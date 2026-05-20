@@ -89,6 +89,10 @@ apis:
       - type: Documentation
         url: https://developer.eliq.com/api-reference
 common:
+  - type: GitHubOrganization
+    url: https://github.com/GetEliq
+  - type: LinkedIn
+    url: https://www.linkedin.com/company/eliq
   - type: Website
     url: https://eliq.com
   - type: DeveloperPortal
