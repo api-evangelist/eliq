@@ -1,0 +1,18 @@
+{
+  "repo": "eliq",
+  "feeds": [
+    {
+      "source": "https://eliq.com/insights",
+      "feed_url": "https://eliq.com/insights",
+      "title": "",
+      "saved": 0,
+      "method": "none"
+    },
+    {
+      "source": "https://eliq.com/api/",
+      "error": "HTTPError"
+    }
+  ],
+  "fetched": "2026-07-11T11:50:51Z",
+  "post_count": 4
+}
