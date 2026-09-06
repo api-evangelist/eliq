@@ -2,20 +2,18 @@
   "repo": "eliq",
   "feeds": [
     {
+      "source": "https://eliq.com/api/",
+      "error": "HTTPError"
+    },
+    {
       "source": "https://eliq.com/insights",
       "feed_url": "https://eliq.com/insights",
       "title": "",
       "saved": 0,
-      "method": "none",
-      "nature": "vendor-blog",
-      "nature_basis": "path_blog"
-    },
-    {
-      "source": "https://eliq.com/api/",
-      "error": "HTTPError"
+      "method": "none"
     }
   ],
-  "fetched": "2026-08-30T22:33:40Z",
+  "fetched": "2026-09-06T19:17:18Z",
   "post_count": 4,
   "feed_nature": "vendor-blog",
   "feed_nature_basis": "path_blog",

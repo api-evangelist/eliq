@@ -1,106 +1,100 @@
+# Eliq rate limits — transcribed from the provider's published API Guidelines.
 specification: API Commons Rate Limits
 specificationVersion: '0.1'
 schema: https://raw.githubusercontent.com/api-evangelist/interface-research/main/schema/api-commons.yml#/$defs/RateLimits
 provider: Eliq
 providerId: eliq
+generated: '2026-09-06'
+method: searched
+source: https://developer.eliq.com/doc/eliq-api-guidelines
 created: '2026-05-04'
-# Provenance stamped 2026-08-11: this artifact was written by the API Evangelist
-# bulk sweep dated 2026-05-04, not harvested from the provider. See roadmap#35.
-method: generated
-modified: '2026-05-04'
+modified: '2026-09-06'
 tags:
-  - Energy
-  - Utilities
-  - Analytics
-  - Sustainability
-  - Rate Limiting
-  - Quotas
-  - Throttling
-description: Machine-readable rate limit definitions for the Eliq API surface. Captures per-tier quotas,
-  burst behavior, response signaling, and recovery semantics. Defaults are scaffold values to be replaced
-  with published provider limits.
+- Energy
+- Utilities
+- Analytics
+- Rate Limiting
+- Quotas
+- Throttling
+description: Eliq's published API usage ceilings, transcribed from the Eliq API Guidelines. THIS FILE REPLACES a
+  2026-05-04 scaffold whose tier limits (10/100/1000 rpm, 1k/100k monthly quotas) were invented by an API Evangelist
+  bulk sweep and were never published by Eliq.
+note: 'Eliq frames these as RECOMMENDATIONS backed by a commercial enforcement process, not as an enforced runtime
+  throttle. There is no published 429 response, no documented rate-limit response header, and no per-plan quota.
+  Enforcement is human: Eliq monitors usage, contacts the client, expects engagement within 5 business days and
+  remediation within 10, and only then escalates to surcharges, temporary restrictions or termination.'
 headers:
-  limit: X-RateLimit-Limit
-  remaining: X-RateLimit-Remaining
-  reset: X-RateLimit-Reset
-  retryAfter: Retry-After
-  policy: RateLimit-Policy
+  limit: null
+  remaining: null
+  reset: null
+  retryAfter: null
+  policy: null
+  note: None published. No RateLimit-*, X-RateLimit-* or Retry-After header appears in the Eliq documentation or
+    in any of the four OpenAPI documents.
 responseCodes:
-  throttled: 429
-  quotaExceeded: 429
-  serviceUnavailable: 503
+  throttled: null
+  quotaExceeded: null
+  note: 'No 429 response is declared on any of the 148 operations across the four specs. Response codes actually
+    declared: 200, 201, 202, 204, 400, 401, 403, 404, 409, 500, 501.'
+limit_count: 4
 limits:
-  - tier: free
-    name: Free Tier Default
-    scope: api-key
-    metric: requests_per_minute
-    limit: 10
-    burst: 20
-    timeFrame: minute
-    applies:
-      - Eliq Auth API
-      - Eliq Data Management API
-      - Eliq Insights API
-      - Eliq Intelligence API
-  - tier: free
-    name: Free Tier Monthly Quota
-    scope: api-key
-    metric: requests_per_month
-    limit: 1000
-    timeFrame: month
-    applies:
-      - Eliq Auth API
-      - Eliq Data Management API
-      - Eliq Insights API
-      - Eliq Intelligence API
-  - tier: professional
-    name: Professional Tier Default
-    scope: api-key
-    metric: requests_per_minute
-    limit: 100
-    burst: 200
-    timeFrame: minute
-    applies:
-      - Eliq Auth API
-      - Eliq Data Management API
-      - Eliq Insights API
-      - Eliq Intelligence API
-  - tier: professional
-    name: Professional Tier Monthly Quota
-    scope: api-key
-    metric: requests_per_month
-    limit: 100000
-    timeFrame: month
-    applies:
-      - Eliq Auth API
-      - Eliq Data Management API
-      - Eliq Insights API
-      - Eliq Intelligence API
-  - tier: enterprise
-    name: Enterprise Negotiated Limit
-    scope: contract
-    metric: requests_per_minute
-    limit: 1000
-    burst: 5000
-    timeFrame: minute
-    applies:
-      - Eliq Auth API
-      - Eliq Data Management API
-      - Eliq Insights API
-      - Eliq Intelligence API
+- name: Per-endpoint request ceiling
+  rule_type: recommendation
+  scope: per-endpoint
+  metric: requests_per_minute
+  limit: 1000
+  timeFrame: minute
+  statement: '"More than 1000 requests per minute should not be sent to any single endpoint, unless explicitly agreed
+    otherwise in writing."'
+  applies:
+  - Eliq Data Management API
+  - Eliq Insights API
+- name: Status endpoint polling
+  rule_type: recommendation
+  scope: per-endpoint
+  metric: requests_per_second
+  limit: 0.2
+  timeFrame: 5 seconds
+  statement: '"Status endpoints should not be polled more than once every 5 seconds."'
+  applies:
+  - Eliq Data Management API
+- name: Insights resource polling
+  rule_type: recommendation
+  scope: per-resource
+  metric: requests_per_minute
+  limit: 1
+  timeFrame: 60 seconds
+  statement: '"Insights API resources (e.g. user/location) should not be polled more than once every 60 seconds,
+    unless recently updated."'
+  applies:
+  - Eliq Insights API
+- name: Async job file size
+  rule_type: requirement
+  scope: per-request
+  metric: bytes
+  limit: 104857600
+  timeFrame: per file
+  statement: Maximum job file size is 100 MB; a job whose file exceeds 1000 failing rows stops and is marked failed.
+  applies:
+  - Eliq Data Management API
+  docs: https://developer.eliq.com/doc/jobs
 policies:
-  - name: Backoff Strategy
-    description: Clients should implement exponential backoff with jitter, honoring the Retry-After header
-      when present.
-  - name: Burst Handling
-    description: Short bursts above the steady-state limit are tolerated up to the documented burst ceiling
-      before throttling engages.
-  - name: Quota Reset
-    description: Monthly quotas reset at the start of each calendar month in UTC. Per-minute and per-second
-      windows reset on a sliding-window basis.
-  - name: Fair Use
-    description: Even on uncapped enterprise tiers, sustained usage that materially impacts shared infrastructure
-      may be subject to fair-use throttling.
+- name: Batch over singleton
+  description: Batch endpoints (/jobs) MUST be used instead of multiple single requests when loading data via the
+    Data Management API in production.
+- name: Backoff on 5xx
+  description: Exponential backoff MUST be applied on 5xx. Blind retries of failing or malformed requests are a
+    documented violation; 4xx MUST be corrected before retrying.
+- name: Cache static data
+  description: Static or infrequently changing data (user/location metadata) should be cached for at least 24 hours.
+- name: Health checks
+  description: 'Availability checks should use /health or /heartbeat (Insights: GET /v3/health/heart_beat (get-v3-heartbeat)), never
+    functional endpoints like GET /user or GET /location.'
+- name: Client timeout
+  description: Client-side timeouts must be set; 30 seconds is the suggested value for standard API calls.
+- name: Enforcement
+  description: 'Eliq monitors usage and contacts the client. Escalation path: operational surcharges, temporary
+    access restrictions, termination of the service agreement (last resort).'
 maintainers:
-  - FN: Kin Lane
-    email: kin@apievangelist.com
+- FN: Kin Lane
+  email: kin@apievangelist.com

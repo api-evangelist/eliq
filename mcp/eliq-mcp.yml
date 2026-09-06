@@ -1,0 +1,98 @@
+# Eliq MCP — no first-party server exists. Candidate tools derived from the published OpenAPI.
+generated: '2026-09-06'
+method: derived
+source: searched for a first-party MCP server (developer.eliq.com, eliq.com, the GetEliq GitHub org, npm and PyPI)
+  on 2026-09-06 and found none; candidate tools derived from openapi/eliq-insights-api-openapi.yaml and openapi/eliq-data-management-api-openapi.json
+provider: Eliq
+providerId: eliq
+status: candidate
+deployment:
+  mode: none
+  auth: unknown
+  verified: searched
+  note: Eliq ships no MCP server — no remote endpoint, no stdio package. Searched developer.eliq.com and eliq.com
+    (no mention of MCP), the GetEliq GitHub org (zero public repos), and npm/PyPI (no @eliq or eliq-mcp package).
+    NO ENDPOINT WAS GUESSED. The tools below are a derived candidate surface only, mapped one-to-one onto operations
+    Eliq actually publishes.
+auth_note: 'Any real Eliq MCP server would inherit the OAuth 2.0 client-credentials flow: a per-API audience-scoped
+  bearer token, plus a delegated token carrying sub/sub_type when acting for one end user. Credentials are issued
+  by an account manager; there is no DCR path.'
+candidate_tools:
+- name: eliq_get_location_consumption
+  category: read
+  rest:
+  - get-v3-locations-locationId-consumption
+  description: Consumption for a location over a period, at a chosen resolution and unit (energy or cost).
+- name: eliq_get_energy_usage_categories
+  category: read
+  rest:
+  - get-v3-locations-locationId-euc
+  description: Disaggregated energy usage by appliance category for a location.
+- name: eliq_get_market_prices
+  category: read
+  rest:
+  - get-v3-locations-locationId-marketprice-prices
+  - get-v3-locations-locationId-marketprice-price-summary
+  description: Day-ahead and summary electricity market prices for a location.
+- name: eliq_get_forecast
+  category: read
+  rest:
+  - get-v3-locations-locationId-forecast
+  - get-v3-locations-locationId-forecast-hourly
+  description: Consumption forecast for a location, daily or hourly.
+- name: eliq_get_anomalies
+  category: read
+  rest:
+  - get-v3-location-anomalies
+  description: Detected consumption anomalies for a location.
+- name: eliq_get_similar_homes
+  category: read
+  rest:
+  - get-v3-locations-locationId-similarhomes
+  - get-v3-locations-locationId-similarhomes-consumption
+  description: Peer-cohort comparison for a location.
+- name: eliq_get_advice
+  category: read
+  rest:
+  - get-v3-location-advice
+  description: Personalised energy-saving advice for a location.
+- name: eliq_get_peak_power
+  category: read
+  rest:
+  - get-v3-locations-locationId-peakpower
+  description: Peak power / dynamic capacity readings for a location.
+- name: eliq_upsert_user
+  category: write
+  rest:
+  - put-users-userId
+  description: Create or update a user by client-supplied id. Replayable.
+- name: eliq_upsert_location
+  category: write
+  rest:
+  - put-locations-locationId
+  description: Create or update a location by client-supplied id. Replayable.
+- name: eliq_upsert_meter
+  category: write
+  rest:
+  - put-meter-meterid
+  description: Create or update a meter by client-supplied id. Replayable.
+- name: eliq_create_job
+  category: write
+  rest:
+  - create-job
+  description: Create an async bulk job for an entity/operation pair, uploading an .ndjson file. NOT replay-safe
+    — re-posting the same file under a new name is a documented guideline violation.
+- name: eliq_get_job
+  category: read
+  rest:
+  - get-job
+  - get-jobs
+  - get-job-failures
+  description: Job state, progress and per-row failures.
+- name: eliq_cancel_job
+  category: write
+  rest:
+  - cancel-job
+  description: Cancel a job before it finishes. The reversal path for eliq_create_job.
+candidate_tool_count: 14
+note: A derived candidate list, NOT a server. Nothing here is callable until Eliq publishes one.

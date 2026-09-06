@@ -1,0 +1,1084 @@
+{
+  "openapi": "3.0.1",
+  "info": {
+    "title": "Eliq Intelligence API",
+    "description": "\r\n# API Reference\r\n\r\nThe Eliq Intelligence API is organized around REST. The API accepts JSON-encoded request bodies, returns JSON-encoded responses and uses standard HTTP response codes. The URLs are resource oriented around Eliq's Intelligence capabilities.\r\n\r\n# Errors\r\n\r\n## Error body\r\n\r\nThe API returns an error response body on failures to provide additional information on the error. Please find the error body and description below.\r\n\r\n```json\r\n{\r\n    \"code\":\"< ERROR CODE >\",\r\n    \"description\":\"< DESCRIPTION OF ERROR >\"\r\n}\r\n```\r\n\r\n*Field* | *Type* | *Description*\r\n--- | --- | ---\r\ncode | String | Error code. Possible error codes per request can be found in each request section. Error codes do not change, and can be used to tie actions to.\r\ndescription | String | A description of the error for developers\r\n\r\n",
+    "contact": {
+      "name": "Support",
+      "email": "support_b2b@eliq.com"
+    },
+    "version": "1.0.0"
+  },
+  "paths": {
+    "/dashboards/{dashboard_id}/token": {
+      "post": {
+        "tags": [
+          "Dashboards"
+        ],
+        "summary": "Mint a user-scoped token for embedding a dashboard with @databricks/aibi-client",
+        "parameters": [
+          {
+            "name": "dashboard_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/DashboardEmbedTokenResult"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "The token carries no user identifier"
+          },
+          "404": {
+            "description": "Dashboards are not enabled for the client, or the dashboard is not available"
+          }
+        }
+      }
+    },
+    "/info/auth": {
+      "get": {
+        "tags": [
+          "Info"
+        ],
+        "summary": "Get Entra authentication information for the application",
+        "responses": {
+          "200": {
+            "description": "Successful",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AuthInfoResult"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/info/me": {
+      "get": {
+        "tags": [
+          "Info"
+        ],
+        "summary": "Get information about the current user",
+        "responses": {
+          "200": {
+            "description": "Successful",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/MyInfoResult"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/info/configuration": {
+      "get": {
+        "tags": [
+          "Info"
+        ],
+        "summary": "Get the Intelligence API configuration for the client",
+        "responses": {
+          "200": {
+            "description": "Successful",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/IntelligenceApiConfiguration"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "No configuration found for the client"
+          }
+        }
+      }
+    },
+    "/locations/segmentation/filter": {
+      "post": {
+        "tags": [
+          "LocationSegmentation"
+        ],
+        "summary": "Filters Location Segmentation data.",
+        "requestBody": {
+          "content": {
+            "application/json-patch+json": {
+              "schema": {
+                "$ref": "#/components/schemas/PagedFilterRequest"
+              }
+            },
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/PagedFilterRequest"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/PagedFilterRequest"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/PagedFilterRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/FilterResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorDetails"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/locations/segmentation/export/create": {
+      "post": {
+        "tags": [
+          "LocationSegmentation"
+        ],
+        "summary": "Creates an export job to export all segments to a CSV file.",
+        "requestBody": {
+          "description": "",
+          "content": {
+            "application/json-patch+json": {
+              "schema": {
+                "$ref": "#/components/schemas/FilterRequest"
+              }
+            },
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/FilterRequest"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/FilterRequest"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/FilterRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Returns the newly created export job"
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorDetails"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/locations/segmentation/export/{jobId}": {
+      "get": {
+        "tags": [
+          "LocationSegmentation"
+        ],
+        "summary": "Gets the export job.",
+        "parameters": [
+          {
+            "name": "jobId",
+            "in": "path",
+            "description": "The ID of the export job.",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ExportJob"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorDetails"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/locations/segmentation/export/{jobId}/download": {
+      "get": {
+        "tags": [
+          "LocationSegmentation"
+        ],
+        "summary": "Downloads the file containing exported locations.",
+        "parameters": [
+          {
+            "name": "jobId",
+            "in": "path",
+            "description": "The ID of the export job.",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/octet-stream": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorDetails"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorDetails"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/locations/segmentation/filter/tariffValues": {
+      "get": {
+        "tags": [
+          "LocationSegmentation"
+        ],
+        "summary": "Get tariff filter options. Returns all possible tariffIds for the client and their names.",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/TariffFilterOptions"
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorDetails"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/locations/segmentation/map": {
+      "post": {
+        "tags": [
+          "LocationSegmentation"
+        ],
+        "parameters": [
+          {
+            "name": "limit",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json-patch+json": {
+              "schema": {
+                "$ref": "#/components/schemas/FilterRequest"
+              }
+            },
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/FilterRequest"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/FilterRequest"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/FilterRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/MapSegmentationResponseDto"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorDetails"
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "AssetKind": {
+        "enum": [
+          "ElectricVehicle",
+          "Tariff",
+          "pv",
+          "GasHeating",
+          "ElecHeating",
+          "battery"
+        ],
+        "type": "string"
+      },
+      "Assets": {
+        "type": "object",
+        "properties": {
+          "electricVehicle": {
+            "$ref": "#/components/schemas/ElectricVehicle"
+          },
+          "tariff": {
+            "$ref": "#/components/schemas/Tariffs"
+          },
+          "pvDetails": {
+            "$ref": "#/components/schemas/PvDetails"
+          },
+          "heatingDetails": {
+            "$ref": "#/components/schemas/HeatingDetails"
+          },
+          "battery": {
+            "$ref": "#/components/schemas/Battery"
+          }
+        },
+        "additionalProperties": false
+      },
+      "AuthInfoResult": {
+        "required": [
+          "entra_application_id",
+          "entra_tenant_id"
+        ],
+        "type": "object",
+        "properties": {
+          "entra_tenant_id": {
+            "minLength": 1,
+            "type": "string",
+            "description": "Entra tenant id",
+            "example": "dc4a5e2f-2537-4f0f-ba68-f79bc8d57fa8"
+          },
+          "entra_application_id": {
+            "minLength": 1,
+            "type": "string",
+            "description": "Entra application id",
+            "example": "b77ee01b-e19b-4fe5-b73b-5d4d810910d1"
+          }
+        },
+        "additionalProperties": false,
+        "description": "Authorization information for the application"
+      },
+      "Battery": {
+        "type": "object",
+        "properties": {
+          "score": {
+            "type": "number",
+            "format": "double"
+          }
+        },
+        "additionalProperties": false
+      },
+      "DashboardConfigurationItem": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "description": "Id of the published DataBricks dashboard",
+            "nullable": true,
+            "example": "01ef2a3b4c5d6e7f8a9b0c1d2e3f4a5b"
+          },
+          "name": {
+            "type": "string",
+            "description": "Display name shown in the application",
+            "nullable": true,
+            "example": "Energy Overview"
+          },
+          "external_value_scope": {
+            "type": "string",
+            "description": "What the dashboard's dataset queries are filtered by. \"client\" injects the client id, \"user\" injects a\r\nper-user hash. Defaults to \"client\" when omitted.",
+            "nullable": true,
+            "example": "client"
+          }
+        },
+        "additionalProperties": false,
+        "description": "A published DataBricks dashboard the client is allowed to embed"
+      },
+      "DashboardEmbedTokenResult": {
+        "required": [
+          "dashboard_id",
+          "expires_in_seconds",
+          "instance_url",
+          "token",
+          "workspace_id"
+        ],
+        "type": "object",
+        "properties": {
+          "instance_url": {
+            "minLength": 1,
+            "type": "string",
+            "description": "Base URL of the DataBricks workspace instance",
+            "example": "https://adb-1234567890123456.7.azuredatabricks.net"
+          },
+          "workspace_id": {
+            "minLength": 1,
+            "type": "string",
+            "description": "Id of the DataBricks workspace",
+            "example": "1234567890123456"
+          },
+          "dashboard_id": {
+            "minLength": 1,
+            "type": "string",
+            "description": "Id of the published dashboard",
+            "example": "01ef2a3b4c5d6e7f8a9b0c1d2e3f4a5b"
+          },
+          "token": {
+            "minLength": 1,
+            "type": "string",
+            "description": "User-scoped token authorizing the embedded dashboard"
+          },
+          "expires_in_seconds": {
+            "type": "integer",
+            "description": "Number of seconds until the token expires; request a new token before then",
+            "format": "int32",
+            "example": 600
+          }
+        },
+        "additionalProperties": false,
+        "description": "Everything the frontend needs to embed a dashboard with @databricks/aibi-client"
+      },
+      "DashboardsConfiguration": {
+        "type": "object",
+        "properties": {
+          "enabled": {
+            "type": "boolean",
+            "description": "Whether embedded dashboards are enabled for the client",
+            "example": true
+          },
+          "items": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/DashboardConfigurationItem"
+            },
+            "description": "The dashboards available to the client",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false,
+        "description": "DataBricks dashboards available for embedding in the application"
+      },
+      "ElectricVehicle": {
+        "type": "object",
+        "properties": {
+          "chargedKwh": {
+            "type": "number",
+            "format": "double"
+          },
+          "chargedPowerKw": {
+            "type": "array",
+            "items": {
+              "type": "number",
+              "format": "double"
+            },
+            "nullable": true
+          },
+          "confidence": {
+            "type": "number",
+            "format": "double",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "ErrorDetails": {
+        "required": [
+          "code",
+          "description"
+        ],
+        "type": "object",
+        "properties": {
+          "code": {
+            "minLength": 1,
+            "type": "string"
+          },
+          "description": {
+            "minLength": 1,
+            "type": "string"
+          }
+        },
+        "additionalProperties": false
+      },
+      "ExportJob": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "status": {
+            "$ref": "#/components/schemas/ExportJobStatus"
+          }
+        },
+        "additionalProperties": false
+      },
+      "ExportJobStatus": {
+        "enum": [
+          "Created",
+          "Pending",
+          "Complete",
+          "Failed"
+        ],
+        "type": "string"
+      },
+      "FilterRequest": {
+        "type": "object",
+        "properties": {
+          "filters": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/FilterRequestAsset"
+            },
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "FilterRequestAsset": {
+        "required": [
+          "asset"
+        ],
+        "type": "object",
+        "properties": {
+          "asset": {
+            "$ref": "#/components/schemas/AssetKind"
+          },
+          "exists": {
+            "type": "boolean"
+          },
+          "properties": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/FilterRequestAssetProperty"
+            },
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "FilterRequestAssetProperty": {
+        "type": "object",
+        "properties": {
+          "field": {
+            "type": "string",
+            "nullable": true
+          },
+          "operator": {
+            "$ref": "#/components/schemas/Operator"
+          },
+          "value": {
+            "$ref": "#/components/schemas/JsonNode"
+          }
+        },
+        "additionalProperties": false
+      },
+      "FilterResponse": {
+        "type": "object",
+        "properties": {
+          "summary": {
+            "$ref": "#/components/schemas/Summary"
+          },
+          "locations": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/FilterResponseItem"
+            },
+            "nullable": true
+          },
+          "paging": {
+            "$ref": "#/components/schemas/Paging"
+          }
+        },
+        "additionalProperties": false
+      },
+      "FilterResponseItem": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "assets": {
+            "$ref": "#/components/schemas/Assets"
+          },
+          "consumptionKwh": {
+            "type": "number",
+            "format": "double",
+            "nullable": true
+          },
+          "totalGridImportKwh": {
+            "type": "number",
+            "format": "double",
+            "nullable": true
+          },
+          "totalGridExportKwh": {
+            "type": "number",
+            "format": "double",
+            "nullable": true
+          },
+          "locationExtRef": {
+            "type": "string",
+            "nullable": true
+          },
+          "userId": {
+            "type": "integer",
+            "format": "int32",
+            "nullable": true
+          },
+          "userExtRef": {
+            "type": "string",
+            "nullable": true
+          },
+          "fromDate": {
+            "type": "string",
+            "format": "date"
+          },
+          "toDate": {
+            "type": "string",
+            "format": "date"
+          }
+        },
+        "additionalProperties": false
+      },
+      "HeatingDetails": {
+        "type": "object",
+        "properties": {
+          "estimatedGasHeatingKwh": {
+            "type": "number",
+            "format": "double",
+            "nullable": true
+          },
+          "estimatedElecHeatingKwh": {
+            "type": "number",
+            "format": "double",
+            "nullable": true
+          },
+          "primaryHeatingFuel": {
+            "type": "string",
+            "nullable": true
+          },
+          "otherHeatingFuels": {
+            "$ref": "#/components/schemas/HeatingFuelFlags"
+          }
+        },
+        "additionalProperties": false
+      },
+      "HeatingFuelFlags": {
+        "type": "object",
+        "properties": {
+          "elec": {
+            "type": "boolean",
+            "nullable": true
+          },
+          "gas": {
+            "type": "boolean",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "IntelligenceApiConfiguration": {
+        "type": "object",
+        "properties": {
+          "application_name": {
+            "type": "string",
+            "nullable": true
+          },
+          "dashboards": {
+            "$ref": "#/components/schemas/DashboardsConfiguration"
+          }
+        },
+        "additionalProperties": false
+      },
+      "JsonNode": {
+        "type": "object",
+        "properties": {
+          "options": {
+            "$ref": "#/components/schemas/JsonNodeOptions"
+          },
+          "parent": {
+            "$ref": "#/components/schemas/JsonNode"
+          },
+          "root": {
+            "$ref": "#/components/schemas/JsonNode"
+          }
+        },
+        "additionalProperties": false
+      },
+      "JsonNodeOptions": {
+        "type": "object",
+        "properties": {
+          "propertyNameCaseInsensitive": {
+            "type": "boolean"
+          }
+        },
+        "additionalProperties": false
+      },
+      "MapLocationDto": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "ev": {
+            "type": "boolean"
+          },
+          "pv": {
+            "type": "boolean"
+          },
+          "elecHeat": {
+            "type": "boolean"
+          },
+          "gasHeat": {
+            "type": "boolean"
+          },
+          "battery": {
+            "type": "boolean"
+          },
+          "lat": {
+            "type": "number",
+            "format": "double"
+          },
+          "lon": {
+            "type": "number",
+            "format": "double"
+          }
+        },
+        "additionalProperties": false
+      },
+      "MapSegmentationResponseDto": {
+        "type": "object",
+        "properties": {
+          "locations": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/MapLocationDto"
+            },
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "MyInfoResult": {
+        "required": [
+          "client_id",
+          "roles"
+        ],
+        "type": "object",
+        "properties": {
+          "client_id": {
+            "type": "integer",
+            "description": "Client Id of active user",
+            "format": "int64",
+            "example": 5435964696
+          },
+          "roles": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "description": "Roles of active user",
+            "example": [
+              "Support",
+              "EliqConfigurator",
+              "ClientConfigurator"
+            ]
+          }
+        },
+        "additionalProperties": false,
+        "description": "Information about the active user"
+      },
+      "Operator": {
+        "enum": [
+          "eq",
+          "neq",
+          "gt",
+          "lt",
+          "gte",
+          "lte"
+        ],
+        "type": "string"
+      },
+      "PagedFilterRequest": {
+        "type": "object",
+        "properties": {
+          "paging": {
+            "$ref": "#/components/schemas/PagingRequest"
+          },
+          "filters": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/FilterRequestAsset"
+            },
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "Paging": {
+        "type": "object",
+        "properties": {
+          "currentPage": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "pages": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "pageSize": {
+            "type": "integer",
+            "format": "int32"
+          }
+        },
+        "additionalProperties": false
+      },
+      "PagingRequest": {
+        "type": "object",
+        "properties": {
+          "page": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "pageSize": {
+            "type": "integer",
+            "format": "int32"
+          }
+        },
+        "additionalProperties": false
+      },
+      "PvDetails": {
+        "type": "object",
+        "properties": {
+          "estimatedProductionKwh": {
+            "type": "number",
+            "format": "double",
+            "nullable": true
+          },
+          "selfConsumptionPercentage": {
+            "type": "number",
+            "format": "double",
+            "nullable": true
+          },
+          "detectionSource": {
+            "$ref": "#/components/schemas/PvDetectionSource"
+          },
+          "confidence": {
+            "type": "number",
+            "format": "double",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "PvDetectionSource": {
+        "enum": [
+          "disaggregation",
+          "import_regression"
+        ],
+        "type": "string"
+      },
+      "Summary": {
+        "type": "object",
+        "properties": {
+          "totalLocations": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "filteredLocations": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "optimalTariffs": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/TariffCount"
+            },
+            "nullable": true
+          },
+          "electricVehicles": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "pv": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "gasHeating": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "elecHeating": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "battery": {
+            "type": "integer",
+            "format": "int64"
+          }
+        },
+        "additionalProperties": false
+      },
+      "TariffCount": {
+        "type": "object",
+        "properties": {
+          "tariffId": {
+            "type": "string",
+            "nullable": true
+          },
+          "count": {
+            "type": "integer",
+            "format": "int32"
+          }
+        },
+        "additionalProperties": false
+      },
+      "TariffFilterOptions": {
+        "type": "object",
+        "properties": {
+          "tariffId": {
+            "type": "string",
+            "nullable": true
+          },
+          "tariffName": {
+            "type": "string",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "TariffSummary": {
+        "type": "object",
+        "properties": {
+          "tariffId": {
+            "type": "string",
+            "nullable": true
+          },
+          "tariffName": {
+            "type": "string",
+            "nullable": true
+          },
+          "annualSavings": {
+            "type": "number",
+            "format": "double"
+          },
+          "annualCosts": {
+            "type": "number",
+            "format": "double"
+          }
+        },
+        "additionalProperties": false
+      },
+      "Tariffs": {
+        "type": "object",
+        "properties": {
+          "optimalTariff": {
+            "$ref": "#/components/schemas/TariffSummary"
+          }
+        },
+        "additionalProperties": false
+      }
+    },
+    "securitySchemes": {
+      "Bearer": {
+        "type": "http",
+        "description": "Enter JWT Bearer token **_only_**",
+        "scheme": "bearer",
+        "bearerFormat": "JWT"
+      }
+    }
+  },
+  "security": [
+    {
+      "Bearer": [ ]
+    }
+  ]
+}

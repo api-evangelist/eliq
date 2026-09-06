@@ -1,0 +1,103 @@
+# Eliq embeddable UI components.
+generated: '2026-09-06'
+method: searched
+source: https://developer.eliq.com/doc/eliq-modules
+provider: Eliq
+providerId: eliq
+docs: https://developer.eliq.com/doc/eliq-modules
+family: Eliq SDK (modules)
+description: 'Embeddable client-side UI for end-user energy apps. Two delivery modes: standards-based custom elements
+  (web components) or an iframe window. Framework-agnostic — any platform that renders HTML/JS/CSS can host them.'
+delivery_modes:
+- web-components (custom elements)
+- iframe
+loaders:
+- file: eliq-core.css
+  url: https://general-webcomponents.eliq.com/v1.1.0/eliq-core.css
+  role: core stylesheet
+- file: eliq-core.js
+  url: https://general-webcomponents.eliq.com/v1.1.0/eliq-core.js
+  role: core loader (module script)
+- file: webcom-v1.js
+  url: https://general-webcomponents.eliq.com/v1.1.0/webcom-v1.js
+  role: the components themselves (module script)
+configuration:
+  file: eliq-assets/DEP_config.json
+  required:
+  - base_url
+  - client_id
+  styling: eliq-assets/DEP_style.css
+  note: base_url and client_id are mandatory and are issued by Eliq.
+auth_prerequisite:
+  flow: Call the Eliq Insights API to obtain a ticket-id with status = completed, then hand it to eliq-core-initializer-v1,
+    which authenticates the user for every other component.
+  operations:
+  - post-v3-auth-user-token
+  - get-v3-authentication-autologin-ticket
+  docs: https://developer.eliq.com/api-reference/insights-api
+third_party_deps:
+- Bootstrap Icons 1.11.3 (bundled, or loadable from jsDelivr)
+component_count: 20
+components:
+- name: eliq-core-initializer-v1
+  group: Core
+  description: Initializer — MUST be loaded before any other component; authenticates the user from a ticket-id
+    and prepares the environment.
+- name: advisory-detail-v1
+  group: Advice
+  description: One single advice, in detail.
+- name: advisory-list-v1
+  group: Advice
+  description: List of advices.
+- name: advisory-card-v1
+  group: Advice
+  description: One or more random advices.
+- name: full-advisory-v1
+  group: Advice
+  description: Energy saving full advice view.
+- name: bill-v1
+  group: Billing
+  description: User's energy bills.
+- name: bill-card-v1
+  group: Billing
+  description: User's latest energy bill.
+- name: chart-v2
+  group: Consumption
+  description: Energy data in a chart. Requires location inputs (from, to, fuel, unit, resolution).
+- name: comparison-v1
+  group: Consumption
+  description: Energy consumption compared to the user’s previous usage.
+- name: summary-card-v1
+  group: Consumption
+  description: Summary of the user's energy consumption.
+- name: full-insights-v1
+  group: Consumption
+  description: Energy full insights view. Requires no inputs.
+- name: euc-v1
+  group: Breakdown
+  description: The location's Energy Usage by Category (EUC).
+- name: similar-homes-v1
+  group: Breakdown
+  description: Energy consumption compared to similar homes.
+- name: co2-v2
+  group: Sustainability
+  description: CO2 savings visualiser.
+- name: sufficiency-card-v1
+  group: Solar
+  description: PV sufficiency.
+- name: elec-price-card-v1
+  group: Price
+  description: Summary of electricity prices.
+- name: market-price-card-v1
+  group: Price
+  description: Electricity market price for today.
+- name: location-image-v1
+  group: Location
+  description: Sample image of the user’s location.
+- name: location-profile-update-v1
+  group: Location
+  description: Location profile update.
+- name: location-profile-wizard-v1
+  group: Location
+  description: Location profile wizard — recommended during onboarding; EUC, Similar Homes and customised advice
+    all depend on the profile data it collects.

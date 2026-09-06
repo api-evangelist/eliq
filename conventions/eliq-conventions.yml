@@ -1,0 +1,132 @@
+# Eliq cross-cutting API conventions.
+generated: '2026-09-06'
+method: searched
+source: https://developer.eliq.com/doc/eliq-api-guidelines, https://developer.eliq.com/doc/authentication, https://developer.eliq.com/doc/jobs,
+  https://developer.eliq.com/doc/date-and-time, https://developer.eliq.com/doc/webhooks + openapi/
+provider: Eliq
+providerId: eliq
+docs: https://developer.eliq.com/doc/eliq-api-guidelines
+auth:
+  style: OAuth 2.0 client credentials -> Bearer JWT
+  header: 'Authorization: Bearer <access_token>'
+  token_endpoint: https://auth-api.eliq.com/oauth/token
+  audience_scoped: true
+  note: A token is minted per target API via the `aud` field (data-management-api, insights-api). Access tokens
+    expire in 3600s. Delegated tokens carry sub/sub_type for a specific end user and may be issued with a refresh
+    token (refresh_token_expires_in 2592000s).
+  see: authentication/eliq-authentication.yml
+idempotency:
+  coverage: partial
+  mechanism: client-supplied-id upsert (PUT create-or-update). Eliq publishes NO Idempotency-Key header and no replay-token
+    mechanism on POST.
+  scope:
+  - put-users-userId
+  - put-locations-locationId
+  - put-meter-meterid
+  - put-locations-locationId-homeprofile
+  - put-portfolio-accounts
+  - put-portfolio-locations
+  - put-portfolio-users
+  - put-v3-users-userId-consents
+  - put-v3-locations-locationId-notifications-settings
+  - put-v3-locations-locationId-budgets
+  note: '10 of 59 mutating operations are PUT create-or-update against a client-chosen id, so replaying one converges
+    rather than duplicating. Every POST (price formulas, energy writes, job creation) is NOT replay-protected: the
+    API guidelines instead tell clients not to create duplicate resources and not to re-post the same job file under
+    a different name to force reprocessing, which is guidance, not a mechanism. Jobs additionally do not guarantee
+    ordering WITHIN a file, so repeated updates to the same entity in one job file can race.'
+  docs: https://developer.eliq.com/doc/eliq-api-guidelines
+reversibility:
+  grade: documented
+  note: Reversal paths exist and are named in the contract, but Eliq publishes no time-bounded reversal window for
+    them, so this is `documented` rather than `verified`. NOTHING here asserts a window Eliq has not stated.
+  surfaces:
+  - write: create-job (POST /jobs/{entity}/{operation})
+    reversal: cancel-job (GET /jobs/{jobId}/cancel)
+    window: while the job is still queued or processing — "Cancel job before it is finished". No time bound is published.
+    docs: https://developer.eliq.com/doc/jobs
+  - write: put-users-userId / put-locations-locationId / put-meter-meterid
+    reversal: delete-users-userId / delete-locations-locationId / delete-meter-meterid
+    window: not stated
+    docs: https://developer.eliq.com/api-reference/data-mgmt-api
+  - write: energy writes (daily, high-resolution, period, reads, max-demand)
+    reversal: delete-daily-energy-meterid, delete-high-resolution-energy-meterid, delete-period-energy-data-meterid,
+      delete-meter-reads-meterid, delete-max-demand-meterid
+    window: not stated; deletes are range-scoped by from/to
+    docs: https://developer.eliq.com/api-reference/data-mgmt-api
+  - write: price formula writes
+    reversal: delete-meter-from-date-price-formulas, delete-meter-all-price-formulas, delete-locations-locationId-priceformulas,
+      delete-locations-all-priceformulas
+    window: not stated
+    docs: https://developer.eliq.com/doc/price-formula-model
+  not_reversible:
+  - surface: a failed async job
+    note: 'Explicitly stated: "Successful rows in a failed job will not be rolled back, so there may be partial
+      success in a job." A partially-applied job must be reconciled by the client, not rolled back by Eliq.'
+    docs: https://developer.eliq.com/doc/jobs
+dry_run_mode:
+  supported: false
+  note: No dry-run, preview or validate-only mode is documented on any write surface.
+pagination:
+  style: cursor + limit (keyset)
+  params:
+  - limit
+  - after_id
+  - after_user_id
+  - direction
+  - created_after
+  note: Collection reads page with a `limit` plus an `after_*` cursor drawn from the last id seen; job results additionally
+    page by path segment (GET /jobs/{jobId}/result/{page}).
+  response_fields:
+  - <collection>
+  - next (where present)
+metadata:
+  supported: false
+  note: No free-form metadata bag. Client-owned external references (`id`, `location_ext_ref`) are the extension
+    point.
+request_id_tracing:
+  header: X-Request-Id
+  body_field: transaction_id
+  error_field: request_id
+  note: The guidelines ask clients to log and store the request id whenever a response is quoted in a support request.
+    It is also carried on the ErrorDetails envelope.
+  docs: https://developer.eliq.com/doc/eliq-api-guidelines
+versioning:
+  scheme: path segment per API
+  insights: /v3
+  data_management: /integration/api/v1
+  auth: v2 client model (numeric client_id = legacy v1, still supported)
+  spec_versions:
+    Eliq Auth API: 2.0.0
+    Insights API: 3.4.1
+    Eliq Data Management API: 1.5.2
+    Eliq Intelligence API: 1.0.0
+  see: lifecycle/eliq-lifecycle.yml
+error_envelope:
+  media_type: application/json
+  shape: '{ code, description, request_id }'
+  rfc9457: false
+  see: errors/eliq-problem-types.yml
+rate_limit_signalling:
+  response_headers_published: false
+  note: Eliq publishes usage CEILINGS in prose (see rate-limits/eliq-rate-limits.yml) but documents no RateLimit-*/X-RateLimit-*/Retry-After
+    response headers and no 429 response in any of the four OpenAPI documents. Enforcement is described as a commercial/operational
+    process — Eliq contacts the client — not a runtime signal an agent can read.
+  see: rate-limits/eliq-rate-limits.yml
+date_time:
+  format: ISO 8601
+  timezone: Insights API in the location local time zone; Data Management API in UTC for high-resolution data and
+    local time for daily data.
+  docs: https://developer.eliq.com/doc/date-and-time
+bulk:
+  format: application/x-ndjson
+  max_file_size: 100 MB
+  upload: multipart/form-data field name `content`
+  max_failed_rows: 1000
+  retries: a failed job is retried up to 3 times
+  docs: https://developer.eliq.com/doc/jobs
+client_requirements:
+  timeout: clients must set a client-side timeout, suggested 30 seconds
+  tls: HTTPS required
+  secrets: client secrets and tokens must never be exposed client-side; compromised tokens must be revoked immediately
+  docs: https://developer.eliq.com/doc/eliq-api-guidelines

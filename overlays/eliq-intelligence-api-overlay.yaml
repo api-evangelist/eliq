@@ -1,0 +1,22 @@
+# OpenAPI Overlay 1.0.0 — API Evangelist enhancements. The original spec is untouched in openapi/_original/.
+overlay: 1.0.0
+info:
+  title: API Evangelist enhancements — Eliq Intelligence API
+  version: 1.0.0
+extends: openapi/eliq-intelligence-api-openapi.json
+x-generated: '2026-09-06'
+x-method: generated
+x-source: API Evangelist enrichment pipeline; base URL established from the provider docs and live probes on 2026-09-06
+actions:
+- target: $.servers
+  description: 'The published document declares no servers[]. The host is the one the provider serves this spec
+    from. Probed 2026-09-06: GET /info/auth returns 200 with the tenant Entra identifiers.'
+  update:
+  - url: https://eliq.intelligence-api.eliq.com
+    description: 'Production (tenant-prefixed host; the real base URL is issued by Eliq — form: https://{tenant}.intelligence-api.eliq.com)'
+- target: $.info
+  description: Record that this document was harvested by API Evangelist from the provider's own Redoc reference,
+    and where from.
+  update:
+    x-apievangelist-source: https://developer.eliq.com/api-reference
+    x-apievangelist-harvested: '2026-09-06'

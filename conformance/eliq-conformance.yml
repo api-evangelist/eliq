@@ -1,0 +1,110 @@
+# Eliq conformance against cross-cutting and domain standards.
+generated: '2026-09-06'
+method: searched
+source: https://developer.eliq.com/docs (guidelines, authentication, webhooks, jobs, date-and-time), live /.well-known
+  probes, and openapi/
+provider: Eliq
+providerId: eliq
+conformance_count: 17
+conformance:
+- id: oauth2
+  conforms: true
+  evidence: https://developer.eliq.com/doc/authentication
+  note: OAuth 2.0 client credentials grant, plus refresh_token grant. Token endpoint POST https://auth-api.eliq.com/oauth/token,
+    accepting both application/json and application/x-www-form-urlencoded.
+- id: oauth2-client-credentials
+  conforms: true
+  evidence: https://developer.eliq.com/doc/authentication
+- id: jwt
+  conforms: true
+  evidence: https://auth-api.eliq.com/.well-known/jwks.json
+  note: RS256-signed JWTs with a published asymmetric key set. Standard claims iss/aud/sub plus vendor claims org,
+    org_type, sub_type, access_type.
+- id: oidc
+  conforms: false
+  evidence: https://auth-api.eliq.com/.well-known/openid-configuration
+  note: PARTIAL, recorded as false. A discovery document is served at the OIDC well-known path and returns 200,
+    but carries only issuer and jwks_uri — no authorization_endpoint, token_endpoint, scopes_supported, response_types_supported
+    or grant_types_supported. It supports signature verification, not OpenID Connect. Calling this OIDC-conformant
+    would credit Eliq with a surface it does not run.
+- id: rfc7517-jwks
+  conforms: true
+  evidence: https://auth-api.eliq.com/.well-known/jwks.json
+- id: rfc9457
+  conforms: false
+  evidence: errors/eliq-problem-types.yml
+  note: Errors are application/json with a first-party {code, description, request_id} envelope, not application/problem+json.
+- id: json:api
+  conforms: false
+  evidence: openapi/
+- id: odata
+  conforms: false
+  evidence: openapi/
+- id: scim
+  conforms: false
+  evidence: openapi/
+  note: Users and locations are provisioned through Eliq-native endpoints, not SCIM.
+- id: idempotency
+  conforms: false
+  evidence: conventions/eliq-conventions.yml
+  note: PARTIAL, recorded as false against the standard. No Idempotency-Key header; replay safety exists only on
+    the 10 PUT create-or-update operations.
+- id: pagination
+  conforms: true
+  evidence: conventions/eliq-conventions.yml
+  note: Keyset pagination — limit + after_id / after_user_id / created_after cursors.
+- id: rfc8594-sunset
+  conforms: false
+  evidence: https://developer.eliq.com/doc/eliq-api-guidelines
+  note: A 180-day deprecation window is published in prose, but no Deprecation or Sunset response header is emitted.
+- id: iso8601
+  conforms: true
+  evidence: https://developer.eliq.com/doc/date-and-time
+  note: ISO 8601 throughout; Insights in location local time, Data Management in UTC for high-resolution data and
+    local time for daily data.
+- id: ndjson
+  conforms: true
+  evidence: https://developer.eliq.com/doc/jobs
+  note: application/x-ndjson is the async bulk format; declared on 9 job operations in the Data Management contract.
+- id: hmac-sha256-webhook-signing
+  conforms: true
+  evidence: https://developer.eliq.com/doc/webhooks
+  note: 'X-Eliq-Signature: t=<unix>,sha256=<hex> over "{timestamp}.{json_payload}", Stripe-shaped. Consumers must
+    dedupe on event id; Eliq retries for up to 24 hours.'
+- id: openapi-3
+  conforms: true
+  evidence: openapi/
+  note: 'Four published documents: OpenAPI 3.1.0 (Auth, Insights) and 3.0.1 (Data Management, Intelligence). 148
+    operations, 138 with unique operationIds, 134 carrying in-spec examples.'
+- id: gdpr
+  conforms: true
+  evidence: https://www.eliq.com/privacy-api/
+  note: Eliq AB is a Swedish controller/processor and states it is subject to Swedish data protection legislation
+    including GDPR. The Insights API carries an explicit user-consent surface (PUT /v3/users/{userId}/consents),
+    and the guidelines require that consents are only updated following an explicit user action.
+domain_standard:
+  declared: false
+  checked:
+  - green-button
+  - espi
+  - cds-energy (CDR Energy, Australia)
+  - cds-common
+  - smart-energy-code / DCC (GB)
+  - ieee-2030-5
+  - openadr
+  - iec-61968 / CIM
+  - mqtt-sparkplug
+  method: Searched the four OpenAPI contracts and the public documentation for a domain-standard signature — a Green
+    Button / ESPI resource shape, an ESPI UsagePoint or IntervalBlock, a CDR Energy endpoint, an IEEE 2030.5 or
+    OpenADR surface, a CIM message type, an OBIS or MPAN/MPRN identifier scheme.
+  result: None present. Eliq models energy with a first-party vocabulary — User, Location, Meter, energy-period
+    / energy-daily / energy-highres-{6min,15min,30min,hour}, price formula, register — and exchanges it as its own
+    JSON and NDJSON shapes.
+  note: 'REWARD-ONLY: recorded as an honest absence. Eliq sits downstream of the meter-data standards rather than
+    implementing one — its customers are utilities that already hold the data. Nothing was invented to fill this
+    slot.'
+certifications:
+  published: false
+  note: No ISO 27001, SOC 2, PCI or comparable certification is claimed anywhere on eliq.com or developer.eliq.com.
+    Probed eliq.com/security (404), trust.eliq.com (NXDOMAIN) and the full 124-URL sitemap on 2026-09-06. GDPR is
+    stated as an applicable regime, not as a certified compliance program — so no Compliance pointer is emitted.

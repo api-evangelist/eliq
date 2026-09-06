@@ -1,151 +1,47 @@
+# Eliq plans + pricing — measured absence. Eliq publishes no plans.
 specification: API Commons Plans
 specificationVersion: '0.1'
 schema: https://raw.githubusercontent.com/api-evangelist/interface-research/main/schema/api-commons.yml#/$defs/Plans
 provider: Eliq
 providerId: eliq
+generated: '2026-09-06'
+method: searched
+source: https://www.eliq.com/sitemap.xml, https://www.eliq.com/contact, https://developer.eliq.com/request-api-reference
 created: '2026-05-04'
-# Provenance stamped 2026-08-11: this artifact was written by the API Evangelist
-# bulk sweep dated 2026-05-04, not harvested from the provider. See roadmap#35.
-method: generated
-modified: '2026-05-04'
+modified: '2026-09-06'
 tags:
-  - Energy
-  - Utilities
-  - Analytics
-  - Sustainability
-description: Machine-readable plans and pricing scaffold for this API provider. Conforms to the API Commons
-  Plans schema. Tier limits and prices are scaffold defaults; replace with provider-published values.
-plans:
-  - id: eliq-free
-    name: Free
-    type: freemium
-    description: Free entry tier for the Eliq API surface. Intended for evaluation, prototyping, and low-volume
-      integrations. Real limits and pricing must be reconciled with the provider's published plan documentation.
-    entries:
-      - label: API Requests
-        description: Monthly API request quota across all included endpoints
-        name: api_requests
-        type: quota
-        metric: requests
-        limit: 1000
-        timeFrame: month
-        geo: global
-        domains: []
-        unit: 1
-        price: '0.00'
-        userMultiplied: false
-      - label: Rate Limit
-        description: Maximum requests per minute on the free tier
-        name: rate_limit
-        type: rate
-        metric: requests_per_minute
-        limit: 10
-        timeFrame: minute
-        geo: global
-        domains: []
-        unit: 1
-        price: '0.00'
-        userMultiplied: false
-    elements:
-      - name: Public Documentation
-      - name: Community Support
-      - name: Sandbox Access
-      - name: Eliq Auth API
-      - name: Eliq Data Management API
-      - name: Eliq Insights API
-      - name: Eliq Intelligence API
-  - id: eliq-pro
-    name: Professional
-    type: paid
-    description: Production tier for Eliq. Provides higher quotas, priority support, and access to the
-      broader API portfolio. Pricing placeholder; align with the provider's pricing page.
-    entries:
-      - label: API Requests
-        description: Monthly API request quota
-        name: api_requests
-        type: quota
-        metric: requests
-        limit: 100000
-        timeFrame: month
-        geo: global
-        domains: []
-        unit: 1
-        price: TBD
-        userMultiplied: false
-      - label: Rate Limit
-        description: Maximum requests per minute on the professional tier
-        name: rate_limit
-        type: rate
-        metric: requests_per_minute
-        limit: 100
-        timeFrame: minute
-        geo: global
-        domains: []
-        unit: 1
-        price: '0.00'
-        userMultiplied: false
-      - label: Overage
-        description: Per-request price after monthly quota is exceeded
-        name: overage
-        type: metered
-        metric: requests
-        limit: -1
-        timeFrame: month
-        geo: global
-        domains: []
-        unit: 1000
-        price: TBD
-        userMultiplied: false
-    elements:
-      - name: All Production Endpoints
-      - name: Email Support
-      - name: SLA Targets
-      - name: Webhook Subscriptions
-      - name: Eliq Auth API
-      - name: Eliq Data Management API
-      - name: Eliq Insights API
-      - name: Eliq Intelligence API
-  - id: eliq-enterprise
-    name: Enterprise
-    type: enterprise
-    description: Custom-negotiated tier for Eliq. Includes dedicated capacity, contractual SLAs, security
-      review, data residency options, and named technical account management.
-    entries:
-      - label: API Requests
-        description: Negotiated request volume; -1 indicates uncapped subject to fair use
-        name: api_requests
-        type: quota
-        metric: requests
-        limit: -1
-        timeFrame: month
-        geo: configurable
-        domains: []
-        unit: 1
-        price: custom
-        userMultiplied: false
-      - label: Rate Limit
-        description: Negotiated burst and steady-state rate
-        name: rate_limit
-        type: rate
-        metric: requests_per_minute
-        limit: 1000
-        timeFrame: minute
-        geo: configurable
-        domains: []
-        unit: 1
-        price: custom
-        userMultiplied: false
-    elements:
-      - name: Unlimited / Negotiated Volume
-      - name: 24/7 Dedicated Support
-      - name: Contractual SLA
-      - name: Security & Compliance Review
-      - name: Dedicated Account Manager
-      - name: Custom Data Residency
-      - name: Eliq Auth API
-      - name: Eliq Data Management API
-      - name: Eliq Insights API
-      - name: Eliq Intelligence API
+- Energy
+- Utilities
+- Analytics
+- Pricing
+description: Eliq publishes NO pricing. THIS FILE REPLACES a 2026-05-04 scaffold that invented three tiers (Free
+  / Professional / Enterprise) with invented quotas — none of which Eliq has ever published.
+plan_count: 0
+plans: []
+access_model:
+  pricing: contact-sales
+  public_pricing_page: false
+  free_tier: false
+  self_serve: false
+  onboarding: Commercial. A `client_id` is issued by an Eliq account manager; client secrets are generated through
+    the Client Admin API or by the account manager. The developer portal has a self-serve account signup (https://developer.eliq.com/create-account)
+    but it grants documentation access only — the API Reference itself sits behind a separate 'Request access' form.
+  intelligence_api: Access to the Intelligence API is granted on request.
+evidence:
+- url: https://www.eliq.com/pricing
+  status: 404
+  note: No pricing page.
+- url: https://www.eliq.com/sitemap.xml
+  status: 200
+  note: 124 URLs; no pricing, plans, or tiers page.
+- url: https://developer.eliq.com/request-api-reference
+  status: 200
+  note: '"Request access to the Api Reference" lead form — company, country, message.'
+- url: https://developer.eliq.com/create-account
+  status: 200
+  note: Self-serve signup for documentation access only.
+note: 'plan_count: 0 is the measurement, not a gap in this pass. An enterprise contact-sales motion is a legitimate
+  commercial model; it is simply not a published plan.'
 maintainers:
-  - FN: Kin Lane
-    email: kin@apievangelist.com
+- FN: Kin Lane
+  email: kin@apievangelist.com

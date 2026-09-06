@@ -1,0 +1,86 @@
+# Eliq API lifecycle: versioning, deprecation, status.
+generated: '2026-09-06'
+method: searched
+source: https://developer.eliq.com/doc/eliq-api-guidelines, https://developer.eliq.com/changelog-pages/release-notes
+  + deprecated operations read from openapi/
+provider: Eliq
+providerId: eliq
+versioning:
+  scheme: major version in the path
+  current:
+    Eliq Auth API: v2 (spec 2.0.0)
+    Eliq Insights API: v3 (spec 3.4.1)
+    Eliq Data Management API: v1 (spec 1.5.2)
+    Eliq Intelligence API: v1 (spec 1.0.0)
+  note: Legacy v1 auth clients (numeric Utility ClientId) continue to work unchanged; migration is offered but not
+    forced.
+deprecation_policy:
+  published: true
+  url: https://developer.eliq.com/doc/eliq-api-guidelines
+  window: 180 days from notice
+  statement: '"Deprecated endpoints and fields must be migrated away from within 180 days of notice (Note: any endpoint
+    may be changed, without notice, if required to address a critical security issue)."'
+  sunset_header: false
+  rfc8594: false
+  note: 'A stated calendar window, but no machine-readable Deprecation/Sunset header (RFC 8594) and no deprecation
+    feed. An agent learns about a retirement only by reading the changelog or the `deprecated: true` flag in the
+    spec.'
+deprecated_operations:
+- api: Eliq Insights API
+  operationId: get-v3-locations-locationId-homeprofile
+  method: GET
+  path: /v3/locations/{locationId}/homeprofile
+- api: Eliq Insights API
+  operationId: patch-v3-locations-locationId-homeprofile
+  method: PATCH
+  path: /v3/locations/{locationId}/homeprofile
+- api: Eliq Insights API
+  operationId: get-v3-locations-locationId-homeprofile-completion
+  method: GET
+  path: /v3/locations/{locationId}/homeprofile/completion
+- api: Eliq Insights API
+  operationId: get-v3-locations-locationId-breakdown
+  method: GET
+  path: /v3/locations/{locationId}/breakdown
+- api: Eliq Data Management API
+  operationId: get-locations-locationId-homeprofile
+  method: GET
+  path: /locations/{locationId}/homeprofile
+- api: Eliq Data Management API
+  operationId: put-locations-locationId-homeprofile
+  method: PUT
+  path: /locations/{locationId}/homeprofile
+- api: Eliq Data Management API
+  operationId: delete-locations-locationId-homeprofile
+  method: DELETE
+  path: /locations/{locationId}/homeprofile
+- api: Eliq Data Management API
+  operationId: post-locations-locationId-homeprofile
+  method: POST
+  path: /locations/{locationId}/homeprofile
+deprecated_operation_count: 8
+deprecation_theme: The Home Profile surface is deprecated across both APIs in favour of the Location Profile.
+status_page:
+  published: false
+  note: Probed status.eliq.com (DNS NXDOMAIN, 2026-09-06) and the eliq.com sitemap (124 URLs, no status page). Eliq
+    documents /v3/health/heart_beat as the availability check clients should poll instead of functional endpoints,
+    but publishes no public status page.
+  health_endpoint:
+    api: Eliq Insights API
+    operationId: get-v3-heartbeat
+    path: /v3/health/heart_beat
+  evidence:
+  - url: https://status.eliq.com
+    status: 0
+    note: DNS does not resolve
+  - url: https://www.eliq.com/sitemap.xml
+    status: 200
+sla:
+  published: false
+  note: No public SLA. The API guidelines describe an enforcement/remediation process (5 business days to engage,
+    10 business days to remediate) that runs in the other direction — obligations on the client, not uptime commitments
+    by Eliq.
+changelog:
+  published: true
+  url: https://developer.eliq.com/changelog-pages/release-notes
+  see: changelog/eliq-changelog.yml

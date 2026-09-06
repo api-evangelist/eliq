@@ -1,0 +1,43 @@
+# Eliq OAuth scopes — transcribed from the provider's auth documentation. Not a complete catalogue.
+generated: '2026-09-06'
+method: searched
+source: https://developer.eliq.com/doc/authentication, openapi/eliq-auth-api-openapi.yaml
+docs: https://developer.eliq.com/doc/authentication
+provider: Eliq
+providerId: eliq
+model: OAuth 2.0 scopes, space-delimited, optional on the token request. When `scope` is omitted the token receives
+  the scopes configured for that client.
+scope_reference_published: false
+note: Eliq does NOT publish a scope reference page. The scopes below are the ones the provider's own documentation
+  and Auth API contract show by name in request examples and token-claim examples — they are transcribed, not enumerated
+  from a catalogue, and the real per-client scope set is only visible inside the Client Admin Portal. `scopes_supported`
+  is absent from the OIDC discovery document too. NO SCOPE HERE WAS INVENTED and this list is not claimed to be
+  complete.
+scope_count: 4
+scopes:
+- name: insights.read
+  description: Read access to the Eliq Insights API.
+  evidence: https://developer.eliq.com/doc/authentication (delegated token example)
+- name: insights.write
+  description: Write access to the Eliq Insights API.
+  evidence: https://developer.eliq.com/doc/authentication (delegated token example)
+- name: data.read
+  description: Read access to Eliq data.
+  evidence: https://developer.eliq.com/doc/authentication (token claims table, `scope` claim example)
+- name: data.write
+  description: Write access to Eliq data.
+  evidence: https://developer.eliq.com/doc/authentication (token claims table, `scope` claim example)
+audiences:
+- name: data-management-api
+  description: Eliq Data Management API
+- name: insights-api
+  description: Eliq Insights API
+access_types:
+- name: application
+  description: App (machine-to-machine) token
+- name: delegated
+  description: Token issued on behalf of a named subject
+discovery:
+  scopes_supported_published: false
+  url: https://auth-api.eliq.com/.well-known/openid-configuration
+  note: The discovery document carries issuer and jwks_uri only.

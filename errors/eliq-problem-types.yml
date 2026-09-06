@@ -1,0 +1,1820 @@
+# Eliq error catalog — derived from the provider's own OpenAPI response examples.
+generated: '2026-09-06'
+method: derived
+source: openapi/eliq-data-management-api-openapi.json, openapi/eliq-insights-api-openapi.yaml, openapi/eliq-intelligence-api-openapi.json,
+  openapi/eliq-auth-api-openapi.yaml (4xx/5xx response examples); handling rules from https://developer.eliq.com/doc/eliq-api-guidelines
+provider: Eliq
+providerId: eliq
+format: vendor-json
+rfc9457: false
+note: Eliq does not use RFC 9457 application/problem+json. Errors are returned as application/json with a first-party
+  envelope (components.schemas.ErrorDetails). The codes below are transcribed from the response examples the provider
+  publishes in its own OpenAPI documents — nothing here was invented.
+envelope:
+  media_type: application/json
+  schema: ErrorDetails
+  fields:
+  - name: code
+    type: string
+    required: true
+    description: Machine-readable, SCREAMING_SNAKE_CASE error code. Stable across responses.
+  - name: description
+    type: string
+    required: true
+    description: Human-readable explanation of what failed.
+  - name: request_id
+    type: string
+    required: false
+    nullable: true
+    description: Correlation id for the failing request. The API guidelines ask clients to log and quote it in support
+      requests (also returned as the X-Request-Id header / transaction_id field).
+batch_errors:
+  schema: FileRowError
+  description: Rows that fail inside an async /jobs file are recorded per-row with the same code + description shape
+    and retrieved from GET /jobs/{jobId}/failures. A job whose file exceeds 1000 failing rows stops and is marked
+    failed.
+  docs: https://developer.eliq.com/doc/jobs
+status_codes:
+- status: 400
+  occurrences: 102
+- status: 401
+  occurrences: 2
+- status: 403
+  occurrences: 1
+- status: 404
+  occurrences: 107
+- status: 409
+  occurrences: 1
+- status: 500
+  occurrences: 77
+- status: 501
+  occurrences: 1
+retry_policy:
+  4xx: Must be reviewed and corrected before retrying. Blind retries of failing or malformed requests are a documented
+    guideline violation.
+  5xx: Exponential backoff must be applied.
+  source: https://developer.eliq.com/doc/eliq-api-guidelines
+problem_type_count: 286
+problem_types:
+- code: BUSINESS_TYPE_REQUIRED_FOR_EUC
+  title: Business type required for EUC.
+  status:
+  - 400
+  apis:
+  - Eliq Insights API
+- code: CATEGORY_CLIENT_IS_INVALID
+  title: Category is invalid
+  status:
+  - 400
+  apis:
+  - Eliq Data Management API
+- code: CATEGORY_PERCENTAGE_CLIENT_SHOULD_BE_NULL
+  title: Category percentage should be null
+  status:
+  - 400
+  apis:
+  - Eliq Data Management API
+- code: CATEGORY_PERCENTAGE_IS_INVALID
+  title: Category percentage is invalid
+  status:
+  - 400
+  apis:
+  - Eliq Data Management API
+- code: CLIENT_CONVERSION_RATE_NOT_FOUND
+  title: Conversion rate is missing for the client
+  status:
+  - 404
+  apis:
+  - Eliq Insights API
+- code: COST_NOT_FOUND_FOR_ALL_DATA_POINTS
+  title: Monetary value could not be calculated
+  status:
+  - 400
+  apis:
+  - Eliq Insights API
+- code: COUNTRY_NOT_SUPPORTED
+  title: Country is not currently supported
+  status:
+  - 404
+  apis:
+  - Eliq Insights API
+- code: DAILY_RESOLUTION_OR_BETTER_REQUIRED_FOR_CUSTOM_PERIOD
+  title: Daily or hourly resolution required for the requested period.
+  status:
+  - 400
+  apis:
+  - Eliq Insights API
+- code: DATE_RANGE_INVALID
+  title: Date range is invalid i.e. 'from' date is after 'to' date
+  status:
+  - 400
+  apis:
+  - Eliq Data Management API
+- code: DATE_RANGE_LIMIT_EXCEEDED
+  title: Maximum range between 'from' and 'to' exceeded. Please refer to documentation
+  status:
+  - 400
+  apis:
+  - Eliq Data Management API
+- code: DATE_RANGE_MISSING
+  title: Missing parameters 'from' and 'to'. This may be caused by incorrect date format, please refer to documentation
+  status:
+  - 400
+  apis:
+  - Eliq Data Management API
+- code: DUPLICATE_FOUND
+  title: Max Demand for the same Meter and Date already exist
+  status:
+  - 400
+  apis:
+  - Eliq Data Management API
+- code: DUPLICATE_KEY_VALUE_PAIRS
+  title: 'Key date values must be unique for a single location. The following duplicates were found: Key ''persons''
+    From ''2024-01-01'''
+  status:
+  - 400
+  apis:
+  - Eliq Insights API
+- code: ELEC_EXPORT_DUPLICATE_FOUND
+  title: 'Duplicate Meter, Fuel: Elec, Direction: Export, already exist'
+  status:
+  - 400
+  apis:
+  - Eliq Data Management API
+- code: ELEC_IMPORT_DUPLICATE_FOUND
+  title: 'Duplicate Meter, Fuel: Elec, Direction: Import, already exist'
+  status:
+  - 400
+  apis:
+  - Eliq Data Management API
+- code: ENERGY_DAILY_DATE_IS_OUTSIDE_METER_SUPPLY_DATE_RANGE
+  title: Parameter 'date' cannot be outside range of meter SupplyStartDate -> SupplyEndDate range
+  status:
+  - 400
+  apis:
+  - Eliq Data Management API
+- code: ENERGY_ELEMENT_BOTH_ENERGY_WH_AND_ENERGY_M3_SET
+  title: Element in sequence must have either parameter 'energy_wh' or 'energy_m3' but not both
+  status:
+  - 400
+  apis:
+  - Eliq Data Management API
+- code: ENERGY_ELEMENT_CONTAINS_DUPLICATE_REGISTERS
+  title: Registers in 'registers[]' must be unique
+  status:
+  - 400
+  apis:
+  - Eliq Data Management API
+- code: ENERGY_ELEMENT_DATE_MISSING
+  title: Element in sequence missing parameter 'date'. This may be caused by incorrect date format, please refer
+    to documentation
+  status:
+  - 400
+  apis:
+  - Eliq Data Management API
+- code: ENERGY_ELEMENT_ENERGY_M3_ON_UNSUPPORTED_FUEL_METER
+  title: Element in sequence has 'energy_m3' but the meter's fuel does not support it. 'energy_wh' is supported
+  status:
+  - 400
+  apis:
+  - Eliq Data Management API
+- code: ENERGY_ELEMENT_ENERGY_WH_AND_ENERGY_M3_MISSING
+  title: Element in sequence must have either parameter 'energy_wh' or 'energy_m3'
+  status:
+  - 400
+  apis:
+  - Eliq Data Management API
+- code: ENERGY_ELEMENT_ENERGY_WH_INVALID
+  title: Parameter 'energy_wh' must not be negative
+  status:
+  - 400
+  apis:
+  - Eliq Data Management API
+- code: ENERGY_ELEMENT_INTERVAL_START_DATE_INVALID_FOR_RESOLUTION
+  title: Parameter 'interval_start' must align with given resolution (eg. 'xx:00:00' for hourly, 'xx:00:00' and
+    'xx:30:00' for 30min). Please refer to documentation for more information
+  status:
+  - 400
+  apis:
+  - Eliq Data Management API
+- code: ENERGY_ELEMENT_INTERVAL_START_MISSING
+  title: Parameter 'interval_start' must not be null. This may be caused by incorrect datetime format, please refer
+    to documentation
+  status:
+  - 400
+  apis:
+  - Eliq Data Management API
+- code: ENERGY_ELEMENT_REGISTER_BOTH_ENERGY_WH_AND_ENERGY_M3_SET
+  title: Element in sequence must have either parameter 'registers[].energy_wh' or 'registers[].energy_m3' but not
+    both
+  status:
+  - 400
+  apis:
+  - Eliq Data Management API
+- code: ENERGY_ELEMENT_REGISTER_ENERGY_WH_AND_ENERGY_M3_MISSING
+  title: Element in sequence must have either parameter 'registers[].energy_wh' or 'registers[].energy_m3'
+  status:
+  - 400
+  apis:
+  - Eliq Data Management API
+- code: ENERGY_ELEMENT_REGISTER_ENERGY_WH_INVALID
+  title: Parameter 'registers[].energy_wh' must not be negative
+  status:
+  - 400
+  apis:
+  - Eliq Data Management API
+- code: ENERGY_ELEMENT_REGISTER_ENERGY_WH_MISSING
+  title: Parameter 'registers[].energy_wh' must not be null
+  status:
+  - 400
+  apis:
+  - Eliq Data Management API
+- code: ENERGY_ELEMENT_REGISTER_ID_MISSING
+  title: Parameter 'registers[].id' must not be null or empty
+  status:
+  - 400
+  apis:
+  - Eliq Data Management API
+- code: ENERGY_INTERVAL_START_DATE_IS_OUTSIDE_METER_SUPPLY_DATE_RANGE
+  title: Parameter 'interval_start' must be between meter SupplyStartDate and SupplyEndDate dates.
+  status:
+  - 400
+  apis:
+  - Eliq Data Management API
+- code: ENERGY_M3_MUST_NOT_BE_ADDED_ON_UNSUPPORTED_FUEL_METER
+  title: '''energy_m3'' cannot be used on a meter whose fuel type does not support it'
+  status:
+  - 400
+  apis:
+  - Eliq Data Management API
+- code: ENERGY_MONTHLY_DATA_MUST_NOT_BE_NULL
+  title: Request body 'energyMonthlyData' must not be null or empty
+  status:
+  - 400
+  apis:
+  - Eliq Data Management API
+- code: ENERGY_SEQUENCE_CONTAINS_DUPLICATE_ELEMENTS
+  title: Energy elements in sequence must be unique
+  status:
+  - 400
+  apis:
+  - Eliq Data Management API
+- code: ENERGY_SEQUENCE_LENGTH_LIMIT_EXCEEDED
+  title: Maximum limit of element per request exceeded. Please refer to documentation for more information
+  status:
+  - 400
+  apis:
+  - Eliq Data Management API
+- code: ENERGY_WH_AND_ENERGY_M3_MUST_NOT_BE_PROVIDED_TOGETHER
+  title: '''energy_wh'' and ''energy_m3'' cannot be provided together'
+  status:
+  - 400
+  apis:
+  - Eliq Data Management API
+- code: ENERGY_WH_OR_ENERGY_M3_MUST_NOT_BE_NULL
+  title: Either 'energy_wh' or 'energy_m3' must be provided
+  status:
+  - 400
+  apis:
+  - Eliq Data Management API
+- code: ENTITY_NOT_FOUND
+  title: Could not find the location.
+  status:
+  - 404
+  apis:
+  - Eliq Insights API
+- code: EPC_RATING_NOT_AVAILABLE
+  title: EPC rating data is currently not available
+  status:
+  - 404
+  apis:
+  - Eliq Insights API
+- code: EUC_FOR_CURRENT_MONTH_IS_NOT_SUPPORTED
+  title: EUC for current month is not supported.
+  status:
+  - 400
+  apis:
+  - Eliq Insights API
+- code: EUC_NOT_SUPPORTED_FOR_BUSINESS_TYPE
+  title: EUC is not supported for the selected business type.
+  status:
+  - 400
+  apis:
+  - Eliq Insights API
+- code: EXCESSIVE_REQUESTS_FOR_THE_SAME_LOCATION
+  title: Too many requests to add the same location were created, please try again later.
+  status:
+  - 400
+  apis:
+  - Eliq Data Management API
+- code: EXCESSIVE_REQUESTS_FOR_THE_SAME_METER
+  title: Too many requests to add the same meter were created, please try again later.
+  status:
+  - 400
+  apis:
+  - Eliq Data Management API
+- code: EXCESSIVE_REQUESTS_FOR_THE_SAME_USER
+  title: Too many requests to add the same User were created, please try again later.
+  status:
+  - 400
+  apis:
+  - Eliq Data Management API
+- code: EXISTING_PROFILE_VALUES_FOUND
+  title: Can not change profile type for a configured profile with existing values
+  status:
+  - 400
+  apis:
+  - Eliq Data Management API
+  - Eliq Insights API
+- code: EXPORT_DUPLICATE_FOUND
+  title: 'Duplicate Meter, Direction: Export, already exist'
+  status:
+  - 400
+  apis:
+  - Eliq Data Management API
+- code: FAILED_TO_IDENTIFY_JOB_STATE
+  title: Failed to identify job state
+  status:
+  - 400
+  apis:
+  - Eliq Data Management API
+- code: FROM_DATE_CANNOT_BE_LATER_THAN_TODAY_DATE
+  title: From date cannot be larger than todays date.
+  status:
+  - 400
+  apis:
+  - Eliq Insights API
+- code: FROM_MISSING
+  title: From date is missing. This may be caused by incorrect date format, please refer to documentation
+  status:
+  - 400
+  apis:
+  - Eliq Data Management API
+- code: GAP_IN_ENERGY_DATE_INTERVAL
+  title: Gap not matching resolution size between 'interval_start' dates have been found.
+  status:
+  - 400
+  apis:
+  - Eliq Data Management API
+- code: GAS_CANNOT_BE_EXPORTED
+  title: Gas cannot be exported
+  status:
+  - 400
+  apis:
+  - Eliq Data Management API
+- code: HOME_PROFILE_KEY_INVALID
+  title: 'No such property found: ''{property.Key}'''
+  status:
+  - 400
+  apis:
+  - Eliq Data Management API
+- code: HOME_PROFILE_KEY_MISSING
+  title: Property key missing
+  status:
+  - 400
+  apis:
+  - Eliq Data Management API
+- code: HOME_PROFILE_MISSING
+  title: Home profile must not be null
+  status:
+  - 400
+  apis:
+  - Eliq Data Management API
+- code: HOME_PROFILE_VALUE_INVALID
+  title: Input not supported for multiple_select. Only a list of strings is allowed and all selected values must
+    be valid options.
+  status:
+  - 400
+  apis:
+  - Eliq Data Management API
+- code: HOME_PROFILE_VALUE_MISSING
+  title: Property value missing for property at index {invalidPropertyIndex} with key '{invalidProperty.Key}', check
+    if all properties has key and value
+  status:
+  - 400
+  apis:
+  - Eliq Data Management API
+- code: HOURLY_FORECAST_RESULT_CANNOT_BE_NULL_OR_EMPTY
+  title: Hourly forecast result cannot be null or empty
+  status:
+  - 404
+  apis:
+  - Eliq Insights API
+- code: HOUSE_TYPE_REQUIRED_FOR_EUC
+  title: House type required for EUC.
+  status:
+  - 400
+  apis:
+  - Eliq Insights API
+- code: IMPORT_DUPLICATE_FOUND
+  title: 'Duplicate Meter, Direction: Import, already exist'
+  status:
+  - 400
+  apis:
+  - Eliq Data Management API
+- code: INPUT_MISSING
+  title: Request input is missing. This may be caused by incorrect format of input.
+  status:
+  - 400
+  apis:
+  - Eliq Data Management API
+- code: INTERNAL_ERROR
+  title: Internal server error, please try again later. If problem remains, please contact support.
+  status:
+  - 500
+  apis:
+  - Eliq Data Management API
+  - Eliq Insights API
+- code: INTERNAL_SERVER_ERROR
+  title: Internal server error.
+  status:
+  - 500
+  apis:
+  - Eliq Insights API
+- code: INVALID_DATE
+  title: Invalid date
+  status:
+  - 400
+  apis:
+  - Eliq Data Management API
+- code: INVALID_FROM_DATE
+  title: Invalid From Date
+  status:
+  - 400
+  apis:
+  - Eliq Data Management API
+- code: INVALID_INPUT
+  title: Empty input provided
+  status:
+  - 400
+  apis:
+  - Eliq Insights API
+- code: INVALID_INPUT_VALUE_FORMAT
+  title: 'Unsupported type used for number: System.String'
+  status:
+  - 400
+  apis:
+  - Eliq Insights API
+- code: INVALID_MONTHLY_DAY
+  title: For Max Demand resolution monthly date have to be first day of the month
+  status:
+  - 400
+  apis:
+  - Eliq Data Management API
+- code: INVALID_PARAMETER
+  title: Parameter 'extref' missing
+  status:
+  - 400
+  apis:
+  - Eliq Insights API
+- code: INVALID_PATH
+  title: No advices found
+  status:
+  - 404
+  apis:
+  - Eliq Insights API
+- code: INVALID_PEAK_POWER_RESOLUTION
+  title: Invalid peak power resolution type. Only valid values are e.g 6min, 15min, 30min and hour.
+  status:
+  - 400
+  apis:
+  - Eliq Insights API
+- code: INVALID_PRICE_FORMULA_CHARGE_TYPE
+  title: Parameter 'elements[].charge.type' is invalid.
+  status:
+  - 400
+  apis:
+  - Eliq Data Management API
+- code: INVALID_PRICE_FORMULA_ENERGY_UNIT
+  title: Parameter 'energy_unit' invalid. Only 'kwh' or 'm3' is valid.
+  status:
+  - 400
+  apis:
+  - Eliq Data Management API
+- code: INVALID_PRICE_FORMULA_SOURCE
+  title: Invalid parameter source. Only 'client' or 'user' is valid.
+  status:
+  - 400
+  apis:
+  - Eliq Data Management API
+- code: INVALID_PRICE_FORMULA_SPOT_PRICE_PROVIDER
+  title: Parameter 'elements[].unit_rate.spot_price.provider' is invalid.
+  status:
+  - 400
+  apis:
+  - Eliq Data Management API
+- code: INVALID_PRICE_FORMULA_SPOT_PRICE_RESOLUTION
+  title: Parameter 'elements[].unit_rate.spot_price.resolution' is invalid.
+  status:
+  - 400
+  apis:
+  - Eliq Data Management API
+- code: INVALID_RESOLUTION
+  title: Resolution provided invalid
+  status:
+  - 400
+  apis:
+  - Eliq Insights API
+- code: INVALID_RESOLUTION_PROVIDED
+  title: Invalid sub-resolution provided for day resolution
+  status:
+  - 400
+  apis:
+  - Eliq Insights API
+- code: INVALID_TO_DATE
+  title: Invalid To Date
+  status:
+  - 400
+  apis:
+  - Eliq Data Management API
+- code: JOB_ENTITY_INVALID
+  title: The provided entity is invalid. This may be due to that it is not yet supported
+  status:
+  - 400
+  apis:
+  - Eliq Data Management API
+- code: JOB_FILE_FORMAT_INVALID
+  title: The file format provided is invalid. Please refer to documentation for supported file formats
+  status:
+  - 400
+  apis:
+  - Eliq Data Management API
+- code: JOB_FILE_FORMAT_MISSING
+  title: No format provided for the file (file extension). Please refer to documentation for supported file formats
+  status:
+  - 400
+  apis:
+  - Eliq Data Management API
+- code: JOB_FILE_MISSING
+  title: No file provided. Make sure the name in content-disposition is set to 'content' and that a filename is
+    set
+  status:
+  - 400
+  apis:
+  - Eliq Data Management API
+- code: JOB_FILE_NAME_INVALID
+  title: The name of the file is invalid (a.k.a. 'reference'). Please refer to documentation for filename limitations
+  status:
+  - 400
+  apis:
+  - Eliq Data Management API
+- code: JOB_FILE_NAME_MISSING
+  title: No filename provided (a.k.a. 'reference'). Please refer to documentation for filename limitations
+  status:
+  - 400
+  apis:
+  - Eliq Data Management API
+- code: JOB_FILE_TOO_LARGE
+  title: The provided file is too large
+  status:
+  - 400
+  apis:
+  - Eliq Data Management API
+- code: JOB_IS_CANCELLED
+  title: Job is already canceled
+  status:
+  - 400
+  apis:
+  - Eliq Data Management API
+- code: JOB_IS_COMPLETED
+  title: Job is already completed
+  status:
+  - 400
+  apis:
+  - Eliq Data Management API
+- code: JOB_NOT_FOUND
+  title: Job with specified id could not be found
+  status:
+  - 400
+  - 403
+  - 404
+  apis:
+  - Eliq Data Management API
+- code: JOB_NOT_YET_FINISHED
+  title: The job has not yet finished.
+  status:
+  - 500
+  apis:
+  - Eliq Data Management API
+- code: JOB_OPERATION_INVALID
+  title: The provided operation for entity is invalid. This may be due to that it is not yet supported
+  status:
+  - 400
+  apis:
+  - Eliq Data Management API
+- code: JOB_REFERENCE_ALREADY_EXISTS
+  title: A job is already associated with the provided file name (a.k.a. 'reference').
+  status:
+  - 400
+  apis:
+  - Eliq Data Management API
+- code: JOB_RESULT_NOT_FOUND
+  title: The job result is not found. This may be due to that the result has been removed. Please refer to documentation
+    for result lifetime.
+  status:
+  - 404
+  apis:
+  - Eliq Data Management API
+- code: JOB_STATE_CANNOT_BE_CHANGED
+  title: Job state cannot be changed
+  status:
+  - 400
+  apis:
+  - Eliq Data Management API
+- code: JOB_TYPE_DOES_NOT_SUPPORT_RESULT
+  title: The type of the job does not support retrieval of results.
+  status:
+  - 500
+  apis:
+  - Eliq Data Management API
+- code: KEY_DATE_VALUE_ALREADY_EXISTS
+  title: Key 'heating_type' with From 'null' already exists for the location
+  status:
+  - 400
+  apis:
+  - Eliq Data Management API
+  - Eliq Insights API
+- code: KEY_MISSING_FROM_CONFIGURATION
+  title: Key 'ice_makers' does not match any allowed settings
+  status:
+  - 400
+  apis:
+  - Eliq Insights API
+- code: LOCATION_ADDRESS_COUNTRY_CODE_INVALID
+  title: Parameter 'address.country_code' is invalid
+  status:
+  - 400
+  apis:
+  - Eliq Data Management API
+- code: LOCATION_ADDRESS_COUNTRY_CODE_MISSING
+  title: Parameter 'address.country_code' must not be null or empty
+  status:
+  - 400
+  apis:
+  - Eliq Data Management API
+- code: LOCATION_ADDRESS_MISSING
+  title: Parameter 'address' must not be null
+  status:
+  - 400
+  apis:
+  - Eliq Data Management API
+- code: LOCATION_ADDRESS_POSTAL_CODE_OR_CITY_MISSING
+  title: Parameter 'address.postal_code' or 'address.city' must be provided if 'geo' is not provided
+  status:
+  - 400
+  apis:
+  - Eliq Data Management API
+- code: LOCATION_CANNOT_BE_MOVED
+  title: A location with the same id already exists for another user. A location cannot be moved between users.
+  status:
+  - 400
+  apis:
+  - Eliq Data Management API
+- code: LOCATION_GEO_LATITUDE_INVALID
+  title: Parameter 'geo.latitude' is invalid. It must be in the range between -90 and 90
+  status:
+  - 400
+  apis:
+  - Eliq Data Management API
+- code: LOCATION_GEO_LATITUDE_MISSING
+  title: Parameter 'geo.latitude' must not be null
+  status:
+  - 400
+  apis:
+  - Eliq Data Management API
+- code: LOCATION_GEO_LONGITUDE_INVALID
+  title: Parameter 'geo.longitude' is invalid. It must be in the range between -180 and 180
+  status:
+  - 400
+  apis:
+  - Eliq Data Management API
+- code: LOCATION_GEO_LONGITUDE_MISSING
+  title: Parameter 'geo.longitude' must not be null
+  status:
+  - 400
+  apis:
+  - Eliq Data Management API
+- code: LOCATION_ID_MISSING
+  title: Parameter 'id' must not be null or empty
+  status:
+  - 400
+  apis:
+  - Eliq Data Management API
+- code: LOCATION_MISSING_SPOT_PRICE_REGION
+  title: Location missing spot price region
+  status:
+  - 404
+  apis:
+  - Eliq Insights API
+- code: LOCATION_NOT_FOUND
+  title: Location not found
+  status:
+  - 400
+  - 404
+  apis:
+  - Eliq Data Management API
+  - Eliq Insights API
+- code: LOCATION_OWNER_NOT_FOUND
+  title: Location owner not found
+  status:
+  - 404
+  apis:
+  - Eliq Insights API
+- code: LOCATION_PROFILE_TYPE_INVALID_OR_MISSING
+  title: Location profile type must not be null, and can only be 'residential' or 'business'
+  status:
+  - 400
+  apis:
+  - Eliq Data Management API
+- code: LOCATION_SPOT_PRICE_REGION_NOT_FOUND
+  title: Spot price region with given 'spot_price_region_id' could not be found.
+  status:
+  - 400
+  apis:
+  - Eliq Data Management API
+- code: LOCATION_USER_ID_MISSING
+  title: Parameter 'user_id' must not be null or empty
+  status:
+  - 400
+  apis:
+  - Eliq Data Management API
+- code: LOCATION_USER_NOT_FOUND
+  title: User with given 'user_id' could not be found
+  status:
+  - 400
+  apis:
+  - Eliq Data Management API
+- code: MAX_DEMAND_LIMIT_NOT_FOUND
+  title: Max demand limit was not found
+  status:
+  - 404
+  apis:
+  - Eliq Data Management API
+- code: MAX_DEMAND_NOT_FOUND
+  title: Max demand was not found
+  status:
+  - 404
+  apis:
+  - Eliq Data Management API
+- code: MAX_DEMAND_RESOLUTION_NOT_SUPPORTED
+  title: Max demand resolution is not supported
+  status:
+  - 400
+  apis:
+  - Eliq Data Management API
+- code: METER_CANNOT_BE_MOVED
+  title: A meter with the same id already exists for another location. A meter cannot be moved between users.
+  status:
+  - 400
+  apis:
+  - Eliq Data Management API
+- code: METER_FUEL_CANNOT_BE_UPDATED
+  title: Fuel type for Meter cannot be updated
+  status:
+  - 400
+  apis:
+  - Eliq Data Management API
+- code: METER_FUEL_INVALID
+  title: Invalid meter fuel. Must be one of 'elec', 'gas' or 'district_heating'
+  status:
+  - 400
+  apis:
+  - Eliq Data Management API
+- code: METER_FUEL_MISSING
+  title: Parameter 'fuel' must not be null or empty
+  status:
+  - 400
+  apis:
+  - Eliq Data Management API
+- code: METER_ID_MISMATCH
+  title: Parameter 'id' does not match 'id' provided in the URI
+  status:
+  - 400
+  apis:
+  - Eliq Data Management API
+- code: METER_ID_MISSING
+  title: Parameter 'id' must not be null or empty
+  status:
+  - 400
+  apis:
+  - Eliq Data Management API
+- code: METER_LOCATION_ID_MISSING
+  title: Parameter 'location_id' must not be null or empty
+  status:
+  - 400
+  apis:
+  - Eliq Data Management API
+- code: METER_LOCATION_NOT_FOUND
+  title: Location with given 'location_id' could not be found
+  status:
+  - 400
+  apis:
+  - Eliq Data Management API
+- code: METER_MODEL_DOES_NOT_SUPPORT_READS
+  title: Meter associated with provided id does not support meter reads.
+  status:
+  - 400
+  apis:
+  - Eliq Data Management API
+- code: METER_MODEL_INVALID
+  title: Invalid meter model
+  status:
+  - 400
+  apis:
+  - Eliq Data Management API
+- code: METER_MODEL_MISSING
+  title: Parameter 'model' must not be null or empty
+  status:
+  - 400
+  apis:
+  - Eliq Data Management API
+- code: METER_NOT_FOUND
+  title: Meter with given id could not be found
+  status:
+  - 404
+  apis:
+  - Eliq Data Management API
+- code: METER_SUPPLY_START_DATE_MISSING
+  title: Parameter 'supply_start_date' must not be null or empty. This may be caused by incorrect date format, please
+    refer to documentation
+  status:
+  - 400
+  apis:
+  - Eliq Data Management API
+- code: METER_TYPE_CANNOT_BE_UPDATED
+  title: Direction type for Meter cannot be updated
+  status:
+  - 400
+  apis:
+  - Eliq Data Management API
+- code: METER_TYPE_INVALID
+  title: Invalid meter type. Must be one of 'import', 'export', 'consumption' or 'production'
+  status:
+  - 400
+  apis:
+  - Eliq Data Management API
+- code: METER_TYPE_MISSING
+  title: Parameter 'type' must not be null or empty
+  status:
+  - 400
+  apis:
+  - Eliq Data Management API
+- code: METER_TYPE_MUST_BE_IMPORT_FOR_DISTRICT_HEATING
+  title: Direction type must be 'import' for district heating meters
+  status:
+  - 400
+  apis:
+  - Eliq Data Management API
+- code: MIN_VALUE_BIGGER_OR_EQUAL_MAX_VALUE
+  title: Min value have to be smaller than Max value
+  status:
+  - 400
+  apis:
+  - Eliq Data Management API
+- code: MISSING_FROM
+  title: From date missing
+  status:
+  - 400
+  apis:
+  - Eliq Insights API
+- code: MISSING_INPUT
+  title: Missing max demand limit input data
+  status:
+  - 400
+  - 404
+  apis:
+  - Eliq Data Management API
+- code: MISSING_PRICE_FORMULA_CAPACITY_TARIFF_CALCULATION_TYPE
+  title: Parameter 'capacity_tariff.calculation_type' must not be null.
+  status:
+  - 400
+  apis:
+  - Eliq Data Management API
+- code: MISSING_PRICE_FORMULA_SPOT_PRICE_PROVIDER
+  title: Parameter 'elements[].unit_rate.spot_price.provider' must not be null.
+  status:
+  - 400
+  apis:
+  - Eliq Data Management API
+- code: MISSING_PRICE_FORMULA_SPOT_PRICE_REGION
+  title: Parameter 'elements[].unit_rate.spot_price.region' must not be null.
+  status:
+  - 400
+  apis:
+  - Eliq Data Management API
+- code: MISSING_PRICE_FORMULA_SPOT_PRICE_RESOLUTION
+  title: Parameter 'elements[].unit_rate.spot_price.resolution' must not be null.
+  status:
+  - 400
+  apis:
+  - Eliq Data Management API
+- code: MISSING_RESOLUTION
+  title: Resolution missing
+  status:
+  - 400
+  apis:
+  - Eliq Data Management API
+  - Eliq Insights API
+- code: MISSING_TO
+  title: To date missing
+  status:
+  - 400
+  apis:
+  - Eliq Insights API
+- code: MISSING_UNIT_TYPE
+  title: Missing Unit Type
+  status:
+  - 400
+  apis:
+  - Eliq Data Management API
+- code: MULTI_MONTH_DATES_START_MID_MONTH
+  title: When requesting EUC for a period larger than 1 month, or 31 days, from and to dates must start on the 1st
+    day of the month.
+  status:
+  - 400
+  apis:
+  - Eliq Insights API
+- code: NOTIFICATION_SETTINGS_NOT_FOUND
+  title: Notification settings not found
+  status:
+  - 404
+  apis:
+  - Eliq Insights API
+- code: NOT_ENOUGH_BUSINESS_PROFILE_OPTIONS_SET
+  title: All required business profile options must be set.
+  status:
+  - 400
+  apis:
+  - Eliq Insights API
+- code: NOT_ENOUGH_DATA_POINTS
+  title: Not enough data point for the requested period.
+  status:
+  - 400
+  apis:
+  - Eliq Insights API
+- code: NOT_ENOUGH_HOME_PROFILE_OPTIONS_SET
+  title: Not enough home profile options set.
+  status:
+  - 400
+  apis:
+  - Eliq Insights API
+- code: NOT_SUPPORTED_PROFILE_TYPE
+  title: Locations profile type is not supported or missing for EUC.
+  status:
+  - 400
+  apis:
+  - Eliq Insights API
+- code: NOT_SUPPORTED_RESOLUTION
+  title: Not Supported Resolution
+  status:
+  - 400
+  apis:
+  - Eliq Data Management API
+- code: NOT_SUPPORTED_UNIT_TYPE
+  title: Unit type is not supported
+  status:
+  - 400
+  apis:
+  - Eliq Data Management API
+- code: NO_CATEGORIES_IDENTIFIED
+  title: No categories were identified for the selected location.
+  status:
+  - 400
+  apis:
+  - Eliq Insights API
+- code: NO_CONSUMPTION_DATA_FOR_SOLAR_LOCATION
+  title: Solar panels are selected for this location, but we do not have consumption data in our platform.
+  status:
+  - 400
+  apis:
+  - Eliq Insights API
+- code: PERIOD_TOO_LONG
+  title: Period requested too long for given resolution
+  status:
+  - 400
+  apis:
+  - Eliq Insights API
+- code: PRICE_FORMULA_ALREADY_ADDED_BY_SOURCE_CLIENT
+  title: Price formula already added by source 'client'. Cannot add price formula by source 'user' if price formula
+    by source 'Client' is already added.
+  status:
+  - 400
+  apis:
+  - Eliq Data Management API
+- code: PRICE_FORMULA_CHARGE_CAPACITY_TARIFF_CALCULATION_TYPE_MISSING
+  title: Parameter 'elements[].charge.capacity_tariff.calculation_type' must not be null.
+  status:
+  - 400
+  apis:
+  - Eliq Data Management API
+- code: PRICE_FORMULA_CHARGE_CAPACITY_TARIFF_MISSING
+  title: Parameter 'elements[].charge.capacity_tariff' must not be null.
+  status:
+  - 400
+  apis:
+  - Eliq Data Management API
+- code: PRICE_FORMULA_CHARGE_TYPE_MISSING
+  title: Parameter 'elements[].charge.type' must not be null.
+  status:
+  - 400
+  apis:
+  - Eliq Data Management API
+- code: PRICE_FORMULA_CURRENCY_CODE_INVALID
+  title: Parameter 'currency_code' invalid
+  status:
+  - 400
+  apis:
+  - Eliq Data Management API
+- code: PRICE_FORMULA_CURRENCY_CODE_MISSING
+  title: Parameter 'currency_code' must not be null or empty
+  status:
+  - 400
+  apis:
+  - Eliq Data Management API
+- code: PRICE_FORMULA_DEVICE_ID_MISSING
+  title: Parameter 'meter_id' must not be null or empty.
+  status:
+  - 400
+  apis:
+  - Eliq Data Management API
+- code: PRICE_FORMULA_DIRECTION_INVALID
+  title: Parameter 'direction' invalid
+  status:
+  - 400
+  apis:
+  - Eliq Data Management API
+- code: PRICE_FORMULA_DIRECTION_MISSING
+  title: Parameter 'direction' must not be null
+  status:
+  - 400
+  apis:
+  - Eliq Data Management API
+- code: PRICE_FORMULA_DUPLICATES_FOUND
+  title: Found multiple price formulas starting from the same 'from' date.
+  status:
+  - 400
+  apis:
+  - Eliq Data Management API
+- code: PRICE_FORMULA_ELEMENTS_MISSING
+  title: Parameter 'elements' must not be null or empty.
+  status:
+  - 400
+  apis:
+  - Eliq Data Management API
+- code: PRICE_FORMULA_ELEMENT_BLOCK_RESOLUTION_TYPE_INVALID
+  title: Parameters 'elements[].unit_rate.block.resolution' is invalid. Only valid values are 'day' and 'year' for
+    'elements[].unit_rate.type = block'.
+  status:
+  - 400
+  apis:
+  - Eliq Data Management API
+- code: PRICE_FORMULA_ELEMENT_BLOCK_RESOLUTION_TYPE_MISSING
+  title: Parameters 'elements[].unit_rate.block.resolution' cannot be null or empty for 'elements[].unit_rate.type
+    = block'.
+  status:
+  - 400
+  apis:
+  - Eliq Data Management API
+- code: PRICE_FORMULA_ELEMENT_CHARGE_INVALID
+  title: Parameter 'elements[].unit_rate' must be null for 'elements[].type = charge'.
+  status:
+  - 400
+  apis:
+  - Eliq Data Management API
+- code: PRICE_FORMULA_ELEMENT_CHARGE_MISSING
+  title: Parameter 'elements[].charge' must not be null or empty for 'elements[].type = charge'.
+  status:
+  - 400
+  apis:
+  - Eliq Data Management API
+- code: PRICE_FORMULA_ELEMENT_CHARGE_RESOLUTION_INVALID
+  title: Parameter 'elements[].charge.resolution' is invalid. Must be one of ['day', 'month'].
+  status:
+  - 400
+  apis:
+  - Eliq Data Management API
+- code: PRICE_FORMULA_ELEMENT_CHARGE_RESOLUTION_MISSING
+  title: Parameter 'elements[].charge.resolution' must not be null or empty for 'elements[].type = charge'.
+  status:
+  - 400
+  apis:
+  - Eliq Data Management API
+- code: PRICE_FORMULA_ELEMENT_CHARGE_VALUE_MISSING
+  title: Parameter 'elements[].charge.charge' must not be null for 'elements[].type = charge'.
+  status:
+  - 400
+  apis:
+  - Eliq Data Management API
+- code: PRICE_FORMULA_ELEMENT_MISSING
+  title: Parameter 'element' must not be null or empty.
+  status:
+  - 400
+  apis:
+  - Eliq Data Management API
+- code: PRICE_FORMULA_ELEMENT_NAME_MISSING
+  title: Parameter 'element[].name' must not be null or empty.
+  status:
+  - 400
+  apis:
+  - Eliq Data Management API
+- code: PRICE_FORMULA_ELEMENT_NORDPOOL_RESOLUTION_TYPE_INVALID
+  title: Parameters 'elements[].unit_rate.nordpool.resolution' is invalid. Only valid value is 'hour'.
+  status:
+  - 400
+  apis:
+  - Eliq Data Management API
+- code: PRICE_FORMULA_ELEMENT_NORDPOOL_RESOLUTION_TYPE_MISSING
+  title: Parameters 'elements[].unit_rate.nordpool.resolution' cannot be null or empty.
+  status:
+  - 400
+  apis:
+  - Eliq Data Management API
+- code: PRICE_FORMULA_ELEMENT_TYPE_INVALID
+  title: 'Parameters ''elements[].type'' is invalid. Must be one of: [''charge'', ''unit_rate'']'
+  status:
+  - 400
+  apis:
+  - Eliq Data Management API
+- code: PRICE_FORMULA_ELEMENT_TYPE_MISSING
+  title: Parameters 'elements[].type' cannot be null or empty.
+  status:
+  - 400
+  apis:
+  - Eliq Data Management API
+- code: PRICE_FORMULA_ELEMENT_UNIT_RATE_BLOCK_FROM_KWH_INVALID
+  title: Parameters 'elements[].unit_rate.block.from_kwh' cannot be equal or bigger 'elements[].unit_rate.block.to_kwh'
+    for 'elements[].unit_rate.type = block'.
+  status:
+  - 400
+  apis:
+  - Eliq Data Management API
+- code: PRICE_FORMULA_ELEMENT_UNIT_RATE_BLOCK_FROM_KWH_MISSING
+  title: Parameters 'elements[].unit_rate.block.from_kwh' cannot be null for 'elements[].unit_rate.type = block'.
+  status:
+  - 400
+  apis:
+  - Eliq Data Management API
+- code: PRICE_FORMULA_ELEMENT_UNIT_RATE_BLOCK_FROM_M3_INVALID
+  title: Parameters 'elements[].unit_rate.block.from_m3' is invalid for 'elements[].unit_rate.type = block'.
+  status:
+  - 400
+  apis:
+  - Eliq Data Management API
+- code: PRICE_FORMULA_ELEMENT_UNIT_RATE_BLOCK_FROM_M3_MISSING
+  title: Parameters 'elements[].unit_rate.block.from_m3' cannot be null for 'elements[].unit_rate.type = block'.
+  status:
+  - 400
+  apis:
+  - Eliq Data Management API
+- code: PRICE_FORMULA_ELEMENT_UNIT_RATE_BLOCK_MISSING
+  title: Parameters 'elements[].unit_rate.block' must not be null for 'elements[].unit_rate.type = block'
+  status:
+  - 400
+  apis:
+  - Eliq Data Management API
+- code: PRICE_FORMULA_ELEMENT_UNIT_RATE_BLOCK_REGISTER_ID_MISSING
+  title: Parameters 'elements[].unit_rate.block.register_id' must not be null or empty for 'elements[].unit_rate.type
+    = block'.
+  status:
+  - 400
+  apis:
+  - Eliq Data Management API
+- code: PRICE_FORMULA_ELEMENT_UNIT_RATE_BLOCK_TO_KWH_MISSING
+  title: Parameters 'elements[].unit_rate.block.to_kwh' cannot be null for 'elements[].unit_rate.type = block'.
+  status:
+  - 400
+  apis:
+  - Eliq Data Management API
+- code: PRICE_FORMULA_ELEMENT_UNIT_RATE_BLOCK_TO_M3_MISSING
+  title: Parameters 'elements[].unit_rate.block.to_m3' cannot be null for 'elements[].unit_rate.type = block'.
+  status:
+  - 400
+  apis:
+  - Eliq Data Management API
+- code: PRICE_FORMULA_ELEMENT_UNIT_RATE_BLOCK_VALUE_INVALID
+  title: Parameters 'elements[].unit_rate.block.unit_rate' must not be equal to 0 for 'elements[].unit_rate.type
+    = block'.
+  status:
+  - 400
+  apis:
+  - Eliq Data Management API
+- code: PRICE_FORMULA_ELEMENT_UNIT_RATE_FIXED_MISSING
+  title: Parameters 'elements[].unit_rate.fixed' must not be null for 'elements[].unit_rate.type = fixed'.
+  status:
+  - 400
+  apis:
+  - Eliq Data Management API
+- code: PRICE_FORMULA_ELEMENT_UNIT_RATE_FIXED_VALUE_INVALID
+  title: Parameters 'elements[].unit_rate.fixed.unit_rate' must not be equal to 0 for 'elements[].unit_rate.type
+    = fixed'.
+  status:
+  - 400
+  apis:
+  - Eliq Data Management API
+- code: PRICE_FORMULA_ELEMENT_UNIT_RATE_FIXED_VALUE_MISSING
+  title: Parameters 'elements[].unit_rate.fixed.unit_rate' must not be null
+  status:
+  - 400
+  apis:
+  - Eliq Data Management API
+- code: PRICE_FORMULA_ELEMENT_UNIT_RATE_INVALID
+  title: Parameter 'elements[].charge' must be null for 'elements[].type = unit_rate'.
+  status:
+  - 400
+  apis:
+  - Eliq Data Management API
+- code: PRICE_FORMULA_ELEMENT_UNIT_RATE_MISSING
+  title: Parameter 'elements[].unit_rate' must not be null or empty for 'elements[].type = unit_rate'.
+  status:
+  - 400
+  apis:
+  - Eliq Data Management API
+- code: PRICE_FORMULA_ELEMENT_UNIT_RATE_NORDPOOL_MISSING
+  title: Parameters 'elements[].unit_rate.nordpool' must not be null for 'elements[].unit_rate.type = nordpool'.
+  status:
+  - 400
+  apis:
+  - Eliq Data Management API
+- code: PRICE_FORMULA_ELEMENT_UNIT_RATE_NORDPOOL_MULTIPLIER_INVALID
+  title: Parameters 'elements[].unit_rate.nordpool.multiplier' must not be equal or less than 0 for 'elements[].unit_rate.type
+    = nordpool'.
+  status:
+  - 400
+  apis:
+  - Eliq Data Management API
+- code: PRICE_FORMULA_ELEMENT_UNIT_RATE_NORDPOOL_REGION_INVALID
+  title: Parameters 'elements[].unit_rate.nordpool.region' is invalid for 'elements[].unit_rate.type = nordpool'.
+  status:
+  - 400
+  apis:
+  - Eliq Data Management API
+- code: PRICE_FORMULA_ELEMENT_UNIT_RATE_NORDPOOL_REGION_MISSING
+  title: Parameters 'elements[].unit_rate.nordpool.region' must not be null for 'elements[].unit_rate.type = nordpool'.
+  status:
+  - 400
+  apis:
+  - Eliq Data Management API
+- code: PRICE_FORMULA_ELEMENT_UNIT_RATE_NORDPOOL_RESOLUTION_MISSING
+  title: Parameters 'elements[].unit_rate.nordpool.resolution' must not be null for 'elements[].unit_rate.type =
+    nordpool'.
+  status:
+  - 400
+  apis:
+  - Eliq Data Management API
+- code: PRICE_FORMULA_ELEMENT_UNIT_RATE_SPOT_PRICE_MULTIPLIER_INVALID
+  title: Parameter 'elements[].unit_rate.spot_price.multiplier' must not be less than 0 for 'elements[].unit_rate.type
+    = spot_price'.
+  status:
+  - 400
+  apis:
+  - Eliq Data Management API
+- code: PRICE_FORMULA_ELEMENT_UNIT_RATE_TOU_INTERVALS_FROM_MINUTE_INVALID
+  title: Parameters 'elements[].unit_rate.tou.intervals[].from_minute' cannot be more than 1440 for 'elements[].unit_rate.type
+    = tou'.
+  status:
+  - 400
+  apis:
+  - Eliq Data Management API
+- code: PRICE_FORMULA_ELEMENT_UNIT_RATE_TOU_INTERVALS_FROM_MINUTE_MISSING
+  title: Parameters 'elements[].unit_rate.tou.intervals[].from_minute' cannot be null or less than 0 for 'elements[].unit_rate.type
+    = tou'.
+  status:
+  - 400
+  apis:
+  - Eliq Data Management API
+- code: PRICE_FORMULA_ELEMENT_UNIT_RATE_TOU_INTERVALS_TO_MINUTE_INVALID
+  title: Parameters 'elements[].unit_rate.tou.intervals[].to_minute' cannot be more than 1440 for 'elements[].unit_rate.type
+    = tou'.
+  status:
+  - 400
+  apis:
+  - Eliq Data Management API
+- code: PRICE_FORMULA_ELEMENT_UNIT_RATE_TOU_INTERVALS_TO_MINUTE_MISSING
+  title: Parameters 'elements[].unit_rate.tou.intervals[].to_minute' cannot be null for 'elements[].unit_rate.type
+    = tou'.
+  status:
+  - 400
+  apis:
+  - Eliq Data Management API
+- code: PRICE_FORMULA_ELEMENT_UNIT_RATE_TOU_MISSING
+  title: Parameters 'elements[].unit_rate.tou' must not be null for 'elements[].unit_rate.type = tou'
+  status:
+  - 400
+  apis:
+  - Eliq Data Management API
+- code: PRICE_FORMULA_ELEMENT_UNIT_RATE_TOU_REGISTER_ID_MISSING
+  title: Parameters 'elements[].unit_rate.tou.register_id' must not be null for 'elements[].unit_rate.type = tou'.
+  status:
+  - 400
+  apis:
+  - Eliq Data Management API
+- code: PRICE_FORMULA_ELEMENT_UNIT_RATE_TOU_VALUE_INVALID
+  title: Parameters 'elements[].unit_rate.tou.unit_rate' must not be null, or equal to 0 for 'elements[].unit_rate.type
+    = tou'.
+  status:
+  - 400
+  apis:
+  - Eliq Data Management API
+- code: PRICE_FORMULA_ELEMENT_UNIT_RATE_TOU_VALUE_MISSING
+  title: Parameters 'elements[].unit_rate.tou.unit_rate' must not be null for 'elements[].unit_rate.type = tou'.
+  status:
+  - 400
+  apis:
+  - Eliq Data Management API
+- code: PRICE_FORMULA_ELEMENT_UNIT_RATE_TYPE_INVALID
+  title: 'Parameters ''elements[].unit_rate.type'' is invalid. Must be one of: [''fixed'', ''tou'', ''nordpool'',
+    ''block'']'
+  status:
+  - 400
+  apis:
+  - Eliq Data Management API
+- code: PRICE_FORMULA_ELEMENT_UNIT_RATE_TYPE_MISSING
+  title: Parameters 'elements[].unit_rate.type' cannot be null or empty.
+  status:
+  - 400
+  apis:
+  - Eliq Data Management API
+- code: PRICE_FORMULA_ELEMENT_UNIT_RATE_VALUE_FOR_TYPE_BLOCK_INVALID
+  title: Parameters 'elements[].unit_rate.[tou,fix,norpool]' must be null for 'elements[].unit_rate.type = block'
+  status:
+  - 400
+  apis:
+  - Eliq Data Management API
+- code: PRICE_FORMULA_ELEMENT_UNIT_RATE_VALUE_FOR_TYPE_FIXED_INVALID
+  title: Parameters 'elements[].unit_rate.[tou,nordpool,block]' must be null for 'elements[].unit_rate.type = fixed'
+  status:
+  - 400
+  apis:
+  - Eliq Data Management API
+- code: PRICE_FORMULA_ELEMENT_UNIT_RATE_VALUE_FOR_TYPE_NORDPOOL_INVALID
+  title: Parameters 'elements[].unit_rate.[tou,fix,block]' must be null for 'elements[].unit_rate.type = nordpool'
+  status:
+  - 400
+  apis:
+  - Eliq Data Management API
+- code: PRICE_FORMULA_ELEMENT_UNIT_RATE_VALUE_FOR_TYPE_SPOT_PRICE_INVALID
+  title: Parameters 'elements[].unit_rate.[tou,fix,block,nordpool]' must be null for 'elements[].unit_rate.type
+    = spot_price'.
+  status:
+  - 400
+  apis:
+  - Eliq Data Management API
+- code: PRICE_FORMULA_ELEMENT_UNIT_RATE_VALUE_FOR_TYPE_TOU_INVALID
+  title: Parameters 'elements[].unit_rate.[block,fix,norpool]' must be null for 'elements[].unit_rate.type = tou'
+  status:
+  - 400
+  apis:
+  - Eliq Data Management API
+- code: PRICE_FORMULA_ELEMENT_UNIT_RATE_VALUE_TOU_INTERVALS_MISSING
+  title: Parameters 'elements[].unit_rate.tou.intervals[]' must not be empty or null for 'elements[].unit_rate.type
+    = tou'.
+  status:
+  - 400
+  apis:
+  - Eliq Data Management API
+- code: PRICE_FORMULA_FROM_DATE_INVALID
+  title: Parameter 'from' must not be in the same date or after parameter 'to'.
+  status:
+  - 400
+  apis:
+  - Eliq Data Management API
+- code: PRICE_FORMULA_FROM_DATE_IS_OVERLAP_EXISTING_PRICE_FORMULA
+  title: Parameter 'from' cannot overlap with already existing price formula.
+  status:
+  - 400
+  apis:
+  - Eliq Data Management API
+- code: PRICE_FORMULA_FROM_DATE_MISSING
+  title: Parameter 'from' must not be null or empty. This may be caused by incorrect format of input.
+  status:
+  - 400
+  apis:
+  - Eliq Data Management API
+- code: PRICE_FORMULA_FROM_DATE_OUTSIDE_DEVICE_SUPPLY_DATE_RANGE
+  title: Parameter 'from' cannot be outside device supply date range (start -> end dates).
+  status:
+  - 400
+  apis:
+  - Eliq Data Management API
+- code: PRICE_FORMULA_FUEL_INVALID
+  title: Parameter 'fuel' invalid
+  status:
+  - 400
+  apis:
+  - Eliq Data Management API
+- code: PRICE_FORMULA_FUEL_MISSING
+  title: Parameter 'fuel' must not be null
+  status:
+  - 400
+  apis:
+  - Eliq Data Management API
+- code: PRICE_FORMULA_HAVE_DATE_RANGE_GAP_WITH_NEXT_PRICE_FORMULA
+  title: Price formula has a date range gap with the next price formula.
+  status:
+  - 400
+  apis:
+  - Eliq Data Management API
+- code: PRICE_FORMULA_HAVE_DATE_RANGE_GAP_WITH_PREVIOUS_PRICE_FORMULA
+  title: Price formula has a date range gap with the previous price formula.
+  status:
+  - 400
+  apis:
+  - Eliq Data Management API
+- code: PRICE_FORMULA_LOCATION_INVALID
+  title: Location for the price formula is invalid.
+  status:
+  - 400
+  apis:
+  - Eliq Data Management API
+- code: PRICE_FORMULA_METER_NOT_FOUND
+  title: Meter with the given 'meter_id' could not be found. Meter was either deleted or not imported.
+  status:
+  - 400
+  apis:
+  - Eliq Data Management API
+- code: PRICE_FORMULA_NOT_FOUND
+  title: Price formula for the given 'meter_id' and 'from' date was not found.
+  status:
+  - 404
+  apis:
+  - Eliq Data Management API
+- code: PRICE_FORMULA_TO_DATE_IS_OVERLAP_EXISTING_PRICE_FORMULA
+  title: Parameter 'to' cannot overlap with already existing price formula.
+  status:
+  - 400
+  apis:
+  - Eliq Data Management API
+- code: PRICE_FORMULA_TO_DATE_MISSING
+  title: Parameter 'to' must not be null or empty. This may be caused by incorrect format of input.
+  status:
+  - 400
+  apis:
+  - Eliq Data Management API
+- code: PRICE_FORMULA_UNIT_RATE_BLOCK_FROM_TO_KWH_NOT_ALLOWED_ENERGY_UNIT_M3
+  title: Parameters 'elements[].unit_rate.block.from_kwh/to_kwh' not allowed when energy unit is m3.
+  status:
+  - 400
+  apis:
+  - Eliq Data Management API
+- code: PRICE_FORMULA_UNIT_RATE_BLOCK_FROM_TO_M3_NOT_ALLOWED_ENERGY_UNIT_KWH
+  title: Parameters 'elements[].unit_rate.block.from_m3/to_m3' not allowed when energy unit is kwh.
+  status:
+  - 400
+  apis:
+  - Eliq Data Management API
+- code: PRICE_FORMULA_UNIT_RATE_SPOT_PRICE_MISSING
+  title: Parameters 'elements[].unit_rate.spot_price' must not be null for 'elements[].unit_rate.type = spot_price'.
+  status:
+  - 400
+  apis:
+  - Eliq Data Management API
+- code: PRICE_FORMULA_UNIT_RATE_SPOT_PRICE_REGION_INVALID
+  title: Parameters 'elements[].unit_rate.spot_price.region' is invalid for 'elements[].unit_rate.type = spot_price'.
+  status:
+  - 400
+  apis:
+  - Eliq Data Management API
+- code: PRICE_FORMULA_UNIT_RATE_SPOT_PRICE_REGION_MISSING
+  title: Parameters 'elements[].unit_rate.spot_price.region' must not be null for 'elements[].unit_rate.type = spot_price'.
+  status:
+  - 400
+  apis:
+  - Eliq Data Management API
+- code: PRICE_FORMULA_UNIT_RATE_SPOT_PRICE_RESOLUTION_MISSING
+  title: Parameters 'elements[].unit_rate.spot_price.resolution' must not be null for 'elements[].unit_rate.type
+    = spot_price'.
+  status:
+  - 400
+  apis:
+  - Eliq Data Management API
+- code: PRICE_FORMULA_UNIT_RATE_VALUE_TOU_INTERVALS_INCLUDED_WITH_SKIP_INTERVALS
+  title: Parameters 'elements[].unit_rate.tou.intervals[]' cannot be provided together with skip intervals.
+  status:
+  - 400
+  apis:
+  - Eliq Data Management API
+- code: PRICE_FORMULA_UNIT_RATE_WEEKDAYS_VALUES_CONTAINS_DUPLICATES
+  title: Parameters 'elements[].unit_rate.weekdays' values must not contain any duplicates'
+  status:
+  - 400
+  apis:
+  - Eliq Data Management API
+- code: PRICE_FORMULA_UNIT_RATE_WEEKDAYS_VALUES_INVALID
+  title: Parameters 'elements[].unit_rate.weekdays' values must only contain valid weekdays like 'Monday', 'Tuesday',
+    'Wednesday', etc.'
+  status:
+  - 400
+  apis:
+  - Eliq Data Management API
+- code: PRICE_FORMULA_UNIT_RATE_WEEKDAYS_VALUES_MISSING
+  title: Parameters 'elements[].unit_rate.weekdays' must not be empty'
+  status:
+  - 400
+  apis:
+  - Eliq Data Management API
+- code: PROFILE_CONFIGURATION_NOT_FOUND
+  title: Profile settings not configured
+  status:
+  - 400
+  - 404
+  apis:
+  - Eliq Insights API
+- code: PROFILE_NOT_SUPPORTED
+  title: Profile is not supported, check description for more details
+  status:
+  - 404
+  apis:
+  - Eliq Insights API
+- code: PROFILE_TYPE_NOT_CONFIGURED
+  title: Profile type not configured
+  status:
+  - 400
+  apis:
+  - Eliq Data Management API
+  - Eliq Insights API
+- code: PROFILE_VALUE_NOT_FOUND
+  title: Profile value not found for given location and id.
+  status:
+  - 404
+  apis:
+  - Eliq Data Management API
+  - Eliq Insights API
+- code: PROPERTY_KEY_INVALID
+  title: Property key 'propertyKey' not found
+  status:
+  - 400
+  apis:
+  - Eliq Data Management API
+- code: PROPERTY_KEY_MISSING
+  title: Property key missing
+  status:
+  - 400
+  apis:
+  - Eliq Data Management API
+- code: PROPERTY_VALUE_INVALID
+  title: Invalid input for property 'propertyKey'
+  status:
+  - 400
+  apis:
+  - Eliq Data Management API
+- code: PROPERTY_VALUE_MISSING
+  title: Property value missing
+  status:
+  - 400
+  apis:
+  - Eliq Data Management API
+- code: READ_ELEMENT_CONTAINS_DUPLICATE_REGISTERS
+  title: Registers in 'registers[]' must be unique
+  status:
+  - 400
+  apis:
+  - Eliq Data Management API
+- code: READ_ELEMENT_DATE_MISSING
+  title: Element in sequence missing parameter 'date'. This may be caused by incorrect date format, please refer
+    to documentation
+  status:
+  - 400
+  apis:
+  - Eliq Data Management API
+- code: READ_ELEMENT_QUALITY_INVALID
+  title: Parameter 'quality' invalid. Should be one of 'normal' or 'estimated'
+  status:
+  - 400
+  apis:
+  - Eliq Data Management API
+- code: READ_ELEMENT_QUALITY_MISSING
+  title: Parameter 'quality' must not be null
+  status:
+  - 400
+  apis:
+  - Eliq Data Management API
+- code: READ_ELEMENT_REGISTERS_MISSING
+  title: Element in sequence missing parameter 'registers'
+  status:
+  - 400
+  apis:
+  - Eliq Data Management API
+- code: READ_ELEMENT_REGISTER_ID_MISSING
+  title: Parameter 'registers[].id' must not be null or empty
+  status:
+  - 400
+  apis:
+  - Eliq Data Management API
+- code: READ_ELEMENT_REGISTER_INDEX_INVALID
+  title: Parameter 'registers[].index' must not be negative
+  status:
+  - 400
+  apis:
+  - Eliq Data Management API
+- code: READ_ELEMENT_REGISTER_INDEX_MISSING
+  title: Parameter 'registers[].index' must not be null
+  status:
+  - 400
+  apis:
+  - Eliq Data Management API
+- code: READ_ELEMENT_SOURCE_INVALID
+  title: Parameter 'source' invalid. Should be one of 'customer', 'utility', 'smr' or 'system'
+  status:
+  - 400
+  apis:
+  - Eliq Data Management API
+- code: READ_ELEMENT_SOURCE_MISSING
+  title: Parameter 'source' must not be null
+  status:
+  - 400
+  apis:
+  - Eliq Data Management API
+- code: READ_ELEMENT_STATUS_INVALID
+  title: Parameter 'status' invalid. Should be one of 'accepted' or 'pending'
+  status:
+  - 400
+  apis:
+  - Eliq Data Management API
+- code: READ_ELEMENT_STATUS_MISSING
+  title: Parameter 'status' must not be null
+  status:
+  - 400
+  apis:
+  - Eliq Data Management API
+- code: READ_ELEMENT_UNIT_INVALID
+  title: Parameter 'unit' invalid. Should be 'kwh' or 'm3'
+  status:
+  - 400
+  apis:
+  - Eliq Data Management API
+- code: READ_ELEMENT_UNIT_M3_ON_UNSUPPORTED_FUEL_METER
+  title: Parameter 'unit' has value 'm3' but the meter's fuel does not support it. 'kwh' is supported
+  status:
+  - 400
+  apis:
+  - Eliq Data Management API
+- code: READ_ELEMENT_UNIT_MISSING
+  title: Parameter 'unit' must not be null
+  status:
+  - 400
+  apis:
+  - Eliq Data Management API
+- code: READ_SEQUENCE_CONTAINS_DUPLICATE_ELEMENTS
+  title: Energy elements in sequence must be unique
+  status:
+  - 400
+  apis:
+  - Eliq Data Management API
+- code: READ_SEQUENCE_LENGTH_LIMIT_EXCEEDED
+  title: Maximum limit of element per request exceeded. Please refer to documentation for more information
+  status:
+  - 400
+  apis:
+  - Eliq Data Management API
+- code: REGISTERS_CANNOT_HAVE_SAME_ID
+  title: Registers contain duplicate 'id' values
+  status:
+  - 400
+  apis:
+  - Eliq Data Management API
+- code: REGISTERS_ENERGY_MUST_NOT_BE_NULL
+  title: Parameter 'registers[].energy_wh' must not be null
+  status:
+  - 400
+  apis:
+  - Eliq Data Management API
+- code: REGISTERS_ENERGY_WH_SUM_NOT_MATCH_DATA_ENERGY_WH
+  title: Parameter 'registers' elements 'energy_wh' sum have to be identical to parameter 'energy_wh'
+  status:
+  - 400
+  apis:
+  - Eliq Data Management API
+- code: REGISTERS_ID_CANNOT_BE_NULL
+  title: Parameter 'registers[].id' must not be null or empty
+  status:
+  - 400
+  apis:
+  - Eliq Data Management API
+- code: RESOLUTION_INVALID
+  title: 'Invalid resolution. Must be one of: [hour, 30min, 15min, 10min, 6min]'
+  status:
+  - 400
+  apis:
+  - Eliq Data Management API
+- code: RESOLUTION_MISSING
+  title: Resolution must not be null or empty
+  status:
+  - 400
+  apis:
+  - Eliq Data Management API
+- code: SEQUENCE_MUST_NOT_CONTAIN_DUPLICATE_DATES
+  title: Sequence contains duplicate date ranges
+  status:
+  - 400
+  apis:
+  - Eliq Data Management API
+- code: SPOT_PRICE_REGION_NOT_FOUND
+  title: Spot price region not found
+  status:
+  - 404
+  apis:
+  - Eliq Insights API
+- code: TARGET_VALUE_BIGGER_THAN_MAX_VALUE
+  title: Target value cannot be bigger than Max Value
+  status:
+  - 400
+  apis:
+  - Eliq Data Management API
+- code: TARGET_VALUE_SMALLER_THAN_MIN_VALUE
+  title: Target value cannot be smaller than Min value
+  status:
+  - 400
+  apis:
+  - Eliq Data Management API
+- code: TIMESPAN_TOO_LARGE
+  title: Timespan too large, one year or 366 days is the maximum allowed.
+  status:
+  - 400
+  apis:
+  - Eliq Insights API
+- code: TIMESPAN_TOO_SMALL
+  title: Timespan must be at least 28 days.
+  status:
+  - 400
+  apis:
+  - Eliq Insights API
+- code: TO_MISSING
+  title: To date is missing. This may be caused by incorrect date format, please refer to documentation
+  status:
+  - 400
+  apis:
+  - Eliq Data Management API
+- code: TO_MUST_BE_AFTER_FROM
+  title: To date must be after from date
+  status:
+  - 400
+  apis:
+  - Eliq Insights API
+- code: USER_CUSTOM_NOT_SUPPORTED
+  title: The provided custom properties are not supported
+  status:
+  - 400
+  apis:
+  - Eliq Data Management API
+- code: USER_EMAIL_DUPLICATE
+  title: A user with the provided email already exist
+  status:
+  - 400
+  apis:
+  - Eliq Data Management API
+- code: USER_EMAIL_INVALID
+  title: Email is invalid
+  status:
+  - 400
+  apis:
+  - Eliq Data Management API
+- code: USER_ID_MISSING
+  title: Parameter 'id' must not be null or empty
+  status:
+  - 400
+  apis:
+  - Eliq Data Management API
+- code: USER_LANGUAGE_CODE_INVALID
+  title: Language code is invalid
+  status:
+  - 400
+  apis:
+  - Eliq Data Management API
+- code: USER_LANGUAGE_CODE_MISSING
+  title: Language code is missing
+  status:
+  - 400
+  apis:
+  - Eliq Data Management API
+- code: USER_NOT_FOUND
+  title: Could not find user with Id '123'
+  status:
+  - 400
+  - 404
+  apis:
+  - Eliq Data Management API
+  - Eliq Insights API
+- code: USER_PHONE_INVALID
+  title: Phone number is invalid
+  status:
+  - 400
+  apis:
+  - Eliq Data Management API
+- code: USER_TIME_ZONE_INVALID
+  title: Time zone is invalid
+  status:
+  - 400
+  apis:
+  - Eliq Data Management API
+- code: USER_TIME_ZONE_MISSING
+  title: Time zone is missing
+  status:
+  - 400
+  apis:
+  - Eliq Data Management API
+- code: invalid_parameter
+  title: '''input'' cannot be null'
+  status:
+  - 400
+  apis:
+  - Eliq Insights API

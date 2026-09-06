@@ -1,0 +1,1831 @@
+# Eliq data model — derived from the provider's OpenAPI components.schemas graph.
+generated: '2026-09-06'
+method: derived
+source: openapi/eliq-data-management-api-openapi.json, openapi/eliq-insights-api-openapi.yaml, openapi/eliq-intelligence-api-openapi.json
+  ($ref links + *_id reference fields)
+provider: Eliq
+providerId: eliq
+core_model:
+  description: 'Eliq''s published domain model: a User owns one or more Locations; a Location carries a Location
+    Profile and a Home Profile and holds one or more Meters; a Meter carries Energy data (daily, period, high-resolution
+    reads) and Price Formulas that convert kWh to currency. Insights are computed on top of that graph.'
+  docs: https://developer.eliq.com/doc/eliqs-view-of-the-world
+  entities:
+  - User
+  - Location
+  - LocationProfile
+  - HomeProfile
+  - Meter
+  - EnergyData
+  - PriceFormula
+identifiers:
+- name: id
+  description: Client-supplied external identifier. Every top-level entity is created or updated by PUT against
+    the id the client chooses, which is what makes those writes replayable.
+- name: eliq_id
+  description: Numeric identifier Eliq assigns on creation and returns in the response body.
+- name: location_ext_ref
+  description: The client's own external reference for a location; echoed on webhook events.
+entity_count: 165
+relationship_count: 183
+entities:
+- name: legacy-token-request
+  api: Eliq Auth API
+  fields: 3
+  required:
+  - grant_type
+  - client_id
+  - client_secret
+- name: token-request
+  api: Eliq Auth API
+  fields: 9
+  required:
+  - grant_type
+- name: token-response
+  api: Eliq Auth API
+  fields: 5
+  required:
+  - access_token
+  - token_type
+  - expires_in
+- name: AcceptedResult
+  api: Eliq Data Management API
+  fields: 6
+  required: []
+- name: Block
+  api: Eliq Data Management API
+  fields: 7
+  required: []
+- name: CapacityTariff
+  api: Eliq Data Management API
+  fields: 3
+  required: []
+- name: Charge
+  api: Eliq Data Management API
+  fields: 4
+  required: []
+- name: DeviceMaxDemand
+  api: Eliq Data Management API
+  fields: 3
+  required: []
+- name: DeviceMaxDemandLimit
+  api: Eliq Data Management API
+  fields: 4
+  required: []
+- name: DtoLink
+  api: Eliq Data Management API
+  fields: 3
+  required: []
+- name: Element
+  api: Eliq Data Management API
+  fields: 4
+  required: []
+- name: EnergyDailyData
+  api: Eliq Data Management API
+  fields: 5
+  required: []
+- name: EnergyHighResolutionData
+  api: Eliq Data Management API
+  fields: 4
+  required: []
+- name: EnergyMonthlyData
+  api: Eliq Data Management API
+  fields: 8
+  required: []
+- name: ErrorDetails
+  api: Eliq Data Management API
+  fields: 3
+  required:
+  - code
+  - description
+- name: FileRowError
+  api: Eliq Data Management API
+  fields: 2
+  required: []
+- name: Fixed
+  api: Eliq Data Management API
+  fields: 1
+  required: []
+- name: HomeProfileProperty
+  api: Eliq Data Management API
+  fields: 3
+  required: []
+- name: Interval
+  api: Eliq Data Management API
+  fields: 2
+  required: []
+- name: JobEntry
+  api: Eliq Data Management API
+  fields: 12
+  required: []
+- name: JobFailedRow
+  api: Eliq Data Management API
+  fields: 3
+  required: []
+- name: JobResultRow
+  api: Eliq Data Management API
+  fields: 4
+  required: []
+- name: Location
+  api: Eliq Data Management API
+  fields: 10
+  required: []
+- name: LocationAddress
+  api: Eliq Data Management API
+  fields: 4
+  required: []
+- name: LocationGeo
+  api: Eliq Data Management API
+  fields: 2
+  required: []
+- name: LocationPriceFormula
+  api: Eliq Data Management API
+  fields: 9
+  required: []
+- name: LocationProfilePossibleValue
+  api: Eliq Data Management API
+  fields: 2
+  required: []
+- name: LocationProfilePropertyRequirement
+  api: Eliq Data Management API
+  fields: 2
+  required: []
+- name: LocationProfileSelectedValue
+  api: Eliq Data Management API
+  fields: 3
+  required: []
+- name: LocationProfileSetting
+  api: Eliq Data Management API
+  fields: 9
+  required:
+  - data_type
+  - dependent_properties
+  - developer_description
+  - group
+  - key
+  - possible_values
+  - selected_values
+  - tags
+- name: LocationProfileSettings
+  api: Eliq Data Management API
+  fields: 2
+  required:
+  - groups
+  - settings
+- name: LocationProfileType
+  api: Eliq Data Management API
+  fields: 1
+  required: []
+- name: LocationProfileValueRequest
+  api: Eliq Data Management API
+  fields: 3
+  required:
+  - key
+  - value
+- name: LocationProfileValueResponse
+  api: Eliq Data Management API
+  fields: 4
+  required:
+  - key
+  - value
+- name: LocationPropertyLimit
+  api: Eliq Data Management API
+  fields: 3
+  required: []
+- name: Meter
+  api: Eliq Data Management API
+  fields: 14
+  required: []
+- name: NoContentResult
+  api: Eliq Data Management API
+  fields: 1
+  required: []
+- name: NonSmartMeterReadDto
+  api: Eliq Data Management API
+  fields: 6
+  required: []
+- name: NonSmartRegisterDto
+  api: Eliq Data Management API
+  fields: 2
+  required: []
+- name: NotificationDto
+  api: Eliq Data Management API
+  fields: 4
+  required: []
+- name: OkObjectResult
+  api: Eliq Data Management API
+  fields: 5
+  required: []
+- name: PatchLocationProfileRequestModel
+  api: Eliq Data Management API
+  fields: 2
+  required: []
+- name: PortfolioAccount
+  api: Eliq Data Management API
+  fields: 3
+  required:
+  - name
+- name: PortfolioGroup
+  api: Eliq Data Management API
+  fields: 8
+  required: []
+- name: PortfolioGroupAddDto
+  api: Eliq Data Management API
+  fields: 3
+  required: []
+- name: PortfolioLocation
+  api: Eliq Data Management API
+  fields: 3
+  required:
+  - name
+- name: PortfolioUser
+  api: Eliq Data Management API
+  fields: 6
+  required:
+  - name
+  - role
+- name: PriceFormula
+  api: Eliq Data Management API
+  fields: 7
+  required: []
+- name: Register
+  api: Eliq Data Management API
+  fields: 3
+  required: []
+- name: SpotPrice
+  api: Eliq Data Management API
+  fields: 4
+  required: []
+- name: Tou
+  api: Eliq Data Management API
+  fields: 4
+  required: []
+- name: UnitRate
+  api: Eliq Data Management API
+  fields: 6
+  required: []
+- name: User
+  api: Eliq Data Management API
+  fields: 8
+  required: []
+- name: Address
+  api: Eliq Insights API
+  fields: 6
+  required:
+  - country_code
+  - street_address
+- name: Advice
+  api: Eliq Insights API
+  fields: 18
+  required:
+  - content
+  - id
+  - key
+  - relevance
+  - title
+  - type
+- name: AdviceFinancingOptionModel
+  api: Eliq Insights API
+  fields: 5
+  required:
+  - description
+  - key
+  - title
+  - type
+  - url
+- name: AdviceInvestmentCostModel
+  api: Eliq Insights API
+  fields: 4
+  required: []
+- name: AdviceLinkModel
+  api: Eliq Insights API
+  fields: 4
+  required:
+  - key
+  - text
+  - type
+- name: AdvicePatchInput
+  api: Eliq Insights API
+  fields: 3
+  required:
+  - op
+  - path
+  - value
+- name: AdviceReturnOfInvestmentModel
+  api: Eliq Insights API
+  fields: 3
+  required:
+  - from
+  - to
+  - unit
+- name: Anomaly
+  api: Eliq Insights API
+  fields: 3
+  required:
+  - type
+  - fuel
+  - status
+- name: Block
+  api: Eliq Insights API
+  fields: 7
+  required: []
+- name: Breakdown
+  api: Eliq Insights API
+  fields: 6
+  required:
+  - accuracy
+  - total_value
+  - from
+  - to
+  - unit
+  - breakdown
+- name: BreakdownItem
+  api: Eliq Insights API
+  fields: 2
+  required:
+  - category
+  - value
+- name: Budget
+  api: Eliq Insights API
+  fields: 10
+  required:
+  - enabled
+  - type
+  - fuel
+  - resolution
+  - unit
+- name: BudgetHistory
+  api: Eliq Insights API
+  fields: 7
+  required:
+  - fuel
+  - unit
+  - resolution
+  - from
+  - to
+  - limit
+  - consumption
+- name: Charge
+  api: Eliq Insights API
+  fields: 2
+  required:
+  - resolution
+- name: Co2Emission
+  api: Eliq Insights API
+  fields: 2
+  required: []
+- name: Connection
+  api: Eliq Insights API
+  fields: 4
+  required: []
+- name: ConnectionEntity
+  api: Eliq Insights API
+  fields: 5
+  required: []
+- name: ConnectionMetaData
+  api: Eliq Insights API
+  fields: 1
+  required: []
+- name: Consent
+  api: Eliq Insights API
+  fields: 9
+  required: []
+- name: EUC
+  api: Eliq Insights API
+  fields: 6
+  required:
+  - accuracy
+  - breakdown
+  - from
+  - to
+  - total_value
+  - unit
+- name: Element
+  api: Eliq Insights API
+  fields: 4
+  required:
+  - name
+  - type
+- name: EliqConnectUriResponse
+  api: Eliq Insights API
+  fields: 1
+  required: []
+- name: EpcRatingResponse
+  api: Eliq Insights API
+  fields: 6
+  required:
+  - energy_efficiency
+  - energy_rating
+  - type
+- name: Error
+  api: Eliq Insights API
+  fields: 6
+  required: []
+- name: EstimatedSavings
+  api: Eliq Insights API
+  fields: 2
+  required:
+  - unit
+  - value
+- name: EucCategoryResultModel
+  api: Eliq Insights API
+  fields: 3
+  required:
+  - category
+  - percentage
+  - value
+- name: Event
+  api: Eliq Insights API
+  fields: 3
+  required: []
+- name: Fixed
+  api: Eliq Insights API
+  fields: 1
+  required:
+  - unit_rate
+- name: HomeProfileOption
+  api: Eliq Insights API
+  fields: 10
+  required:
+  - key
+  - data_type
+- name: Homeprofile
+  api: Eliq Insights API
+  fields: 5
+  required: []
+- name: Interval
+  api: Eliq Insights API
+  fields: 2
+  required: []
+- name: LimitRange
+  api: Eliq Insights API
+  fields: 2
+  required:
+  - max
+  - min
+- name: Link
+  api: Eliq Insights API
+  fields: 2
+  required:
+  - text
+  - url
+- name: Location
+  api: Eliq Insights API
+  fields: 7
+  required:
+  - address
+  - ext_ref
+  - fuels
+  - id
+  - meters
+  - timezone
+- name: LocationFuel
+  api: Eliq Insights API
+  fields: 4
+  required: []
+- name: LocationFuelItem
+  api: Eliq Insights API
+  fields: 5
+  required:
+  - resolution
+  - source
+- name: LocationFuels
+  api: Eliq Insights API
+  fields: 3
+  required: []
+- name: LocationMeter
+  api: Eliq Insights API
+  fields: 12
+  required:
+  - direction
+  - fuel_type
+  - id
+  - is_sub_meter
+  - user_setup_completed
+- name: LocationNotificationSettingsInput
+  api: Eliq Insights API
+  fields: 6
+  required:
+  - notification_type_id
+- name: LocationProfileCompletionResponse
+  api: Eliq Insights API
+  fields: 1
+  required:
+  - completion_percentage
+- name: LocationProfilePossibleValue
+  api: Eliq Insights API
+  fields: 2
+  required:
+  - developer_description
+  - value
+- name: LocationProfileSelectedValue
+  api: Eliq Insights API
+  fields: 3
+  required:
+  - id
+  - value
+- name: LocationProfileSetting
+  api: Eliq Insights API
+  fields: 9
+  required:
+  - data_type
+  - dependent_properties
+  - developer_description
+  - group
+  - key
+- name: LocationProfileSettings
+  api: Eliq Insights API
+  fields: 2
+  required:
+  - groups
+  - settings
+- name: LocationProfileType
+  api: Eliq Insights API
+  fields: 1
+  required:
+  - type
+- name: LocationProfileValueRequest
+  api: Eliq Insights API
+  fields: 3
+  required:
+  - key
+  - value
+- name: LocationProfileValueResponse
+  api: Eliq Insights API
+  fields: 4
+  required:
+  - id
+  - key
+  - value
+- name: LocationPropertyLimit
+  api: Eliq Insights API
+  fields: 3
+  required:
+  - max
+  - min
+  - step
+- name: LocationPropertyRequirement
+  api: Eliq Insights API
+  fields: 2
+  required: []
+- name: MarketPriceElementDto
+  api: Eliq Insights API
+  fields: 2
+  required:
+  - period_start
+  - price_kwh
+- name: MarketPriceResponseDto
+  api: Eliq Insights API
+  fields: 5
+  required:
+  - currency
+  - from
+  - resolution
+  - to
+  - values
+- name: MarketPriceSummaryDto
+  api: Eliq Insights API
+  fields: 5
+  required:
+  - currency
+  - from
+  - resolution
+  - to
+  - values
+- name: MarketPriceSummaryElementDto
+  api: Eliq Insights API
+  fields: 6
+  required:
+  - avg_price_kwh
+  - highest_price_kwh
+  - lowest_price_kwh
+  - period_start
+  - price_level
+  - values
+- name: MeterDataResult
+  api: Eliq Insights API
+  fields: 6
+  required:
+  - meter
+  - fuel
+  - unit
+  - resolution
+  - from
+  - to
+- name: MeterPriceFormula
+  api: Eliq Insights API
+  fields: 8
+  required: []
+- name: Nordpool
+  api: Eliq Insights API
+  fields: 3
+  required:
+  - region
+  - resolution
+- name: Notification
+  api: Eliq Insights API
+  fields: 7
+  required:
+  - type
+  - id
+  - read
+  - created_date
+  - header
+  - content
+- name: NotificationSettingsResponse
+  api: Eliq Insights API
+  fields: 8
+  required: []
+- name: PatchLocationProfileRequestModel
+  api: Eliq Insights API
+  fields: 2
+  required: []
+- name: PeakPowerResponse
+  api: Eliq Insights API
+  fields: 12
+  required:
+  - direction
+  - from
+  - fuel
+  - peak_power_resolution
+  - peak_power_timestamp
+  - power
+  - resolution
+  - to
+- name: ResultWrapper
+  api: Eliq Insights API
+  fields: 2
+  required:
+  - result_status
+- name: SavingMonetary
+  api: Eliq Insights API
+  fields: 3
+  required:
+  - cost
+  - cost_per_wh
+  - type
+- name: SavingMonetarySource
+  api: Eliq Insights API
+  fields: 3
+  required:
+  - details
+  - name
+  - type
+- name: SimilarHomesConsumption
+  api: Eliq Insights API
+  fields: 7
+  required:
+  - from
+  - fuel
+  - resolution
+  - to
+  - unit
+- name: SimilarHomesConsumptionResultModel
+  api: Eliq Insights API
+  fields: 2
+  required:
+  - result_status
+- name: SimilarHomesGroup
+  api: Eliq Insights API
+  fields: 2
+  required:
+  - contributors
+  - filters
+- name: SimilarHomesGroupFilter
+  api: Eliq Insights API
+  fields: 5
+  required:
+  - description
+  - key
+  - type
+- name: SimilarHomesGroupResultModel
+  api: Eliq Insights API
+  fields: 2
+  required:
+  - result_status
+- name: SimilarHomesReport
+  api: Eliq Insights API
+  fields: 6
+  required:
+  - distribution_values
+  - from
+  - to
+  - value
+- name: SimilarHomesReportResultModel
+  api: Eliq Insights API
+  fields: 2
+  required:
+  - result_status
+- name: SimilarHomesResultStatus
+  api: Eliq Insights API
+  fields: 2
+  required:
+  - code
+- name: SimilarHomesResultStatusAction
+  api: Eliq Insights API
+  fields: 2
+  required: []
+- name: SpotPrice
+  api: Eliq Insights API
+  fields: 4
+  required: []
+- name: TemperatureData
+  api: Eliq Insights API
+  fields: 4
+  required:
+  - resolution
+  - from
+  - to
+- name: TimeSeriesData
+  api: Eliq Insights API
+  fields: 13
+  required: []
+- name: TimeseriesData
+  api: Eliq Insights API
+  fields: 10
+  required:
+  - fuel
+  - unit
+  - resolution
+  - from
+  - to
+- name: Tou
+  api: Eliq Insights API
+  fields: 4
+  required: []
+- name: UnitRate
+  api: Eliq Insights API
+  fields: 7
+  required:
+  - type
+- name: User
+  api: Eliq Insights API
+  fields: 9
+  required:
+  - id
+  - ext_ref
+  - language_code
+- name: UserNotification
+  api: Eliq Insights API
+  fields: 6
+  required: []
+- name: YearlyEstimate
+  api: Eliq Insights API
+  fields: 5
+  required:
+  - fuel
+  - source
+  - type
+  - year
+- name: Assets
+  api: Eliq Intelligence API
+  fields: 5
+  required: []
+- name: AuthInfoResult
+  api: Eliq Intelligence API
+  fields: 2
+  required:
+  - entra_application_id
+  - entra_tenant_id
+- name: Battery
+  api: Eliq Intelligence API
+  fields: 1
+  required: []
+- name: DashboardConfigurationItem
+  api: Eliq Intelligence API
+  fields: 3
+  required: []
+- name: DashboardEmbedTokenResult
+  api: Eliq Intelligence API
+  fields: 5
+  required:
+  - dashboard_id
+  - expires_in_seconds
+  - instance_url
+  - token
+  - workspace_id
+- name: DashboardsConfiguration
+  api: Eliq Intelligence API
+  fields: 2
+  required: []
+- name: ElectricVehicle
+  api: Eliq Intelligence API
+  fields: 3
+  required: []
+- name: ErrorDetails
+  api: Eliq Intelligence API
+  fields: 2
+  required:
+  - code
+  - description
+- name: ExportJob
+  api: Eliq Intelligence API
+  fields: 2
+  required: []
+- name: FilterRequest
+  api: Eliq Intelligence API
+  fields: 1
+  required: []
+- name: FilterRequestAsset
+  api: Eliq Intelligence API
+  fields: 3
+  required:
+  - asset
+- name: FilterRequestAssetProperty
+  api: Eliq Intelligence API
+  fields: 3
+  required: []
+- name: FilterResponse
+  api: Eliq Intelligence API
+  fields: 3
+  required: []
+- name: FilterResponseItem
+  api: Eliq Intelligence API
+  fields: 10
+  required: []
+- name: HeatingDetails
+  api: Eliq Intelligence API
+  fields: 4
+  required: []
+- name: HeatingFuelFlags
+  api: Eliq Intelligence API
+  fields: 2
+  required: []
+- name: IntelligenceApiConfiguration
+  api: Eliq Intelligence API
+  fields: 2
+  required: []
+- name: JsonNode
+  api: Eliq Intelligence API
+  fields: 3
+  required: []
+- name: JsonNodeOptions
+  api: Eliq Intelligence API
+  fields: 1
+  required: []
+- name: MapLocationDto
+  api: Eliq Intelligence API
+  fields: 8
+  required: []
+- name: MapSegmentationResponseDto
+  api: Eliq Intelligence API
+  fields: 1
+  required: []
+- name: MyInfoResult
+  api: Eliq Intelligence API
+  fields: 2
+  required:
+  - client_id
+  - roles
+- name: PagedFilterRequest
+  api: Eliq Intelligence API
+  fields: 2
+  required: []
+- name: Paging
+  api: Eliq Intelligence API
+  fields: 3
+  required: []
+- name: PagingRequest
+  api: Eliq Intelligence API
+  fields: 2
+  required: []
+- name: PvDetails
+  api: Eliq Intelligence API
+  fields: 4
+  required: []
+- name: Summary
+  api: Eliq Intelligence API
+  fields: 8
+  required: []
+- name: TariffCount
+  api: Eliq Intelligence API
+  fields: 2
+  required: []
+- name: TariffFilterOptions
+  api: Eliq Intelligence API
+  fields: 2
+  required: []
+- name: TariffSummary
+  api: Eliq Intelligence API
+  fields: 4
+  required: []
+- name: Tariffs
+  api: Eliq Intelligence API
+  fields: 1
+  required: []
+relationships:
+- from: legacy-token-request
+  to: client
+  type: belongs_to
+  via: client_id
+  api: Eliq Auth API
+- from: token-request
+  to: client
+  type: belongs_to
+  via: client_id
+  api: Eliq Auth API
+- from: AcceptedResult
+  to: IOutputFormatter
+  type: has_many
+  via: formatters
+  api: Eliq Data Management API
+- from: Block
+  to: register
+  type: belongs_to
+  via: register_id
+  api: Eliq Data Management API
+- from: Charge
+  to: CapacityTariff
+  type: has_one
+  via: capacity_tariff
+  api: Eliq Data Management API
+- from: DtoLink
+  to: DtoLinkTarget
+  type: has_one
+  via: target
+  api: Eliq Data Management API
+- from: Element
+  to: Charge
+  type: has_one
+  via: charge
+  api: Eliq Data Management API
+- from: Element
+  to: UnitRate
+  type: has_one
+  via: unit_rate
+  api: Eliq Data Management API
+- from: EnergyDailyData
+  to: Register
+  type: has_many
+  via: registers
+  api: Eliq Data Management API
+- from: EnergyMonthlyData
+  to: client
+  type: belongs_to
+  via: client_id
+  api: Eliq Data Management API
+- from: EnergyMonthlyData
+  to: Register
+  type: has_many
+  via: registers
+  api: Eliq Data Management API
+- from: ErrorDetails
+  to: request
+  type: belongs_to
+  via: request_id
+  api: Eliq Data Management API
+- from: JobEntry
+  to: JobOperationType
+  type: has_one
+  via: operation
+  api: Eliq Data Management API
+- from: JobEntry
+  to: JobEntryStateType
+  type: has_one
+  via: state
+  api: Eliq Data Management API
+- from: JobEntry
+  to: JobType
+  type: has_one
+  via: type
+  api: Eliq Data Management API
+- from: JobResultRow
+  to: FileRowError
+  type: has_one
+  via: error
+  api: Eliq Data Management API
+- from: Location
+  to: LocationAddress
+  type: has_one
+  via: address
+  api: Eliq Data Management API
+- from: Location
+  to: eliq
+  type: belongs_to
+  via: eliq_id
+  api: Eliq Data Management API
+- from: Location
+  to: LocationGeo
+  type: has_one
+  via: geo
+  api: Eliq Data Management API
+- from: Location
+  to: ProfileType
+  type: has_one
+  via: location_profile_type
+  api: Eliq Data Management API
+- from: Location
+  to: Meter
+  type: has_many
+  via: meters
+  api: Eliq Data Management API
+- from: Location
+  to: spot_price_region
+  type: belongs_to
+  via: spot_price_region_id
+  api: Eliq Data Management API
+- from: Location
+  to: user
+  type: belongs_to
+  via: user_id
+  api: Eliq Data Management API
+- from: LocationPriceFormula
+  to: Element
+  type: has_many
+  via: elements
+  api: Eliq Data Management API
+- from: LocationProfileSetting
+  to: LocationProfileDataType
+  type: has_one
+  via: data_type
+  api: Eliq Data Management API
+- from: LocationProfileSetting
+  to: LocationProfilePropertyRequirement
+  type: has_many
+  via: dependent_properties
+  api: Eliq Data Management API
+- from: LocationProfileSetting
+  to: LocationPropertyLimit
+  type: has_one
+  via: limits
+  api: Eliq Data Management API
+- from: LocationProfileSetting
+  to: LocationProfilePossibleValue
+  type: has_many
+  via: possible_values
+  api: Eliq Data Management API
+- from: LocationProfileSetting
+  to: LocationProfileSelectedValue
+  type: has_many
+  via: selected_values
+  api: Eliq Data Management API
+- from: LocationProfileSetting
+  to: LocationProfileTag
+  type: has_many
+  via: tags
+  api: Eliq Data Management API
+- from: LocationProfileSettings
+  to: LocationProfileSetting
+  type: has_many
+  via: settings
+  api: Eliq Data Management API
+- from: LocationProfileType
+  to: ProfileType
+  type: has_one
+  via: type
+  api: Eliq Data Management API
+- from: Meter
+  to: eliq
+  type: belongs_to
+  via: eliq_id
+  api: Eliq Data Management API
+- from: Meter
+  to: location
+  type: belongs_to
+  via: location_id
+  api: Eliq Data Management API
+- from: NonSmartMeterReadDto
+  to: NonSmartRegisterDto
+  type: has_many
+  via: registers
+  api: Eliq Data Management API
+- from: NotificationDto
+  to: DtoLink
+  type: has_one
+  via: link
+  api: Eliq Data Management API
+- from: NotificationDto
+  to: NotificationType
+  type: has_one
+  via: type
+  api: Eliq Data Management API
+- from: OkObjectResult
+  to: IOutputFormatter
+  type: has_many
+  via: formatters
+  api: Eliq Data Management API
+- from: PortfolioGroup
+  to: PortfolioUser
+  type: has_one
+  via: created_by_user
+  api: Eliq Data Management API
+- from: PortfolioGroup
+  to: created_by_user
+  type: belongs_to
+  via: created_by_user_id
+  api: Eliq Data Management API
+- from: PortfolioGroup
+  to: PortfolioLocation
+  type: has_many
+  via: locations
+  api: Eliq Data Management API
+- from: PortfolioGroup
+  to: PortfolioGroupStatus
+  type: has_one
+  via: status
+  api: Eliq Data Management API
+- from: PortfolioGroup
+  to: PortfolioUser
+  type: has_many
+  via: users
+  api: Eliq Data Management API
+- from: PortfolioUser
+  to: PortfolioUserRole
+  type: has_one
+  via: role
+  api: Eliq Data Management API
+- from: PriceFormula
+  to: Element
+  type: has_many
+  via: elements
+  api: Eliq Data Management API
+- from: Tou
+  to: Interval
+  type: has_many
+  via: intervals
+  api: Eliq Data Management API
+- from: Tou
+  to: register
+  type: belongs_to
+  via: register_id
+  api: Eliq Data Management API
+- from: UnitRate
+  to: Block
+  type: has_one
+  via: block
+  api: Eliq Data Management API
+- from: UnitRate
+  to: Fixed
+  type: has_one
+  via: fixed
+  api: Eliq Data Management API
+- from: UnitRate
+  to: SpotPrice
+  type: has_one
+  via: spot_price
+  api: Eliq Data Management API
+- from: UnitRate
+  to: Tou
+  type: has_one
+  via: tou
+  api: Eliq Data Management API
+- from: User
+  to: eliq
+  type: belongs_to
+  via: eliq_id
+  api: Eliq Data Management API
+- from: User
+  to: Location
+  type: has_many
+  via: locations
+  api: Eliq Data Management API
+- from: Advice
+  to: EstimatedSavings
+  type: has_many
+  via: estimated_yearly_savings
+  api: Eliq Insights API
+- from: Advice
+  to: SavingMonetary
+  type: has_many
+  via: estimated_yearly_savings_monetary
+  api: Eliq Insights API
+- from: Advice
+  to: AdviceFinancingOptionModel
+  type: has_many
+  via: financing_options
+  api: Eliq Insights API
+- from: Advice
+  to: AdviceInvestmentCostModel
+  type: has_one
+  via: investment_cost
+  api: Eliq Insights API
+- from: Advice
+  to: Link
+  type: has_one
+  via: link
+  api: Eliq Insights API
+- from: Advice
+  to: AdviceLinkModel
+  type: has_many
+  via: links
+  api: Eliq Insights API
+- from: Advice
+  to: AdviceStatus
+  type: has_one
+  via: status
+  api: Eliq Insights API
+- from: Advice
+  to: AdviceType
+  type: has_one
+  via: type
+  api: Eliq Insights API
+- from: AdviceFinancingOptionModel
+  to: FinancingOptionType
+  type: has_one
+  via: type
+  api: Eliq Insights API
+- from: AdviceInvestmentCostModel
+  to: AdviceReturnOfInvestmentModel
+  type: has_many
+  via: roi
+  api: Eliq Insights API
+- from: AdviceLinkModel
+  to: AdviceLinkType
+  type: has_one
+  via: type
+  api: Eliq Insights API
+- from: AdviceReturnOfInvestmentModel
+  to: AdviceReturnOfInvestmentUnit
+  type: has_one
+  via: unit
+  api: Eliq Insights API
+- from: Block
+  to: register
+  type: belongs_to
+  via: register_id
+  api: Eliq Insights API
+- from: Block
+  to: BlockResolution
+  type: has_one
+  via: resolution
+  api: Eliq Insights API
+- from: Breakdown
+  to: BreakdownItem
+  type: has_many
+  via: breakdown
+  api: Eliq Insights API
+- from: Charge
+  to: ChargeResolution
+  type: has_one
+  via: resolution
+  api: Eliq Insights API
+- from: ConnectionEntity
+  to: location
+  type: belongs_to
+  via: location_id
+  api: Eliq Insights API
+- from: Consent
+  to: version
+  type: belongs_to
+  via: version_id
+  api: Eliq Insights API
+- from: EUC
+  to: EucAccuracy
+  type: has_one
+  via: accuracy
+  api: Eliq Insights API
+- from: EUC
+  to: EucCategoryResultModel
+  type: has_many
+  via: breakdown
+  api: Eliq Insights API
+- from: Element
+  to: Charge
+  type: has_one
+  via: charge
+  api: Eliq Insights API
+- from: Element
+  to: PriceElementType
+  type: has_one
+  via: type
+  api: Eliq Insights API
+- from: Element
+  to: UnitRate
+  type: has_one
+  via: unit_rate
+  api: Eliq Insights API
+- from: EpcRatingResponse
+  to: EpcRatingStatus
+  type: has_one
+  via: status
+  api: Eliq Insights API
+- from: EpcRatingResponse
+  to: EpcRatingType
+  type: has_one
+  via: type
+  api: Eliq Insights API
+- from: Error
+  to: transaction
+  type: belongs_to
+  via: transaction_id
+  api: Eliq Insights API
+- from: EstimatedSavings
+  to: EnergyUnit
+  type: has_one
+  via: unit
+  api: Eliq Insights API
+- from: Homeprofile
+  to: HomeProfileOption
+  type: has_many
+  via: appliances
+  api: Eliq Insights API
+- from: Homeprofile
+  to: HomeProfileOption
+  type: has_many
+  via: cooking
+  api: Eliq Insights API
+- from: Homeprofile
+  to: HomeProfileOption
+  type: has_many
+  via: extras
+  api: Eliq Insights API
+- from: Homeprofile
+  to: HomeProfileOption
+  type: has_many
+  via: fridges_and_freezers
+  api: Eliq Insights API
+- from: Homeprofile
+  to: HomeProfileOption
+  type: has_many
+  via: properties
+  api: Eliq Insights API
+- from: Location
+  to: Address
+  type: has_one
+  via: address
+  api: Eliq Insights API
+- from: Location
+  to: LocationFuels
+  type: has_one
+  via: fuels
+  api: Eliq Insights API
+- from: Location
+  to: LocationMeter
+  type: has_many
+  via: meters
+  api: Eliq Insights API
+- from: LocationFuel
+  to: LocationFuelItem
+  type: has_one
+  via: consumption
+  api: Eliq Insights API
+- from: LocationFuel
+  to: LocationFuelItem
+  type: has_one
+  via: export
+  api: Eliq Insights API
+- from: LocationFuel
+  to: LocationFuelItem
+  type: has_one
+  via: import
+  api: Eliq Insights API
+- from: LocationFuel
+  to: LocationFuelItem
+  type: has_one
+  via: production
+  api: Eliq Insights API
+- from: LocationFuelItem
+  to: FuelSource
+  type: has_one
+  via: source
+  api: Eliq Insights API
+- from: LocationFuelItem
+  to: SyncStatus
+  type: has_one
+  via: sync_status
+  api: Eliq Insights API
+- from: LocationFuels
+  to: LocationFuel
+  type: has_one
+  via: district_heating
+  api: Eliq Insights API
+- from: LocationFuels
+  to: LocationFuel
+  type: has_one
+  via: elec
+  api: Eliq Insights API
+- from: LocationFuels
+  to: LocationFuel
+  type: has_one
+  via: gas
+  api: Eliq Insights API
+- from: LocationNotificationSettingsInput
+  to: notification_type
+  type: belongs_to
+  via: notification_type_id
+  api: Eliq Insights API
+- from: LocationProfileSetting
+  to: LocationProfileDataType
+  type: has_one
+  via: data_type
+  api: Eliq Insights API
+- from: LocationProfileSetting
+  to: LocationPropertyRequirement
+  type: has_many
+  via: dependent_properties
+  api: Eliq Insights API
+- from: LocationProfileSetting
+  to: LocationPropertyLimit
+  type: has_one
+  via: limits
+  api: Eliq Insights API
+- from: LocationProfileSetting
+  to: LocationProfilePossibleValue
+  type: has_many
+  via: possible_values
+  api: Eliq Insights API
+- from: LocationProfileSetting
+  to: LocationProfileSelectedValue
+  type: has_many
+  via: selected_values
+  api: Eliq Insights API
+- from: LocationProfileSetting
+  to: LocationProfileTag
+  type: has_many
+  via: tags
+  api: Eliq Insights API
+- from: LocationProfileSettings
+  to: LocationProfileSetting
+  type: has_many
+  via: settings
+  api: Eliq Insights API
+- from: LocationProfileType
+  to: ProfileType
+  type: has_one
+  via: type
+  api: Eliq Insights API
+- from: MarketPriceResponseDto
+  to: MarketPriceElementDto
+  type: has_many
+  via: values
+  api: Eliq Insights API
+- from: MarketPriceSummaryDto
+  to: MarketPriceResolution
+  type: has_one
+  via: resolution
+  api: Eliq Insights API
+- from: MarketPriceSummaryDto
+  to: MarketPriceSummaryElementDto
+  type: has_many
+  via: values
+  api: Eliq Insights API
+- from: MarketPriceSummaryElementDto
+  to: MarketPriceElementDto
+  type: has_one
+  via: highest_price_kwh
+  api: Eliq Insights API
+- from: MarketPriceSummaryElementDto
+  to: MarketPriceElementDto
+  type: has_one
+  via: lowest_price_kwh
+  api: Eliq Insights API
+- from: MarketPriceSummaryElementDto
+  to: PriceLevel
+  type: has_one
+  via: price_level
+  api: Eliq Insights API
+- from: MarketPriceSummaryElementDto
+  to: MarketPriceElementDto
+  type: has_many
+  via: values
+  api: Eliq Insights API
+- from: MeterPriceFormula
+  to: PriceFormulaDirection
+  type: has_one
+  via: direction
+  api: Eliq Insights API
+- from: MeterPriceFormula
+  to: Element
+  type: has_many
+  via: elements_array
+  api: Eliq Insights API
+- from: MeterPriceFormula
+  to: Fuel
+  type: has_one
+  via: fuel
+  api: Eliq Insights API
+- from: MeterPriceFormula
+  to: meter
+  type: belongs_to
+  via: meter_id
+  api: Eliq Insights API
+- from: MeterPriceFormula
+  to: Source
+  type: has_one
+  via: source
+  api: Eliq Insights API
+- from: Nordpool
+  to: NordpoolResolution
+  type: has_one
+  via: resolution
+  api: Eliq Insights API
+- from: NotificationSettingsResponse
+  to: notification_type
+  type: belongs_to
+  via: notification_type_id
+  api: Eliq Insights API
+- from: SimilarHomesConsumption
+  to: SimilarHomesFuelType
+  type: has_one
+  via: fuel
+  api: Eliq Insights API
+- from: SimilarHomesConsumption
+  to: SimilarHomesResolutionType
+  type: has_one
+  via: resolution
+  api: Eliq Insights API
+- from: SimilarHomesConsumption
+  to: SimilarHomesUnitType
+  type: has_one
+  via: unit
+  api: Eliq Insights API
+- from: SimilarHomesConsumptionResultModel
+  to: SimilarHomesConsumption
+  type: has_one
+  via: result
+  api: Eliq Insights API
+- from: SimilarHomesConsumptionResultModel
+  to: SimilarHomesResultStatus
+  type: has_one
+  via: result_status
+  api: Eliq Insights API
+- from: SimilarHomesGroup
+  to: SimilarHomesGroupFilter
+  type: has_many
+  via: filters
+  api: Eliq Insights API
+- from: SimilarHomesGroupFilter
+  to: LimitRange
+  type: has_one
+  via: limit_range
+  api: Eliq Insights API
+- from: SimilarHomesGroupFilter
+  to: SimilarHomesGroupFilterType
+  type: has_one
+  via: type
+  api: Eliq Insights API
+- from: SimilarHomesGroupResultModel
+  to: SimilarHomesGroup
+  type: has_one
+  via: result
+  api: Eliq Insights API
+- from: SimilarHomesGroupResultModel
+  to: SimilarHomesResultStatus
+  type: has_one
+  via: result_status
+  api: Eliq Insights API
+- from: SimilarHomesReportResultModel
+  to: SimilarHomesReport
+  type: has_one
+  via: result
+  api: Eliq Insights API
+- from: SimilarHomesReportResultModel
+  to: SimilarHomesResultStatus
+  type: has_one
+  via: result_status
+  api: Eliq Insights API
+- from: SimilarHomesResultStatus
+  to: SimilarHomesResultStatusAction
+  type: has_one
+  via: action
+  api: Eliq Insights API
+- from: SimilarHomesResultStatus
+  to: SimilarHomesResultStatusCode
+  type: has_one
+  via: code
+  api: Eliq Insights API
+- from: SpotPrice
+  to: SpotPriceProvider
+  type: has_one
+  via: provider
+  api: Eliq Insights API
+- from: SpotPrice
+  to: SpotPriceResolution
+  type: has_one
+  via: resolution
+  api: Eliq Insights API
+- from: TimeSeriesData
+  to: Co2Emission
+  type: has_one
+  via: co2emission
+  api: Eliq Insights API
+- from: TimeSeriesData
+  to: FuelType
+  type: has_one
+  via: fuel
+  api: Eliq Insights API
+- from: TimeSeriesData
+  to: UnitType
+  type: has_one
+  via: unit
+  api: Eliq Insights API
+- from: Tou
+  to: Interval
+  type: has_many
+  via: intervals
+  api: Eliq Insights API
+- from: Tou
+  to: register
+  type: belongs_to
+  via: register_id
+  api: Eliq Insights API
+- from: UnitRate
+  to: Block
+  type: has_one
+  via: block
+  api: Eliq Insights API
+- from: UnitRate
+  to: Fixed
+  type: has_one
+  via: fixed
+  api: Eliq Insights API
+- from: UnitRate
+  to: Nordpool
+  type: has_one
+  via: nordpool
+  api: Eliq Insights API
+- from: UnitRate
+  to: SpotPrice
+  type: has_one
+  via: spot_price
+  api: Eliq Insights API
+- from: UnitRate
+  to: Tou
+  type: has_one
+  via: tou
+  api: Eliq Insights API
+- from: UnitRate
+  to: UnitRateType
+  type: has_one
+  via: type
+  api: Eliq Insights API
+- from: User
+  to: client
+  type: belongs_to
+  via: client_id
+  api: Eliq Insights API
+- from: UserNotification
+  to: Event
+  type: has_one
+  via: event
+  api: Eliq Insights API
+- from: YearlyEstimate
+  to: Fuel
+  type: has_one
+  via: fuel
+  api: Eliq Insights API
+- from: YearlyEstimate
+  to: Direction
+  type: has_one
+  via: type
+  api: Eliq Insights API
+- from: Assets
+  to: Battery
+  type: has_one
+  via: battery
+  api: Eliq Intelligence API
+- from: Assets
+  to: ElectricVehicle
+  type: has_one
+  via: electricVehicle
+  api: Eliq Intelligence API
+- from: Assets
+  to: HeatingDetails
+  type: has_one
+  via: heatingDetails
+  api: Eliq Intelligence API
+- from: Assets
+  to: PvDetails
+  type: has_one
+  via: pvDetails
+  api: Eliq Intelligence API
+- from: Assets
+  to: Tariffs
+  type: has_one
+  via: tariff
+  api: Eliq Intelligence API
+- from: AuthInfoResult
+  to: entra_application
+  type: belongs_to
+  via: entra_application_id
+  api: Eliq Intelligence API
+- from: AuthInfoResult
+  to: entra_tenant
+  type: belongs_to
+  via: entra_tenant_id
+  api: Eliq Intelligence API
+- from: DashboardEmbedTokenResult
+  to: dashboard
+  type: belongs_to
+  via: dashboard_id
+  api: Eliq Intelligence API
+- from: DashboardEmbedTokenResult
+  to: workspace
+  type: belongs_to
+  via: workspace_id
+  api: Eliq Intelligence API
+- from: DashboardsConfiguration
+  to: DashboardConfigurationItem
+  type: has_many
+  via: items
+  api: Eliq Intelligence API
+- from: ExportJob
+  to: ExportJobStatus
+  type: has_one
+  via: status
+  api: Eliq Intelligence API
+- from: FilterRequest
+  to: FilterRequestAsset
+  type: has_many
+  via: filters
+  api: Eliq Intelligence API
+- from: FilterRequestAsset
+  to: AssetKind
+  type: has_one
+  via: asset
+  api: Eliq Intelligence API
+- from: FilterRequestAsset
+  to: FilterRequestAssetProperty
+  type: has_many
+  via: properties
+  api: Eliq Intelligence API
+- from: FilterRequestAssetProperty
+  to: Operator
+  type: has_one
+  via: operator
+  api: Eliq Intelligence API
+- from: FilterRequestAssetProperty
+  to: JsonNode
+  type: has_one
+  via: value
+  api: Eliq Intelligence API
+- from: FilterResponse
+  to: FilterResponseItem
+  type: has_many
+  via: locations
+  api: Eliq Intelligence API
+- from: FilterResponse
+  to: Paging
+  type: has_one
+  via: paging
+  api: Eliq Intelligence API
+- from: FilterResponse
+  to: Summary
+  type: has_one
+  via: summary
+  api: Eliq Intelligence API
+- from: FilterResponseItem
+  to: Assets
+  type: has_one
+  via: assets
+  api: Eliq Intelligence API
+- from: HeatingDetails
+  to: HeatingFuelFlags
+  type: has_one
+  via: otherHeatingFuels
+  api: Eliq Intelligence API
+- from: IntelligenceApiConfiguration
+  to: DashboardsConfiguration
+  type: has_one
+  via: dashboards
+  api: Eliq Intelligence API
+- from: JsonNode
+  to: JsonNodeOptions
+  type: has_one
+  via: options
+  api: Eliq Intelligence API
+- from: JsonNode
+  to: JsonNode
+  type: has_one
+  via: parent
+  api: Eliq Intelligence API
+- from: JsonNode
+  to: JsonNode
+  type: has_one
+  via: root
+  api: Eliq Intelligence API
+- from: MapSegmentationResponseDto
+  to: MapLocationDto
+  type: has_many
+  via: locations
+  api: Eliq Intelligence API
+- from: MyInfoResult
+  to: client
+  type: belongs_to
+  via: client_id
+  api: Eliq Intelligence API
+- from: PagedFilterRequest
+  to: FilterRequestAsset
+  type: has_many
+  via: filters
+  api: Eliq Intelligence API
+- from: PagedFilterRequest
+  to: PagingRequest
+  type: has_one
+  via: paging
+  api: Eliq Intelligence API
+- from: PvDetails
+  to: PvDetectionSource
+  type: has_one
+  via: detectionSource
+  api: Eliq Intelligence API
+- from: Summary
+  to: TariffCount
+  type: has_many
+  via: optimalTariffs
+  api: Eliq Intelligence API
+- from: Tariffs
+  to: TariffSummary
+  type: has_one
+  via: optimalTariff
+  api: Eliq Intelligence API

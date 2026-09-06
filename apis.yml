@@ -1,10 +1,16 @@
 aid: eliq
 name: Eliq
-description: >-
-  Eliq provides energy data and analytics APIs for utilities and energy app
-  developers. The platform combines a decade of analytics and machine learning
-  trained on millions of homes to deliver consumption insights, disaggregation,
-  forecasting, peak detection, tariff comparison, and customer segmentation.
+description: 'Eliq is a Swedish energy-data company (Eliq AB, Gothenburg) that gives utilities and energy-app
+  developers an API layer over household energy data. Its Data Management API ingests users, locations,
+  meters, consumption readings and tariff price formulas — synchronously or as asynchronous NDJSON bulk
+  jobs — and its Insights API returns presentation-ready analytics on top of that data: consumption and
+  cost by day, week, month and year, CO2 footprint, appliance-level disaggregation (NILM), day-ahead market
+  prices, peak power and dynamic capacity, tariff comparison, PV production, forecasting, anomaly detection,
+  similar-homes benchmarking, budgets and personalised advice. An Intelligence API adds portfolio segmentation
+  for utility service and growth teams, and an OAuth 2.0 Auth API issues app and delegated tokens for
+  all of it. Eliq also ships 20 embeddable web components and pushes notification webhooks signed with
+  HMAC-SHA256. Access is commercial — credentials are issued by an account manager — but all four OpenAPI
+  contracts are published publicly.'
 type: Index
 deliveryModel:
   model: unknown
@@ -29,105 +35,211 @@ accessModel:
   - plans
   generated: '2026-07-22'
   method: derived
-position: Consuming
+position: Producing
 access: 3rd-Party
 image: https://kinlane-images.s3.amazonaws.com/shared/apis-json/icons/eliq.png
 tags:
-  - Energy
-  - Utilities
-  - Analytics
-  - Sustainability
+- Energy
+- Utilities
+- Analytics
+- Sustainability
+- Energy Data
+- Smart Meter
+- Disaggregation
+- Forecasting
+- Segmentation
+- Consumption
+- Tariffs
+- Insights
 created: '2025-05-02'
-modified: '2026-04-28'
+modified: '2026-09-06'
 url: https://raw.githubusercontent.com/api-evangelist/eliq/refs/heads/main/apis.yml
 specificationVersion: '0.23'
 apis:
-  - aid: eliq:auth
-    name: Eliq Auth API
-    description: >-
-      The Eliq Auth API authenticates client applications and issues access
-      tokens used to call the Insights, Data Management, and Intelligence APIs.
-      It supports the credential flows required for utility-side integrations.
-    humanURL: https://developer.eliq.com/api-reference
-    tags:
-      - Authentication
-      - Energy
-    properties:
-      - type: Documentation
-        url: https://developer.eliq.com/api-reference
-      - type: DeveloperPortal
-        url: https://developer.eliq.com
-  - aid: eliq:data-management
-    name: Eliq Data Management API
-    description: >-
-      The Eliq Data Management API ingests and manages customer, location, and
-      meter data inside the Eliq system. Clients use it to provision users and
-      locations, post energy consumption readings, attach metadata such as
-      tariffs and dwelling information, and keep the dataset that powers the
-      Insights API up to date.
-    humanURL: https://developer.eliq.com/doc/eliq-apis
-    tags:
-      - Data Management
-      - Energy
-      - Utilities
-    properties:
-      - type: Documentation
-        url: https://developer.eliq.com/doc/eliq-apis
-  - aid: eliq:insights
-    name: Eliq Insights API
-    description: >-
-      The Eliq Insights API delivers analytics and presentation-ready data for
-      end-user energy applications. It exposes consumption aggregates by day,
-      week, month, and year, trends, cost, CO2 footprint, day-ahead pricing,
-      weather, peak power, tariff comparisons, PV disaggregation, forecasting,
-      anomalies, and budget or goal tracking. Device-specific energy insights
-      use NILM disaggregation to attribute consumption to appliances.
-    humanURL: https://developer.eliq.com/doc/energy-insights-for-businesses
-    tags:
-      - Insights
-      - Analytics
-      - Energy
-      - Utilities
-      - Disaggregation
-    properties:
-      - type: Documentation
-        url: https://developer.eliq.com/doc/energy-insights-for-businesses
-      - type: Documentation
-        url: https://developer.eliq.com/doc/device-specific-energy-insights
-  - aid: eliq:intelligence
-    name: Eliq Intelligence API
-    description: >-
-      The Eliq Intelligence API provides customer-level analytics designed for
-      utility service, operations, and growth teams. It supports customer
-      segmentation, behavioral classification, and personalized recommendations
-      derived from consumption history, weather, tariffs, and disaggregation
-      models. Access to the Intelligence API is granted on request.
-    humanURL: https://developer.eliq.com/api-reference
-    tags:
-      - Intelligence
-      - Segmentation
-      - Energy
-      - Utilities
-    properties:
-      - type: Documentation
-        url: https://developer.eliq.com/api-reference
-common:
-  - type: DomainSecurity
-    url: security/eliq-domain-security.yml
-  - type: GitHubOrganization
-    url: https://github.com/GetEliq
-  - type: LinkedIn
-    url: https://www.linkedin.com/company/eliq
-  - type: Website
-    url: https://eliq.com
+- aid: eliq:auth
+  name: Eliq Auth API
+  description: The Eliq Auth API authenticates client applications and issues access tokens used to call
+    the Insights, Data Management, and Intelligence APIs. It supports the credential flows required for
+    utility-side integrations.
+  humanURL: https://developer.eliq.com/api-reference/auth-api
+  tags:
+  - Authentication
+  - Energy
+  properties:
+  - type: Documentation
+    url: https://developer.eliq.com/api-reference
   - type: DeveloperPortal
     url: https://developer.eliq.com
+  - type: OpenAPI
+    url: openapi/eliq-auth-api-openapi.yaml
+  - type: Overlay
+    url: overlays/eliq-auth-api-overlay.yaml
+  - type: APIReference
+    url: https://developer.eliq.com/api-reference/auth-api
+  - type: Authentication
+    url: authentication/eliq-authentication.yml
+  - type: OAuthScopes
+    url: scopes/eliq-scopes.yml
+  baseURL: https://auth-api.eliq.com
+- aid: eliq:data-management
+  name: Eliq Data Management API
+  description: The Eliq Data Management API ingests and manages customer, location, and meter data inside
+    the Eliq system. Clients use it to provision users and locations, post energy consumption readings,
+    attach metadata such as tariffs and dwelling information, and keep the dataset that powers the Insights
+    API up to date.
+  humanURL: https://developer.eliq.com/api-reference/data-mgmt-api
+  tags:
+  - Data Management
+  - Energy
+  - Utilities
+  properties:
   - type: Documentation
-    url: https://developer.eliq.com/docs
+    url: https://developer.eliq.com/doc/eliq-apis
+  - type: OpenAPI
+    url: openapi/eliq-data-management-api-openapi.json
+  - type: Overlay
+    url: overlays/eliq-data-management-api-overlay.yaml
+  - type: APIReference
+    url: https://developer.eliq.com/api-reference/data-mgmt-api
+  - type: ErrorCatalog
+    url: errors/eliq-problem-types.yml
+  - type: DataModel
+    url: data-model/eliq-data-model.yml
+  baseURL: https://eliq.data-management-api.eliq.com/integration/api/v1
+- aid: eliq:insights
+  name: Eliq Insights API
+  description: The Eliq Insights API delivers analytics and presentation-ready data for end-user energy
+    applications. It exposes consumption aggregates by day, week, month, and year, trends, cost, CO2 footprint,
+    day-ahead pricing, weather, peak power, tariff comparisons, PV disaggregation, forecasting, anomalies,
+    and budget or goal tracking. Device-specific energy insights use NILM disaggregation to attribute
+    consumption to appliances.
+  humanURL: https://developer.eliq.com/api-reference/insights-api
+  tags:
+  - Insights
+  - Analytics
+  - Energy
+  - Utilities
+  - Disaggregation
+  properties:
   - type: Documentation
-    url: https://eliq.com/api/
-  - type: Blog
-    url: https://eliq.com/insights
+    url: https://developer.eliq.com/doc/energy-insights-for-businesses
+  - type: Documentation
+    url: https://developer.eliq.com/doc/device-specific-energy-insights
+  - type: OpenAPI
+    url: openapi/eliq-insights-api-openapi.yaml
+  - type: Overlay
+    url: overlays/eliq-insights-api-overlay.yaml
+  - type: APIReference
+    url: https://developer.eliq.com/api-reference/insights-api
+  - type: Webhooks
+    url: asyncapi/eliq-webhooks.yml
+  - type: Components
+    url: components/eliq-components.yml
+  baseURL: https://eliq.insights-api.eliq.com
+- aid: eliq:intelligence
+  name: Eliq Intelligence API
+  description: The Eliq Intelligence API provides customer-level analytics designed for utility service,
+    operations, and growth teams. It supports customer segmentation, behavioral classification, and personalized
+    recommendations derived from consumption history, weather, tariffs, and disaggregation models. Access
+    to the Intelligence API is granted on request.
+  humanURL: https://developer.eliq.com/api-reference/intelligence-api
+  tags:
+  - Intelligence
+  - Segmentation
+  - Energy
+  - Utilities
+  properties:
+  - type: Documentation
+    url: https://developer.eliq.com/api-reference
+  - type: OpenAPI
+    url: openapi/eliq-intelligence-api-openapi.json
+  - type: Overlay
+    url: overlays/eliq-intelligence-api-overlay.yaml
+  - type: APIReference
+    url: https://developer.eliq.com/api-reference/intelligence-api
+  baseURL: https://eliq.intelligence-api.eliq.com
+common:
+- type: Authentication
+  url: authentication/eliq-authentication.yml
+- type: DomainSecurity
+  url: security/eliq-domain-security.yml
+- type: GitHubOrganization
+  url: https://github.com/GetEliq
+- type: LinkedIn
+  url: https://www.linkedin.com/company/eliq
+- type: Website
+  url: https://eliq.com
+- type: DeveloperPortal
+  url: https://developer.eliq.com
+- type: Documentation
+  url: https://developer.eliq.com/docs
+- type: Blog
+  url: https://www.eliq.com/learn/blog
+- type: Documentation
+  url: https://developer.eliq.com/docs/getting-started
+- type: APIReference
+  url: https://developer.eliq.com/api-reference
+- type: GettingStarted
+  url: https://developer.eliq.com/docs/getting-started
+- type: Support
+  url: https://www.eliq.com/contact
+- type: SignUp
+  url: https://developer.eliq.com/create-account
+- type: Login
+  url: https://developer.eliq.com/login
+- type: TermsOfService
+  url: https://www.eliq.com/terms-of-service
+- type: PrivacyPolicy
+  url: https://www.eliq.com/privacy-policy
+- type: Conventions
+  url: conventions/eliq-conventions.yml
+- type: Idempotency
+  url: conventions/eliq-conventions.yml
+- type: ErrorCatalog
+  url: errors/eliq-problem-types.yml
+- type: Lifecycle
+  url: lifecycle/eliq-lifecycle.yml
+- type: Deprecation
+  url: lifecycle/eliq-lifecycle.yml
+- type: ChangeLog
+  url: changelog/eliq-changelog.yml
+- type: RateLimits
+  url: rate-limits/eliq-rate-limits.yml
+- type: Plans
+  url: plans/eliq-plans-pricing.yml
+- type: OAuthScopes
+  url: scopes/eliq-scopes.yml
+- type: Conformance
+  url: conformance/eliq-conformance.yml
+- type: DataModel
+  url: data-model/eliq-data-model.yml
+- type: Examples
+  url: examples/eliq-examples.yml
+- type: Packages
+  url: packages/eliq-packages.yml
+- type: SDKs
+  url: packages/eliq-packages.yml
+- type: Components
+  url: components/eliq-components.yml
+- type: Sandbox
+  url: sandbox/eliq-sandbox.yml
+- type: WellKnown
+  url: well-known/eliq-well-known.yml
+- type: LLMsTxt
+  url: llms/eliq-llms.txt
+- type: X-MCPServerCandidate
+  url: mcp/eliq-mcp.yml
+- type: AgentSkill
+  url: skills/_index.yml
+- type: Webhooks
+  url: asyncapi/eliq-webhooks.yml
+- type: AsyncAPI
+  url: asyncapi/eliq-notifications-asyncapi.yml
 maintainers:
-  - FN: Kin Lane
-    email: kin@apievangelist.com
+- FN: Kin Lane
+  email: kin@apievangelist.com
+x-enrichment:
+  date: '2026-09-06'
+  status: enriched
+  artifacts_added: 38
+  pass: local-v3

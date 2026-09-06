@@ -1,0 +1,16 @@
+# OpenAPI Overlay 1.0.0 — API Evangelist enhancements.
+overlay: 1.0.0
+info:
+  title: API Evangelist enhancements — Eliq Auth API
+  version: 1.0.0
+extends: openapi/eliq-auth-api-openapi.yaml
+x-generated: '2026-09-06'
+x-method: generated
+x-source: API Evangelist enrichment pipeline, 2026-09-06
+actions:
+- target: $.info
+  description: The Auth API already declares correct Production and UAT servers; no base-URL repair was needed.
+    Only provenance is added.
+  update:
+    x-apievangelist-source: https://eliqdeveloperportalst.blob.core.windows.net/api-docs/eliq-auth-api.yaml
+    x-apievangelist-harvested: '2026-09-06'

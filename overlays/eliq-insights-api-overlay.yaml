@@ -1,0 +1,24 @@
+# OpenAPI Overlay 1.0.0 — API Evangelist enhancements. The original spec is untouched in openapi/_original/.
+overlay: 1.0.0
+info:
+  title: API Evangelist enhancements — Eliq Insights API
+  version: 1.0.0
+extends: openapi/eliq-insights-api-openapi.yaml
+x-generated: '2026-09-06'
+x-method: generated
+x-source: API Evangelist enrichment pipeline; base URL established from the provider docs and live probes on 2026-09-06
+actions:
+- target: $.servers
+  description: 'The published document declares servers: [http://localhost:3000], a development placeholder that
+    names no reachable host. The replacement was PROBED on 2026-09-06: https://eliq.insights-api.eliq.com/ returns
+    200 "Welcome to the API." and /v3/locations returns 401, i.e. live and auth-gated. The docs additionally reference
+    GET {url}/v3/locations against this surface.'
+  update:
+  - url: https://eliq.insights-api.eliq.com
+    description: 'Production (tenant-prefixed host; the real base URL is issued by Eliq — form: https://{tenant}.insights-api.eliq.com)'
+- target: $.info
+  description: Record that this document was harvested by API Evangelist from the provider's own Redoc reference,
+    and where from.
+  update:
+    x-apievangelist-source: https://developer.eliq.com/api-reference
+    x-apievangelist-harvested: '2026-09-06'

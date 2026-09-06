@@ -1,0 +1,66 @@
+# Eliq client libraries. One first-party CDN bundle; nothing in any language registry.
+generated: '2026-09-06'
+method: searched
+source: https://developer.eliq.com/doc/eliq-modules + registry probes of npm, PyPI, NuGet, RubyGems, crates.io,
+  Maven Central, pkg.go.dev, Packagist and the GetEliq GitHub org, 2026-09-06
+provider: Eliq
+providerId: eliq
+summary:
+  official_count: 1
+  registry_published_count: 0
+  note: 'Eliq publishes exactly ONE first-party client distribution — the ''Eliq SDK (modules)'' web-component bundle,
+    served from its own CDN at general-webcomponents.eliq.com and also offered as a downloadable .zip. There is
+    no first-party package in any language registry: npm, PyPI, NuGet, RubyGems, crates.io, Maven Central, pkg.go.dev
+    and Packagist all return nothing under Eliq''s name, and the GetEliq GitHub org (real, id 117751288, ''Making
+    sense of energy data'') has ZERO public repositories.'
+packages:
+- name: eliq-webcomponents
+  display_name: Eliq SDK (modules) — web components
+  official: true
+  registry: cdn
+  language: JavaScript (Web Components / Custom Elements)
+  version: 1.1.0
+  published: null
+  version_source: read from the pinned CDN path — https://general-webcomponents.eliq.com/v1.1.0/… — and from the
+    download filename webcom-v1.1.0.zip on the provider docs page.
+  published_note: 'No registry metadata endpoint exists for a CDN-served bundle, so no publish date is available.
+    Probed 2026-09-06: v1.1.0 and v1.0.0 both return 200; v1.1.1 and v1.2.0 return 404, so 1.1.0 is the current
+    pinned release.'
+  distribution:
+  - kind: cdn
+    files:
+    - https://general-webcomponents.eliq.com/v1.1.0/eliq-core.css
+    - https://general-webcomponents.eliq.com/v1.1.0/eliq-core.js
+    - https://general-webcomponents.eliq.com/v1.1.0/webcom-v1.js
+    pinned: true
+    status: 200
+    note: Version-pinned paths — a consumer can tell exactly what they are loading.
+  - kind: download
+    url: https://eliq.com/wp-content/uploads/2025/06/webcom-v1.1.0.zip
+    status: 404
+    note: The .zip download link on the docs page is DEAD (404 on 2026-09-06) — it points at a WordPress uploads
+      path on a site that has since moved to Webflow. The CDN files it duplicates are live. Worth reporting to the
+      provider.
+  docs: https://developer.eliq.com/doc/eliq-modules
+  see: components/eliq-components.yml
+third_party:
+- name: eliq-promise
+  registry: npm
+  official: false
+  version: 3.1.8
+  published: '2022-06-13'
+  url: https://www.npmjs.com/package/eliq-promise
+  author: Magnus Ljadas (github.com/ashpool)
+  note: Community wrapper for an older Eliq API. Not maintained by Eliq; last release 2022. Recorded so it is not
+    mistaken for a first-party SDK.
+- name: eliq2graphite
+  registry: npm
+  official: false
+  version: 3.0.2
+  published: '2021-11-05'
+  url: https://www.npmjs.com/package/eliq2graphite
+  note: Community tool forwarding Eliq consumption to Graphite. Not first-party.
+gaps:
+- No server-side SDK in any language. A utility integrating the Data Management API writes its own HTTP client.
+- GitHub org GetEliq exists but publishes no repositories — no sample code, no reference client, no issue surface.
+- The .zip on the SDK docs page 404s.

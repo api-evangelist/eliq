@@ -1,0 +1,36 @@
+# Eliq sandbox / test environment.
+generated: '2026-09-06'
+method: searched
+source: https://developer.eliq.com/doc/authentication, https://developer.eliq.com/doc/jobs
+provider: Eliq
+providerId: eliq
+environments:
+- name: Production
+  auth_base: https://auth-api.eliq.com
+  issuer: https://auth-api.eliq.com
+- name: UAT
+  auth_base: https://auth-api-uat.eliq.com
+  issuer: https://auth-api-uat.eliq.com
+  note: Declared as a second server in the Auth API OpenAPI document and probed live on 2026-09-06 (its /.well-known/openid-configuration
+    and /.well-known/jwks.json both return 200).
+mode: separate UAT environment with its own token issuer and signing keys
+test_credentials:
+  self_serve: false
+  note: No self-serve sandbox keys. UAT client_id/client_secret are issued by an Eliq account manager alongside
+    production credentials; there is no test-vs-live key prefix, no publishable test key, and no hosted test tokens.
+test_fixtures:
+  published: true
+  note: Eliq publishes real example .ndjson fixture rows for every supported job entity/operation pair (user upsert/delete/export,
+    location, meter, energy-period, energy-daily, energy-highres, homeprofile, priceformula) on the Jobs page.
+  docs: https://developer.eliq.com/doc/jobs
+time_simulation:
+  supported: false
+  note: No test clocks or time simulation documented.
+console:
+  published: false
+  note: No in-browser try-it console. Redoc reference pages are read-only; Eliq instead publishes downloadable Postman
+    collections for the Data Management and Auth APIs behind the developer-portal login.
+triggers:
+  webhook_replay: false
+  note: No webhook trigger/replay tooling documented. Eliq retries a failed delivery with decreasing frequency for
+    up to 24 hours.

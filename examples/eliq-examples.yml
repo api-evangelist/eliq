@@ -1,0 +1,826 @@
+# Eliq in-spec example inventory — derived from the provider's own OpenAPI documents.
+generated: '2026-09-06'
+method: derived
+source: openapi/eliq-auth-api-openapi.yaml, openapi/eliq-insights-api-openapi.yaml, openapi/eliq-data-management-api-openapi.json,
+  openapi/eliq-intelligence-api-openapi.json
+provider: Eliq
+providerId: eliq
+note: Eliq ships example request and response bodies INSIDE its OpenAPI documents rather than as a separate examples
+  repository. This is an index of what is there, per operation, so the coverage is legible without parsing 900KB
+  of spec. The example VALUES themselves live in openapi/ — nothing is copied or invented here.
+summary:
+  operations: 148
+  operations_with_examples: 134
+  coverage_pct: 90.5
+  by_api:
+    Eliq Auth API: 1
+    Eliq Insights API: 56
+    Eliq Data Management API: 77
+    Eliq Intelligence API: 0
+  gap: The Eliq Intelligence API (10 operations) carries NO examples and NO operationIds — the thinnest of the four
+    contracts.
+operations:
+- api: Eliq Auth API
+  operationId: post-oauth-token
+  method: POST
+  path: /oauth/token
+  request_examples: 4
+  response_examples: 2
+- api: Eliq Insights API
+  operationId: get-v3-users-userId
+  method: GET
+  path: /v3/users/{userId}
+  request_examples: 0
+  response_examples: 2
+- api: Eliq Insights API
+  operationId: get-v3-users-userId-consents
+  method: GET
+  path: /v3/users/{userId}/consents
+  request_examples: 0
+  response_examples: 2
+- api: Eliq Insights API
+  operationId: get-v3-users-userExtref
+  method: GET
+  path: /v3/users
+  request_examples: 0
+  response_examples: 2
+- api: Eliq Insights API
+  operationId: get--v3-users-userId-locations
+  method: GET
+  path: /v3/Users/{userId}/locations
+  request_examples: 0
+  response_examples: 4
+- api: Eliq Insights API
+  operationId: get-v3-locations-locationId
+  method: GET
+  path: /v3/locations/{locationId}
+  request_examples: 0
+  response_examples: 5
+- api: Eliq Insights API
+  operationId: get-v3-locations-locationExtref
+  method: GET
+  path: /v3/locations
+  request_examples: 0
+  response_examples: 6
+- api: Eliq Insights API
+  operationId: get-v3-locations-notification
+  method: GET
+  path: /v3/locations/{locationId}/notifications
+  request_examples: 0
+  response_examples: 2
+- api: Eliq Insights API
+  operationId: get-v3-locations-notification-settings
+  method: GET
+  path: /v3/locations/{locationId}/notifications/settings
+  request_examples: 0
+  response_examples: 2
+- api: Eliq Insights API
+  operationId: put-v3-locations-locationId-notifications-settings
+  method: PUT
+  path: /v3/locations/{locationId}/notifications/settings/{notificationTypeId}
+  request_examples: 0
+  response_examples: 7
+- api: Eliq Insights API
+  operationId: get-v3-location-profile-type
+  method: GET
+  path: /v3/locations/{locationId}/profile/type
+  request_examples: 0
+  response_examples: 4
+- api: Eliq Insights API
+  operationId: post-v3-location-profile-type
+  method: POST
+  path: /v3/locations/{locationId}/profile/type
+  request_examples: 8
+  response_examples: 5
+- api: Eliq Insights API
+  operationId: get-v3-location-profile
+  method: GET
+  path: /v3/locations/{locationId}/profile
+  request_examples: 0
+  response_examples: 4
+- api: Eliq Insights API
+  operationId: set-v3-location-profile-values
+  method: POST
+  path: /v3/locations/{locationId}/profile
+  request_examples: 1
+  response_examples: 12
+- api: Eliq Insights API
+  operationId: get-v3-location-profile-completion
+  method: GET
+  path: /v3/locations/{locationId}/profile/completion
+  request_examples: 0
+  response_examples: 5
+- api: Eliq Insights API
+  operationId: patch-v3-location-profile-value
+  method: PATCH
+  path: /v3/locations/{locationId}/profile/{profileValueId}
+  request_examples: 20
+  response_examples: 2
+- api: Eliq Insights API
+  operationId: delete-v3-location-profile-value
+  method: DELETE
+  path: /v3/locations/{locationId}/profile/{profileValueId}
+  request_examples: 0
+  response_examples: 2
+- api: Eliq Insights API
+  operationId: get-v3-locations-locationId-homeprofile
+  method: GET
+  path: /v3/locations/{locationId}/homeprofile
+  request_examples: 0
+  response_examples: 2
+- api: Eliq Insights API
+  operationId: patch-v3-locations-locationId-homeprofile
+  method: PATCH
+  path: /v3/locations/{locationId}/homeprofile
+  request_examples: 1
+  response_examples: 2
+- api: Eliq Insights API
+  operationId: get-v3-locations-locationId-homeprofile-completion
+  method: GET
+  path: /v3/locations/{locationId}/homeprofile/completion
+  request_examples: 0
+  response_examples: 2
+- api: Eliq Insights API
+  operationId: get-v3-locations-locationId-marketprice-prices
+  method: GET
+  path: /v3/locations/{locationId}/marketprice/prices
+  request_examples: 0
+  response_examples: 10
+- api: Eliq Insights API
+  operationId: get-v3-locations-locationId-marketprice-price-summary
+  method: GET
+  path: /v3/locations/{locationId}/marketprice/price-summary
+  request_examples: 0
+  response_examples: 14
+- api: Eliq Insights API
+  operationId: get-v3-locations-locationId-breakdown
+  method: GET
+  path: /v3/locations/{locationId}/breakdown
+  request_examples: 0
+  response_examples: 3
+- api: Eliq Insights API
+  operationId: get-v3-locations-locationId-euc
+  method: GET
+  path: /v3/locations/{locationId}/euc
+  request_examples: 0
+  response_examples: 32
+- api: Eliq Insights API
+  operationId: get-v3-locations-locationId-epc-rating
+  method: GET
+  path: /v3/locations/{locationId}/epc-rating
+  request_examples: 0
+  response_examples: 7
+- api: Eliq Insights API
+  operationId: get-v3-locations-locationId-consumption
+  method: GET
+  path: /v3/locations/{locationId}/consumption
+  request_examples: 0
+  response_examples: 14
+- api: Eliq Insights API
+  operationId: get-v3-locations-locationId-peakpower
+  method: GET
+  path: /v3/locations/{locationId}/peakpower/{resolution}
+  request_examples: 0
+  response_examples: 10
+- api: Eliq Insights API
+  operationId: get-v3-locations-locationId-yearly_estimates
+  method: GET
+  path: /v3/locations/{locationId}/yearly_estimates
+  request_examples: 0
+  response_examples: 8
+- api: Eliq Insights API
+  operationId: post-v3-locations-locationId-yearly_estimates
+  method: POST
+  path: /v3/locations/{locationId}/yearly_estimates
+  request_examples: 4
+  response_examples: 10
+- api: Eliq Insights API
+  operationId: delete-v3-locations-locationId-yearly_estimates
+  method: DELETE
+  path: /v3/locations/{locationId}/yearly_estimates
+  request_examples: 0
+  response_examples: 4
+- api: Eliq Insights API
+  operationId: get-v3-locations-locationId-consumption/suggestion
+  method: GET
+  path: /v3/locations/{locationId}/yearly_estimates/suggestion
+  request_examples: 0
+  response_examples: 2
+- api: Eliq Insights API
+  operationId: get-v3-locations-locationId-price-formula
+  method: GET
+  path: /v3/locations/{locationId}/price-formula
+  request_examples: 0
+  response_examples: 5
+- api: Eliq Insights API
+  operationId: get-v3-locations-locationId-production
+  method: GET
+  path: /v3/locations/{locationId}/production
+  request_examples: 0
+  response_examples: 4
+- api: Eliq Insights API
+  operationId: get-v3-locations-locationId-import
+  method: GET
+  path: /v3/locations/{locationId}/import
+  request_examples: 0
+  response_examples: 4
+- api: Eliq Insights API
+  operationId: get-v3-locations-locationId-export
+  method: GET
+  path: /v3/locations/{locationId}/export
+  request_examples: 0
+  response_examples: 4
+- api: Eliq Insights API
+  operationId: get-v3-locations-locationId-forecast
+  method: GET
+  path: /v3/locations/{locationId}/forecast
+  request_examples: 0
+  response_examples: 4
+- api: Eliq Insights API
+  operationId: get-v3-locations-locationId-forecast-hourly
+  method: GET
+  path: /v3/locations/{locationId}/forecast/hourly
+  request_examples: 0
+  response_examples: 3
+- api: Eliq Insights API
+  operationId: get-v3-meters-meterId-energy
+  method: GET
+  path: /v3/meters/{meterId}/energy
+  request_examples: 0
+  response_examples: 3
+- api: Eliq Insights API
+  operationId: get-v3-locations-locationId-similarhomes
+  method: GET
+  path: /v3/locations/{locationId}/similarhomes
+  request_examples: 0
+  response_examples: 5
+- api: Eliq Insights API
+  operationId: get-v3-locations-locationId-similarhomes-consumption
+  method: GET
+  path: /v3/locations/{locationId}/similarhomes/consumption
+  request_examples: 0
+  response_examples: 13
+- api: Eliq Insights API
+  operationId: get-v3-locations-locationId-similarhomes-report
+  method: GET
+  path: /v3/locations/{locationId}/similarhomes/report
+  request_examples: 0
+  response_examples: 13
+- api: Eliq Insights API
+  operationId: get-v3-locations-locationId-budgets
+  method: GET
+  path: /v3/locations/{locationId}/budgets
+  request_examples: 0
+  response_examples: 4
+- api: Eliq Insights API
+  operationId: put-v3-locations-locationId-budgets
+  method: PUT
+  path: /v3/locations/{locationId}/budgets
+  request_examples: 3
+  response_examples: 0
+- api: Eliq Insights API
+  operationId: get-v3-locations-locationId-budgets-history
+  method: GET
+  path: /v3/locations/{locationId}/budgets/history
+  request_examples: 0
+  response_examples: 1
+- api: Eliq Insights API
+  operationId: get-v3-location-temperature
+  method: GET
+  path: /v3/locations/{locationId}/temperature
+  request_examples: 0
+  response_examples: 2
+- api: Eliq Insights API
+  operationId: get-v3-location-advice
+  method: GET
+  path: /v3/locations/{locationId}/advice
+  request_examples: 0
+  response_examples: 5
+- api: Eliq Insights API
+  operationId: patch-v3-location-advice-adviceId
+  method: PATCH
+  path: /v3/locations/{locationId}/advice/{adviceId}
+  request_examples: 1
+  response_examples: 9
+- api: Eliq Insights API
+  operationId: get-v3-location-advice-monetary-sources
+  method: GET
+  path: /v3/locations/{locationId}/advice/estimated-savings-monetary-source
+  request_examples: 0
+  response_examples: 3
+- api: Eliq Insights API
+  operationId: get-v3-location-anomalies
+  method: GET
+  path: /v3/locations/{locationId}/anomalies
+  request_examples: 0
+  response_examples: 2
+- api: Eliq Insights API
+  operationId: get-v3-heartbeat
+  method: GET
+  path: /v3/health/heart_beat
+  request_examples: 0
+  response_examples: 1
+- api: Eliq Insights API
+  operationId: get-v3-users-userId-connections-web-portal-uri
+  method: GET
+  path: /v3/users/{userId}/connections/web-portal-uri
+  request_examples: 0
+  response_examples: 1
+- api: Eliq Insights API
+  operationId: get-v3-users-userId-connections
+  method: GET
+  path: /v3/users/{userId}/connections
+  request_examples: 0
+  response_examples: 1
+- api: Eliq Insights API
+  operationId: get-v3-users-userId-notifications
+  method: GET
+  path: /v3/Users/{userId}/sent_notifications
+  request_examples: 0
+  response_examples: 4
+- api: Eliq Insights API
+  operationId: get-v3-connections-connectionId-connection-entities
+  method: GET
+  path: /v3/connections/{connectionId}/connection-entities
+  request_examples: 0
+  response_examples: 1
+- api: Eliq Insights API
+  operationId: get-v3-locations-locationId-connection-meta-data
+  method: GET
+  path: /v3/locations/{locationId}/connection-meta-data
+  request_examples: 0
+  response_examples: 1
+- api: Eliq Insights API
+  operationId: post-v3-auth-user-token
+  method: POST
+  path: /v3/auth/user/token
+  request_examples: 1
+  response_examples: 2
+- api: Eliq Insights API
+  operationId: get-v3-authentication-autologin-ticket
+  method: GET
+  path: /v3/authentication/autologin/ticket
+  request_examples: 0
+  response_examples: 2
+- api: Eliq Data Management API
+  operationId: get-availablelanguages
+  method: GET
+  path: /client-details/available-languages
+  request_examples: 0
+  response_examples: 5
+- api: Eliq Data Management API
+  operationId: create-job
+  method: POST
+  path: /jobs/{entity}/{operation}
+  request_examples: 0
+  response_examples: 14
+- api: Eliq Data Management API
+  operationId: cancel-job
+  method: GET
+  path: /jobs/{jobId}/cancel
+  request_examples: 0
+  response_examples: 6
+- api: Eliq Data Management API
+  operationId: get-jobs
+  method: GET
+  path: /jobs
+  request_examples: 0
+  response_examples: 3
+- api: Eliq Data Management API
+  operationId: get-job
+  method: GET
+  path: /jobs/{jobId}
+  request_examples: 0
+  response_examples: 4
+- api: Eliq Data Management API
+  operationId: get-job-failures
+  method: GET
+  path: /jobs/{jobId}/failures
+  request_examples: 0
+  response_examples: 3
+- api: Eliq Data Management API
+  operationId: get-job-content
+  method: GET
+  path: /jobs/{jobId}/content
+  request_examples: 0
+  response_examples: 4
+- api: Eliq Data Management API
+  operationId: get-job-result
+  method: GET
+  path: /jobs/{jobId}/result
+  request_examples: 0
+  response_examples: 5
+- api: Eliq Data Management API
+  operationId: get-job-result-page
+  method: GET
+  path: /jobs/{jobId}/result/{page}
+  request_examples: 0
+  response_examples: 5
+- api: Eliq Data Management API
+  operationId: get-locations-locationId-priceformulas
+  method: GET
+  path: /locations/{locationId}/priceformulas
+  request_examples: 0
+  response_examples: 4
+- api: Eliq Data Management API
+  operationId: post-locations-locationId-priceformulas
+  method: POST
+  path: /locations/{locationId}/priceformulas
+  request_examples: 1
+  response_examples: 39
+- api: Eliq Data Management API
+  operationId: delete-locations-locationId-priceformulas
+  method: DELETE
+  path: /locations/{locationId}/priceformulas
+  request_examples: 0
+  response_examples: 7
+- api: Eliq Data Management API
+  operationId: delete-locations-all-priceformulas
+  method: DELETE
+  path: /locations/{locationId}/priceformulas/all
+  request_examples: 0
+  response_examples: 4
+- api: Eliq Data Management API
+  operationId: set-locations-locationId-profile-type
+  method: POST
+  path: /locations/{locationId}/profile/type
+  request_examples: 4
+  response_examples: 6
+- api: Eliq Data Management API
+  operationId: get-locations-locationId-profile-type
+  method: GET
+  path: /locations/{locationId}/profile/type
+  request_examples: 0
+  response_examples: 6
+- api: Eliq Data Management API
+  operationId: set-locations-locationId-profile-values
+  method: POST
+  path: /locations/{locationId}/profile
+  request_examples: 0
+  response_examples: 11
+- api: Eliq Data Management API
+  operationId: get-locations-locationId-profile
+  method: GET
+  path: /locations/{locationId}/profile
+  request_examples: 0
+  response_examples: 7
+- api: Eliq Data Management API
+  operationId: patch-locations-locationId-profile-value
+  method: PATCH
+  path: /locations/{locationId}/profile/{id}
+  request_examples: 0
+  response_examples: 11
+- api: Eliq Data Management API
+  operationId: delete-locations-locationId-profile
+  method: DELETE
+  path: /locations/{locationId}/profile/{id}
+  request_examples: 0
+  response_examples: 5
+- api: Eliq Data Management API
+  operationId: put-locations-locationId
+  method: PUT
+  path: /locations/{id}
+  request_examples: 2
+  response_examples: 20
+- api: Eliq Data Management API
+  operationId: delete-locations-locationId
+  method: DELETE
+  path: /locations/{id}
+  request_examples: 0
+  response_examples: 3
+- api: Eliq Data Management API
+  operationId: get-locations-locationId
+  method: GET
+  path: /locations/{id}
+  request_examples: 0
+  response_examples: 5
+- api: Eliq Data Management API
+  operationId: get-locations
+  method: GET
+  path: /locations
+  request_examples: 0
+  response_examples: 4
+- api: Eliq Data Management API
+  operationId: get-locations-locationId-meters
+  method: GET
+  path: /locations/{id}/meters
+  request_examples: 0
+  response_examples: 4
+- api: Eliq Data Management API
+  operationId: get-locations-locationId-homeprofile
+  method: GET
+  path: /locations/{locationId}/homeprofile
+  request_examples: 0
+  response_examples: 5
+- api: Eliq Data Management API
+  operationId: put-locations-locationId-homeprofile
+  method: PUT
+  path: /locations/{locationId}/homeprofile
+  request_examples: 2
+  response_examples: 13
+- api: Eliq Data Management API
+  operationId: delete-locations-locationId-homeprofile
+  method: DELETE
+  path: /locations/{locationId}/homeprofile
+  request_examples: 0
+  response_examples: 3
+- api: Eliq Data Management API
+  operationId: post-locations-locationId-homeprofile
+  method: POST
+  path: /locations/{locationId}/homeprofile
+  request_examples: 0
+  response_examples: 3
+- api: Eliq Data Management API
+  operationId: get-meter-meterid-price-formulas
+  method: GET
+  path: /meters/{meterId}/priceformulas
+  request_examples: 0
+  response_examples: 5
+- api: Eliq Data Management API
+  operationId: add-or-update-meter-price-formulas
+  method: POST
+  path: /meters/{meterId}/priceformulas
+  request_examples: 1
+  response_examples: 98
+- api: Eliq Data Management API
+  operationId: delete-meter-from-date-price-formulas
+  method: DELETE
+  path: /meters/{meterId}/priceformulas/{fromDate}
+  request_examples: 0
+  response_examples: 6
+- api: Eliq Data Management API
+  operationId: delete-meter-all-price-formulas
+  method: DELETE
+  path: /meters/{meterId}/priceformulas/all
+  request_examples: 0
+  response_examples: 6
+- api: Eliq Data Management API
+  operationId: put-meter-meterid
+  method: PUT
+  path: /meters/{id}
+  request_examples: 1
+  response_examples: 30
+- api: Eliq Data Management API
+  operationId: get-meter-meterid
+  method: GET
+  path: /meters/{id}
+  request_examples: 0
+  response_examples: 4
+- api: Eliq Data Management API
+  operationId: delete-meter-meterid
+  method: DELETE
+  path: /meters/{id}
+  request_examples: 0
+  response_examples: 3
+- api: Eliq Data Management API
+  operationId: get-meters
+  method: GET
+  path: /meters
+  request_examples: 0
+  response_examples: 3
+- api: Eliq Data Management API
+  operationId: post-daily-energy-meterid
+  method: POST
+  path: /meters/{id}/energy/day
+  request_examples: 1
+  response_examples: 19
+- api: Eliq Data Management API
+  operationId: delete-daily-energy-meterid
+  method: DELETE
+  path: /meters/{id}/energy/day
+  request_examples: 0
+  response_examples: 7
+- api: Eliq Data Management API
+  operationId: get-daily-energy-meterid
+  method: GET
+  path: /meters/{id}/energy/day
+  request_examples: 0
+  response_examples: 9
+- api: Eliq Data Management API
+  operationId: post-high-resolution-energy-meterid
+  method: POST
+  path: /meters/{id}/energy/highres/{resolution}
+  request_examples: 1
+  response_examples: 16
+- api: Eliq Data Management API
+  operationId: delete-high-resolution-energy-meterid-2
+  method: DELETE
+  path: /meters/{id}/energy/highres/{resolution}
+  request_examples: 0
+  response_examples: 8
+- api: Eliq Data Management API
+  operationId: get-high-resolution-energy-meterid
+  method: GET
+  path: /meters/{id}/energy/highres/{resolution}
+  request_examples: 0
+  response_examples: 11
+- api: Eliq Data Management API
+  operationId: delete-high-resolution-energy-meterid
+  method: DELETE
+  path: /meters/{id}/energy/{resolution}
+  request_examples: 0
+  response_examples: 8
+- api: Eliq Data Management API
+  operationId: post-meter-reads-meterid
+  method: POST
+  path: /meters/{id}/reads
+  request_examples: 1
+  response_examples: 22
+- api: Eliq Data Management API
+  operationId: get-meter-reads-meterid
+  method: GET
+  path: /meters/{id}/reads
+  request_examples: 0
+  response_examples: 9
+- api: Eliq Data Management API
+  operationId: delete-meter-reads-meterid
+  method: DELETE
+  path: /meters/{id}/reads
+  request_examples: 0
+  response_examples: 8
+- api: Eliq Data Management API
+  operationId: post-period-energy-data-meterid
+  method: POST
+  path: /meters/{id}/energy/period
+  request_examples: 1
+  response_examples: 14
+- api: Eliq Data Management API
+  operationId: get-period-energy-data-meterid
+  method: GET
+  path: /meters/{id}/energy/period
+  request_examples: 0
+  response_examples: 9
+- api: Eliq Data Management API
+  operationId: delete-period-energy-data-meterid
+  method: DELETE
+  path: /meters/{id}/energy/period
+  request_examples: 0
+  response_examples: 7
+- api: Eliq Data Management API
+  operationId: post-max-demand-meterid
+  method: POST
+  path: /meters/{id}/max-demand/{resolution}
+  request_examples: 0
+  response_examples: 22
+- api: Eliq Data Management API
+  operationId: get-max-demand-meterid
+  method: GET
+  path: /meters/{id}/max-demand/{resolution}
+  request_examples: 0
+  response_examples: 23
+- api: Eliq Data Management API
+  operationId: delete-max-demand-meterid
+  method: DELETE
+  path: /meters/{id}/max-demand/{resolution}
+  request_examples: 0
+  response_examples: 22
+- api: Eliq Data Management API
+  operationId: delete-max-demand-limit-meterid
+  method: DELETE
+  path: /meters/{id}/max-demand/limits/{resolution}
+  request_examples: 0
+  response_examples: 22
+- api: Eliq Data Management API
+  operationId: post-max-demand-limit-meterid
+  method: POST
+  path: /meters/{id}/max-demand/limits/{resolution}
+  request_examples: 1
+  response_examples: 22
+- api: Eliq Data Management API
+  operationId: get-max-demand-limit-meterid
+  method: GET
+  path: /meters/{id}/max-demand/limits/{resolution}
+  request_examples: 0
+  response_examples: 23
+- api: Eliq Data Management API
+  operationId: put-portfolio-accounts
+  method: PUT
+  path: /portfolio/accounts/{id}
+  request_examples: 0
+  response_examples: 1
+- api: Eliq Data Management API
+  operationId: delete-portfolio-accounts
+  method: DELETE
+  path: /portfolio/accounts/{id}
+  request_examples: 0
+  response_examples: 2
+- api: Eliq Data Management API
+  operationId: get-portfolio-accounts
+  method: GET
+  path: /portfolio/accounts/{id}
+  request_examples: 0
+  response_examples: 2
+- api: Eliq Data Management API
+  operationId: get-portfolio-accounts-by-name
+  method: GET
+  path: /portfolio/accounts/name/{name}
+  request_examples: 0
+  response_examples: 2
+- api: Eliq Data Management API
+  operationId: put-portfolio-groups
+  method: POST
+  path: /portfolio/accounts/{accountId}/groups
+  request_examples: 0
+  response_examples: 2
+- api: Eliq Data Management API
+  operationId: get-portfolio-groups-list
+  method: GET
+  path: /portfolio/accounts/{accountId}/groups
+  request_examples: 0
+  response_examples: 2
+- api: Eliq Data Management API
+  operationId: delete-portfolio-groups
+  method: DELETE
+  path: /portfolio/accounts/{accountId}/groups/{id}
+  request_examples: 0
+  response_examples: 3
+- api: Eliq Data Management API
+  operationId: get-portfolio-groups
+  method: GET
+  path: /portfolio/accounts/{accountId}/groups/{id}
+  request_examples: 0
+  response_examples: 2
+- api: Eliq Data Management API
+  operationId: put-portfolio-locations
+  method: PUT
+  path: /portfolio/accounts/{accountId}/locations/{id}
+  request_examples: 0
+  response_examples: 2
+- api: Eliq Data Management API
+  operationId: delete-portfolio-locations
+  method: DELETE
+  path: /portfolio/accounts/{accountId}/locations/{id}
+  request_examples: 0
+  response_examples: 2
+- api: Eliq Data Management API
+  operationId: get-portfolio-locations
+  method: GET
+  path: /portfolio/accounts/{accountId}/locations/{id}
+  request_examples: 0
+  response_examples: 2
+- api: Eliq Data Management API
+  operationId: get-portfolio-locations-list
+  method: GET
+  path: /portfolio/accounts/{accountId}/locations
+  request_examples: 0
+  response_examples: 2
+- api: Eliq Data Management API
+  operationId: put-portfolio-users
+  method: PUT
+  path: /portfolio/accounts/{accountId}/users/{id}
+  request_examples: 0
+  response_examples: 2
+- api: Eliq Data Management API
+  operationId: delete-portfolio-users
+  method: DELETE
+  path: /portfolio/accounts/{accountId}/users/{id}
+  request_examples: 0
+  response_examples: 2
+- api: Eliq Data Management API
+  operationId: get-portfolio-users
+  method: GET
+  path: /portfolio/accounts/{accountId}/users/{id}
+  request_examples: 0
+  response_examples: 2
+- api: Eliq Data Management API
+  operationId: get-portfolio-users-list
+  method: GET
+  path: /portfolio/accounts/{accountId}/users
+  request_examples: 0
+  response_examples: 2
+- api: Eliq Data Management API
+  operationId: put-users-userId
+  method: PUT
+  path: /users/{id}
+  request_examples: 1
+  response_examples: 14
+- api: Eliq Data Management API
+  operationId: delete-users-userId
+  method: DELETE
+  path: /users/{id}
+  request_examples: 0
+  response_examples: 3
+- api: Eliq Data Management API
+  operationId: get-users-userId
+  method: GET
+  path: /users/{id}
+  request_examples: 0
+  response_examples: 4
+- api: Eliq Data Management API
+  operationId: get-users
+  method: GET
+  path: /users
+  request_examples: 0
+  response_examples: 3
+- api: Eliq Data Management API
+  operationId: post-users-userId-notification
+  method: POST
+  path: /users/{id}/notification
+  request_examples: 0
+  response_examples: 3
+- api: Eliq Data Management API
+  operationId: get-users-userId-locations
+  method: GET
+  path: /users/{id}/locations
+  request_examples: 0
+  response_examples: 4

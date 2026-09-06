@@ -1,0 +1,351 @@
+openapi: 3.1.0
+info:
+  title: Eliq auth API
+  version: 2.0.0
+  description: |-
+    # Eliq auth API
+
+    Used to obtain access tokens for Eliq APIs, most commonly the Eliq data management API and Eliq insights API.
+
+    ## Getting started
+
+    OAuth clients are set up in collaboration with Eliq. Your account manager will provide you with a `client_id`.
+    Client secrets are generated via the **Client Admin API** or by your account manager.
+
+    Each client is configured with access to one or more APIs, along with the allowed access types and scopes for each.
+    You can review and manage your client's API access, secrets, and scope configuration in the **Client Admin Portal**.
+
+    **Multiple secrets** are supported per client to allow for smooth secret rotation without downtime.
+
+    ## Requesting tokens
+
+    Tokens are requested via `POST /oauth/token` using OAuth 2.0 client credentials. The endpoint supports three flows:
+
+    - **App token** — machine-to-machine token scoped to a specific API
+    - **Delegated token** — token issued on behalf of a subject (e.g. a user or location)
+    - **Token refresh** — exchange a refresh token for a new access token
+
+    ## Token verification
+
+    Tokens are signed with asymmetric keys. The public key is available at `GET /.well-known/jwks.json`.
+    The full OpenID configuration is available at `GET /.well-known/openid-configuration`.
+
+    ## Token claims
+
+    | Claim | Description | Example |
+    |---|---|---|
+    | `iss` | Token issuer | `https://auth-api.eliq.com` |
+    | `aud` | Target API the token is scoped to | `data-management-api` |
+    | `client_id` | OAuth application the token belongs to | `utility-acme-backend` |
+    | `org` | Organization ID | `1234567890` |
+    | `org_type` | Type of organization | `utility` |
+    | `sub` | Identity the token represents | `12345` (user) or `utility-acme-backend` (app) |
+    | `sub_type` | Type of subject | `user`, `client` |
+    | `scope` | Scopes granted | `data.read data.write` |
+    | `access_type` | How access was granted | `application`, `delegated` |
+
+    > **Legacy (v1) clients:** If your `client_id` is a numeric Utility ID, your existing integration continues to work without any changes. See the [Legacy v1](#section/Legacy-v1) section at the bottom of this page.
+servers:
+  - url: 'https://auth-api.eliq.com'
+    description: Production
+  - url: 'https://auth-api-uat.eliq.com'
+    description: UAT
+paths:
+  /.well-known/jwks.json:
+    get:
+      summary: JSON Web Key Set
+      operationId: get-jwks
+      description: Returns the public keys used to verify token signatures. Use this endpoint to validate JWTs issued by the auth API.
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                description: JWKS document containing the public signing keys.
+  /.well-known/openid-configuration:
+    get:
+      summary: OpenID configuration
+      operationId: get-openid-configuration
+      description: Returns the OpenID Connect discovery document, including supported endpoints, signing algorithms, and claim types.
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                description: OpenID Connect discovery document.
+  /oauth/token:
+    parameters: []
+    post:
+      summary: Request a token
+      operationId: post-oauth-token
+      description: |-
+        Create an Eliq access token using OAuth 2.0 client credentials.
+
+        The `client_id` field determines which flow is used:
+        - **Non-numeric string** → Auth v2
+        - **Numeric string** → Legacy v1 (see legacy section)
+        - **`grant_type: refresh_token`** → Token refresh (no `client_id` needed)
+
+        ---
+
+        ### App token
+
+        Issues a machine-to-machine token scoped to a specific API. Use this for server-to-server integrations where no end-user context is required.
+
+        ```json
+        {
+          "grant_type": "client_credentials",
+          "client_id": "utility-acme-backend",
+          "client_secret": "eliq_...",
+          "aud": "data-management-api",
+          "scope": "data.read data.write"
+        }
+        ```
+
+        ---
+
+        ### Delegated token
+
+        Issues a token on behalf of a subject (e.g. a specific user or location). Required when the target API enforces subject context.
+
+        ```json
+        {
+          "grant_type": "client_credentials",
+          "client_id": "utility-acme-frontend",
+          "client_secret": "eliq_...",
+          "aud": "insights-api",
+          "scope": "insights.read insights.write",
+          "sub": "12345",
+          "sub_type": "user"
+        }
+        ```
+
+        Set `"issue_refresh_token": true` to also receive a refresh token in the response.
+
+        ---
+
+        ### Token refresh
+
+        Exchange a refresh token for a new access token without re-authenticating.
+
+        ```json
+        {
+          "grant_type": "refresh_token",
+          "refresh_token": "eliq_rt_..."
+        }
+        ```
+
+        ---
+
+        ### Legacy v1
+
+        If your `client_id` is a numeric Utility ClientId, use this flow. No other fields are supported.
+
+        ```json
+        {
+          "grant_type": "client_credentials",
+          "client_id": "1234567890",
+          "client_secret": "..."
+        }
+        ```
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/token-request'
+            examples:
+              app-token:
+                summary: App token
+                value:
+                  grant_type: client_credentials
+                  client_id: utility-acme-backend
+                  client_secret: eliq_Hcjr4OLI91flAP-o8e4G5-W1nwDxg8PjSCIfHo2cgMo
+                  aud: data-management-api
+                  scope: data.read data.write
+              delegated-token:
+                summary: Delegated token
+                value:
+                  grant_type: client_credentials
+                  client_id: utility-acme-frontend
+                  client_secret: eliq_Hcjr4OLI91flAP-o8e4G5-W1nwDxg8PjSCIfHo2cgMo
+                  aud: insights-api
+                  scope: insights.read insights.write
+                  sub: '12345'
+                  sub_type: user
+                  issue_refresh_token: true
+              refresh-token:
+                summary: Refresh token
+                value:
+                  grant_type: refresh_token
+                  refresh_token: eliq_rt_RGjWlUx0s3yursEPHSf3Sg36bb1UqbasJ85QoCt0XyxW2oinIfNnbvlirs2u6L-z70CN0zQwJJ1psdVEUD2R-w
+              legacy-v1:
+                summary: Legacy v1 (numeric client_id)
+                value:
+                  grant_type: client_credentials
+                  client_id: '1234567890'
+                  client_secret: VFGJIJz49ZdYfif/NGdD+neVtpx7YScWlh0Rp2oMZpU=
+      responses:
+        '200':
+          description: Token issued successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/token-response'
+              examples:
+                app-token:
+                  summary: App token response
+                  value:
+                    access_token: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c
+                    token_type: Bearer
+                    expires_in: 3600
+                delegated-token:
+                  summary: Delegated token response (includes refresh token)
+                  value:
+                    access_token: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c
+                    token_type: Bearer
+                    expires_in: 3600
+                    refresh_token: eliq_rt_RGjWlUx0s3yursEPHSf3Sg36bb1UqbasJ85QoCt0XyxW2oinIfNnbvlirs2u6L-z70CN0zQwJJ1psdVEUD2R-w
+                    refresh_token_expires_in: 2592000
+        '400':
+          description: Bad Request — invalid or missing parameters
+        '401':
+          description: Unauthorized — invalid client credentials or refresh token
+components:
+  schemas:
+    token-request:
+      title: Token request
+      type: object
+      required:
+        - grant_type
+      properties:
+        grant_type:
+          type: string
+          description: |-
+            The OAuth grant type.
+            - `client_credentials` — issue a new app or delegated token
+            - `refresh_token` — exchange a refresh token for a new access token
+          enum:
+            - client_credentials
+            - refresh_token
+          example: client_credentials
+        client_id:
+          type: string
+          description: |-
+            The OAuth application identity. A non-numeric string, e.g. `utility-acme-backend` (for data-management-api)
+            or `utility-acme-frontend` (for insights-api).
+            Required for `client_credentials` grant.
+          example: utility-acme-backend
+        client_secret:
+          type: string
+          description: The client secret. Required for `client_credentials` grant.
+          example: eliq_Hcjr4OLI91flAP-o8e4G5-W1nwDxg8PjSCIfHo2cgMo
+        aud:
+          type: string
+          description: |-
+            The target API the token should be scoped to (e.g. `data-management-api`, `insights-api`).
+            Required for Auth v2 flows.
+          example: data-management-api
+        scope:
+          type: string
+          description: |-
+            Space-delimited list of requested scopes. Optional — if omitted, the default scopes
+            configured for the client are used.
+          example: data.read data.write
+        sub:
+          type: string
+          description: |-
+            The subject identifier on whose behalf the token is issued (e.g. a user ID or location ID).
+            Required for delegated flows. Must be accompanied by `sub_type`.
+            The subject is not verified during token creation but will be enforced by the target API.
+          example: '12345'
+        sub_type:
+          type: string
+          description: |-
+            The type of subject referenced by `sub` (e.g. `user`, `location`).
+            Required when `sub` is set.
+          example: user
+        issue_refresh_token:
+          type: boolean
+          description: |-
+            Whether to include a refresh token in the response. Applies to delegated flows only.
+            May be denied by server policy regardless of this value.
+          example: true
+        refresh_token:
+          type: string
+          description: The refresh token to exchange. Required when `grant_type` is `refresh_token`.
+          example: eliq_rt_RGjWlUx0s3yursEPHSf3Sg36bb1UqbasJ85QoCt0XyxW2oinIfNnbvlirs2u6L-z70CN0zQwJJ1psdVEUD2R-w
+      examples:
+        - grant_type: client_credentials
+          client_id: utility-acme-backend
+          client_secret: eliq_Hcjr4OLI91flAP-o8e4G5-W1nwDxg8PjSCIfHo2cgMo
+          aud: data-management-api
+    token-response:
+      title: Token response
+      description: Response returned on successful token creation.
+      type: object
+      required:
+        - access_token
+        - token_type
+        - expires_in
+      properties:
+        access_token:
+          type: string
+          description: The issued JWT access token.
+          example: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c
+        token_type:
+          type: string
+          description: Always `Bearer`.
+          example: Bearer
+        expires_in:
+          type: number
+          description: Seconds until the access token expires.
+          example: 3600
+        refresh_token:
+          type: string
+          description: |-
+            A refresh token for obtaining a new access token. Only present in delegated token responses
+            when a refresh token was requested and approved.
+          example: eliq_rt_RGjWlUx0s3yursEPHSf3Sg36bb1UqbasJ85QoCt0XyxW2oinIfNnbvlirs2u6L-z70CN0zQwJJ1psdVEUD2R-w
+        refresh_token_expires_in:
+          type: number
+          description: Seconds until the refresh token expires. Only present when `refresh_token` is included.
+          example: 2592000
+      examples:
+        - access_token: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c
+          token_type: Bearer
+          expires_in: 3600
+    legacy-token-request:
+      title: Legacy v1 token request
+      description: |-
+        For clients that have not yet migrated to Auth v2. Pass a numeric Utility ClientId as `client_id`.
+        Only `grant_type: client_credentials` is supported. Fields like `aud`, `scope`, `sub`, and `sub_type` are not applicable.
+
+        To migrate to Auth v2, replace your numeric `client_id` with the string OAuth application identity
+        provided to you and follow the Auth v2 flows described above.
+      type: object
+      required:
+        - grant_type
+        - client_id
+        - client_secret
+      properties:
+        grant_type:
+          type: string
+          enum:
+            - client_credentials
+          example: client_credentials
+        client_id:
+          type: string
+          description: Numeric Utility ClientId.
+          example: '1234567890'
+        client_secret:
+          type: string
+          example: VFGJIJz49ZdYfif/NGdD+neVtpx7YScWlh0Rp2oMZpU=
+      examples:
+        - grant_type: client_credentials
+          client_id: '1234567890'
+          client_secret: VFGJIJz49ZdYfif/NGdD+neVtpx7YScWlh0Rp2oMZpU=

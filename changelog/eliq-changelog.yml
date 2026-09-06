@@ -1,0 +1,81 @@
+# Eliq change log — transcribed from the provider's public release notes.
+generated: '2026-09-06'
+method: searched
+source: https://developer.eliq.com/changelog-pages/release-notes
+provider: Eliq
+providerId: eliq
+url: https://developer.eliq.com/changelog-pages/release-notes
+scheme: dated release notes, tagged Update or News; per-API changelogs additionally exist at /api-reference/changelog/{auth-api,data-management-api,insights-api,intelligence-api}
+  but their content is behind the developer-portal login
+per_api_changelogs:
+- https://developer.eliq.com/api-reference/changelog/auth-api
+- https://developer.eliq.com/api-reference/changelog/data-management-api
+- https://developer.eliq.com/api-reference/changelog/insights-api
+- https://developer.eliq.com/api-reference/changelog/intelligence-api
+per_api_changelog_access: gated — the pages return 200 but render an empty Memberstack-protected shell to an anonymous
+  fetch
+current_versions:
+  Eliq Auth API: 2.0.0
+  Eliq Insights API: 3.4.1
+  Eliq Data Management API: 1.5.2
+  Eliq Intelligence API: 1.0.0
+entries:
+- date: '2026-07-10'
+  kind: Update
+  title: Budgets that set themselves, and show how you’re tracking
+  breaking: false
+  additions: true
+  highlights: Budgets can derive limits from forecasts, return cumulative progress for the current period, and report
+    historical performance. Stated as additive — existing integrations require no changes.
+- date: '2026-06-16'
+  kind: Update
+  title: Time-Aware EV Charging Cost Calculation live in Energy Usage Categories (EUC)
+  breaking: false
+  additions: true
+  highlights: EV charging cost attributed by time of charge inside the EUC breakdown.
+- date: '2026-04-30'
+  kind: News
+  title: EV Detection Algorithm v2
+  breaking: false
+  additions: false
+  highlights: Next-generation EV detection sharpening the whole disaggregated energy breakdown in EV households.
+- date: '2025-10-01'
+  kind: News
+  title: EV Similar Homes
+  breaking: false
+  additions: true
+  highlights: Peer comparison cohorts for EV owners.
+- date: '2025-08-25'
+  kind: News
+  title: The API changelog is now live
+  breaking: false
+  additions: false
+  highlights: Per-API changelogs introduced on the developer portal.
+- date: '2025-06-04'
+  kind: News
+  title: Peak Power Insights
+  breaking: false
+  additions: true
+  highlights: Peak power / dynamic capacity tariff insights.
+- date: '2025-05-15'
+  kind: News
+  title: Time-of-Use Tariff Insights
+  breaking: false
+  additions: true
+  highlights: Variable-tariff period insights.
+- date: '2025-05-07'
+  kind: News
+  title: Energy Insights for Business
+  breaking: false
+  additions: true
+  highlights: B2B variant of the Insights surface.
+- date: '2025-03-27'
+  kind: News
+  title: New developer portal
+  breaking: false
+  additions: false
+  highlights: developer.eliq.com relaunched.
+entry_count: 9
+breaking_changes_in_window: 0
+note: Window is what the public release-notes page renders to an anonymous fetch on 2026-09-06. Entries are transcribed,
+  not summarised from elsewhere.
