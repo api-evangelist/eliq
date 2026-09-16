@@ -2,8 +2,11 @@
   "repo": "eliq",
   "feeds": [
     {
-      "source": "https://eliq.com/api/",
-      "error": "HTTPError"
+      "source": "https://developer.eliq.com/docs",
+      "feed_url": "https://developer.eliq.com/docs",
+      "title": "",
+      "saved": 0,
+      "method": "none"
     },
     {
       "source": "https://eliq.com/insights",
@@ -13,7 +16,7 @@
       "method": "none"
     }
   ],
-  "fetched": "2026-09-06T19:17:18Z",
+  "fetched": "2026-09-13T13:00:00Z",
   "post_count": 4,
   "feed_nature": "vendor-blog",
   "feed_nature_basis": "path_blog",
