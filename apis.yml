@@ -1218,46 +1218,6 @@ apis:
     url: components/eliq-components.yml
   - type: APIReference
     url: https://developer.eliq.com/api-reference/intelligence-api
-- aid: eliq:eliq-oauth-api
-  name: Eliq OAUTH API
-  description: The Oauth API from Eliq — 1 operation(s) for oauth.
-  humanURL: https://developer.eliq.com/api-reference/auth-api
-  baseURL: https://auth-api.eliq.com
-  tags:
-  - Oauth
-  properties:
-  - type: OpenAPI
-    url: openapi/eliq-oauth-api-openapi.yml
-  - type: Documentation
-    url: https://developer.eliq.com/api-reference
-  - type: DeveloperPortal
-    url: https://developer.eliq.com
-  - type: APIReference
-    url: https://developer.eliq.com/api-reference/auth-api
-  - type: Authentication
-    url: authentication/eliq-authentication.yml
-  - type: OAuthScopes
-    url: scopes/eliq-scopes.yml
-  - type: Documentation
-    url: https://developer.eliq.com/doc/eliq-apis
-  - type: APIReference
-    url: https://developer.eliq.com/api-reference/data-mgmt-api
-  - type: ErrorCatalog
-    url: errors/eliq-problem-types.yml
-  - type: DataModel
-    url: data-model/eliq-data-model.yml
-  - type: Documentation
-    url: https://developer.eliq.com/doc/energy-insights-for-businesses
-  - type: Documentation
-    url: https://developer.eliq.com/doc/device-specific-energy-insights
-  - type: APIReference
-    url: https://developer.eliq.com/api-reference/insights-api
-  - type: Webhooks
-    url: asyncapi/eliq-webhooks.yml
-  - type: Components
-    url: components/eliq-components.yml
-  - type: APIReference
-    url: https://developer.eliq.com/api-reference/intelligence-api
 - aid: eliq:eliq-portfolio-accounts-api
   name: Eliq Portfolio Accounts API
   description: The Portfolio Accounts API from Eliq — 3 operation(s) for portfolio accounts.
@@ -1588,6 +1548,46 @@ apis:
   properties:
   - type: OpenAPI
     url: openapi/eliq-well-known-api-openapi.yml
+  - type: Documentation
+    url: https://developer.eliq.com/api-reference
+  - type: DeveloperPortal
+    url: https://developer.eliq.com
+  - type: APIReference
+    url: https://developer.eliq.com/api-reference/auth-api
+  - type: Authentication
+    url: authentication/eliq-authentication.yml
+  - type: OAuthScopes
+    url: scopes/eliq-scopes.yml
+  - type: Documentation
+    url: https://developer.eliq.com/doc/eliq-apis
+  - type: APIReference
+    url: https://developer.eliq.com/api-reference/data-mgmt-api
+  - type: ErrorCatalog
+    url: errors/eliq-problem-types.yml
+  - type: DataModel
+    url: data-model/eliq-data-model.yml
+  - type: Documentation
+    url: https://developer.eliq.com/doc/energy-insights-for-businesses
+  - type: Documentation
+    url: https://developer.eliq.com/doc/device-specific-energy-insights
+  - type: APIReference
+    url: https://developer.eliq.com/api-reference/insights-api
+  - type: Webhooks
+    url: asyncapi/eliq-webhooks.yml
+  - type: Components
+    url: components/eliq-components.yml
+  - type: APIReference
+    url: https://developer.eliq.com/api-reference/intelligence-api
+- aid: eliq:eliq-oauth-api
+  name: Eliq OAUTH API
+  description: The Oauth API from Eliq — 1 operation(s) for oauth.
+  humanURL: https://developer.eliq.com/api-reference/auth-api
+  baseURL: https://auth-api.eliq.com
+  tags:
+  - Oauth
+  properties:
+  - type: OpenAPI
+    url: openapi/eliq-oauth-api-openapi.yml
   - type: Documentation
     url: https://developer.eliq.com/api-reference
   - type: DeveloperPortal
