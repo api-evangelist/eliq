@@ -1,0 +1,270 @@
+openapi: 3.2.0
+info:
+  title: Eliq Data Management Portfolio Accounts API
+  description: '# API Reference
+
+
+    The Eliq data management API is organized around REST.'
+  contact:
+    name: Support
+    email: support_b2b@eliq.com
+  version: 1.5.2
+tags:
+- name: Portfolio Accounts
+paths:
+  /portfolio/accounts/{id}:
+    put:
+      tags:
+      - Portfolio Accounts
+      summary: Create or update portfolio account
+      description: 'Create or update an account for the portfolio.
+
+        If an account with the given id does not exist, a new account will be created.
+
+        If an account with id exists, that account will be updated.'
+      operationId: put-portfolio-accounts
+      parameters:
+      - name: id
+        in: path
+        description: Account identifier
+        required: true
+        schema:
+          type: string
+        example: 6ad04dc2-0db7-4f96-a10d-5a6aff002d05
+      requestBody:
+        description: ''
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PortfolioAccount'
+      responses:
+        '200':
+          description: Portfolio account was updated
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PortfolioAccount'
+        '201':
+          description: Portfolio account was created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PortfolioAccount'
+        '400':
+          description: Bad request. See error code and description for more info
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorDetails'
+              examples:
+                Job with specified id could not be found:
+                  value:
+                    code: JOB_NOT_FOUND
+                    description: Job with specified id could not be found
+                    request_id: 65e2ea86-470f-4363-9295-35d6b473981a
+    delete:
+      tags:
+      - Portfolio Accounts
+      summary: Delete a portfolio account
+      operationId: delete-portfolio-accounts
+      parameters:
+      - name: id
+        in: path
+        description: Account identifier
+        required: true
+        schema:
+          type: string
+        example: 6ad04dc2-0db7-4f96-a10d-5a6aff002d05
+      responses:
+        '204':
+          description: Portfolio account was deleted
+        '400':
+          description: Bad request. See error code and description for more info
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorDetails'
+              examples:
+                Job with specified id could not be found:
+                  value:
+                    code: JOB_NOT_FOUND
+                    description: Job with specified id could not be found
+                    request_id: 65e2ea86-470f-4363-9295-35d6b473981a
+        '404':
+          description: Portfolio account was not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorDetails'
+              examples:
+                Job with specified id could not be found:
+                  value:
+                    code: JOB_NOT_FOUND
+                    description: Job with specified id could not be found
+                    request_id: 65e2ea86-470f-4363-9295-35d6b473981a
+    get:
+      tags:
+      - Portfolio Accounts
+      summary: Get portfolio account
+      operationId: get-portfolio-accounts
+      parameters:
+      - name: id
+        in: path
+        description: Account identifier
+        required: true
+        schema:
+          type: string
+        example: 6ad04dc2-0db7-4f96-a10d-5a6aff002d05
+      responses:
+        '200':
+          description: Ok
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PortfolioAccount'
+        '400':
+          description: Bad request. See error code and description for more info
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorDetails'
+              examples:
+                Job with specified id could not be found:
+                  value:
+                    code: JOB_NOT_FOUND
+                    description: Job with specified id could not be found
+                    request_id: 65e2ea86-470f-4363-9295-35d6b473981a
+        '404':
+          description: Portfolio account was not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorDetails'
+              examples:
+                Job with specified id could not be found:
+                  value:
+                    code: JOB_NOT_FOUND
+                    description: Job with specified id could not be found
+                    request_id: 65e2ea86-470f-4363-9295-35d6b473981a
+  /portfolio/accounts/name/{name}:
+    get:
+      tags:
+      - Portfolio Accounts
+      summary: Get portfolio account, by name
+      operationId: get-portfolio-accounts-by-name
+      parameters:
+      - name: name
+        in: path
+        description: Name of the portfolio account
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          description: Ok
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PortfolioAccount'
+        '400':
+          description: Bad request. See error code and description for more info
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorDetails'
+              examples:
+                Job with specified id could not be found:
+                  value:
+                    code: JOB_NOT_FOUND
+                    description: Job with specified id could not be found
+                    request_id: 65e2ea86-470f-4363-9295-35d6b473981a
+        '404':
+          description: Portfolio account was not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorDetails'
+              examples:
+                Job with specified id could not be found:
+                  value:
+                    code: JOB_NOT_FOUND
+                    description: Job with specified id could not be found
+                    request_id: 65e2ea86-470f-4363-9295-35d6b473981a
+  /portfolio/accounts:
+    get:
+      tags:
+      - Portfolio Accounts
+      summary: Get all portfolio accounts
+      operationId: get-portfolio-accounts-list
+      responses:
+        '200':
+          description: Ok
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/PortfolioAccount'
+components:
+  schemas:
+    ErrorDetails:
+      required:
+      - code
+      - description
+      type: object
+      properties:
+        code:
+          minLength: 1
+          type: string
+        description:
+          minLength: 1
+          type: string
+        request_id:
+          type:
+          - string
+          - 'null'
+    PortfolioAccount:
+      required:
+      - name
+      type: object
+      properties:
+        id:
+          type:
+          - string
+          - 'null'
+        name:
+          minLength: 1
+          type: string
+        created_at_utc:
+          type: string
+x-tagGroups:
+- name: Users
+  tags:
+  - User
+- name: Locations
+  tags:
+  - Location
+  - Location profile
+  - Location home profile
+  - Location price formulas
+- name: Meters
+  tags:
+  - Meter
+  - Meter Energy Day
+  - Meter Energy High Resolution
+  - Meter Energy Reads
+  - Meter Energy Period
+  - Meter Max Demand
+  - Meter Price Formulas
+- name: Jobs
+  tags:
+  - Jobs
+- name: Portfolio
+  tags:
+  - Portfolio Accounts
+  - Portfolio Groups
+  - Portfolio Locations
+  - Portfolio Users
+- name: Client details
+  tags:
+  - Client details

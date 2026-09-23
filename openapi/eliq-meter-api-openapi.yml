@@ -1,0 +1,582 @@
+openapi: 3.2.0
+info:
+  title: Eliq Data Management Meter API
+  description: '# API Reference
+
+
+    The Eliq data management API is organized around REST.'
+  contact:
+    name: Support
+    email: support_b2b@eliq.com
+  version: 1.5.2
+tags:
+- name: Meter
+paths:
+  /meters/{id}:
+    put:
+      tags:
+      - Meter
+      summary: Creates or updates a meter
+      operationId: put-meter-meterid
+      parameters:
+      - name: id
+        in: path
+        description: Meter external reference
+        required: true
+        schema:
+          type: string
+      requestBody:
+        description: The meter entity to create or update
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Meter'
+            examples:
+              Meter request example:
+                value:
+                  id: Meter_ID
+                  location_id: Meter_Location_ID
+                  name: Meter_Name
+                  model: Meter_Model
+                  fuel: elec
+                  type: import
+                  is_sub_meter: false
+                  category: Meter_Category
+                  category_percentage: 100
+                  supply_start_date: '2024-01-01'
+                  supply_end_date: '2024-12-31'
+                  created_at_timestamp: '2024-01-01T12:00:00Z'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Meter'
+              examples:
+                Meter:
+                  value:
+                    id: Meter_ID
+                    eliq_id: 000001_MeterID
+                    location_id: Meter_Location_ID
+                    name: Meter_Name
+                    model: Meter_Model
+                    fuel: elec
+                    type: import
+                    is_sub_meter: false
+                    category: Meter_Category
+                    category_percentage: 100
+                    supply_start_date: '2024-01-01'
+                    supply_end_date: '2024-12-31'
+                    created_at_timestamp: '2024-01-01T12:00:00Z'
+        '201':
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Meter'
+              examples:
+                Meter:
+                  value:
+                    id: Meter_ID
+                    eliq_id: 000001_MeterID
+                    location_id: Meter_Location_ID
+                    name: Meter_Name
+                    model: Meter_Model
+                    fuel: elec
+                    type: import
+                    is_sub_meter: false
+                    category: Meter_Category
+                    category_percentage: 100
+                    supply_start_date: '2024-01-01'
+                    supply_end_date: '2024-12-31'
+                    created_at_timestamp: '2024-01-01T12:00:00Z'
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorDetails'
+              examples:
+                Request input is missing. This may be caused by incorrect format of input.:
+                  value:
+                    code: INPUT_MISSING
+                    description: Request input is missing. This may be caused by incorrect format of input.
+                    request_id: 65e2ea86-470f-4363-9295-35d6b473981a
+                Parameter 'id' must not be null or empty:
+                  value:
+                    code: METER_ID_MISSING
+                    description: Parameter 'id' must not be null or empty
+                    request_id: 65e2ea86-470f-4363-9295-35d6b473981a
+                Parameter 'id' does not match 'id' provided in the URI:
+                  value:
+                    code: METER_ID_MISMATCH
+                    description: Parameter 'id' does not match 'id' provided in the URI
+                    request_id: 65e2ea86-470f-4363-9295-35d6b473981a
+                ? Parameter 'supply_start_date' must not be null or empty. This may be caused by incorrect date format, please refer to documentation
+                : value:
+                    code: METER_SUPPLY_START_DATE_MISSING
+                    description: Parameter 'supply_start_date' must not be null or empty. This may be caused by incorrect date format, please refer to documentation
+                    request_id: 65e2ea86-470f-4363-9295-35d6b473981a
+                Parameter 'location_id' must not be null or empty:
+                  value:
+                    code: METER_LOCATION_ID_MISSING
+                    description: Parameter 'location_id' must not be null or empty
+                    request_id: 65e2ea86-470f-4363-9295-35d6b473981a
+                Parameter 'fuel' must not be null or empty:
+                  value:
+                    code: METER_FUEL_MISSING
+                    description: Parameter 'fuel' must not be null or empty
+                    request_id: 65e2ea86-470f-4363-9295-35d6b473981a
+                Meter associated with provided id does not support meter reads.:
+                  value:
+                    code: METER_MODEL_DOES_NOT_SUPPORT_READS
+                    description: Meter associated with provided id does not support meter reads.
+                    request_id: 65e2ea86-470f-4363-9295-35d6b473981a
+                Invalid meter model:
+                  value:
+                    code: METER_MODEL_INVALID
+                    description: Invalid meter model
+                    request_id: 65e2ea86-470f-4363-9295-35d6b473981a
+                Parameter 'model' must not be null or empty:
+                  value:
+                    code: METER_MODEL_MISSING
+                    description: Parameter 'model' must not be null or empty
+                    request_id: 65e2ea86-470f-4363-9295-35d6b473981a
+                Invalid meter fuel. Must be one of 'elec', 'gas' or 'district_heating':
+                  value:
+                    code: METER_FUEL_INVALID
+                    description: Invalid meter fuel. Must be one of 'elec', 'gas' or 'district_heating'
+                    request_id: 65e2ea86-470f-4363-9295-35d6b473981a
+                Parameter 'type' must not be null or empty:
+                  value:
+                    code: METER_TYPE_MISSING
+                    description: Parameter 'type' must not be null or empty
+                    request_id: 65e2ea86-470f-4363-9295-35d6b473981a
+                Invalid meter type. Must be one of 'import', 'export', 'consumption' or 'production':
+                  value:
+                    code: METER_TYPE_INVALID
+                    description: Invalid meter type. Must be one of 'import', 'export', 'consumption' or 'production'
+                    request_id: 65e2ea86-470f-4363-9295-35d6b473981a
+                Category percentage is invalid:
+                  value:
+                    code: CATEGORY_PERCENTAGE_IS_INVALID
+                    description: Category percentage is invalid
+                    request_id: 65e2ea86-470f-4363-9295-35d6b473981a
+                Category percentage should be null:
+                  value:
+                    code: CATEGORY_PERCENTAGE_CLIENT_SHOULD_BE_NULL
+                    description: Category percentage should be null
+                    request_id: 65e2ea86-470f-4363-9295-35d6b473981a
+                Gas cannot be exported:
+                  value:
+                    code: GAS_CANNOT_BE_EXPORTED
+                    description: Gas cannot be exported
+                    request_id: 65e2ea86-470f-4363-9295-35d6b473981a
+                'Duplicate Meter, Fuel: Elec, Direction: Export, already exist':
+                  value:
+                    code: ELEC_EXPORT_DUPLICATE_FOUND
+                    description: 'Duplicate Meter, Fuel: Elec, Direction: Export, already exist'
+                    request_id: 65e2ea86-470f-4363-9295-35d6b473981a
+                'Duplicate Meter, Fuel: Elec, Direction: Import, already exist':
+                  value:
+                    code: ELEC_IMPORT_DUPLICATE_FOUND
+                    description: 'Duplicate Meter, Fuel: Elec, Direction: Import, already exist'
+                    request_id: 65e2ea86-470f-4363-9295-35d6b473981a
+                'Duplicate Meter, Direction: Export, already exist':
+                  value:
+                    code: EXPORT_DUPLICATE_FOUND
+                    description: 'Duplicate Meter, Direction: Export, already exist'
+                    request_id: 65e2ea86-470f-4363-9295-35d6b473981a
+                'Duplicate Meter, Direction: Import, already exist':
+                  value:
+                    code: IMPORT_DUPLICATE_FOUND
+                    description: 'Duplicate Meter, Direction: Import, already exist'
+                    request_id: 65e2ea86-470f-4363-9295-35d6b473981a
+                A meter with the same id already exists for another location. A meter cannot be moved between users.:
+                  value:
+                    code: METER_CANNOT_BE_MOVED
+                    description: A meter with the same id already exists for another location. A meter cannot be moved between users.
+                    request_id: 65e2ea86-470f-4363-9295-35d6b473981a
+                Fuel type for Meter cannot be updated:
+                  value:
+                    code: METER_FUEL_CANNOT_BE_UPDATED
+                    description: Fuel type for Meter cannot be updated
+                    request_id: 65e2ea86-470f-4363-9295-35d6b473981a
+                Direction type for Meter cannot be updated:
+                  value:
+                    code: METER_TYPE_CANNOT_BE_UPDATED
+                    description: Direction type for Meter cannot be updated
+                    request_id: 65e2ea86-470f-4363-9295-35d6b473981a
+                Category is invalid:
+                  value:
+                    code: CATEGORY_CLIENT_IS_INVALID
+                    description: Category is invalid
+                    request_id: 65e2ea86-470f-4363-9295-35d6b473981a
+                Location with given 'location_id' could not be found:
+                  value:
+                    code: METER_LOCATION_NOT_FOUND
+                    description: Location with given 'location_id' could not be found
+                    request_id: 65e2ea86-470f-4363-9295-35d6b473981a
+                Too many requests to add the same meter were created, please try again later.:
+                  value:
+                    code: EXCESSIVE_REQUESTS_FOR_THE_SAME_METER
+                    description: Too many requests to add the same meter were created, please try again later.
+                    request_id: 65e2ea86-470f-4363-9295-35d6b473981a
+                Direction type must be 'import' for district heating meters:
+                  value:
+                    code: METER_TYPE_MUST_BE_IMPORT_FOR_DISTRICT_HEATING
+                    description: Direction type must be 'import' for district heating meters
+                    request_id: 65e2ea86-470f-4363-9295-35d6b473981a
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorDetails'
+              examples:
+                Job with specified id could not be found:
+                  value:
+                    code: JOB_NOT_FOUND
+                    description: Job with specified id could not be found
+                    request_id: 65e2ea86-470f-4363-9295-35d6b473981a
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorDetails'
+              examples:
+                Internal server error. If problem remains, please contact support:
+                  value:
+                    code: INTERNAL_ERROR
+                    description: Internal server error. If problem remains, please contact support
+                    request_id: 65e2ea86-470f-4363-9295-35d6b473981a
+    get:
+      tags:
+      - Meter
+      summary: Gets a meter by provided meter external reference
+      operationId: get-meter-meterid
+      parameters:
+      - name: id
+        in: path
+        description: Meter external reference
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Meter'
+              examples:
+                Meter:
+                  value:
+                    id: Meter_ID
+                    eliq_id: 000001_MeterID
+                    location_id: Meter_Location_ID
+                    name: Meter_Name
+                    model: Meter_Model
+                    fuel: elec
+                    type: import
+                    is_sub_meter: false
+                    category: Meter_Category
+                    category_percentage: 100
+                    supply_start_date: '2024-01-01'
+                    supply_end_date: '2024-12-31'
+                    created_at_timestamp: '2024-01-01T12:00:00Z'
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorDetails'
+              examples:
+                Parameter 'id' must not be null or empty:
+                  value:
+                    code: METER_ID_MISSING
+                    description: Parameter 'id' must not be null or empty
+                    request_id: 65e2ea86-470f-4363-9295-35d6b473981a
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorDetails'
+              examples:
+                Meter with given id could not be found:
+                  value:
+                    code: METER_NOT_FOUND
+                    description: Meter with given id could not be found
+                    request_id: 65e2ea86-470f-4363-9295-35d6b473981a
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorDetails'
+              examples:
+                Internal server error. If problem remains, please contact support:
+                  value:
+                    code: INTERNAL_ERROR
+                    description: Internal server error. If problem remains, please contact support
+                    request_id: 65e2ea86-470f-4363-9295-35d6b473981a
+    delete:
+      tags:
+      - Meter
+      summary: Deletes a meter by provided meter external reference
+      operationId: delete-meter-meterid
+      parameters:
+      - name: id
+        in: path
+        description: Meter external reference
+        required: true
+        schema:
+          type: string
+      responses:
+        '204':
+          description: No Content
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NoContentResult'
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorDetails'
+              examples:
+                Parameter 'id' must not be null or empty:
+                  value:
+                    code: METER_ID_MISSING
+                    description: Parameter 'id' must not be null or empty
+                    request_id: 65e2ea86-470f-4363-9295-35d6b473981a
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorDetails'
+              examples:
+                Meter with given id could not be found:
+                  value:
+                    code: METER_NOT_FOUND
+                    description: Meter with given id could not be found
+                    request_id: 65e2ea86-470f-4363-9295-35d6b473981a
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorDetails'
+              examples:
+                Internal server error. If problem remains, please contact support:
+                  value:
+                    code: INTERNAL_ERROR
+                    description: Internal server error. If problem remains, please contact support
+                    request_id: 65e2ea86-470f-4363-9295-35d6b473981a
+  /meters:
+    get:
+      tags:
+      - Meter
+      summary: Gets a list of meters based on the provided query parameters
+      operationId: get-meters
+      parameters:
+      - name: after_id
+        in: query
+        description: Indicates that the meter search should start after a specific meter external reference
+        schema:
+          type: string
+      - name: limit
+        in: query
+        description: The amount of meters to retrieve
+        schema:
+          type: integer
+          format: int32
+          default: 100
+      - name: created_after
+        in: query
+        description: Enables a search of meters which have been created after the provided date
+        schema:
+          type: string
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Meter'
+              examples:
+                Meters:
+                  value:
+                  - id: Meter_ID
+                    eliq_id: 000001_MeterID
+                    location_id: Meter_Location_ID
+                    name: Meter_Name
+                    model: Meter_Model
+                    fuel: elec
+                    type: import
+                    is_sub_meter: false
+                    category: Meter_Category
+                    category_percentage: 100
+                    supply_start_date: '2024-01-01'
+                    supply_end_date: '2024-12-31'
+                    created_at_timestamp: '2024-01-01T12:00:00Z'
+                  - id: Meter_ID_2
+                    eliq_id: 000002_MeterID
+                    location_id: Meter_Location_ID_2
+                    name: Meter_Name
+                    model: Meter_Model
+                    fuel: gas
+                    type: import
+                    is_sub_meter: false
+                    category: Meter_Category
+                    category_percentage: 100
+                    supply_start_date: '2024-01-01'
+                    supply_end_date: '2024-12-31'
+                    created_at_timestamp: '2024-01-01T12:00:00Z'
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorDetails'
+              examples:
+                Meter with given id could not be found:
+                  value:
+                    code: METER_NOT_FOUND
+                    description: Meter with given id could not be found
+                    request_id: 65e2ea86-470f-4363-9295-35d6b473981a
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorDetails'
+              examples:
+                Internal server error. If problem remains, please contact support:
+                  value:
+                    code: INTERNAL_ERROR
+                    description: Internal server error. If problem remains, please contact support
+                    request_id: 65e2ea86-470f-4363-9295-35d6b473981a
+components:
+  schemas:
+    NoContentResult:
+      type: object
+      properties:
+        statusCode:
+          type: integer
+          format: int32
+    ErrorDetails:
+      required:
+      - code
+      - description
+      type: object
+      properties:
+        code:
+          minLength: 1
+          type: string
+        description:
+          minLength: 1
+          type: string
+        request_id:
+          type:
+          - string
+          - 'null'
+    Meter:
+      type: object
+      properties:
+        id:
+          type:
+          - string
+          - 'null'
+        eliq_id:
+          type:
+          - string
+          - 'null'
+          readOnly: true
+        location_id:
+          type:
+          - string
+          - 'null'
+        name:
+          type:
+          - string
+          - 'null'
+        model:
+          type:
+          - string
+          - 'null'
+        fuel:
+          type:
+          - string
+          - 'null'
+        type:
+          type:
+          - string
+          - 'null'
+        is_sub_meter:
+          type:
+          - boolean
+          - 'null'
+        category:
+          type:
+          - string
+          - 'null'
+        category_percentage:
+          type:
+          - integer
+          - 'null'
+          format: int32
+        supply_start_date:
+          type:
+          - string
+          - 'null'
+        supply_end_date:
+          type:
+          - string
+          - 'null'
+        created_at_timestamp:
+          type:
+          - string
+          - 'null'
+        sync_status:
+          type:
+          - string
+          - 'null'
+x-tagGroups:
+- name: Users
+  tags:
+  - User
+- name: Locations
+  tags:
+  - Location
+  - Location profile
+  - Location home profile
+  - Location price formulas
+- name: Meters
+  tags:
+  - Meter
+  - Meter Energy Day
+  - Meter Energy High Resolution
+  - Meter Energy Reads
+  - Meter Energy Period
+  - Meter Max Demand
+  - Meter Price Formulas
+- name: Jobs
+  tags:
+  - Jobs
+- name: Portfolio
+  tags:
+  - Portfolio Accounts
+  - Portfolio Groups
+  - Portfolio Locations
+  - Portfolio Users
+- name: Client details
+  tags:
+  - Client details

@@ -1,0 +1,214 @@
+openapi: 3.2.0
+info:
+  title: Insights Energy Performance Certificate API
+  version: 3.4.1
+  contact:
+    name: Insights Team
+    email: support_b2b@eliq.com
+  description: '# API Reference
+
+
+    The Eliq insights API is organized around REST.'
+servers:
+- url: http://localhost:3000
+security:
+- BearerAuth: []
+tags:
+- name: Energy Performance Certificate
+paths:
+  /v3/locations/{locationId}/epc-rating:
+    get:
+      tags:
+      - Energy Performance Certificate
+      summary: Get EPC rating
+      description: Get an Actual or Estimated Energy Performance Certificate (EPC) rating for a location.
+      operationId: get-v3-locations-locationId-epc-rating
+      parameters:
+      - name: locationId
+        in: path
+        required: true
+        schema:
+          type: integer
+          format: int32
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/EpcRatingResponse'
+              examples:
+                Actual EPC rating:
+                  value:
+                    energy_rating: B
+                    energy_efficiency: 90
+                    type: actual
+                    valid_from: '2020-05-01T00:00:00'
+                    valid_to: '2030-05-01T00:00:00'
+                    status: active
+                Estimated EPC rating:
+                  value:
+                    energy_rating: C
+                    energy_efficiency: 84
+                    type: estimated
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+              examples:
+                Location not found:
+                  value:
+                    code: ENTITY_NOT_FOUND
+                    transaction_id: 0HN18NIB8K5RV:00000001
+                    description: Could not find the location.
+                Rating not available:
+                  value:
+                    code: EPC_RATING_NOT_AVAILABLE
+                    transaction_id: 0HN18NIB8K5RV:00000001
+                    description: EPC rating data is currently not available
+                Country not supported:
+                  value:
+                    code: COUNTRY_NOT_SUPPORTED
+                    transaction_id: 0HN18NIB8K5RV:00000001
+                    description: Country is not currently supported
+                Profile not supported:
+                  value:
+                    code: PROFILE_NOT_SUPPORTED
+                    transaction_id: 0HN18NIB8K5RV:00000001
+                    description: Profile is not supported, check description for more details
+        '500':
+          description: Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+              examples:
+                Internal Error:
+                  value:
+                    code: INTERNAL_SERVER_ERROR
+                    transaction_id: 0HN18NIB8K5RV:00000001
+                    description: Internal server error.
+components:
+  schemas:
+    Error:
+      type: object
+      properties:
+        type:
+          type: string
+          description: Type of error.
+          nullable: true
+          example: internal_error
+        category:
+          type: string
+          description: Error category.
+          nullable: true
+          example: internal_error
+        code:
+          type: string
+          description: Code describing the issue.
+          nullable: true
+          example: INTERNAL_ERROR
+        transaction_id:
+          type: string
+          description: Identifier for the session. Please provide this when contacting support.
+          nullable: true
+          example: 0HN18NN5QB401:00000001
+        message:
+          type: string
+          description: A message related to the error.
+          nullable: true
+          example: Something went wrong. Please try again later. If problem remains, please contact support.
+        description:
+          type: string
+          description: A description of the error for developers.
+          nullable: true
+          example: Internal server error, please try again later. If problem remains, please contact support.
+      description: Model returned for error responses.
+    EpcRatingStatus:
+      enum:
+      - active
+      - expired
+      type: string
+      description: 'Current energy rating status based on the valid from and to dates
+
+
+        Not available for estimated energy rating type'
+    EpcRatingResponse:
+      required:
+      - energy_efficiency
+      - energy_rating
+      - type
+      type: object
+      properties:
+        energy_rating:
+          minLength: 1
+          type: string
+          description: Energy rating
+        energy_efficiency:
+          type: integer
+          description: Energy efficiency
+          format: int32
+        type:
+          $ref: '#/components/schemas/EpcRatingType'
+        valid_from:
+          type: string
+          description: 'Valid from date
+
+
+            Not available for estimated energy rating type'
+          format: date-time
+          nullable: true
+        valid_to:
+          type: string
+          description: 'Valid to date
+
+
+            Not available for estimated energy rating type'
+          format: date-time
+          nullable: true
+        status:
+          $ref: '#/components/schemas/EpcRatingStatus'
+      description: EPC rating
+    EpcRatingType:
+      enum:
+      - actual
+      - estimated
+      type: string
+      description: Energy rating type
+  securitySchemes:
+    BearerAuth:
+      type: http
+      scheme: bearer
+      description: The Eliq insights API uses bearer tokens to authenticate requests. Read more under Authentication tag.
+x-tagGroups:
+- name: Authentication
+  tags:
+  - Authentication
+- name: Users
+  tags:
+  - Users
+- name: Locations
+  tags:
+  - Locations
+  - Location Profile
+  - Energy Data
+  - Energy Usage Categories
+  - Energy Performance Certificate
+  - Similar Homes
+  - Budgets
+  - Advice
+  - Anomalies
+  - Market Price
+  - Price Formulas
+- name: Eliq Connect
+  tags:
+  - Eliq Connect
+- name: Health
+  tags:
+  - Health
+- name: Deprecated
+  tags:
+  - Breakdown
+  - Home Profile

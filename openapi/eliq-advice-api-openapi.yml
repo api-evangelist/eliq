@@ -1,0 +1,834 @@
+openapi: 3.2.0
+info:
+  title: Insights Advice API
+  version: 3.4.1
+  contact:
+    name: Insights Team
+    email: support_b2b@eliq.com
+  description: '# API Reference
+
+
+    The Eliq insights API is organized around REST.'
+servers:
+- url: http://localhost:3000
+security:
+- BearerAuth: []
+tags:
+- name: Advice
+paths:
+  /v3/locations/{locationId}/advice:
+    get:
+      tags:
+      - Advice
+      summary: Get advice
+      description: Get a list of advice sorted on relevance.
+      operationId: get-v3-location-advice
+      parameters:
+      - name: locationId
+        in: path
+        description: Location id
+        required: true
+        schema:
+          type: integer
+          format: int32
+      - name: limit
+        in: query
+        description: Number of advices to return
+        schema:
+          type: integer
+          format: int32
+          default: 10
+      - name: language_code
+        in: query
+        description: 'Preferred language/region code (e.g., sv-SE).
+
+          If specified, the following properties will be translated if translations are present in our system:
+
+
+          * title
+
+          * content
+
+          * link.text'
+        schema:
+          type: string
+      responses:
+        '200':
+          description: Success
+          headers:
+            Content-Language:
+              description: Preferred language/region code (e.g., sv-SE). Will be present in the response if the advice was successfully translated.
+              schema:
+                type: string
+                description: Preferred language/region code (e.g., sv-SE). Will be present in the response if the advice was successfully translated.
+                format: ''
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Advice'
+              examples:
+                Energy tip:
+                  value:
+                  - id: 46e6hh85-037a-49ae-afc3-4eb51a44cded
+                    relevance: 0.21
+                    estimated_yearly_savings_energy: 360
+                    estimated_yearly_savings:
+                    - value: 360
+                      unit: kwh
+                    estimated_yearly_savings_cost: 78.84
+                    estimated_yearly_savings_monetary:
+                    - type: price_formula
+                      cost: 78.84
+                      cost_per_wh: 0.219
+                    title: Replace old lamps with LED lighting
+                    content: Don't wait to replace your incandescent or halogen bulbs with LED bulbs.
+                    key: replace_old_lamps_with_led_lighting
+                    status: none
+                    link:
+                      text: LED lighting
+                      url: https://www.example.com/page.html
+                    links:
+                    - key: led-lighting-page
+                      type: external-link
+                      text: LED lighting
+                      url: https://www.example.com/page.html
+                    type: energy_tip
+                    euc_keys:
+                    - lighting
+                Upgrade:
+                  value:
+                  - id: b0990c22-1e54-4f00-a46c-bebae4a1edb3
+                    relevance: 0.16
+                    estimated_yearly_savings_energy: 650
+                    estimated_yearly_savings:
+                    - value: 650
+                      unit: kwh
+                    estimated_yearly_savings_cost: 117
+                    estimated_yearly_savings_monetary:
+                    - type: price_formula
+                      cost: 117
+                      cost_per_wh: 0.18
+                    title: An old water heater should be replaced
+                    content: Instant hot water taps are becoming popular.
+                    key: old_water_heater_should_be_replaced
+                    status: none
+                    link:
+                      text: Water heater
+                      url: https://www.example.com/page.html
+                    links:
+                    - key: water-heater
+                      type: external-link
+                      text: Water heater
+                      url: https://www.example.com/page.html
+                    - key: water-heater-image
+                      type: image
+                      text: Water heater image
+                      url: https://www.example.com/water-heater.jpg
+                    type: upgrade
+                    investment_cost:
+                      fixed: 2149.99
+                      roi:
+                      - unit: months
+                        from: 37
+                        to: 42
+                    financing_options:
+                    - key: financing_key
+                      type: financing
+                      title: Available financing option
+                      description: This helps to cover costs related to installing an energy saving upgrade for your home
+                      url: https://www.example.com/page.html
+                    euc_keys:
+                    - water_heating
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+              examples:
+                Location not found:
+                  value:
+                    type: client_error
+                    category: entity_not_found
+                    code: ENTITY_NOT_FOUND
+                    transaction_id: 0HN18NIB8K5RV:00000001
+                    message: Something went wrong, please try again later. If problem remains, please contact support.
+                    description: Could not find the location.
+                Advice not found:
+                  value:
+                    type: client_error
+                    category: invalid_path
+                    code: INVALID_PATH
+                    transaction_id: 0HN18NIB8K5RV:00000001
+                    message: Something went wrong, please try again later. If problem remains, please contact support.
+                    description: No advices found
+        '500':
+          description: Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+              examples:
+                Server error:
+                  value:
+                    type: internal_error
+                    category: internal_error
+                    code: INTERNAL_ERROR
+                    transaction_id: 0HN18NIB8K5RV:00000001
+                    message: Something went wrong. Please try again later. If problem remains, please contact support.
+                    description: Error when getting location advice
+  /v3/locations/{locationId}/advice/{adviceId}:
+    patch:
+      tags:
+      - Advice
+      summary: Patch advice
+      description: Update advice status.
+      operationId: patch-v3-location-advice-adviceId
+      parameters:
+      - name: locationId
+        in: path
+        description: Location id
+        required: true
+        schema:
+          type: integer
+          format: int32
+      - name: adviceId
+        in: path
+        description: Advice id
+        required: true
+        schema:
+          type: string
+      requestBody:
+        description: ''
+        content:
+          application/json:
+            schema:
+              type: array
+              items:
+                $ref: '#/components/schemas/AdvicePatchInput'
+            examples:
+              Payload:
+                value:
+                - op: replace
+                  path: /status
+                  value: implemented
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Advice'
+              examples:
+                Energy tip:
+                  value:
+                    id: 46e6hh85-037a-49ae-afc3-4eb51a44cded
+                    relevance: 0.21
+                    estimated_yearly_savings_energy: 360
+                    estimated_yearly_savings_cost: 78.84
+                    estimated_yearly_savings_monetary:
+                    - type: price_formula
+                      cost: 78.84
+                      cost_per_wh: 0.219
+                    title: Replace old lamps with LED lighting
+                    content: Don't wait to replace your incandescent or halogen bulbs with LED bulbs.
+                    key: replace_old_lamps_with_led_lighting
+                    status: none
+                    link:
+                      text: LED lighting
+                      url: https://www.example.com/page.html
+                    type: energy_tip
+                Upgrade:
+                  value:
+                    id: b0990c22-1e54-4f00-a46c-bebae4a1edb3
+                    relevance: 0.16
+                    estimated_yearly_savings_energy: 650
+                    estimated_yearly_savings_cost: 117
+                    estimated_yearly_savings_monetary:
+                    - type: price_formula
+                      cost: 117
+                      cost_per_wh: 0.18
+                    title: An old water heater should be replaced
+                    content: Instant hot water taps are becoming popular.
+                    key: old_water_heater_should_be_replaced
+                    status: none
+                    link:
+                      text: Water heater
+                      url: https://www.example.com/page.html
+                    type: upgrade
+                    investment_cost:
+                      fixed: 2149.99
+                      roi:
+                      - unit: months
+                        from: 37
+                        to: 42
+                    financing_options:
+                    - key: financing_key
+                      type: financing
+                      title: Available financing option
+                      description: This helps to cover costs related to installing an energy saving upgrade for your home
+                      url: https://www.example.com/page.html
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+              examples:
+                Incorrect request body:
+                  value:
+                    type: client_error
+                    category: invalid_parameter
+                    code: INVALID_PARAMETER
+                    transaction_id: 0HN1O72JP5P3C:00000001
+                    message: Something went wrong, please try again later. If problem remains, please contact support.
+                    description: PATCH_LIST_MISSING_OR_EMPTY
+                Only replace allowed:
+                  value:
+                    type: client_error
+                    category: invalid_parameter
+                    code: INVALID_PARAMETER
+                    transaction_id: 0HN1O72JP5P3C:00000001
+                    message: Something went wrong, please try again later. If problem remains, please contact support.
+                    description: ONLY_OPERATION_REPLACE_ALLOWED
+                Only replacing status allowed:
+                  value:
+                    type: client_error
+                    category: invalid_parameter
+                    code: INVALID_PARAMETER
+                    transaction_id: 0HN1O72JP5P3C:00000001
+                    message: Something went wrong, please try again later. If problem remains, please contact support.
+                    description: ONLY_REPLACING_STATUS_ALLOWED
+                Only string value allowed:
+                  value:
+                    type: client_error
+                    category: invalid_parameter
+                    code: INVALID_PARAMETER
+                    transaction_id: 0HN1O72JP5P3C:00000001
+                    message: Something went wrong, please try again later. If problem remains, please contact support.
+                    description: STATUS_VALUE_MUST_BE_STRING
+                Invalid status supplied:
+                  value:
+                    type: client_error
+                    category: invalid_parameter
+                    code: INVALID_PARAMETER
+                    transaction_id: 0HN1O72JP5P3C:00000001
+                    message: Something went wrong, please try again later. If problem remains, please contact support.
+                    description: INVALID_STATUS_SUPPLIED
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+              examples:
+                Location not found:
+                  value:
+                    type: client_error
+                    category: entity_not_found
+                    code: ENTITY_NOT_FOUND
+                    transaction_id: 0HN18NIB8K5RV:00000001
+                    message: Something went wrong, please try again later. If problem remains, please contact support.
+                    description: Could not find the location.
+        '500':
+          description: Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+              examples:
+                Internal Error:
+                  value:
+                    type: internal_error
+                    category: internal_error
+                    code: INTERNAL_ERROR
+                    transaction_id: 0HN18NIB8K5RV:00000001
+                    message: Something went wrong. Please try again later. If problem remains, please contact support.
+                    description: Error when patching location advice
+  /v3/locations/{locationId}/advice/estimated-savings-monetary-source:
+    get:
+      tags:
+      - Advice
+      summary: Get savings monetary sources
+      description: Get list of all monetary sources used for estimated savings
+      operationId: get-v3-location-advice-monetary-sources
+      parameters:
+      - name: locationId
+        in: path
+        description: Location id
+        required: true
+        schema:
+          type: integer
+          format: int32
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/SavingMonetarySource'
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+              examples:
+                Location not found:
+                  value:
+                    type: client_error
+                    category: entity_not_found
+                    code: ENTITY_NOT_FOUND
+                    transaction_id: 0HN18NIB8K5RV:00000001
+                    message: Something went wrong, please try again later. If problem remains, please contact support.
+                    description: Could not find the location.
+                Monetary sources not found:
+                  value:
+                    type: client_error
+                    category: invalid_path
+                    code: INVALID_PATH
+                    transaction_id: 0HN18NIB8K5RV:00000001
+                    message: Something went wrong, please try again later. If problem remains, please contact support.
+                    description: No monetary sources found
+        '500':
+          description: Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+              examples:
+                Server error:
+                  value:
+                    type: internal_error
+                    category: internal_error
+                    code: INTERNAL_ERROR
+                    transaction_id: 0HN18NIB8K5RV:00000001
+                    message: Something went wrong. Please try again later. If problem remains, please contact support.
+                    description: Error when getting estimated savings monetary sources
+components:
+  schemas:
+    AdviceLinkType:
+      enum:
+      - image
+      - external-link
+      type: string
+      description: The type which can be set to an advice Link.
+    Link:
+      required:
+      - text
+      - url
+      type: object
+      properties:
+        text:
+          minLength: 1
+          type: string
+          description: Title provided for a given Web resource
+          example: Example Domain
+        url:
+          minLength: 1
+          type: string
+          description: System generated url that redirects to a given Web resource. Provided url uses anonymous authentication and is only valid for 30 minutes after its receival.
+          example: https://www.eliq.io/v3/locations/advice/redirect_url?adviceTrackingId=3f062710-d544-49b4-ac04-9ef14e3080b5
+      description: "Optional link can be included with each advice\n            \nDeprecated property, links should be used instead."
+    AdviceLinkModel:
+      required:
+      - key
+      - text
+      - type
+      type: object
+      properties:
+        key:
+          minLength: 1
+          type: string
+          description: The key by which the link is identified.
+        type:
+          $ref: '#/components/schemas/AdviceLinkType'
+        text:
+          minLength: 1
+          type: string
+          description: The text to be displayed in the front end for this link.
+        url:
+          type: string
+          description: The actual URL of the link.
+          nullable: true
+      description: Optional link which can be included with each advice
+    AdviceFinancingOptionModel:
+      required:
+      - description
+      - key
+      - title
+      - type
+      - url
+      type: object
+      properties:
+        key:
+          minLength: 1
+          type: string
+          description: Unique key used to identify a financing option. Consisting only of lowercase letters and underscores.
+          example: financing_key
+        type:
+          $ref: '#/components/schemas/FinancingOptionType'
+        title:
+          minLength: 1
+          type: string
+          description: Title text
+        description:
+          minLength: 1
+          type: string
+          description: Description text
+        url:
+          minLength: 1
+          type: string
+          description: Url of an external Web resource
+      description: Financing option
+    SavingMonetarySource:
+      required:
+      - details
+      - name
+      - type
+      type: object
+      properties:
+        type:
+          minLength: 1
+          type: string
+          description: Unique source type
+          example: average
+        name:
+          minLength: 1
+          type: string
+          description: Savings source type name
+          example: Average
+        details:
+          minLength: 1
+          type: string
+          description: Savings source type details
+          example: Savings based on average price
+      description: Savings calculation source type
+    EnergyUnit:
+      enum:
+      - kwh
+      - m3
+      type: string
+    AdviceReturnOfInvestmentUnit:
+      enum:
+      - months
+      type: string
+      description: Return of investment unit
+    AdviceInvestmentCostModel:
+      type: object
+      properties:
+        fixed:
+          type: number
+          description: Fixed investment cost value
+          format: double
+          nullable: true
+        range_from:
+          type: number
+          description: Investment cost range from value
+          format: double
+          nullable: true
+        range_to:
+          type: number
+          description: Investment cost range to value
+          format: double
+          nullable: true
+        roi:
+          type: array
+          items:
+            $ref: '#/components/schemas/AdviceReturnOfInvestmentModel'
+          nullable: true
+      description: Investment cost
+    Error:
+      type: object
+      properties:
+        type:
+          type: string
+          description: Type of error.
+          nullable: true
+          example: internal_error
+        category:
+          type: string
+          description: Error category.
+          nullable: true
+          example: internal_error
+        code:
+          type: string
+          description: Code describing the issue.
+          nullable: true
+          example: INTERNAL_ERROR
+        transaction_id:
+          type: string
+          description: Identifier for the session. Please provide this when contacting support.
+          nullable: true
+          example: 0HN18NN5QB401:00000001
+        message:
+          type: string
+          description: A message related to the error.
+          nullable: true
+          example: Something went wrong. Please try again later. If problem remains, please contact support.
+        description:
+          type: string
+          description: A description of the error for developers.
+          nullable: true
+          example: Internal server error, please try again later. If problem remains, please contact support.
+      description: Model returned for error responses.
+    AdviceType:
+      enum:
+      - energy_tip
+      - upgrade
+      type: string
+      description: Advice type is used as a sub-category or a group
+    AdvicePatchInput:
+      required:
+      - op
+      - path
+      - value
+      type: object
+      properties:
+        op:
+          minLength: 1
+          type: string
+          description: 'Operation to execute
+
+
+            Allowed values: "replace"'
+          example: replace
+        path:
+          minLength: 1
+          type: string
+          description: 'Path to property to update
+
+
+            Allowed values: "/status"'
+          example: /status
+        value:
+          minLength: 1
+          type: string
+          description: "Status to set. \n\nAllowed values: \"none\", \"skipped\", \"not_relevant\", \"implemented\", \"save_for_later\", \"already_implemented\""
+          example: implemented
+      description: Advice status update request body
+    EstimatedSavings:
+      required:
+      - unit
+      - value
+      type: object
+      properties:
+        value:
+          type: number
+          description: The amount saved.
+          format: double
+        unit:
+          $ref: '#/components/schemas/EnergyUnit'
+      description: "The estimated energy savings in either kWh or M3 for a given advice.\n            \nUnit depends on whether the advice is intended for gas of electricity."
+    AdviceReturnOfInvestmentModel:
+      required:
+      - from
+      - to
+      - unit
+      type: object
+      properties:
+        unit:
+          $ref: '#/components/schemas/AdviceReturnOfInvestmentUnit'
+        from:
+          type: number
+          description: From value
+          format: double
+        to:
+          type: number
+          description: To value
+          format: double
+      description: Return of investment
+    FinancingOptionType:
+      enum:
+      - financing
+      - subsidy
+      type: string
+      description: Financing option type
+    Advice:
+      required:
+      - content
+      - id
+      - key
+      - relevance
+      - title
+      - type
+      type: object
+      properties:
+        id:
+          minLength: 1
+          type: string
+          description: Advice id.
+          example: c7fd3d37-9f50-4cfa-b958-dfef25074189
+        relevance:
+          maximum: 1
+          minimum: 0
+          type: number
+          description: A number that indicates how relevant the advice is for the end user. The higher the number, the more relevant the advice.
+          format: double
+          example: 0.9
+        estimated_yearly_savings_energy:
+          type: number
+          description: "Estimated savings in energy kWh.\n            \nDeprecated property, estimated_yearly_savings should be used instead."
+          format: double
+          nullable: true
+        estimated_yearly_savings:
+          type: array
+          items:
+            $ref: '#/components/schemas/EstimatedSavings'
+          description: 'A list of available estimated savings in either kWh or M3, depending on whether the advice is intended
+
+            for gas or electricity fuel.'
+          nullable: true
+        estimated_yearly_savings_cost:
+          type: number
+          description: 'Estimated savings in cost. Currency is the same as price formula currency.
+
+
+            Deprecated property, estimated_yearly_savings_monetary should be used instead.'
+          format: double
+          nullable: true
+          example: 33.24
+        estimated_yearly_savings_monetary:
+          type: array
+          items:
+            $ref: '#/components/schemas/SavingMonetary'
+          description: "A list of available estimated savings in cost. Currency is the same as price formula currency.\n\nAvailable monetary source types are provided with a separate endpoint \n<a href=\"#/Advice/get-v3-location-advice-monetary-sources\">Get savings monetary sources</a>."
+          nullable: true
+        title:
+          minLength: 1
+          type: string
+          description: Title text.
+          example: This is a title
+        content:
+          minLength: 1
+          type: string
+          description: Content text.
+          example: This is the content
+        key:
+          minLength: 1
+          type: string
+          description: Unique advice key.
+          example: advice_energy_key
+        status:
+          $ref: '#/components/schemas/AdviceStatus'
+        activated_at:
+          type: string
+          description: 'Timestamp in UTC
+
+
+            One optional setting is to configure advice to be activated after a certain time period.
+
+
+            If this is defined, the timestamp indicates when the advice was activated. This is managed by Eliq on the backend side.
+
+
+            If an advice has not been activated the timestamp is null, and this can be used to filter out non activated advice.'
+          format: date-time
+          nullable: true
+          example: '2021-01-20T00:00:00Z'
+        updated_status_at:
+          type: string
+          description: 'Timestamp in UTC
+
+
+            This timestamp indicates when the advice status was last updated.'
+          format: date-time
+          nullable: true
+          example: '2022-01-20T00:00:00Z'
+        link:
+          $ref: '#/components/schemas/Link'
+        links:
+          type: array
+          items:
+            $ref: '#/components/schemas/AdviceLinkModel'
+          description: Optional collection of links can be included with each advice
+          nullable: true
+        type:
+          $ref: '#/components/schemas/AdviceType'
+        investment_cost:
+          $ref: '#/components/schemas/AdviceInvestmentCostModel'
+        financing_options:
+          type: array
+          items:
+            $ref: '#/components/schemas/AdviceFinancingOptionModel'
+          description: Available financing options
+          nullable: true
+        euc_keys:
+          type: array
+          items:
+            type: string
+          description: The EUC (energy usage category) keys related to specific advice.
+          nullable: true
+      description: Model containing advice information.
+    AdviceStatus:
+      enum:
+      - none
+      - skipped
+      - not_relevant
+      - implemented
+      - save_for_later
+      - already_implemented
+      type: string
+      description: This statuses are used to capture end user feedback and feed this information back to our algorithms as well as making it easy to build an UI. The status can be updated at any time.
+    SavingMonetary:
+      required:
+      - cost
+      - cost_per_wh
+      - type
+      type: object
+      properties:
+        type:
+          minLength: 1
+          type: string
+          description: Monetary source type
+          example: price_formula
+        cost:
+          type: number
+          description: Savings amount in local currency
+          format: double
+          example: 33.24
+        cost_per_wh:
+          type: number
+          description: Savings amount per one kilowatt-hour in local currency
+          format: double
+          example: 0.27
+      description: Savings monetary value
+  securitySchemes:
+    BearerAuth:
+      type: http
+      scheme: bearer
+      description: The Eliq insights API uses bearer tokens to authenticate requests. Read more under Authentication tag.
+x-tagGroups:
+- name: Authentication
+  tags:
+  - Authentication
+- name: Users
+  tags:
+  - Users
+- name: Locations
+  tags:
+  - Locations
+  - Location Profile
+  - Energy Data
+  - Energy Usage Categories
+  - Energy Performance Certificate
+  - Similar Homes
+  - Budgets
+  - Advice
+  - Anomalies
+  - Market Price
+  - Price Formulas
+- name: Eliq Connect
+  tags:
+  - Eliq Connect
+- name: Health
+  tags:
+  - Health
+- name: Deprecated
+  tags:
+  - Breakdown
+  - Home Profile

@@ -1,0 +1,968 @@
+openapi: 3.2.0
+info:
+  title: Insights Home Profile API
+  version: 3.4.1
+  contact:
+    name: Insights Team
+    email: support_b2b@eliq.com
+  description: '# API Reference
+
+
+    The Eliq insights API is organized around REST.'
+servers:
+- url: http://localhost:3000
+security:
+- BearerAuth: []
+tags:
+- name: Home Profile
+paths:
+  /v3/locations/{locationId}/homeprofile:
+    parameters:
+    - schema:
+        type: string
+      name: locationId
+      in: path
+      required: true
+      description: Eliq internal location id
+    get:
+      summary: Get location homeprofile
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Homeprofile'
+              examples:
+                Home profile:
+                  value:
+                    properties:
+                    - key: house_type
+                      data_type: single_select
+                      is_required: true
+                      possible_values:
+                      - value: apartment
+                        developer_description: Apartment
+                      - value: house
+                        developer_description: House
+                      - value: semi_detached
+                        developer_description: House - semi detached
+                      - value: holiday_home
+                        developer_description: Holiday home / summer house
+                      - value: other
+                        developer_description: Other
+                      tags:
+                      - required_for_euc_to_work
+                      - required_for_sh_to_work
+                      developer_description: Type of dwelling
+                    - key: living_area
+                      data_type: number
+                      is_required: true
+                      limits:
+                        min: 0
+                        max: 400
+                        step: 1
+                      tags:
+                      - required_for_sh_to_work
+                      developer_description: Size of heated living space in square meters
+                    - key: persons
+                      data_type: number
+                      is_required: true
+                      limits:
+                        min: 0
+                        max: 10
+                        step: 1
+                      tags: []
+                      developer_description: Number of people living in the home
+                    - key: heating_type_primary
+                      data_type: single_select
+                      is_required: true
+                      possible_values:
+                      - value: district_heating
+                        developer_description: District heating
+                      - value: radiators
+                        developer_description: Electric radiators
+                      - value: air_air_pump
+                        developer_description: Air-air heat pump
+                      - value: air_water_pump
+                        developer_description: Air-water heat pump
+                      - value: water_pan
+                        developer_description: Storage water heater
+                      - value: exhaust_air_heat_pump
+                        developer_description: Exhaust air heat pump
+                      - value: floor_heat
+                        developer_description: Electric floor heat
+                      - value: other
+                        developer_description: Other
+                      tags:
+                      - required_for_sh_to_work
+                      developer_description: Primary way of heating the location
+                    - key: heating_type_other
+                      data_type: multiple_select
+                      is_required: false
+                      possible_values:
+                      - value: district_heating
+                        developer_description: District heating
+                      - value: radiators
+                        developer_description: Electric radiators
+                      - value: air_air_pump
+                        developer_description: Air-air heat pump
+                      - value: air_water_pump
+                        developer_description: Air-water heat pump
+                      - value: water_pan
+                        developer_description: Storage water heater
+                      - value: exhaust_air_heat_pump
+                        developer_description: Exhaust air heat pump
+                      - value: floor_heat
+                        developer_description: Electric floor heat
+                      - value: other
+                        developer_description: Other
+                      tags: []
+                      developer_description: Non-primary ways of heating the location
+                    - key: hotwater_type
+                      data_type: single_select
+                      is_required: false
+                      possible_values:
+                      - value: hot_water_tank
+                        developer_description: Storage water heater
+                      - value: air_water_pump
+                        developer_description: Air-water heat pump
+                      - value: exhaust_air_heat_pump
+                        developer_description: Exhaust air heat pump
+                      - value: district_heating
+                        developer_description: District heating
+                      - value: other
+                        developer_description: Other
+                      tags: []
+                      developer_description: Primary way of heating water
+                    cooking:
+                    - key: gas_stoves
+                      data_type: number
+                      is_required: false
+                      limits:
+                        min: 0
+                        max: 5
+                        step: 1
+                      tags: []
+                      developer_description: Number of gas hobs
+                    - key: gas_ovens
+                      data_type: number
+                      is_required: false
+                      limits:
+                        min: 0
+                        max: 5
+                        step: 1
+                      tags: []
+                      developer_description: Number of gas ovens
+                    - key: electric_stoves
+                      data_type: number
+                      is_required: false
+                      limits:
+                        min: 0
+                        max: 5
+                        step: 1
+                      tags: []
+                      developer_description: Number of electric hobs
+                    - key: electric_ovens
+                      data_type: number
+                      is_required: false
+                      limits:
+                        min: 0
+                        max: 5
+                        step: 1
+                      tags: []
+                      developer_description: Number of electric ovens
+                    - key: microwaves
+                      data_type: number
+                      is_required: false
+                      limits:
+                        min: 0
+                        max: 5
+                        step: 1
+                      tags: []
+                      developer_description: Number of microwaves
+                    appliances:
+                    - key: dishwashers
+                      data_type: number
+                      is_required: false
+                      limits:
+                        min: 0
+                        max: 5
+                        step: 1
+                      tags: []
+                      developer_description: Number of dishwashers
+                    - key: washing_machines
+                      data_type: number
+                      is_required: false
+                      limits:
+                        min: 0
+                        max: 5
+                        step: 1
+                      tags: []
+                      developer_description: Number of washing machines
+                    - key: dryers
+                      data_type: number
+                      is_required: false
+                      limits:
+                        min: 0
+                        max: 5
+                        step: 1
+                      tags: []
+                      developer_description: Number of electric dryers
+                    fridges_and_freezers:
+                    - key: fridges
+                      data_type: number
+                      is_required: false
+                      limits:
+                        min: 0
+                        max: 5
+                        step: 1
+                      tags: []
+                      developer_description: Number of fridges
+                    - key: freezers
+                      data_type: number
+                      is_required: false
+                      limits:
+                        min: 0
+                        max: 5
+                        step: 1
+                      tags: []
+                      developer_description: Number of freezers
+                    - key: fridge_freezers
+                      data_type: number
+                      is_required: false
+                      limits:
+                        min: 0
+                        max: 5
+                        step: 1
+                      tags: []
+                      developer_description: Number of combined fridge-freezer units
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+              examples:
+                Error not found:
+                  value:
+                    type: client_error
+                    category: entity_not_found
+                    description: Could not find location
+                    message: 'Something went wrong, please try again later. If problem remains, please contact support (error: 1ad3a534117d4).'
+                    transaction_id: 37c4ef86-d525-42c8-b65f-9b4cfcce0df6
+      operationId: get-v3-locations-locationId-homeprofile
+      description: '### Home profile endpoints are being DEPRECATED
+
+
+        Eliq is expanding it''s suite of features to include business insights. In light of this, new Location Profile endpoints were introduced in order to deferentiate locations between residential and business locations.
+
+
+        The new Location profile endpoints should be used to manage home profile properties. Eliq will continue to support this endpoint and will communicate a date when this endpoint will no longer be supported once a date has been set.
+
+
+        Get location home profile. The endpoint will return both meta data about the available home profile options that is available, and the selected properties for the specific location.
+
+
+        A location home profile is used to populate information about the household, such as house type, heating type or number of people in the household. The available home profile options is dependent on the country of the location. There is also a possibility to modify the available home profile options. Please contact Eliq for more information.
+
+
+        NOTE: In the ''properties'' section, certain values, such as ''hotwater_type'', represent different fuel options like electricity or gas for the hot water system. However, if you have a hot water system that operates without consuming energy, like wood burning, you can omit selecting any specific value for the ''hotwater_type'' field.'
+      tags:
+      - Home Profile
+      deprecated: true
+    patch:
+      summary: Update home profile
+      operationId: patch-v3-locations-locationId-homeprofile
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HomeProfileOption'
+              examples:
+                Home profile:
+                  value:
+                    key: house_type
+                    data_type: single_select
+                    is_required: false
+                    value: apartment
+                    possible_values:
+                    - value: house
+                      developer_description: House
+                    - value: apartment
+                      developer_description: Apartment
+                    tags:
+                    - required_for_euc_to_work
+                    - required_for_sh_to_work
+                    developer_description: Type of dwelling
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+              examples:
+                Error not found:
+                  value:
+                    type: client_error
+                    category: entity_not_found
+                    description: Could not find location
+                    message: 'Something went wrong, please try again later. If problem remains, please contact support (error: 1ad3a534117d4).'
+                    transaction_id: 37c4ef86-d525-42c8-b65f-9b4cfcce0df6
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PatchDocument'
+            examples:
+              Replace housetype, people, heating type:
+                value:
+                - op: replace
+                  path: properties/house_type
+                  value: apartment
+                - op: replace
+                  path: properties/persons
+                  value: 2
+                - op: replace
+                  path: properties/heating_type_primary
+                  value: radiators
+        description: ''
+      description: '### Home profile endpoints are being DEPRECATED
+
+
+        Eliq is expanding it''s suite of features to include business insights. In light of this, new Location Profile endpoints were introduced in order to deferentiate locations between residential and business locations.
+
+
+        The new Location profile endpoints should be used to manage home profile properties. Eliq will continue to support this endpoint and will communicate a date when this endpoint will no longer be supported once a date has been set.
+
+
+        Update the homeprofile.
+
+
+        Follows RFC 6902 with the small tweak that we only allow the replace operation. However, the replace operation can be used to add and remove as well.
+
+
+        See the example for GetLocationHomeprofile for specifications of what values can be set for each property.
+
+
+        NOTE: In the ''properties'' section, certain values, such as ''hotwater_type'', represent different fuel options like electricity or gas for the hot water system. However, if you have a hot water system that operates without consuming energy, like wood burning, you can omit selecting any specific value for the ''hotwater_type'' field.'
+      tags:
+      - Home Profile
+      deprecated: true
+  /v3/locations/{locationId}/homeprofile/completion:
+    parameters:
+    - schema:
+        type: string
+      name: locationId
+      in: path
+      required: true
+      description: Eliq internal location id
+    get:
+      summary: Get location homeprofile completion
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  home_profile_completion:
+                    type: integer
+                x-examples:
+                  example-1:
+                    home_profile_completion: 65
+              examples:
+                home_profile_completion:
+                  value:
+                    home_profile_completion: 65
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+              examples:
+                Error not found:
+                  value:
+                    type: client_error
+                    category: entity_not_found
+                    description: Could not find location
+                    message: 'Something went wrong, please try again later. If problem remains, please contact support (error: 1ad3a534117d4).'
+                    transaction_id: 37c4ef86-d525-42c8-b65f-9b4cfcce0df6
+      operationId: get-v3-locations-locationId-homeprofile-completion
+      description: '### Home profile endpoints are being DEPRECATED
+
+
+        Eliq is expanding it''s suite of features to include business insights. In light of this, new Location Profile endpoints were introduced in order to deferentiate locations between residential and business locations.
+
+
+        The new Location profile endpoints should be used to manage home profile properties. Eliq will continue to support this endpoint and will communicate a date when this endpoint will no longer be supported once a date has been set.
+
+
+        This endpoint will return how many percentages of the home profile that is filled out. 100% means that all parameters are set.'
+      tags:
+      - Home Profile
+      deprecated: true
+components:
+  schemas:
+    HomeProfileOption:
+      description: 'A home profile option is the option that can be set. A home profile option may have different data types, ''single_select'', ''multiple_select'' or ''number''. The available properties in the object will change depending on this data type, which is described more in the model. '
+      type: object
+      x-examples:
+        example-1:
+          key: house_type
+          data_type: single_select
+          is_required: true
+          possible_values:
+          - value: apartment
+            developer_description: Apartment
+          - value: house
+            developer_description: House
+          - value: semi_detached
+            developer_description: House - semi detached
+          - value: holiday_home
+            developer_description: Holiday home / summer house
+          - value: townhouse
+            developer_description: House - townhouse
+          - value: other
+            developer_description: Other
+          tags:
+          - required_for_euc_to_work
+          - required_for_sh_to_work
+          developer_description: Type of dwelling
+      examples:
+      - key: house_type
+        data_type: single_select
+        is_required: false
+        value: apartment
+        possible_values:
+        - value: house
+          developer_description: House
+        - value: apartment
+          developer_description: Apartment
+        tags:
+        - required_for_euc_to_work
+        - required_for_sh_to_work
+        developer_description: Type of dwelling
+      - key: electric_ovens
+        data_type: number
+        is_required: false
+        limits:
+          min: 0
+          max: 5
+          step: 1
+        tags: []
+        developer_description: Number of electric ovens
+      title: HomeprofileOptions
+      properties:
+        key:
+          type: string
+          minLength: 1
+          example: house_type
+          description: 'Key of home profile. A home profile option is identified by key, hence, it is the value for the key which are updated when running patch
+
+            '
+        data_type:
+          type: string
+          minLength: 1
+          enum:
+          - single_select
+          - multiple_select
+          - number
+          example: single_select
+          description: 'The data type of the home profile option. Eg. if ''single_select'', there will be several different choices, where one value should be taken (eg. house type).
+
+            '
+        value:
+          type:
+          - number
+          - string
+          - array
+          example: apartment
+          description: Selected value for the location. A number if data_type is ‘number’, string if ‘data_type’ is ‘single_select’ and list of strings if data_type is ‘multiple_select’. Null if no value has been set.
+          items:
+            type: string
+        possible_values:
+          type: array
+          uniqueItems: true
+          minItems: 1
+          description: 'Only present if data_type is ''single_select'' or ''multiple_select''. The possible values contains all the possible options that can be set. '
+          items:
+            type: object
+            properties:
+              value:
+                type: string
+                minLength: 1
+                example: apartment
+                description: Value for the possible value. To be provided in patch
+              developer_description:
+                type: string
+                description: A string that describes this value. Not meant to be displayed to the end user.
+                example: Air-air heat pump
+              name:
+                type: string
+                description: DEPRECATED!
+                deprecated: true
+              type:
+                type: string
+                description: DEPRECATED!
+                deprecated: true
+            required:
+            - value
+        limits:
+          type: object
+          description: 'Only present if data_type is ''number''. The limit object contains the minimum and maximum value that can be selected, and with what step. '
+          properties:
+            min:
+              type: number
+              example: 0
+              description: Minimum number. Usually 0
+            max:
+              type: number
+              example: 5
+              description: Maximum number
+            step:
+              type: number
+              example: 1
+              description: Minimum step. Eg. if home profile option is to select number of freezers, the user would increase/decrease the amount of freezers with 1.
+        dependent_properties:
+          type: array
+          uniqueItems: true
+          minItems: 1
+          description: Only present if a dependent property has been configured. Used to indicated if an option should be shown or not given previous choices.
+          items:
+            type: object
+            properties:
+              property:
+                type: string
+                example: properties/house_type
+                description: The name of the dependent property.
+              accepted_values:
+                type: array
+                uniqueItems: true
+                minItems: 1
+                description: The list of the values that are accepted for the dependent property.
+                items:
+                  type: string
+        tags:
+          type: array
+          uniqueItems: true
+          description: An array of tags. Currently used tags are `required_for_euc_to_work` and `required_for_sh_to_work`.
+          items:
+            type: string
+          example:
+          - required_for_euc_to_work
+          - required_for_sh_to_work
+        developer_description:
+          type: string
+          description: A string that describes this option. Not meant to be displayed to the end user.
+          example: Size of heated living space in square meters
+        name:
+          type: string
+          description: DEPRECATED!
+          deprecated: true
+        is_required:
+          type: boolean
+          default: false
+          description: DEPRECATED! Use tags instead. Whether the option is a field that is required for similar homes and breakdown.
+          deprecated: true
+      required:
+      - key
+      - data_type
+    Error:
+      type: object
+      properties:
+        type:
+          type: string
+          description: Type of error.
+          nullable: true
+          example: internal_error
+        category:
+          type: string
+          description: Error category.
+          nullable: true
+          example: internal_error
+        code:
+          type: string
+          description: Code describing the issue.
+          nullable: true
+          example: INTERNAL_ERROR
+        transaction_id:
+          type: string
+          description: Identifier for the session. Please provide this when contacting support.
+          nullable: true
+          example: 0HN18NN5QB401:00000001
+        message:
+          type: string
+          description: A message related to the error.
+          nullable: true
+          example: Something went wrong. Please try again later. If problem remains, please contact support.
+        description:
+          type: string
+          description: A description of the error for developers.
+          nullable: true
+          example: Internal server error, please try again later. If problem remains, please contact support.
+      description: Model returned for error responses.
+    PatchDocument:
+      type: array
+      description: Patch document used in patch operations
+      minItems: 1
+      uniqueItems: true
+      x-examples:
+        example-1:
+        - op: replace
+          path: properties/house_type
+          value: apartment
+        - op: replace
+          path: properties/persons
+          value: 2
+        - op: replace
+          path: properties/heating_type_primary
+          value: radiators
+        - op: replace
+          path: fridges_and_freezers/fridges
+          value: 1
+      title: ''
+      items:
+        type: object
+        properties:
+          op:
+            type: string
+            minLength: 1
+            example: replace
+            enum:
+            - add
+            - replace
+            - remove
+            description: Operation to execute
+          path:
+            type: string
+            minLength: 1
+            description: Path to property to update
+            example: user/name
+          value:
+            type:
+            - string
+            - number
+            minLength: 1
+            example: John
+            description: Value to set
+        required:
+        - op
+        - path
+        - value
+    Homeprofile:
+      description: "The home profile is describing the properties of a location, such as house type, heating system and other appliances. This information is later used in Eliq analytics. \n\nThe home profile root objects properties may be different in different countries (could be parsed as a dictionary). Hence, the result shown for the locations country may not match with the example provided below."
+      type: object
+      x-examples:
+        example-1:
+          properties: []
+          cooking:
+          - key: gas_stoves
+            data_type: number
+            is_required: false
+            limits:
+              min: 0
+              max: 5
+              step: 1
+            tags: []
+            developer_description: Number of gas hobs
+          - key: gas_ovens
+            data_type: number
+            is_required: false
+            limits:
+              min: 0
+              max: 5
+              step: 1
+            tags: []
+            developer_description: Number of gas ovens
+          - key: electric_stoves
+            data_type: number
+            is_required: false
+            limits:
+              min: 0
+              max: 5
+              step: 1
+            tags: []
+            developer_description: Number of electric hobs
+          - key: electric_ovens
+            data_type: number
+            is_required: false
+            limits:
+              min: 0
+              max: 5
+              step: 1
+            tags: []
+            developer_description: Number of electric ovens
+          - key: microwaves
+            data_type: number
+            is_required: false
+            limits:
+              min: 0
+              max: 5
+              step: 1
+            tags: []
+            developer_description: Number of microwaves
+      examples:
+      - properties:
+        - key: house_type
+          data_type: single_select
+          is_required: true
+          possible_values:
+          - value: apartment
+            developer_description: Type of dwelling
+          - value: house
+            developer_description: House
+          - value: semi_detached
+            developer_description: House - semi detached
+          - value: holiday_home
+            developer_description: Holiday home / summer house
+          - value: other
+            developer_description: Other
+          tags:
+          - required_for_euc_to_work
+          - required_for_sh_to_work
+          developer_description: Type of dwelling
+        - key: living_area
+          data_type: number
+          is_required: true
+          limits:
+            min: 0
+            max: 400
+            step: 1
+          tags:
+          - required_for_sh_to_work
+          developer_description: Size of heated living space in square meters
+        - key: persons
+          data_type: number
+          is_required: true
+          limits:
+            min: 0
+            max: 10
+            step: 1
+          tags: []
+          developer_description: Number of people living in the home
+        - key: heating_type_primary
+          data_type: single_select
+          is_required: true
+          possible_values:
+          - value: district_heating
+            developer_description: District heating
+          - value: radiators
+            developer_description: Electric radiators
+          - value: air_air_pump
+            developer_description: Air-air heat pump
+          - value: air_water_pump
+            developer_description: Air-water heat pump
+          - value: water_pan
+            developer_description: Storage water heater
+          - value: exhaust_air_heat_pump
+            developer_description: Exhaust air heat pump
+          - value: floor_heat
+            developer_description: Electric floor heat
+          - value: other
+            developer_description: Other
+          tags:
+          - required_for_sh_to_work
+          developer_description: Primary way of heating the location
+        - key: heating_type_other
+          data_type: multiple_select
+          is_required: false
+          possible_values:
+          - value: district_heating
+            developer_description: District heating
+          - value: radiators
+            developer_description: Electric radiators
+          - value: air_air_pump
+            developer_description: Air-air heat pump
+          - value: air_water_pump
+            developer_description: Air-water heat pump
+          - value: water_pan
+            developer_description: Storage water heater
+          - value: exhaust_air_heat_pump
+            developer_description: Exhaust air heat pump
+          - value: floor_heat
+            developer_description: Electric floor heat
+          - value: other
+            developer_description: Other
+          tags: []
+          developer_description: Non-primary ways of heating the location
+        - key: hotwater_type
+          data_type: single_select
+          is_required: false
+          possible_values:
+          - value: hot_water_tank
+            developer_description: Storage water heater
+          - value: air_water_pump
+            developer_description: Air-water heat pump
+          - value: exhaust_air_heat_pump
+            developer_description: Exhaust air heat pump
+          - value: district_heating
+            developer_description: District heating
+          - value: other
+            developer_description: Other
+          tags: []
+          developer_description: Primary way of heating water
+        cooking:
+        - key: gas_stoves
+          data_type: number
+          is_required: false
+          limits:
+            min: 0
+            max: 5
+            step: 1
+          tags: []
+          developer_description: Number of gas hobs
+        - key: gas_ovens
+          data_type: number
+          is_required: false
+          limits:
+            min: 0
+            max: 5
+            step: 1
+          tags: []
+          developer_description: Number of gas ovens
+        - key: electric_stoves
+          data_type: number
+          is_required: false
+          limits:
+            min: 0
+            max: 5
+            step: 1
+          tags: []
+          developer_description: Number of electric hobs
+        - key: electric_ovens
+          data_type: number
+          is_required: false
+          limits:
+            min: 0
+            max: 5
+            step: 1
+          tags: []
+          developer_description: Number of electric ovens
+        - key: microwaves
+          data_type: number
+          is_required: false
+          limits:
+            min: 0
+            max: 5
+            step: 1
+          tags: []
+          developer_description: Number of microwaves
+        appliances:
+        - key: dishwashers
+          data_type: number
+          is_required: false
+          limits:
+            min: 0
+            max: 5
+            step: 1
+          tags: []
+          developer_description: Number of dishwashers
+        - key: washing_machines
+          data_type: number
+          is_required: false
+          limits:
+            min: 0
+            max: 5
+            step: 1
+          tags: []
+          developer_description: Number of washing machines
+        - key: dryers
+          data_type: number
+          is_required: false
+          limits:
+            min: 0
+            max: 5
+            step: 1
+          tags: []
+          developer_description: Number of electric dryers
+        fridges_and_freezers:
+        - key: fridges
+          data_type: number
+          is_required: false
+          limits:
+            min: 0
+            max: 5
+            step: 1
+          tags: []
+          developer_description: Number of fridges
+        - key: freezers
+          data_type: number
+          is_required: false
+          limits:
+            min: 0
+            max: 5
+            step: 1
+          tags: []
+          developer_description: Number of freezers
+        - key: fridge_freezers
+          data_type: number
+          is_required: false
+          limits:
+            min: 0
+            max: 5
+            step: 1
+          tags: []
+          developer_description: Number of combined fridge-freezer units
+      title: ''
+      properties:
+        properties:
+          type: array
+          items:
+            $ref: '#/components/schemas/HomeProfileOption'
+        cooking:
+          type: array
+          uniqueItems: false
+          items:
+            $ref: '#/components/schemas/HomeProfileOption'
+        appliances:
+          type: array
+          items:
+            $ref: '#/components/schemas/HomeProfileOption'
+        fridges_and_freezers:
+          type: array
+          items:
+            $ref: '#/components/schemas/HomeProfileOption'
+        extras:
+          type: array
+          items:
+            $ref: '#/components/schemas/HomeProfileOption'
+  securitySchemes:
+    BearerAuth:
+      type: http
+      scheme: bearer
+      description: The Eliq insights API uses bearer tokens to authenticate requests. Read more under Authentication tag.
+x-tagGroups:
+- name: Authentication
+  tags:
+  - Authentication
+- name: Users
+  tags:
+  - Users
+- name: Locations
+  tags:
+  - Locations
+  - Location Profile
+  - Energy Data
+  - Energy Usage Categories
+  - Energy Performance Certificate
+  - Similar Homes
+  - Budgets
+  - Advice
+  - Anomalies
+  - Market Price
+  - Price Formulas
+- name: Eliq Connect
+  tags:
+  - Eliq Connect
+- name: Health
+  tags:
+  - Health
+- name: Deprecated
+  tags:
+  - Breakdown
+  - Home Profile

@@ -1,0 +1,685 @@
+openapi: 3.2.0
+info:
+  title: Eliq Data Management Location API
+  description: '# API Reference
+
+
+    The Eliq data management API is organized around REST.'
+  contact:
+    name: Support
+    email: support_b2b@eliq.com
+  version: 1.5.2
+tags:
+- name: Location
+paths:
+  /locations/{id}:
+    put:
+      tags:
+      - Location
+      summary: Creates or updates location
+      operationId: put-locations-locationId
+      parameters:
+      - name: id
+        in: path
+        description: Unique identifier of location
+        required: true
+        schema:
+          type: string
+      requestBody:
+        description: Location object to create or update
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Location'
+            examples:
+              Location request example with geo:
+                value:
+                  id: 27f4a08a-8672-4efe-84a1-9d16abc7c474
+                  name: Location name
+                  user_id: df530bba-da48-44c6-8f53-8dcb1909a65e
+                  spot_price_region_id: nordpool_se1
+                  address:
+                    street_address: Stora Badhusgatan 18
+                    postal_code: 411 21
+                    city: Göteborg
+                    country_code: SE
+                  geo:
+                    latitude: 57.70413
+                    longitude: 11.95716
+              Minimal location request example:
+                value:
+                  id: 27f4a08a-8672-4efe-84a1-9d16abc7c474
+                  name: Location name
+                  user_id: df530bba-da48-44c6-8f53-8dcb1909a65e
+                  spot_price_region_id: nordpool_se1
+                  address:
+                    street_address: Stora Badhusgatan 18
+                    postal_code: 411 21
+                    city: Göteborg
+                    country_code: SE
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Location'
+              examples:
+                Full location example with geo:
+                  value:
+                    id: 27f4a08a-8672-4efe-84a1-9d16abc7c474
+                    eliq_id: 7654321
+                    name: Location name
+                    user_id: df530bba-da48-44c6-8f53-8dcb1909a65e
+                    spot_price_region_id: nordpool_se1
+                    address:
+                      street_address: Stora Badhusgatan 18
+                      postal_code: 411 21
+                      city: Göteborg
+                      country_code: SE
+                    geo:
+                      latitude: 57.70413
+                      longitude: 11.95716
+                Minimal location:
+                  value:
+                    id: 27f4a08a-8672-4efe-84a1-9d16abc7c474
+                    eliq_id: 7654321
+                    name: Location name
+                    user_id: df530bba-da48-44c6-8f53-8dcb1909a65e
+                    spot_price_region_id: nordpool_se1
+                    address:
+                      street_address: Stora Badhusgatan 18
+                      postal_code: 411 21
+                      city: Göteborg
+                      country_code: SE
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorDetails'
+              examples:
+                User with given 'user_id' could not be found:
+                  value:
+                    code: LOCATION_USER_NOT_FOUND
+                    description: User with given 'user_id' could not be found
+                    request_id: 65e2ea86-470f-4363-9295-35d6b473981a
+                A location with the same id already exists for another user. A location cannot be moved between users.:
+                  value:
+                    code: LOCATION_CANNOT_BE_MOVED
+                    description: A location with the same id already exists for another user. A location cannot be moved between users.
+                    request_id: 65e2ea86-470f-4363-9295-35d6b473981a
+                Parameter 'address.country_code' is invalid:
+                  value:
+                    code: LOCATION_ADDRESS_COUNTRY_CODE_INVALID
+                    description: Parameter 'address.country_code' is invalid
+                    request_id: 65e2ea86-470f-4363-9295-35d6b473981a
+                Parameter 'id' must not be null or empty:
+                  value:
+                    code: LOCATION_ID_MISSING
+                    description: Parameter 'id' must not be null or empty
+                    request_id: 65e2ea86-470f-4363-9295-35d6b473981a
+                Parameter 'user_id' must not be null or empty:
+                  value:
+                    code: LOCATION_USER_ID_MISSING
+                    description: Parameter 'user_id' must not be null or empty
+                    request_id: 65e2ea86-470f-4363-9295-35d6b473981a
+                Parameter 'address' must not be null:
+                  value:
+                    code: LOCATION_ADDRESS_MISSING
+                    description: Parameter 'address' must not be null
+                    request_id: 65e2ea86-470f-4363-9295-35d6b473981a
+                Parameter 'address.postal_code' or 'address.city' must be provided if 'geo' is not provided:
+                  value:
+                    code: LOCATION_ADDRESS_POSTAL_CODE_OR_CITY_MISSING
+                    description: Parameter 'address.postal_code' or 'address.city' must be provided if 'geo' is not provided
+                    request_id: 65e2ea86-470f-4363-9295-35d6b473981a
+                Parameter 'address.country_code' must not be null or empty:
+                  value:
+                    code: LOCATION_ADDRESS_COUNTRY_CODE_MISSING
+                    description: Parameter 'address.country_code' must not be null or empty
+                    request_id: 65e2ea86-470f-4363-9295-35d6b473981a
+                Parameter 'geo.latitude' must not be null:
+                  value:
+                    code: LOCATION_GEO_LATITUDE_MISSING
+                    description: Parameter 'geo.latitude' must not be null
+                    request_id: 65e2ea86-470f-4363-9295-35d6b473981a
+                Parameter 'geo.latitude' is invalid. It must be in the range between -90 and 90:
+                  value:
+                    code: LOCATION_GEO_LATITUDE_INVALID
+                    description: Parameter 'geo.latitude' is invalid. It must be in the range between -90 and 90
+                    request_id: 65e2ea86-470f-4363-9295-35d6b473981a
+                Parameter 'geo.longitude' must not be null:
+                  value:
+                    code: LOCATION_GEO_LONGITUDE_MISSING
+                    description: Parameter 'geo.longitude' must not be null
+                    request_id: 65e2ea86-470f-4363-9295-35d6b473981a
+                Parameter 'geo.longitude' is invalid. It must be in the range between -180 and 180:
+                  value:
+                    code: LOCATION_GEO_LONGITUDE_INVALID
+                    description: Parameter 'geo.longitude' is invalid. It must be in the range between -180 and 180
+                    request_id: 65e2ea86-470f-4363-9295-35d6b473981a
+                Spot price region with given 'spot_price_region_id' could not be found.:
+                  value:
+                    code: LOCATION_SPOT_PRICE_REGION_NOT_FOUND
+                    description: Spot price region with given 'spot_price_region_id' could not be found.
+                    request_id: 65e2ea86-470f-4363-9295-35d6b473981a
+                Too many requests to add the same location were created, please try again later.:
+                  value:
+                    code: EXCESSIVE_REQUESTS_FOR_THE_SAME_LOCATION
+                    description: Too many requests to add the same location were created, please try again later.
+                    request_id: 65e2ea86-470f-4363-9295-35d6b473981a
+                Location profile type must not be null, and can only be 'residential' or 'business':
+                  value:
+                    code: LOCATION_PROFILE_TYPE_INVALID_OR_MISSING
+                    description: Location profile type must not be null, and can only be 'residential' or 'business'
+                    request_id: 65e2ea86-470f-4363-9295-35d6b473981a
+                Can not change profile type for a configured profile with existing values:
+                  value:
+                    code: EXISTING_PROFILE_VALUES_FOUND
+                    description: Can not change profile type for a configured profile with existing values
+                    request_id: 65e2ea86-470f-4363-9295-35d6b473981a
+                Location profile type is not configured:
+                  value:
+                    code: PROFILE_TYPE_NOT_CONFIGURED
+                    description: Location profile type is not configured
+                    request_id: 65e2ea86-470f-4363-9295-35d6b473981a
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorDetails'
+              examples:
+                Internal server error. If problem remains, please contact support:
+                  value:
+                    code: INTERNAL_ERROR
+                    description: Internal server error. If problem remains, please contact support
+                    request_id: 65e2ea86-470f-4363-9295-35d6b473981a
+    delete:
+      tags:
+      - Location
+      summary: Deletes location
+      operationId: delete-locations-locationId
+      parameters:
+      - name: id
+        in: path
+        description: Unique identifier of location
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NoContentResult'
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorDetails'
+              examples:
+                Parameter 'id' must not be null or empty:
+                  value:
+                    code: LOCATION_ID_MISSING
+                    description: Parameter 'id' must not be null or empty
+                    request_id: 65e2ea86-470f-4363-9295-35d6b473981a
+                Location with given id could not be found:
+                  value:
+                    code: LOCATION_NOT_FOUND
+                    description: Location with given id could not be found
+                    request_id: 65e2ea86-470f-4363-9295-35d6b473981a
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorDetails'
+              examples:
+                Internal server error. If problem remains, please contact support:
+                  value:
+                    code: INTERNAL_ERROR
+                    description: Internal server error. If problem remains, please contact support
+                    request_id: 65e2ea86-470f-4363-9295-35d6b473981a
+    get:
+      tags:
+      - Location
+      summary: Gets location
+      operationId: get-locations-locationId
+      parameters:
+      - name: id
+        in: path
+        description: Unique identifier of location
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Location'
+              examples:
+                Full location example with geo:
+                  value:
+                    id: 27f4a08a-8672-4efe-84a1-9d16abc7c474
+                    eliq_id: 7654321
+                    name: Location name
+                    user_id: df530bba-da48-44c6-8f53-8dcb1909a65e
+                    spot_price_region_id: nordpool_se1
+                    address:
+                      street_address: Stora Badhusgatan 18
+                      postal_code: 411 21
+                      city: Göteborg
+                      country_code: SE
+                    geo:
+                      latitude: 57.70413
+                      longitude: 11.95716
+                Minimal location:
+                  value:
+                    id: 27f4a08a-8672-4efe-84a1-9d16abc7c474
+                    eliq_id: 7654321
+                    name: Location name
+                    user_id: df530bba-da48-44c6-8f53-8dcb1909a65e
+                    spot_price_region_id: nordpool_se1
+                    address:
+                      street_address: Stora Badhusgatan 18
+                      postal_code: 411 21
+                      city: Göteborg
+                      country_code: SE
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorDetails'
+              examples:
+                Parameter 'id' must not be null or empty:
+                  value:
+                    code: LOCATION_ID_MISSING
+                    description: Parameter 'id' must not be null or empty
+                    request_id: 65e2ea86-470f-4363-9295-35d6b473981a
+                Location with given id could not be found:
+                  value:
+                    code: LOCATION_NOT_FOUND
+                    description: Location with given id could not be found
+                    request_id: 65e2ea86-470f-4363-9295-35d6b473981a
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorDetails'
+              examples:
+                Internal server error. If problem remains, please contact support:
+                  value:
+                    code: INTERNAL_ERROR
+                    description: Internal server error. If problem remains, please contact support
+                    request_id: 65e2ea86-470f-4363-9295-35d6b473981a
+  /locations:
+    get:
+      tags:
+      - Location
+      summary: Gets multiple locations
+      description: 'Locations are fetched in batches of maximum 1000 locations, and returned in created date order.
+
+        Using parameters after_id and limit can be used to iterate over the full location base.
+
+        Parameter created_after can also be used to fetch locations after a certain date.'
+      operationId: get-locations
+      parameters:
+      - name: after_id
+        in: query
+        description: Unique identifier of location, fetch locations created after location with given id
+        schema:
+          type: string
+      - name: limit
+        in: query
+        description: Number of locations to get
+        schema:
+          type: integer
+          format: int32
+          default: 100
+      - name: created_after
+        in: query
+        description: Locations created after the provided date
+        schema:
+          type: string
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Location'
+              examples:
+                Get locations example:
+                  value:
+                  - id: 27f4a08a-8672-4efe-84a1-9d16abc7c474
+                    eliq_id: 7654321
+                    name: Location name 1
+                    user_id: df530bba-da48-44c6-8f53-8dcb1909a65e
+                    spot_price_region_id: nordpool_se1
+                    address:
+                      street_address: Stora Badhusgatan 18
+                      postal_code: 411 21
+                      city: Göteborg
+                      country_code: SE
+                    geo:
+                      latitude: 57.70413
+                      longitude: 11.95716
+                  - id: 27f4a08a-8672-4efe-84a1-9d16abc7c475
+                    eliq_id: 7654321
+                    name: Location name 2
+                    user_id: df530bba-da48-44c6-8f53-8dcb1909a65f
+                    spot_price_region_id: nordpool_se1
+                    address:
+                      street_address: Stora Badhusgatan 19
+                      postal_code: 411 21
+                      city: Göteborg
+                      country_code: SE
+                    geo:
+                      latitude: 57.70413
+                      longitude: 11.95716
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorDetails'
+              examples:
+                Parameter 'id' must not be null or empty:
+                  value:
+                    code: LOCATION_ID_MISSING
+                    description: Parameter 'id' must not be null or empty
+                    request_id: 65e2ea86-470f-4363-9295-35d6b473981a
+                Location with given id could not be found:
+                  value:
+                    code: LOCATION_NOT_FOUND
+                    description: Location with given id could not be found
+                    request_id: 65e2ea86-470f-4363-9295-35d6b473981a
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorDetails'
+              examples:
+                Internal server error. If problem remains, please contact support:
+                  value:
+                    code: INTERNAL_ERROR
+                    description: Internal server error. If problem remains, please contact support
+                    request_id: 65e2ea86-470f-4363-9295-35d6b473981a
+  /locations/{id}/meters:
+    get:
+      tags:
+      - Location
+      summary: Gets location meters
+      operationId: get-locations-locationId-meters
+      parameters:
+      - name: id
+        in: path
+        description: Unique identifier of location
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Meter'
+              examples:
+                Get location meters example:
+                  value:
+                  - id: 27f4a08a-8672-4efe-84a1-9d16abc7c474
+                    eliq_id: 37771a4f91e611fd80e5f08c0bdb0c8b
+                    location_id: df530bba-da48-44c6-8f53-8dcb1909a65
+                    model: Eliq Energy Meter
+                    fuel: elec
+                    type: import
+                    supply_start_date: '2020-01-01'
+                    supply_end_date: '2021-01-01'
+                    created_at_timestamp: '2021-01-01T00:00:00Z'
+                  - id: 27f4a08a-8672-4efe-84a1-9d16abc7c475
+                    eliq_id: 37771a4f91e611fd80e5f08c0bdb0c8b
+                    location_id: df530bba-da48-44c6-8f53-8dcb1909a66
+                    model: Eliq Energy Meter
+                    fuel: gas
+                    type: import
+                    supply_start_date: '2020-01-01'
+                    supply_end_date: '2021-01-01'
+                    created_at_timestamp: '2021-01-01T00:00:00Z'
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorDetails'
+              examples:
+                Parameter 'id' must not be null or empty:
+                  value:
+                    code: LOCATION_ID_MISSING
+                    description: Parameter 'id' must not be null or empty
+                    request_id: 65e2ea86-470f-4363-9295-35d6b473981a
+                Location with given id could not be found:
+                  value:
+                    code: LOCATION_NOT_FOUND
+                    description: Location with given id could not be found
+                    request_id: 65e2ea86-470f-4363-9295-35d6b473981a
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorDetails'
+              examples:
+                Internal server error. If problem remains, please contact support:
+                  value:
+                    code: INTERNAL_ERROR
+                    description: Internal server error. If problem remains, please contact support
+                    request_id: 65e2ea86-470f-4363-9295-35d6b473981a
+components:
+  schemas:
+    LocationGeo:
+      type: object
+      properties:
+        latitude:
+          type:
+          - number
+          - 'null'
+          format: double
+        longitude:
+          type:
+          - number
+          - 'null'
+          format: double
+    LocationAddress:
+      type: object
+      properties:
+        street_address:
+          type:
+          - string
+          - 'null'
+        postal_code:
+          type:
+          - string
+          - 'null'
+        city:
+          type:
+          - string
+          - 'null'
+        country_code:
+          type:
+          - string
+          - 'null'
+    Location:
+      type: object
+      properties:
+        id:
+          type:
+          - string
+          - 'null'
+        eliq_id:
+          type:
+          - integer
+          - 'null'
+          format: int32
+          readOnly: true
+        name:
+          type:
+          - string
+          - 'null'
+        user_id:
+          type:
+          - string
+          - 'null'
+        spot_price_region_id:
+          type:
+          - string
+          - 'null'
+        address:
+          $ref: '#/components/schemas/LocationAddress'
+        geo:
+          $ref: '#/components/schemas/LocationGeo'
+        meters:
+          type:
+          - array
+          - 'null'
+          items:
+            $ref: '#/components/schemas/Meter'
+        created_at_timestamp:
+          type:
+          - string
+          - 'null'
+        location_profile_type:
+          $ref: '#/components/schemas/ProfileType'
+    ProfileType:
+      enum:
+      - residential
+      - business
+      - undefined
+      type: string
+    Meter:
+      type: object
+      properties:
+        id:
+          type:
+          - string
+          - 'null'
+        eliq_id:
+          type:
+          - string
+          - 'null'
+          readOnly: true
+        location_id:
+          type:
+          - string
+          - 'null'
+        name:
+          type:
+          - string
+          - 'null'
+        model:
+          type:
+          - string
+          - 'null'
+        fuel:
+          type:
+          - string
+          - 'null'
+        type:
+          type:
+          - string
+          - 'null'
+        is_sub_meter:
+          type:
+          - boolean
+          - 'null'
+        category:
+          type:
+          - string
+          - 'null'
+        category_percentage:
+          type:
+          - integer
+          - 'null'
+          format: int32
+        supply_start_date:
+          type:
+          - string
+          - 'null'
+        supply_end_date:
+          type:
+          - string
+          - 'null'
+        created_at_timestamp:
+          type:
+          - string
+          - 'null'
+        sync_status:
+          type:
+          - string
+          - 'null'
+    NoContentResult:
+      type: object
+      properties:
+        statusCode:
+          type: integer
+          format: int32
+    ErrorDetails:
+      required:
+      - code
+      - description
+      type: object
+      properties:
+        code:
+          minLength: 1
+          type: string
+        description:
+          minLength: 1
+          type: string
+        request_id:
+          type:
+          - string
+          - 'null'
+x-tagGroups:
+- name: Users
+  tags:
+  - User
+- name: Locations
+  tags:
+  - Location
+  - Location profile
+  - Location home profile
+  - Location price formulas
+- name: Meters
+  tags:
+  - Meter
+  - Meter Energy Day
+  - Meter Energy High Resolution
+  - Meter Energy Reads
+  - Meter Energy Period
+  - Meter Max Demand
+  - Meter Price Formulas
+- name: Jobs
+  tags:
+  - Jobs
+- name: Portfolio
+  tags:
+  - Portfolio Accounts
+  - Portfolio Groups
+  - Portfolio Locations
+  - Portfolio Users
+- name: Client details
+  tags:
+  - Client details

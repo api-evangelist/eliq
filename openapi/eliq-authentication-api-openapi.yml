@@ -1,0 +1,224 @@
+openapi: 3.2.0
+info:
+  title: Insights Authentication API
+  version: 3.4.1
+  contact:
+    name: Insights Team
+    email: support_b2b@eliq.com
+  description: '# API Reference
+
+
+    The Eliq insights API is organized around REST.'
+servers:
+- url: http://localhost:3000
+security:
+- BearerAuth: []
+tags:
+- name: Authentication
+paths:
+  /v3/auth/user/token:
+    parameters: []
+    post:
+      summary: POST User token request
+      operationId: post-v3-auth-user-token
+      responses:
+        '200':
+          description: OK
+          headers: {}
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  access_token:
+                    type: string
+                  token_type:
+                    type: string
+                  expires_in:
+                    type: integer
+                x-examples:
+                  Example 1:
+                    access_token: JWT TOKEN
+                    token_type: bearer
+                    expires_in: 1800
+              examples:
+                example-1:
+                  value:
+                    access_token: JWT TOKEN
+                    token_type: bearer
+                    expires_in: 1800
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  type:
+                    type: string
+                  category:
+                    type: string
+                  transaction_id:
+                    type: string
+                  message:
+                    type: string
+                  description:
+                    type: string
+                x-examples:
+                  example-1:
+                    type: client_error
+                    category: user_not_found
+                    code: USER_NOT_FOUND
+                    transaction_id: 0HMLS31S9QPFP:00002B34
+                    message: Something went wrong, please try again later. If problem remains, please contact support.
+                    description: Could not find user with Id '12345'
+              examples:
+                example-1:
+                  value:
+                    type: client_error
+                    category: user_not_found
+                    code: USER_NOT_FOUND
+                    transaction_id: 0HMLS31S9QPFP:00002B34
+                    message: Something went wrong, please try again later. If problem remains, please contact support.
+                    description: Could not find user with Id '12345'
+      description: 'Use this endpoint to generate a user access token to be used in the Insights API.
+
+
+        Use case: When adding Eliq insights as a web view inside your own app/web, you need to generate user access tokens in your backend, using your id and secret. This token is passed to your app that can use it to call the insights api directly. Token is valid for 30 minutes before it expires and a new token is needed.'
+      tags:
+      - Authentication
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                grant_type:
+                  type: string
+                user_id:
+                  type: integer
+                client_id:
+                  type: integer
+                client_secret:
+                  type: string
+                requested_token_use:
+                  type: string
+              x-examples:
+                Example 1:
+                  grant_type: client_credentials
+                  user_id: 12345
+                  client_id: 1234567890
+                  client_secret: my_secret_key
+                  requested_token_use: on_behalf_of
+            examples:
+              Example 1:
+                value:
+                  grant_type: client_credentials
+                  client_id: 14934656510
+                  client_secret: client_secret
+                  requested_token_use: on_behalf_of
+                  user_id: 6445967
+        description: ''
+      security: []
+  /v3/authentication/autologin/ticket:
+    parameters: []
+    get:
+      summary: GET Autologin ticket
+      operationId: get-v3-authentication-autologin-ticket
+      responses:
+        '200':
+          description: OK
+          headers: {}
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  ticket_id:
+                    type: string
+                x-examples:
+                  Example 1:
+                    ticket_id: 0ef862de-21f7-4a83-8151-b4be30f24dac
+              examples:
+                example-1:
+                  value:
+                    ticket_id: 0ef862de-21f7-4a83-8151-b4be30f24dac
+        '404':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  type:
+                    type: string
+                  category:
+                    type: string
+                  transaction_id:
+                    type: string
+                  message:
+                    type: string
+                  description:
+                    type: string
+                x-examples:
+                  example-1:
+                    type: client_error
+                    category: not_found
+                    code: USER_NOT_FOUND
+                    transaction_id: 0HMLS31S9QPFP:00002B34
+                    message: Something went wrong, please try again later. If problem remains, please contact support.
+                    description: Could not find user
+              examples:
+                example-1:
+                  value:
+                    type: client_error
+                    category: not_found
+                    code: USER_NOT_FOUND
+                    transaction_id: 0HMLS31S9QPFP:00002B34
+                    message: Something went wrong, please try again later. If problem remains, please contact support.
+                    description: Could not find user
+      description: 'Use this endpoint to generate an autologin ticket.
+
+
+        Use case: When adding Eliq insights as a web view inside your app/web, you need to generate user access tokens in your backend, using your id and secret (see /v3/auth/user/token). Using this token with this endpoint, you can generate a ticketid. You add this ticketid when opening or redirecting a user to Eliq web app to allow the user to be auto logged in, thus avoiding the login form for the user again.'
+      tags:
+      - Authentication
+      requestBody:
+        content: {}
+        description: ''
+components:
+  securitySchemes:
+    BearerAuth:
+      type: http
+      scheme: bearer
+      description: The Eliq insights API uses bearer tokens to authenticate requests. Read more under Authentication tag.
+x-tagGroups:
+- name: Authentication
+  tags:
+  - Authentication
+- name: Users
+  tags:
+  - Users
+- name: Locations
+  tags:
+  - Locations
+  - Location Profile
+  - Energy Data
+  - Energy Usage Categories
+  - Energy Performance Certificate
+  - Similar Homes
+  - Budgets
+  - Advice
+  - Anomalies
+  - Market Price
+  - Price Formulas
+- name: Eliq Connect
+  tags:
+  - Eliq Connect
+- name: Health
+  tags:
+  - Health
+- name: Deprecated
+  tags:
+  - Breakdown
+  - Home Profile

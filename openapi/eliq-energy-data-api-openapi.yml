@@ -1,0 +1,1987 @@
+openapi: 3.2.0
+info:
+  title: Insights Energy Data API
+  version: 3.4.1
+  contact:
+    name: Insights Team
+    email: support_b2b@eliq.com
+  description: '# API Reference
+
+
+    The Eliq insights API is organized around REST.'
+servers:
+- url: http://localhost:3000
+security:
+- BearerAuth: []
+tags:
+- name: Energy Data
+paths:
+  /v3/locations/{locationId}/consumption:
+    get:
+      tags:
+      - Energy Data
+      summary: Get Location consumption
+      description: 'Get energy consumption for the location. Whether location consumption data exists, and between which dates, can be found in the meta data in /locations/{locationId} endpoint.
+
+
+        Maximum time spans for resolutions:
+
+        * 6min: 7 days
+
+        * 15min: 7 days
+
+        * 30min: 7 days
+
+        * hour: 93 days
+
+        * day: 5 years
+
+        * month: 5 years
+
+
+        NOTE! For cost to be available as a unit type, the location prices must be set in our database. If no location prices are available there will be an error response.
+
+
+        NOTE! Unit of m3 is only available with fuel of gas. Conversion between m3 and Wh values relies on a calorific rate being configured for a client. Please contact Eliq for more details about having this configuration in place.'
+      operationId: get-v3-locations-locationId-consumption
+      parameters:
+      - name: locationId
+        in: path
+        description: Location identifier
+        required: true
+        schema:
+          type: integer
+          format: int32
+      - name: from
+        in: query
+        description: From date
+        schema:
+          type: string
+          format: date-time
+      - name: to
+        in: query
+        description: To date, exclusive
+        schema:
+          type: string
+          format: date-time
+      - name: resolution
+        in: query
+        description: 'Data granularity resolution. Valid values: ''6min'', ''15min'', ''30min'', ''hour'', ''day'', ''month''.'
+        schema:
+          type: string
+      - name: cost_type
+        in: query
+        description: "Only applicable when 'cost' unit is passed. Specifies the consumption cost type to return.\n             If set to 'price_formula', price formulas are used to calculate the consumption costs.\n             If set to 'average_cost', the costs are calculated based on the average electricity price for the provided period."
+        schema:
+          type: string
+          default: price_formula
+      - name: fuel
+        in: query
+        description: 'Fuel. Valid values: ''elec'', ''gas''.'
+        schema:
+          type: string
+          default: elec
+      - name: unit
+        in: query
+        description: 'Unit. Valid values: ''cost'', ''energy''.'
+        schema:
+          type: string
+          default: energy
+      - name: include_incomplete
+        in: query
+        description: Includes periods with incomplete data if set to true.
+        schema:
+          type: boolean
+          default: true
+      - name: include_co2
+        in: query
+        description: Includes co2 emissions data if set to true.
+        schema:
+          type: boolean
+          default: false
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TimeSeriesData'
+              examples:
+                Monthly energy response:
+                  value:
+                    consumption:
+                    - 446.37
+                    - null
+                    resolution: month
+                    fuel: elec
+                    unit: energy
+                    from: '2021-01-01T00:00:00'
+                    to: '2021-03-01T00:00:00'
+                Monthly cost response:
+                  value:
+                    consumption:
+                    - 33.29
+                    - null
+                    resolution: month
+                    fuel: elec
+                    unit: cost
+                    from: '2021-01-01T00:00:00'
+                    to: '2021-03-01T00:00:00'
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+              examples:
+                Invalid parameter unit:
+                  value:
+                    type: client_error
+                    category: invalid_parameter
+                    code: INVALID_PARAMETER
+                    transaction_id: 0HN1O72JU5P3C:00000001
+                    message: Something went wrong, please try again later. If problem remains, please contact support.
+                    description: 'Invalid parameter ''unit'': The value <argument> is not valid.'
+                Invalid parameter resolution:
+                  value:
+                    type: client_error
+                    category: invalid_parameter
+                    code: INVALID_PARAMETER
+                    transaction_id: 0HN1O72JU5P3C:00000001
+                    message: Something went wrong, please try again later. If problem remains, please contact support.
+                    description: 'Invalid parameter ''resolution'': The value <argument> is not valid.'
+                Invalid parameter cost_type:
+                  value:
+                    type: client_error
+                    category: invalid_parameter
+                    code: INVALID_PARAMETER
+                    transaction_id: 0HN1O72JU5P3C:00000001
+                    message: Something went wrong, please try again later. If problem remains, please contact support.
+                    description: 'Invalid parameter ''cost_type'': The value <argument> is not valid.'
+                Invalid parameter fuel:
+                  value:
+                    type: client_error
+                    category: invalid_parameter
+                    code: INVALID_PARAMETER
+                    transaction_id: 0HN1O72JU5P3C:00000001
+                    message: Something went wrong, please try again later. If problem remains, please contact support.
+                    description: 'Invalid parameter ''fuel'': The value <argument> is not valid.'
+                From parameter missing:
+                  value:
+                    type: client_error
+                    category: invalid_parameter
+                    code: INVALID_PARAMETER
+                    transaction_id: 0HN1O72JU5P3C:00000001
+                    message: Something went wrong, please try again later. If problem remains, please contact support.
+                    description: Parameter 'from' missing
+                To parameter missing:
+                  value:
+                    type: client_error
+                    category: invalid_parameter
+                    code: INVALID_PARAMETER
+                    transaction_id: 0HN1O72JU5P3C:00000001
+                    message: Something went wrong, please try again later. If problem remains, please contact support.
+                    description: Parameter 'to' missing
+                Date range invalid:
+                  value:
+                    type: client_error
+                    category: invalid_parameter
+                    code: INVALID_PARAMETER
+                    transaction_id: 0HN1O72JU5P3C:00000001
+                    message: Something went wrong, please try again later. If problem remains, please contact support.
+                    description: Parameter 'from' cannot be larger than 'to'
+                From parameter timezone unsupported:
+                  value:
+                    type: client_error
+                    category: invalid_parameter
+                    code: INVALID_PARAMETER
+                    transaction_id: 0HN1O72JU5P3C:00000001
+                    message: Something went wrong, please try again later. If problem remains, please contact support.
+                    description: Parameter 'from' should not include a timezone offset
+                To parameter timezone unsupported:
+                  value:
+                    type: client_error
+                    category: invalid_parameter
+                    code: INVALID_PARAMETER
+                    transaction_id: 0HN1O72JU5P3C:00000001
+                    message: Something went wrong, please try again later. If problem remains, please contact support.
+                    description: Parameter 'to' should not include a timezone offset
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+              examples:
+                Location not found:
+                  value:
+                    type: client_error
+                    category: entity_not_found
+                    code: ENTITY_NOT_FOUND
+                    transaction_id: 0HN18NIB8K5RV:00000001
+                    message: Something went wrong, please try again later. If problem remains, please contact support.
+                    description: Could not find the location.
+                Unit conversion rate not found:
+                  value:
+                    type: client_error
+                    category: client_conversion_rate_not_found
+                    code: CLIENT_CONVERSION_RATE_NOT_FOUND
+                    transaction_id: 0HN18NIB8K5RV:00000001
+                    message: Something went wrong, please try again later. If problem remains, please contact support.
+                    description: Conversion rate is missing for the client
+        '500':
+          description: Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+              examples:
+                Internal Error:
+                  value:
+                    type: internal_error
+                    category: internal_error
+                    code: INTERNAL_ERROR
+                    transaction_id: 0HN18NIB8K5RV:00000001
+                    message: Something went wrong. Please try again later. If problem remains, please contact support.
+                    description: Internal server error, please try again later. If problem remains, please contact support.
+  /v3/locations/{locationId}/peakpower/{resolution}:
+    get:
+      tags:
+      - Energy Data
+      summary: Get location peak power
+      description: 'Get energy peak power for the location. Whether location peak power data exists, and between which dates, can be found in the meta data in /locations/{locationId} endpoint.
+
+
+        Maximum time spans for resolutions:
+
+        * hour: 5 years
+
+        * day: 5 years
+
+        * month: 5 years
+
+
+        Import, export, consumption and production response properties are deprecated, please use the *power* property.'
+      operationId: get-v3-locations-locationId-peakpower
+      parameters:
+      - name: locationId
+        in: path
+        description: Location id
+        required: true
+        schema:
+          type: integer
+          format: int32
+      - name: resolution
+        in: path
+        description: Data resolution
+        required: true
+        schema:
+          type: string
+      - name: peak_power_resolution
+        in: query
+        description: Resolution of peak power values
+        required: true
+        schema:
+          type: string
+      - name: from
+        in: query
+        description: From date
+        required: true
+        schema:
+          type: string
+          format: date-time
+      - name: to
+        in: query
+        description: To date, exclusive
+        required: true
+        schema:
+          type: string
+          format: date-time
+      - name: fuel
+        in: query
+        description: Fuel type
+        schema:
+          enum:
+          - elec
+          - gas
+          - district_heating
+          type: string
+          description: Fuel type
+          default: elec
+      - name: direction
+        in: query
+        description: Type of meter
+        schema:
+          enum:
+          - import
+          - export
+          - consumption
+          - production
+          type: string
+          description: Direction type
+          default: consumption
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PeakPowerResponse'
+              examples:
+                Import peak power:
+                  value:
+                    power:
+                    - 3617.840087890625
+                    peak_power_timestamp:
+                    - '2024-06-01T14:00:00'
+                    from: '2024-06-01T00:00:00'
+                    to: '2024-07-01T00:00:00'
+                    fuel: elec
+                    direction: import
+                    resolution: month
+                    peak_power_resolution: hour
+                    import:
+                    - 3617.840087890625
+                Consumption peak power:
+                  value:
+                    power:
+                    - 1228.7999420166016
+                    - 436.4199981689453
+                    - 1418.760009765625
+                    - 746.5799865722656
+                    peak_power_timestamp:
+                    - '2024-07-01T06:30:00'
+                    - '2024-07-02T08:30:00'
+                    - '2024-07-03T14:00:00'
+                    - '2024-07-04T16:00:00'
+                    from: '2024-07-01T00:00:00'
+                    to: '2024-07-05T00:00:00'
+                    fuel: elec
+                    direction: consumption
+                    resolution: day
+                    peak_power_resolution: 30min
+                    consumption:
+                    - 1228.7999420166016
+                    - 436.4199981689453
+                    - 1418.760009765625
+                    - 746.5799865722656
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+              examples:
+                From parameter missing:
+                  value:
+                    code: INVALID_PARAMETER
+                    transaction_id: 0HN1O72JU5P3C:00000001
+                    description: Parameter 'from' missing
+                To parameter missing:
+                  value:
+                    code: INVALID_PARAMETER
+                    transaction_id: 0HN1O72JU5P3C:00000001
+                    description: Parameter 'to' missing
+                Date range invalid:
+                  value:
+                    code: INVALID_PARAMETER
+                    transaction_id: 0HN1O72JU5P3C:00000001
+                    description: Parameter 'from' cannot be larger than 'to'
+                From parameter timezone unsupported:
+                  value:
+                    code: INVALID_PARAMETER
+                    transaction_id: 0HN1O72JU5P3C:00000001
+                    description: Parameter 'from' should not include a timezone offset
+                To parameter timezone unsupported:
+                  value:
+                    code: INVALID_PARAMETER
+                    transaction_id: 0HN1O72JU5P3C:00000001
+                    description: Parameter 'to' should not include a timezone offset
+                Invalid peak power resolution:
+                  value:
+                    code: INVALID_PEAK_POWER_RESOLUTION
+                    transaction_id: 0HN18NIB8K5RV:00000001
+                    description: Invalid peak power resolution type. Only valid values are e.g 6min, 15min, 30min and hour.
+                Period too long:
+                  value:
+                    code: PERIOD_TOO_LONG
+                    transaction_id: 0HN18NIB8K5RV:00000001
+                    description: Maximum period requested can not exceed 5 years.
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+              examples:
+                Location not found:
+                  value:
+                    code: ENTITY_NOT_FOUND
+                    transaction_id: 0HN18NIB8K5RV:00000001
+                    description: Could not find the location.
+  /v3/locations/{locationId}/production:
+    parameters:
+    - schema:
+        type: string
+      name: locationId
+      in: path
+      required: true
+      description: Location identifier
+    get:
+      summary: Get location production
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TimeseriesData'
+              examples:
+                Example month:
+                  value:
+                    production:
+                    - 446.37
+                    - null
+                    fuel: elec
+                    unit: energy
+                    resolution: month
+                    from: '2021-01-01T00:00:00'
+                    to: '2021-03-01T00:00:00'
+        '400':
+          description: 'Bad Request
+
+
+            Possible errors
+
+
+            | *type* | *category* | *description* |
+
+            | --- | --- | --- |
+
+            | client_error | invalid_parameter | Timespan between ''from'' and ''to'' to large, max {maxTimeSpan} days for the given resolution |
+
+            | client_error | invalid_parameter | Parameter ''to'' missing |
+
+            | client_error | invalid_parameter | Parameter ''from'' missing |
+
+            | client_error | invalid_parameter | Parameter ''from'' cannot be larger than ''to'' |
+
+            | client_error | invalid_parameter | Invalid parameter ''unit''. Should be one of: energy, cost |
+
+            | client_error | invalid_parameter | Invalid parameter ''fuel''. Should be one of: elec, gas, district_heating |
+
+            | client_error | invalid_parameter | Invalid parameter ''resolution''. Should be one of: 6min, 15min, 30min, hour, day, month |'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+              examples:
+                Error example:
+                  value:
+                    type: client_error
+                    category: invalid_parameter
+                    code: INVALID_PARAMETER
+                    description: Invalid parameter 'to'. Cannot be null
+                    message: 'Something went wrong, please try again later. If problem remains, please contact support (error: 1ad3a534117d4).'
+                    transaction_id: 37c4ef86-d525-42c8-b65f-9b4cfcce0df6
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+              examples:
+                Location not found:
+                  value:
+                    type: client_error
+                    category: entity_not_found
+                    code: ENTITY_NOT_FOUND
+                    transaction_id: 0HN18NIB8K5RV:00000001
+                    message: Something went wrong, please try again later. If problem remains, please contact support.
+                    description: Could not find the location.
+                Unit conversion rate not found:
+                  value:
+                    type: client_error
+                    category: client_conversion_rate_not_found
+                    code: CLIENT_CONVERSION_RATE_NOT_FOUND
+                    transaction_id: 0HN18NIB8K5RV:00000001
+                    message: Something went wrong, please try again later. If problem remains, please contact support.
+                    description: Conversion rate is missing for the client
+      operationId: get-v3-locations-locationId-production
+      description: 'Get energy production for the location. Whether location production data exists, and between which dates, can be found in the meta data in /locations/{locationId} endpoint. The production will be a summary of all production for a location, meaning that in case of multiple pv systems installed, this will return the total energy.
+
+
+        Maximum time spans for resolutions
+
+
+        * 6min: 7 days
+
+        * 15min: 7 days
+
+        * 30min: 7 days
+
+        * hour: 93 days
+
+        * day: 5 years
+
+        * month: 5 years
+
+
+        `NOTE!` For cost to be available as a unit type, the location prices must be set in our database. If no location prices are available there will be an error response.'
+      parameters:
+      - schema:
+          type: string
+          enum:
+          - elec
+          - gas
+          - district_heating
+          default: elec
+          example: elec
+        in: query
+        name: fuel
+        description: Fuel. Defaults to 'elec'
+      - schema:
+          type: string
+          default: energy
+          enum:
+          - energy
+          - cost
+          example: energy
+        in: query
+        name: unit
+        description: Unit. Defaults to 'energy'
+      - schema:
+          type: string
+          enum:
+          - 6min
+          - 15min
+          - 30min
+          - hour
+          - day
+          - month
+          example: day
+        in: query
+        name: resolution
+        description: Resolution of data
+        required: true
+      - schema:
+          type: string
+          example: '2021-01-01T00:00:00'
+          format: date-time
+        in: query
+        name: from
+        description: From date
+        required: true
+      - schema:
+          type: string
+          format: date-time
+          example: '2021-02-01T00:00:00'
+        in: query
+        name: to
+        description: The 'to date' represents the end date of the time period. The value is exclusive, indicating that the specified date is not included in the data range. It is rounded down to the closest start of the period for the given resolution.
+        required: true
+      tags:
+      - Energy Data
+  /v3/locations/{locationId}/import:
+    parameters:
+    - schema:
+        type: string
+      name: locationId
+      in: path
+      required: true
+      description: Location identifier
+    get:
+      summary: Get location import
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TimeseriesData'
+              examples:
+                Example month:
+                  value:
+                    import:
+                    - 446.37
+                    - null
+                    fuel: elec
+                    unit: energy
+                    resolution: month
+                    from: '2021-01-01T00:00:00'
+                    to: '2021-03-01T00:00:00'
+        '400':
+          description: 'Bad Request
+
+
+            Possible errors
+
+
+            | *type* | *category* | *description* |
+
+            | --- | --- | --- |
+
+            | client_error | invalid_parameter | Timespan between ''from'' and ''to'' to large, max {maxTimeSpan} days for the given resolution |
+
+            | client_error | invalid_parameter | Parameter ''to'' missing |
+
+            | client_error | invalid_parameter | Parameter ''from'' missing |
+
+            | client_error | invalid_parameter | Parameter ''from'' cannot be larger than ''to'' |
+
+            | client_error | invalid_parameter | Invalid parameter ''unit''. Should be one of: energy, cost |
+
+            | client_error | invalid_parameter | Invalid parameter ''fuel''. Should be one of: elec, gas, district_heating |
+
+            | client_error | invalid_parameter | Invalid parameter ''resolution''. Should be one of: 6min, 15min, 30min, hour, day, month |'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+              examples:
+                Error example:
+                  value:
+                    type: client_error
+                    category: invalid_parameter
+                    code: INVALID_PARAMETER
+                    description: Invalid parameter 'to'. Cannot be null
+                    message: 'Something went wrong, please try again later. If problem remains, please contact support (error: 1ad3a534117d4).'
+                    transaction_id: 37c4ef86-d525-42c8-b65f-9b4cfcce0df6
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+              examples:
+                Location not found:
+                  value:
+                    type: client_error
+                    category: entity_not_found
+                    code: ENTITY_NOT_FOUND
+                    transaction_id: 0HN18NIB8K5RV:00000001
+                    message: Something went wrong, please try again later. If problem remains, please contact support.
+                    description: Could not find the location.
+                Unit conversion rate not found:
+                  value:
+                    type: client_error
+                    category: client_conversion_rate_not_found
+                    code: CLIENT_CONVERSION_RATE_NOT_FOUND
+                    transaction_id: 0HN18NIB8K5RV:00000001
+                    message: Something went wrong, please try again later. If problem remains, please contact support.
+                    description: Conversion rate is missing for the client
+      operationId: get-v3-locations-locationId-import
+      description: 'Get imported energy for the location. Whether location import data exists, and between which dates, can be found in the meta data in /locations/{locationId} endpoint. This represents the energy imported from the grid.
+
+
+        Maximum time spans for resolutions
+
+
+        * 6min: 7 days
+
+        * 15min: 7 days
+
+        * 30min: 7 days
+
+        * hour: 93 days
+
+        * day: 5 years
+
+        * month: 5 years
+
+
+        `NOTE!` For cost to be available as a unit type, the location prices must be set in our database. If no location prices are available there will be an error response.'
+      parameters:
+      - schema:
+          type: string
+          enum:
+          - elec
+          - gas
+          - district_heating
+          default: elec
+          example: elec
+        in: query
+        name: fuel
+        description: Fuel. Defaults to 'elec'
+      - schema:
+          type: string
+          default: energy
+          enum:
+          - energy
+          - cost
+          example: energy
+        in: query
+        name: unit
+        description: Unit. Defaults to 'energy'
+      - schema:
+          type: string
+          enum:
+          - 6min
+          - 15min
+          - 30min
+          - hour
+          - day
+          - month
+          example: day
+        in: query
+        name: resolution
+        description: Resolution of data
+        required: true
+      - schema:
+          type: string
+          example: '2021-01-01T00:00:00'
+          format: date-time
+        in: query
+        name: from
+        description: From date
+        required: true
+      - schema:
+          type: string
+          format: date-time
+          example: '2021-02-01T00:00:00'
+        in: query
+        name: to
+        description: The 'to date' represents the end date of the time period. The value is exclusive, indicating that the specified date is not included in the data range. It is rounded down to the closest start of the period for the given resolution.
+        required: true
+      tags:
+      - Energy Data
+  /v3/locations/{locationId}/export:
+    parameters:
+    - schema:
+        type: string
+      name: locationId
+      in: path
+      required: true
+      description: Location identifier
+    get:
+      summary: Get location export
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TimeseriesData'
+              examples:
+                Example month:
+                  value:
+                    export:
+                    - 446.37
+                    - null
+                    fuel: elec
+                    unit: energy
+                    resolution: month
+                    from: '2021-01-01T00:00:00'
+                    to: '2021-03-01T00:00:00'
+        '400':
+          description: 'Bad Request
+
+
+            Possible errors
+
+
+            | *type* | *category* | *description* |
+
+            | --- | --- | --- |
+
+            | client_error | invalid_parameter | Timespan between ''from'' and ''to'' to large, max {maxTimeSpan} days for the given resolution |
+
+            | client_error | invalid_parameter | Parameter ''to'' missing |
+
+            | client_error | invalid_parameter | Parameter ''from'' missing |
+
+            | client_error | invalid_parameter | Parameter ''from'' cannot be larger than ''to'' |
+
+            | client_error | invalid_parameter | Invalid parameter ''unit''. Should be one of: energy, cost |
+
+            | client_error | invalid_parameter | Invalid parameter ''fuel''. Should be one of: elec, gas, district_heating |
+
+            | client_error | invalid_parameter | Invalid parameter ''resolution''. Should be one of: 6min, 15min, 30min, hour, day, month |'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+              examples:
+                Error example:
+                  value:
+                    type: client_error
+                    category: invalid_parameter
+                    code: INVALID_PARAMETER
+                    description: Invalid parameter 'to'. Cannot be null
+                    message: 'Something went wrong, please try again later. If problem remains, please contact support (error: 1ad3a534117d4).'
+                    transaction_id: 37c4ef86-d525-42c8-b65f-9b4cfcce0df6
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+              examples:
+                Location not found:
+                  value:
+                    type: client_error
+                    category: entity_not_found
+                    code: ENTITY_NOT_FOUND
+                    transaction_id: 0HN18NIB8K5RV:00000001
+                    message: Something went wrong, please try again later. If problem remains, please contact support.
+                    description: Could not find the location.
+                Unit conversion rate not found:
+                  value:
+                    type: client_error
+                    category: client_conversion_rate_not_found
+                    code: CLIENT_CONVERSION_RATE_NOT_FOUND
+                    transaction_id: 0HN18NIB8K5RV:00000001
+                    message: Something went wrong, please try again later. If problem remains, please contact support.
+                    description: Conversion rate is missing for the client
+      operationId: get-v3-locations-locationId-export
+      description: 'Get exported energy for the location. Whether location export data exists, and between which dates, can be found in the meta data in /locations/{locationId} endpoint. This represents the energy exported to the grid.
+
+
+        Maximum time spans for resolutions
+
+
+        * 6min: 7 days
+
+        * 15min: 7 days
+
+        * 30min: 7 days
+
+        * hour: 93 days
+
+        * day: 5 years
+
+        * month: 5 years
+
+
+        `NOTE!` For cost to be available as a unit type, the location prices must be set in our database. If no location prices are available there will be an error response.'
+      parameters:
+      - schema:
+          type: string
+          enum:
+          - elec
+          - gas
+          - district_heating
+          default: elec
+          example: elec
+        in: query
+        name: fuel
+        description: Fuel. Defaults to 'elec'
+      - schema:
+          type: string
+          default: energy
+          enum:
+          - energy
+          - cost
+          example: energy
+        in: query
+        name: unit
+        description: Unit. Defaults to 'energy'
+      - schema:
+          type: string
+          enum:
+          - 6min
+          - 15min
+          - 30min
+          - hour
+          - day
+          - month
+          example: day
+        in: query
+        name: resolution
+        description: Resolution of data
+        required: true
+      - schema:
+          type: string
+          example: '2021-01-01T00:00:00'
+          format: date-time
+        in: query
+        name: from
+        description: From date
+        required: true
+      - schema:
+          type: string
+          format: date-time
+          example: '2021-02-01T00:00:00'
+        in: query
+        name: to
+        description: The 'to date' represents the end date of the time period. The value is exclusive, indicating that the specified date is not included in the data range. It is rounded down to the closest start of the period for the given resolution.
+        required: true
+      tags:
+      - Energy Data
+  /v3/locations/{locationId}/forecast:
+    parameters:
+    - schema:
+        type: string
+      name: locationId
+      in: path
+      required: true
+      description: Location identifier
+    get:
+      summary: Get location forecast
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TimeseriesData'
+              examples:
+                Example month:
+                  value:
+                    forecast:
+                    - 446.37
+                    - 380.24
+                    fuel: elec
+                    unit: energy
+                    resolution: month
+                    from: '2021-01-01T00:00:00'
+                    to: '2021-03-01T00:00:00'
+        '400':
+          description: 'Bad Request
+
+
+            Possible errors
+
+
+            | *type* | *category* | *description* |
+
+            | --- | --- | --- |
+
+            | client_error | invalid_parameter | Timespan between ''from'' and ''to'' to large, max {maxTimeSpan} days for the given resolution |
+
+            | client_error | invalid_parameter | Parameter ''to'' missing |
+
+            | client_error | invalid_parameter | Parameter ''from'' missing |
+
+            | client_error | invalid_parameter | Parameter ''from'' cannot be larger than ''to'' |
+
+            | client_error | invalid_parameter | Invalid parameter ''unit''. Should be one of: energy, cost |
+
+            | client_error | invalid_parameter | Invalid parameter ''fuel''. Should be one of: elec, gas, district_heating |
+
+            | client_error | invalid_parameter | Invalid parameter ''resolution''. Should be one of: day, month |'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+              examples:
+                Error example:
+                  value:
+                    type: client_error
+                    category: invalid_parameter
+                    code: INVALID_PARAMETER
+                    description: Invalid parameter 'to'. Cannot be null
+                    message: 'Something went wrong, please try again later. If problem remains, please contact support (error: 1ad3a534117d4).'
+                    transaction_id: 37c4ef86-d525-42c8-b65f-9b4cfcce0df6
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+              examples:
+                Location not found:
+                  value:
+                    type: client_error
+                    category: entity_not_found
+                    code: ENTITY_NOT_FOUND
+                    transaction_id: 0HN18NIB8K5RV:00000001
+                    message: Something went wrong, please try again later. If problem remains, please contact support.
+                    description: Could not find the location.
+                Unit conversion rate not found:
+                  value:
+                    type: client_error
+                    category: client_conversion_rate_not_found
+                    code: CLIENT_CONVERSION_RATE_NOT_FOUND
+                    transaction_id: 0HN18NIB8K5RV:00000001
+                    message: Something went wrong, please try again later. If problem remains, please contact support.
+                    description: Conversion rate is missing for the client
+      operationId: get-v3-locations-locationId-forecast
+      description: 'Get consumption forecast the location. Whether location consumption data exists, and between which dates, can be found in the meta data in /locations/{locationId} endpoint.
+
+
+        Maximum time spans for resolutions
+
+
+        * day: 31 days
+
+        * month: 12 months
+
+
+        `NOTE!` For cost to be available as a unit type, the location prices must be set in our database. If no location prices are available there will be an error response.
+
+
+        `NOTE!` If allow_historic is set to true, we will return what the forecast looked like at the date of the "from" date. Meaning that no data points after the from date will be used to calculate the forecast.
+
+
+        `NOTE!` Unit of m3 is only available with fuel of gas. Conversion between m3 and Wh values relies on a calorific rate being configured for a client. Please contact Eliq for more details about having this configuration in place.'
+      parameters:
+      - schema:
+          type: string
+          enum:
+          - elec
+          - gas
+          - district_heating
+          default: elec
+          example: elec
+        in: query
+        name: fuel
+        description: Fuel. Defaults to 'elec'
+      - schema:
+          type: string
+          enum:
+          - energy
+          - cost
+          - m3
+          default: energy
+          example: energy
+        in: query
+        name: unit
+        description: Unit. Defaults to 'energy'
+      - schema:
+          type: string
+          enum:
+          - day
+          - month
+          example: day
+        in: query
+        name: resolution
+        description: Resolution of data
+        required: true
+      - schema:
+          type: string
+          example: '2021-01-01T00:00:00'
+          format: date-time
+        in: query
+        name: from
+        description: From date
+        required: true
+      - schema:
+          type: string
+          format: date-time
+          example: '2021-02-01T00:00:00'
+        in: query
+        name: to
+        description: The 'to date' represents the end date of the time period. The value is exclusive, indicating that the specified date is not included in the data range. It is rounded down to the closest start of the period for the given resolution.
+        required: true
+      - schema:
+          type: boolean
+        in: query
+        description: default is set to false.
+        name: allow_historic
+      - schema:
+          type: boolean
+        in: query
+        description: Includes consumption data for the first month of the request. Only applicable for 'month' resolution. Default is set to false.
+        name: include_consumption
+      tags:
+      - Energy Data
+  /v3/locations/{locationId}/forecast/hourly:
+    parameters:
+    - schema:
+        type: string
+      name: locationId
+      in: path
+      required: true
+      description: Location identifier
+    get:
+      summary: Get location forecast hourly
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                x-examples:
+                  example-1:
+                    forecast:
+                      estimate:
+                      - 2150
+                      - 2150
+                      - 1900
+                      - 2250
+                      - 2250
+                      - 2325
+                      - 2675
+                      - 2300
+                      - 2600
+                      - 2300
+                      - 2900
+                      - 2075
+                      - 1825
+                      - 2550
+                      - 2025
+                      - 2275
+                      - 2850
+                      - 3950
+                      - 3925
+                      - 3300
+                      - 3100
+                      - 2675
+                      - 1975
+                      - 3325
+                      lower_bound:
+                      - 2300
+                      - 2050
+                      - 2000
+                      - 2400
+                      - 2350
+                      - 2800
+                      - 2750
+                      - 2600
+                      - 2800
+                      - 2050
+                      - 3100
+                      - 2150
+                      - 2150
+                      - 2550
+                      - 2150
+                      - 1650
+                      - 2250
+                      - 4350
+                      - 4050
+                      - 3150
+                      - 2800
+                      - 3100
+                      - 2150
+                      - 3000
+                      upper_bound:
+                      - 2300
+                      - 2050
+                      - 2000
+                      - 2400
+                      - 2350
+                      - 2800
+                      - 2750
+                      - 2600
+                      - 2800
+                      - 2050
+                      - 3100
+                      - 2150
+                      - 2150
+                      - 2550
+                      - 2150
+                      - 1650
+                      - 2250
+                      - 4350
+                      - 4050
+                      - 3150
+                      - 2800
+                      - 3100
+                      - 2150
+                      - 3000
+                    fuel: elec
+                    unit: energy
+                    from: '2021-04-01T00:00:00'
+                    to: '2021-04-02T00:00:00'
+                properties:
+                  forecast:
+                    type: object
+                    description: Hourly forecast value if available.
+                    properties:
+                      estimate:
+                        type: array
+                        items:
+                          type: integer
+                      lower_bound:
+                        type: array
+                        items:
+                          type: integer
+                      upper_bound:
+                        type: array
+                        items:
+                          type: integer
+                  fuel:
+                    type: string
+                    description: Fuel. elec, gas, district_heating
+                  unit:
+                    type: string
+                    description: Unit. 'energy' or 'cost'
+                  from:
+                    type: string
+                    description: From date
+                  to:
+                    type: string
+                    description: The 'to date' represents the end date of the time period. The value is exclusive, indicating that the specified date is not included in the data range. It is rounded down to the closest start of the period for the given resolution.
+              examples:
+                Example month:
+                  value:
+                    forecast:
+                      estimate:
+                      - 2150
+                      - 2150
+                      - 1900
+                      - 2250
+                      - 2250
+                      - 2325
+                      - 2675
+                      - 2300
+                      - 2600
+                      - 2300
+                      - 2900
+                      - 2075
+                      - 1825
+                      - 2550
+                      - 2025
+                      - 2275
+                      - 2850
+                      - 3950
+                      - 3925
+                      - 3300
+                      - 3100
+                      - 2675
+                      - 1975
+                      - 3325
+                      lower_bound:
+                      - 2300
+                      - 2050
+                      - 2000
+                      - 2400
+                      - 2350
+                      - 2800
+                      - 2750
+                      - 2600
+                      - 2800
+                      - 2050
+                      - 3100
+                      - 2150
+                      - 2150
+                      - 2550
+                      - 2150
+                      - 1650
+                      - 2250
+                      - 4350
+                      - 4050
+                      - 3150
+                      - 2800
+                      - 3100
+                      - 2150
+                      - 3000
+                      upper_bound:
+                      - 2300
+                      - 2050
+                      - 2000
+                      - 2400
+                      - 2350
+                      - 2800
+                      - 2750
+                      - 2600
+                      - 2800
+                      - 2050
+                      - 3100
+                      - 2150
+                      - 2150
+                      - 2550
+                      - 2150
+                      - 1650
+                      - 2250
+                      - 4350
+                      - 4050
+                      - 3150
+                      - 2800
+                      - 3100
+                      - 2150
+                      - 3000
+                    fuel: elec
+                    unit: energy
+                    from: '2021-04-01T00:00:00'
+                    to: '2021-04-02T00:00:00'
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  code:
+                    type: string
+                  transaction_id:
+                    type: string
+                  description:
+                    type: string
+                x-examples:
+                  example-1:
+                    code: TIMESPAN_TOO_LARGE
+                    transaction_id: 0HMMBOERV1RBM:00000002
+                    description: Timespan to large, max 2 days for the given resolution
+              examples:
+                Time Span Is Too Large:
+                  value:
+                    code: TIMESPAN_TOO_LARGE
+                    transaction_id: 0HMMBOERV1RBM:00000002
+                    description: Timespan to large, max 2 days for the given resolution
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+              examples:
+                Forecast not found:
+                  value:
+                    code: HOURLY_FORECAST_RESULT_CANNOT_BE_NULL_OR_EMPTY
+                    transaction_id: 0HN18NIB8K5RV:00000001
+                    description: Hourly forecast result cannot be null or empty
+      operationId: get-v3-locations-locationId-forecast-hourly
+      description: 'Get consumption hourly forecast the location. Whether location consumption data exists, and between which dates, can be found in the meta data in /locations/{locationId} endpoint.
+
+
+        Maximum time spans for the resolution is 2 days
+
+
+        `NOTE!` For cost to be available as a unit type, the location prices must be set in our database. If no location prices are available there will be an error response.
+
+
+        `NOTE!` If allow_historic is set to true, we will return what the forecast looked like at the date of the "from" date. Meaning that no data points after the from date will be used to calculate the forecast.'
+      parameters:
+      - schema:
+          type: string
+          enum:
+          - elec
+          - gas
+          - district_heating
+          default: elec
+          example: elec
+        in: query
+        name: fuel
+        description: Fuel. Defaults to 'elec'
+      - schema:
+          type: string
+          enum:
+          - energy
+          - cost
+          default: energy
+          example: energy
+        in: query
+        name: unit
+        description: Unit. Defaults to 'energy'
+      - schema:
+          type: string
+          example: '2021-01-01T00:00:00'
+          format: date-time
+        in: query
+        name: from
+        description: From date
+        required: true
+      - schema:
+          type: string
+          format: date-time
+          example: '2021-02-01T00:00:00'
+        in: query
+        name: to
+        description: The 'to date' represents the end date of the time period. The value is exclusive, indicating that the specified date is not included in the data range. It is rounded down to the closest start of the period for the given resolution.
+        required: true
+      - schema:
+          type: boolean
+        in: query
+        description: default is set to false.
+        name: allow_historic
+      tags:
+      - Energy Data
+  /v3/meters/{meterId}/energy:
+    parameters:
+    - schema:
+        type: string
+      name: meterId
+      in: path
+      required: true
+      description: Meter id
+    get:
+      summary: Get meter energy data
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MeterDataResult'
+              examples:
+                Example 1:
+                  value:
+                    meter:
+                    - direction: import
+                      data:
+                      - 1.54
+                      - 1.006
+                      - 1.226
+                      - 1.226
+                      - 1.227
+                      - 1.103
+                      - 1.2
+                      - 1.226
+                      - 0.86
+                    from: '2023-09-01T00:00:00'
+                    to: '2023-09-10T00:00:00'
+                    resolution: day
+                    fuel: elec
+                    unit: cost
+        '400':
+          description: 'Bad Request
+
+
+            Possible errors
+
+
+            | *type* | *category* | *description* |
+
+            | --- | --- | --- |
+
+            | client_error | invalid_parameter | Timespan between ''from'' and ''to'' too large, max {maxTimeSpan} days for the given resolution |
+
+            | client_error | invalid_parameter | Parameter ''to'' missing |
+
+            | client_error | invalid_parameter | Parameter ''from'' missing |
+
+            | client_error | invalid_parameter | Parameter ''from'' cannot be larger than ''to'' |
+
+            | client_error | invalid_parameter | Invalid parameter ''unit''. Should be one of: energy, cost |
+
+            | client_error | invalid_parameter | Invalid parameter ''fuel''. Should be one of: elec, gas, district_heating |
+
+            | client_error | invalid_parameter | Invalid parameter ''resolution''. Should be one of: 6min, 15min, 30min, hour, day, month |
+
+            | client_error | invalid_parameter | No meter with matching provided id found for the location |
+
+            | client_error | invalid_parameter | Can not provide energy data for selected clients meter |'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+              examples:
+                Error example:
+                  value:
+                    type: client_error
+                    category: invalid_parameter
+                    code: INVALID_PARAMETER
+                    description: Invalid parameter 'to'. Cannot be null
+                    message: 'Something went wrong, please try again later. If problem remains, please contact support (error: 1ad3a534117d4).'
+                    transaction_id: 37c4ef86-d525-42c8-b65f-9b4cfcce0df6
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+              examples:
+                Unit conversion rate not found:
+                  value:
+                    type: client_error
+                    category: client_conversion_rate_not_found
+                    code: CLIENT_CONVERSION_RATE_NOT_FOUND
+                    transaction_id: 0HN18NIB8K5RV:00000001
+                    message: Something went wrong, please try again later. If problem remains, please contact support.
+                    description: Conversion rate is missing for the client
+      operationId: get-v3-meters-meterId-energy
+      description: 'Get meter specific data for a period, which is broken down into intervals of selected resolution type.
+
+        A list of available meters for the location can be found in the meta data in /locations/{locationId} endpoint.
+
+
+        Maximum time spans for resolutions
+
+
+        * 6min: 7 days
+
+        * 15min: 7 days
+
+        * 30min: 7 days
+
+        * hour: 93 days
+
+        * day: 5 years
+
+        * month: 5 years
+
+
+        Meters having the following fuel types are supported - `elec`, `gas`, `district_heating`.
+
+
+        `NOTE!` For cost to be available as a unit type, the location prices must be set in our database. If no location prices are available there will be an error response.
+
+
+        `NOTE!` Unit of m3 is only available with fuel of gas. Conversion between m3 and Wh values relies on a calorific rate being configured for a client. Please contact Eliq for more details about having this configuration in place.'
+      parameters:
+      - schema:
+          type: string
+          default: energy
+          enum:
+          - energy
+          - cost
+          - m3
+          example: energy
+        in: query
+        name: unit
+        description: Unit. Defaults to 'energy'
+      - schema:
+          type: string
+          enum:
+          - 6min
+          - 15min
+          - 30min
+          - hour
+          - day
+          - month
+          example: day
+        in: query
+        name: resolution
+        description: Resolution of data
+        required: true
+      - schema:
+          type: string
+          example: '2021-01-01T00:00:00'
+          format: date-time
+        in: query
+        name: from
+        description: From date
+        required: true
+      - schema:
+          type: string
+          format: date-time
+          example: '2021-02-01T00:00:00'
+        in: query
+        name: to
+        description: The 'to date' represents the end date of the time period. The value is exclusive, indicating that the specified date is not included in the data range. It is rounded down to the closest start of the period for the given resolution.
+        required: true
+      tags:
+      - Energy Data
+components:
+  schemas:
+    FuelType:
+      enum:
+      - none
+      - elec
+      - gas
+      - district_heating
+      type: string
+    UnitType:
+      enum:
+      - none
+      - cost
+      - monetary_unit
+      - energy
+      - temperature
+      - m3
+      type: string
+    Co2Emission:
+      type: object
+      properties:
+        co2_in_kg:
+          type: number
+          format: double
+          nullable: true
+        car_gas_emission_in_km:
+          type: number
+          format: double
+          nullable: true
+    TimeseriesData:
+      description: Model containing time series data. Different parameters will be available depending on the data requested, see below for more information
+      type: object
+      x-examples:
+        example-1:
+          consumption:
+          - 446.37
+          - null
+          import:
+          - 446.37
+          - null
+          export:
+          - 446.37
+          - null
+          production:
+          - 446.37
+          - null
+          fuel: elec
+          unit: energy
+          resolution: month
+          from: '2019-01-01T00:00:00'
+          to: '2019-03-01T00:00:00'
+      examples:
+      - consumption:
+        - 446.37
+        - null
+        fuel: elec
+        unit: energy
+        resolution: month
+        from: '2021-01-01T00:00:00'
+        to: '2021-03-01T00:00:00'
+      title: Time series data
+      properties:
+        consumption:
+          type: array
+          description: Available if consumption has been queried. Will always contain the exact amount of elements as there are time frames between ‘to’ and ‘from’ with the given ‘resolution’. Values inside the array can be null if no energy data exists (One day always contains 24 values). The consumption values are floating-point numbers.
+          items:
+            type:
+            - number
+            - 'null'
+        import:
+          type: array
+          description: Available if import has been queried. Will always contain the exact amount of elements as there are time frames between ‘to’ and ‘from’ with the given ‘resolution’. Values inside the array can be null if no energy data exists (One day always contains 24 values). The import values are floating-point numbers.
+          items:
+            type:
+            - number
+            - 'null'
+        export:
+          type: array
+          description: Available if export has been queried. Will always contain the exact amount of elements as there are time frames between ‘to’ and ‘from’ with the given ‘resolution’. Values inside the array can be null if no energy data exists (One day always contains 24 values). The export values are floating-point numbers.
+          items:
+            type:
+            - number
+            - 'null'
+        production:
+          type: array
+          description: Available if production has been queried. Will always contain the exact amount of elements as there are time frames between ‘to’ and ‘from’ with the given ‘resolution’. Values inside the array can be null if no energy data exists (One day always contains 24 values). The production values are floating-point numbers.
+          items:
+            type:
+            - number
+            - 'null'
+        forecast:
+          type: array
+          description: Available if forecast has been queried. Will always contain the exact amount of elements as there are time frames between ‘to’ and ‘from’ with the given ‘resolution’. Values inside the array can be null if no energy data exists. The forecast values are floating-point numbers.
+          items:
+            type:
+            - number
+            - 'null'
+        fuel:
+          type: string
+          minLength: 1
+          description: Can be ‘elec’, ‘gas’ or ‘district_heating’. Matches with the value passed in query parameters of the request if provided
+          enum:
+          - elec
+          - gas
+          - district_heating
+          example: elec
+        unit:
+          type: string
+          minLength: 1
+          description: 'Can be ‘cost’, ‘energy’ or ''m3''. Matches with the value passed in query parameters of the request if provided, otherwise default.
+
+
+            Only return m3 if the unit is available.'
+          enum:
+          - energy
+          - cost
+          example: energy
+        resolution:
+          type: string
+          minLength: 1
+          description: Can be '6min','15min', '30min', 'hour', 'day' or 'month'. Matches with the value passed in query parameters of the request.
+          enum:
+          - 6min
+          - 15min
+          - 30min
+          - hour
+          - day
+          - month
+        from:
+          type: string
+          minLength: 1
+          description: From date
+          example: '2021-01-01T00:00:00'
+        to:
+          type: string
+          minLength: 1
+          description: To date
+          example: '2021-02-01T00:00:00'
+      required:
+      - fuel
+      - unit
+      - resolution
+      - from
+      - to
+    PeakPowerResponse:
+      required:
+      - direction
+      - from
+      - fuel
+      - peak_power_resolution
+      - peak_power_timestamp
+      - power
+      - resolution
+      - to
+      type: object
+      properties:
+        power:
+          type: array
+          items:
+            type: number
+            format: double
+          description: List of power values
+        peak_power_timestamp:
+          type: array
+          items:
+            type: string
+            format: date-time
+          description: List of timestamps indicating when the peak power was recorded
+        from:
+          type: string
+          description: From date
+          format: date-time
+        to:
+          type: string
+          description: To date, exclusive
+          format: date-time
+        fuel:
+          enum:
+          - elec
+          - gas
+          - district_heating
+          type: string
+          description: Fuel type
+        direction:
+          enum:
+          - import
+          - export
+          - consumption
+          - production
+          type: string
+          description: Direction type
+        resolution:
+          enum:
+          - hour
+          - day
+          - month
+          type: string
+          description: Peak power data resolution
+        peak_power_resolution:
+          enum:
+          - 6min
+          - 10min
+          - 15min
+          - 30min
+          - hour
+          type: string
+          description: Resolution of peak power values
+        consumption:
+          type: array
+          items:
+            type: number
+            format: double
+          description: List of consumption values
+          nullable: true
+          deprecated: true
+        production:
+          type: array
+          items:
+            type: number
+            format: double
+          description: List of production values
+          nullable: true
+          deprecated: true
+        import:
+          type: array
+          items:
+            type: number
+            format: double
+          description: List of import values
+          nullable: true
+          deprecated: true
+        export:
+          type: array
+          items:
+            type: number
+            format: double
+          description: List of export values
+          nullable: true
+          deprecated: true
+      description: Peak power response model
+    Error:
+      type: object
+      properties:
+        type:
+          type: string
+          description: Type of error.
+          nullable: true
+          example: internal_error
+        category:
+          type: string
+          description: Error category.
+          nullable: true
+          example: internal_error
+        code:
+          type: string
+          description: Code describing the issue.
+          nullable: true
+          example: INTERNAL_ERROR
+        transaction_id:
+          type: string
+          description: Identifier for the session. Please provide this when contacting support.
+          nullable: true
+          example: 0HN18NN5QB401:00000001
+        message:
+          type: string
+          description: A message related to the error.
+          nullable: true
+          example: Something went wrong. Please try again later. If problem remains, please contact support.
+        description:
+          type: string
+          description: A description of the error for developers.
+          nullable: true
+          example: Internal server error, please try again later. If problem remains, please contact support.
+      description: Model returned for error responses.
+    TimeSeriesData:
+      type: object
+      properties:
+        consumption:
+          type: array
+          items:
+            type: number
+            format: double
+            nullable: true
+          nullable: true
+        production:
+          type: array
+          items:
+            type: number
+            format: double
+            nullable: true
+          nullable: true
+        import:
+          type: array
+          items:
+            type: number
+            format: double
+            nullable: true
+          nullable: true
+        export:
+          type: array
+          items:
+            type: number
+            format: double
+            nullable: true
+          nullable: true
+        price:
+          type: array
+          items:
+            type: number
+            format: double
+            nullable: true
+          nullable: true
+        co2emission:
+          $ref: '#/components/schemas/Co2Emission'
+        resolution:
+          type: string
+          nullable: true
+        fuel:
+          $ref: '#/components/schemas/FuelType'
+        unit:
+          $ref: '#/components/schemas/UnitType'
+        from:
+          type: string
+          format: date-time
+          nullable: true
+        to:
+          type: string
+          format: date-time
+          nullable: true
+        estimated_from:
+          type: string
+          format: date-time
+          nullable: true
+        is_ondemand:
+          type: boolean
+          nullable: true
+    MeterDataResult:
+      description: Model containing meter time series data result. Different parameters will be available depending on the data requested, see below for more information
+      type: object
+      title: MeterDataResult
+      properties:
+        meter:
+          type: array
+          description: Available if consumption has been queried. Will always contain the exact amount of elements as there are time frames between ‘to’ and ‘from’ with the given ‘resolution’. Values inside the array can be null if no energy data exists (One day always contains 24 values). The consumption values are floating-point numbers.
+          items:
+            type:
+            - object
+            - 'null'
+            properties:
+              direction:
+                type: string
+              data:
+                type: array
+                items:
+                  type:
+                  - number
+                  - 'null'
+            required:
+            - direction
+            - data
+        fuel:
+          type: string
+          description: Can be ‘elec’, ‘gas’ or ‘district_heating’. Matches with the value passed in query parameters of the request if provided
+          example: elec
+          enum:
+          - elec
+          - gas
+        unit:
+          type: string
+          description: 'Can be ‘cost’, ‘energy’ or ''m3''. Matches with the value passed in query parameters of the request if provided, otherwise default.
+
+
+            Only return m3 if the unit is available.'
+          example: energy
+          enum:
+          - energy
+          - cost
+        resolution:
+          type: string
+          description: Can be '6min','15min', '30min', 'hour', 'day' or 'month'. Matches with the value passed in query parameters of the request.
+          example: day
+          enum:
+          - 6min
+          - 15min
+          - 30min
+          - hour
+          - day
+          - month
+        from:
+          type: string
+          description: From date
+          example: '2021-01-01T00:00:00'
+          minLength: 1
+        to:
+          type: string
+          description: To date
+          example: '2021-02-01T00:00:00'
+          minLength: 1
+      required:
+      - meter
+      - fuel
+      - unit
+      - resolution
+      - from
+      - to
+  securitySchemes:
+    BearerAuth:
+      type: http
+      scheme: bearer
+      description: The Eliq insights API uses bearer tokens to authenticate requests. Read more under Authentication tag.
+x-tagGroups:
+- name: Authentication
+  tags:
+  - Authentication
+- name: Users
+  tags:
+  - Users
+- name: Locations
+  tags:
+  - Locations
+  - Location Profile
+  - Energy Data
+  - Energy Usage Categories
+  - Energy Performance Certificate
+  - Similar Homes
+  - Budgets
+  - Advice
+  - Anomalies
+  - Market Price
+  - Price Formulas
+- name: Eliq Connect
+  tags:
+  - Eliq Connect
+- name: Health
+  tags:
+  - Health
+- name: Deprecated
+  tags:
+  - Breakdown
+  - Home Profile

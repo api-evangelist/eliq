@@ -1,0 +1,785 @@
+openapi: 3.2.0
+info:
+  title: Insights Market Price API
+  version: 3.4.1
+  contact:
+    name: Insights Team
+    email: support_b2b@eliq.com
+  description: '# API Reference
+
+
+    The Eliq insights API is organized around REST.'
+servers:
+- url: http://localhost:3000
+security:
+- BearerAuth: []
+tags:
+- name: Market Price
+paths:
+  /v3/locations/{locationId}/marketprice/prices:
+    get:
+      tags:
+      - Market Price
+      summary: Get location market prices
+      description: Get market prices for location in desired resolution between two specified timestamps. On daily and monthly resolution, the average price is calculated for the given day/month using either hourly or 15min prices, depending on which prices are available.
+      operationId: get-v3-locations-locationId-marketprice-prices
+      parameters:
+      - name: locationId
+        in: path
+        description: Location ID
+        required: true
+        schema:
+          type: integer
+          format: int32
+      - name: from
+        in: query
+        description: From date inclusive
+        schema:
+          type: string
+      - name: to
+        in: query
+        description: To date exclusive
+        schema:
+          type: string
+      - name: resolution
+        in: query
+        description: 'Data granularity resolution with the following valid values: ''15min'', ''30min'', ''hour'', ''day'', ''month'''
+        schema:
+          enum:
+          - 15min
+          - 30min
+          - hour
+          - day
+          - month
+          type: string
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MarketPriceResponseDto'
+              examples:
+                Successful day result:
+                  value:
+                    resolution: day
+                    currency: SEK
+                    from: '2022-09-01T00:00:00'
+                    to: '2022-09-02T00:00:00'
+                    values:
+                    - period_start: '2022-09-02T00:00:00'
+                      price_kwh: 1.406281
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+              examples:
+                From date missing:
+                  value:
+                    code: MISSING_FROM
+                    transaction_id: 0HN18NIB8K5RV:00000001
+                    description: From date missing
+                To date missing:
+                  value:
+                    code: MISSING_TO
+                    transaction_id: 0HN18NIB8K5RV:00000001
+                    description: To date missing
+                To date must be after from date:
+                  value:
+                    code: TO_MUST_BE_AFTER_FROM
+                    transaction_id: 0HN18NIB8K5RV:00000001
+                    description: To date must be after from date
+                Resolution missing:
+                  value:
+                    code: MISSING_RESOLUTION
+                    transaction_id: 0HN18NIB8K5RV:00000001
+                    description: Resolution missing
+                Resolution provided invalid:
+                  value:
+                    code: INVALID_RESOLUTION
+                    transaction_id: 0HN18NIB8K5RV:00000001
+                    description: Resolution provided invalid
+                Period too long:
+                  value:
+                    code: PERIOD_TOO_LONG
+                    transaction_id: 0HN18NIB8K5RV:00000001
+                    description: Period requested too long for given resolution
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+              examples:
+                Location not found:
+                  value:
+                    code: LOCATION_NOT_FOUND
+                    transaction_id: 0HN18NIB8K5RV:00000001
+                    description: Location with given id not found
+                Location missing spot price region:
+                  value:
+                    code: LOCATION_MISSING_SPOT_PRICE_REGION
+                    transaction_id: 0HN18NIB8K5RV:00000001
+                    description: Location missing spot price region
+                Spot price region not found:
+                  value:
+                    code: SPOT_PRICE_REGION_NOT_FOUND
+                    transaction_id: 0HN18NIB8K5RV:00000001
+                    description: Spot price region not found
+  /v3/locations/{locationId}/marketprice/price-summary:
+    get:
+      tags:
+      - Market Price
+      summary: Get location market price summary
+      description: 'Get market price summary in daily or monthly resolution. The summary includes: average market price, the lowest and highest market price for the period and price levels. The price levels indicates if the average market price was high or low for the period compared to a reference period.
+
+
+        In daily resolution the lowest and highest market price are hourly and the price levels reference period is default 30 days.
+
+
+        In monthly resolution the lowest and highest market price are daily average and the price levels reference period is default 12 months.
+
+
+        Note! In order for market prices to be available, the property spot_price_region_id must be set on the location via the Data Management API.'
+      operationId: get-v3-locations-locationId-marketprice-price-summary
+      parameters:
+      - name: locationId
+        in: path
+        description: Location Id
+        required: true
+        schema:
+          type: integer
+          format: int32
+      - name: from
+        in: query
+        description: From date
+        required: true
+        schema:
+          type: string
+      - name: to
+        in: query
+        description: To date exclusive
+        required: true
+        schema:
+          type: string
+      - name: resolution
+        in: query
+        description: 'Data granularity resolution of periods to summarise with the following valid values: ''day'', ''month'''
+        required: true
+        schema:
+          enum:
+          - day
+          - month
+          type: string
+      - name: subResolution
+        in: query
+        description: Optional parameter which specifies the sub-resolution of the summary data. For 'day' resolution, valid values are 'hour' and '15min'. For 'month' resolution, the only valid value is 'day'. If parameter isn't provided, it defaults to 'hour' for 'day' resolution and 'day' for 'month' resolution.
+        schema:
+          type: string
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MarketPriceSummaryDto'
+              examples:
+                Daily market price summary response with hour subResolution.:
+                  value:
+                    resolution: day
+                    currency: NOK
+                    from: '2022-09-01T00:00:00'
+                    to: '2022-09-02T00:00:00'
+                    values:
+                    - period_start: '2022-09-01T00:00:00'
+                      avg_price_kwh: 5.661202
+                      price_level: high
+                      lowest_price_kwh:
+                        period_start: '2022-09-01T03:00:00'
+                        price_kwh: 4.90578
+                      highest_price_kwh:
+                        period_start: '2022-09-01T19:00:00'
+                        price_kwh: 6.73716
+                      values:
+                      - period_start: '2022-09-01T00:00:00'
+                        price_kwh: 5.01563
+                      - period_start: '2022-09-01T01:00:00'
+                        price_kwh: 4.95013
+                      - period_start: '2022-09-01T02:00:00'
+                        price_kwh: 4.94994
+                      - period_start: '2022-09-01T03:00:00'
+                        price_kwh: 4.90578
+                      - period_start: '2022-09-01T04:00:00'
+                        price_kwh: 5.01007
+                      - period_start: '2022-09-01T05:00:00'
+                        price_kwh: 5.68437
+                      - period_start: '2022-09-01T06:00:00'
+                        price_kwh: 5.90448
+                      - period_start: '2022-09-01T07:00:00'
+                        price_kwh: 6.43509
+                      - period_start: '2022-09-01T08:00:00'
+                        price_kwh: 6.39896
+                      - period_start: '2022-09-01T09:00:00'
+                        price_kwh: 5.95261
+                      - period_start: '2022-09-01T10:00:00'
+                        price_kwh: 5.77011
+                      - period_start: '2022-09-01T11:00:00'
+                        price_kwh: 5.34598
+                      - period_start: '2022-09-01T12:00:00'
+                        price_kwh: 5.0719
+                      - period_start: '2022-09-01T13:00:00'
+                        price_kwh: 5.03399
+                      - period_start: '2022-09-01T14:00:00'
+                        price_kwh: 5.23563
+                      - period_start: '2022-09-01T15:00:00'
+                        price_kwh: 5.52649
+                      - period_start: '2022-09-01T16:00:00'
+                        price_kwh: 5.75612
+                      - period_start: '2022-09-01T17:00:00'
+                        price_kwh: 6.15177
+                      - period_start: '2022-09-01T18:00:00'
+                        price_kwh: 6.498
+                      - period_start: '2022-09-01T19:00:00'
+                        price_kwh: 6.73716
+                      - period_start: '2022-09-01T20:00:00'
+                        price_kwh: 6.58076
+                      - period_start: '2022-09-01T21:00:00'
+                        price_kwh: 6.27571
+                      - period_start: '2022-09-01T22:00:00'
+                        price_kwh: 5.60697
+                      - period_start: '2022-09-01T23:00:00'
+                        price_kwh: 5.0712
+                Daily market price summary response with 15min subResolution.:
+                  value:
+                    resolution: day
+                    currency: NOK
+                    from: '2022-09-01T00:00:00'
+                    to: '2022-09-02T00:00:00'
+                    values:
+                    - period_start: '2022-09-01T00:00:00'
+                      avg_price_kwh: 5.661202
+                      price_level: high
+                      lowest_price_kwh:
+                        period_start: '2022-09-01T00:45:00'
+                        price_kwh: 4.90578
+                      highest_price_kwh:
+                        period_start: '2022-09-01T04:45:00'
+                        price_kwh: 6.73716
+                      values:
+                      - period_start: '2022-09-01T00:00:00'
+                        price_kwh: 5.01563
+                      - period_start: '2022-09-01T00:15:00'
+                        price_kwh: 4.95013
+                      - period_start: '2022-09-01T00:30:00'
+                        price_kwh: 4.94994
+                      - period_start: '2022-09-01T00:45:00'
+                        price_kwh: 4.90578
+                      - period_start: '2022-09-01T01:00:00'
+                        price_kwh: 5.01007
+                      - period_start: '2022-09-01T01:15:00'
+                        price_kwh: 5.68437
+                      - period_start: '2022-09-01T01:30:00'
+                        price_kwh: 5.90448
+                      - period_start: '2022-09-01T01:45:00'
+                        price_kwh: 6.43509
+                      - period_start: '2022-09-01T02:00:00'
+                        price_kwh: 6.39896
+                      - period_start: '2022-09-01T02:15:00'
+                        price_kwh: 5.95261
+                      - period_start: '2022-09-01T02:30:00'
+                        price_kwh: 5.77011
+                      - period_start: '2022-09-01T02:45:00'
+                        price_kwh: 5.34598
+                      - period_start: '2022-09-01T03:00:00'
+                        price_kwh: 5.0719
+                      - period_start: '2022-09-01T03:15:00'
+                        price_kwh: 5.03399
+                      - period_start: '2022-09-01T03:30:00'
+                        price_kwh: 5.23563
+                      - period_start: '2022-09-01T03:45:00'
+                        price_kwh: 5.52649
+                      - period_start: '2022-09-01T04:00:00'
+                        price_kwh: 5.75612
+                      - period_start: '2022-09-01T04:15:00'
+                        price_kwh: 6.15177
+                      - period_start: '2022-09-01T04:30:00'
+                        price_kwh: 6.498
+                      - period_start: '2022-09-01T04:45:00'
+                        price_kwh: 6.73716
+                      - period_start: '2022-09-01T05:00:00'
+                        price_kwh: 6.58076
+                      - period_start: '2022-09-01T05:15:00'
+                        price_kwh: 6.27571
+                      - period_start: '2022-09-01T05:30:00'
+                        price_kwh: 5.60697
+                      - period_start: '2022-09-01T05:45:00'
+                        price_kwh: 5.0712
+                      - period_start: '2022-09-01T06:00:00'
+                        price_kwh: 5.0712
+                      - period_start: '2022-09-01T06:15:00'
+                        price_kwh: 4.95013
+                      - period_start: '2022-09-01T06:30:00'
+                        price_kwh: 4.94994
+                      - period_start: '2022-09-01T06:45:00'
+                        price_kwh: 4.08
+                      - period_start: '2022-09-01T07:00:00'
+                        price_kwh: 5.01007
+                      - period_start: '2022-09-01T07:15:00'
+                        price_kwh: 5.68437
+                      - period_start: '2022-09-01T07:30:00'
+                        price_kwh: 5.90448
+                      - period_start: '2022-09-01T07:45:00'
+                        price_kwh: 6.43509
+                      - period_start: '2022-09-01T08:00:00'
+                        price_kwh: 6.39896
+                      - period_start: '2022-09-01T08:15:00'
+                        price_kwh: 5.95261
+                      - period_start: '2022-09-01T08:30:00'
+                        price_kwh: 5.77011
+                      - period_start: '2022-09-01T08:45:00'
+                        price_kwh: 5.34598
+                      - period_start: '2022-09-01T09:00:00'
+                        price_kwh: 5.0719
+                      - period_start: '2022-09-01T09:15:00'
+                        price_kwh: 5.03399
+                      - period_start: '2022-09-01T09:30:00'
+                        price_kwh: 5.23563
+                      - period_start: '2022-09-01T09:45:00'
+                        price_kwh: 5.52649
+                      - period_start: '2022-09-01T10:00:00'
+                        price_kwh: 5.75612
+                      - period_start: '2022-09-01T10:15:00'
+                        price_kwh: 6.15177
+                      - period_start: '2022-09-01T10:30:00'
+                        price_kwh: 6.498
+                      - period_start: '2022-09-01T10:45:00'
+                        price_kwh: 6
+                      - period_start: '2022-09-01T11:00:00'
+                        price_kwh: 6.58076
+                      - period_start: '2022-09-01T11:15:00'
+                        price_kwh: 6.27571
+                      - period_start: '2022-09-01T11:30:00'
+                        price_kwh: 5.60697
+                      - period_start: '2022-09-01T11:45:00'
+                        price_kwh: 5.0712
+                      - period_start: '2022-09-01T12:00:00'
+                        price_kwh: 5.0712
+                      - period_start: '2022-09-01T12:15:00'
+                        price_kwh: 4.95013
+                      - period_start: '2022-09-01T12:30:00'
+                        price_kwh: 4.94994
+                      - period_start: '2022-09-01T12:45:00'
+                        price_kwh: 4
+                      - period_start: '2022-09-01T13:00:00'
+                        price_kwh: 5.01007
+                      - period_start: '2022-09-01T13:15:00'
+                        price_kwh: 5.68437
+                      - period_start: '2022-09-01T13:30:00'
+                        price_kwh: 5.90448
+                      - period_start: '2022-09-01T13:45:00'
+                        price_kwh: 6.43509
+                      - period_start: '2022-09-01T14:00:00'
+                        price_kwh: 6.39896
+                      - period_start: '2022-09-01T14:15:00'
+                        price_kwh: 5.95261
+                      - period_start: '2022-09-01T14:30:00'
+                        price_kwh: 5.77011
+                      - period_start: '2022-09-01T14:45:00'
+                        price_kwh: 5.34598
+                      - period_start: '2022-09-01T15:00:00'
+                        price_kwh: 5.0719
+                      - period_start: '2022-09-01T15:15:00'
+                        price_kwh: 5.03399
+                      - period_start: '2022-09-01T15:30:00'
+                        price_kwh: 5.23563
+                      - period_start: '2022-09-01T15:45:00'
+                        price_kwh: 5.52649
+                      - period_start: '2022-09-01T16:00:00'
+                        price_kwh: 5.75612
+                      - period_start: '2022-09-01T16:15:00'
+                        price_kwh: 6.15177
+                      - period_start: '2022-09-01T16:30:00'
+                        price_kwh: 6.498
+                      - period_start: '2022-09-01T16:45:00'
+                        price_kwh: 6
+                      - period_start: '2022-09-01T17:00:00'
+                        price_kwh: 6.58076
+                      - period_start: '2022-09-01T17:15:00'
+                        price_kwh: 6.27571
+                      - period_start: '2022-09-01T17:30:00'
+                        price_kwh: 5.60697
+                      - period_start: '2022-09-01T17:45:00'
+                        price_kwh: 5.0712
+                      - period_start: '2022-09-01T18:00:00'
+                        price_kwh: 5.0712
+                      - period_start: '2022-09-01T18:15:00'
+                        price_kwh: 4.95013
+                      - period_start: '2022-09-01T18:30:00'
+                        price_kwh: 4.94994
+                      - period_start: '2022-09-01T18:45:00'
+                        price_kwh: 4
+                      - period_start: '2022-09-01T19:00:00'
+                        price_kwh: 5.01007
+                      - period_start: '2022-09-01T19:15:00'
+                        price_kwh: 5.68437
+                      - period_start: '2022-09-01T19:30:00'
+                        price_kwh: 5.90448
+                      - period_start: '2022-09-01T19:45:00'
+                        price_kwh: 6.43509
+                      - period_start: '2022-09-01T20:00:00'
+                        price_kwh: 6.39896
+                      - period_start: '2022-09-01T20:15:00'
+                        price_kwh: 5.95261
+                      - period_start: '2022-09-01T20:30:00'
+                        price_kwh: 5.77011
+                      - period_start: '2022-09-01T20:45:00'
+                        price_kwh: 5.34598
+                      - period_start: '2022-09-01T21:00:00'
+                        price_kwh: 5.0719
+                      - period_start: '2022-09-01T21:15:00'
+                        price_kwh: 5.03399
+                      - period_start: '2022-09-01T21:30:00'
+                        price_kwh: 5.23563
+                      - period_start: '2022-09-01T21:45:00'
+                        price_kwh: 5.52649
+                      - period_start: '2022-09-01T22:00:00'
+                        price_kwh: 5.75612
+                      - period_start: '2022-09-01T22:15:00'
+                        price_kwh: 6.15177
+                      - period_start: '2022-09-01T22:30:00'
+                        price_kwh: 6.498
+                      - period_start: '2022-09-01T22:45:00'
+                        price_kwh: 6
+                      - period_start: '2022-09-01T23:00:00'
+                        price_kwh: 6.58076
+                      - period_start: '2022-09-01T23:15:00'
+                        price_kwh: 6.27571
+                      - period_start: '2022-09-01T23:30:00'
+                        price_kwh: 5.60697
+                      - period_start: '2022-09-01T23:45:00'
+                        price_kwh: 5.0712
+                Monthly market price summary response:
+                  value:
+                    resolution: month
+                    currency: NOK
+                    from: '2022-09-01T00:00:00'
+                    to: '2022-10-01T00:00:00'
+                    values:
+                    - period_start: '2022-09-01T00:00:00'
+                      avg_price_kwh: 5.661202
+                      price_level: high
+                      lowest_price_kwh:
+                        period_start: '2022-09-04T00:00:00'
+                        price_kwh: 4.90578
+                      highest_price_kwh:
+                        period_start: '2022-09-20T00:00:00'
+                        price_kwh: 6.73716
+                      values:
+                      - period_start: '2022-09-01T00:00:00'
+                        price_kwh: 5.01563
+                      - period_start: '2022-09-02T00:00:00'
+                        price_kwh: 4.95013
+                      - period_start: '2022-09-03T00:00:00'
+                        price_kwh: 4.94994
+                      - period_start: '2022-09-04T00:00:00'
+                        price_kwh: 4.90578
+                      - period_start: '2022-09-05T00:00:00'
+                        price_kwh: 5.01007
+                      - period_start: '2022-09-06T00:00:00'
+                        price_kwh: 5.68437
+                      - period_start: '2022-09-07T00:00:00'
+                        price_kwh: 5.90448
+                      - period_start: '2022-09-08T00:00:00'
+                        price_kwh: 6.43509
+                      - period_start: '2022-09-09T00:00:00'
+                        price_kwh: 6.39896
+                      - period_start: '2022-09-10T00:00:00'
+                        price_kwh: 5.95261
+                      - period_start: '2022-09-11T00:00:00'
+                        price_kwh: 5.77011
+                      - period_start: '2022-09-12T00:00:00'
+                        price_kwh: 5.34598
+                      - period_start: '2022-09-13T00:00:00'
+                        price_kwh: 5.0719
+                      - period_start: '2022-09-14T00:00:00'
+                        price_kwh: 5.03399
+                      - period_start: '2022-09-15T00:00:00'
+                        price_kwh: 5.23563
+                      - period_start: '2022-09-16T00:00:00'
+                        price_kwh: 5.52649
+                      - period_start: '2022-09-17T00:00:00'
+                        price_kwh: 5.75612
+                      - period_start: '2022-09-18T00:00:00'
+                        price_kwh: 6.15177
+                      - period_start: '2022-09-19T00:00:00'
+                        price_kwh: 6.498
+                      - period_start: '2022-09-20T00:00:00'
+                        price_kwh: 6.73716
+                      - period_start: '2022-09-21T00:00:00'
+                        price_kwh: 6.58076
+                      - period_start: '2022-09-22T00:00:00'
+                        price_kwh: 6.27571
+                      - period_start: '2022-09-23T00:00:00'
+                        price_kwh: 5.60697
+                      - period_start: '2022-09-24T00:00:00'
+                        price_kwh: 5.0712
+                      - period_start: '2022-09-25T00:00:00'
+                        price_kwh: 5.0712
+                      - period_start: '2022-09-26T00:00:00'
+                        price_kwh: 5.0712
+                      - period_start: '2022-09-27T00:00:00'
+                        price_kwh: 5.0712
+                      - period_start: '2022-09-28T00:00:00'
+                        price_kwh: 5.0712
+                      - period_start: '2022-09-29T00:00:00'
+                        price_kwh: 5.0712
+                      - period_start: '2022-09-30T00:00:00'
+                        price_kwh: 5.0712
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+              examples:
+                From date missing:
+                  value:
+                    code: MISSING_FROM
+                    transaction_id: 0HN18NIB8K5RV:00000001
+                    description: From date missing
+                To date missing:
+                  value:
+                    code: MISSING_TO
+                    transaction_id: 0HN18NIB8K5RV:00000001
+                    description: To date missing
+                To date must be after from date:
+                  value:
+                    code: TO_MUST_BE_AFTER_FROM
+                    transaction_id: 0HN18NIB8K5RV:00000001
+                    description: To date must be after from date
+                Resolution missing:
+                  value:
+                    code: MISSING_RESOLUTION
+                    transaction_id: 0HN18NIB8K5RV:00000001
+                    description: Resolution missing
+                Resolution provided invalid:
+                  value:
+                    code: INVALID_RESOLUTION
+                    transaction_id: 0HN18NIB8K5RV:00000001
+                    description: Resolution provided invalid
+                Period too long:
+                  value:
+                    code: PERIOD_TOO_LONG
+                    transaction_id: 0HN18NIB8K5RV:00000001
+                    description: Period requested too long for given resolution
+                Invalid sub-resolution for day resolution:
+                  value:
+                    code: INVALID_RESOLUTION_PROVIDED
+                    transaction_id: 0HN18NIB8K5RV:00000001
+                    description: Invalid sub-resolution provided for day resolution
+                Invalid sub-resolution for month resolution:
+                  value:
+                    code: INVALID_RESOLUTION_PROVIDED
+                    transaction_id: 0HN18NIB8K5RV:00000001
+                    description: Invalid sub-resolution provided for month resolution
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+              examples:
+                Location not found:
+                  value:
+                    code: LOCATION_NOT_FOUND
+                    transaction_id: 0HN18NIB8K5RV:00000001
+                    description: Location with given id not found
+                Location missing spot price region:
+                  value:
+                    code: LOCATION_MISSING_SPOT_PRICE_REGION
+                    transaction_id: 0HN18NIB8K5RV:00000001
+                    description: Location missing spot price region
+                Spot price region not found:
+                  value:
+                    code: SPOT_PRICE_REGION_NOT_FOUND
+                    transaction_id: 0HN18NIB8K5RV:00000001
+                    description: Spot price region not found
+components:
+  schemas:
+    MarketPriceSummaryElementDto:
+      required:
+      - avg_price_kwh
+      - highest_price_kwh
+      - lowest_price_kwh
+      - period_start
+      - price_level
+      - values
+      type: object
+      properties:
+        period_start:
+          type: string
+          description: The start of the daily/monthly period
+        avg_price_kwh:
+          type: number
+          description: Average daily/monthly price per kwh
+          format: double
+        price_level:
+          $ref: '#/components/schemas/PriceLevel'
+        lowest_price_kwh:
+          $ref: '#/components/schemas/MarketPriceElementDto'
+        highest_price_kwh:
+          $ref: '#/components/schemas/MarketPriceElementDto'
+        values:
+          type: array
+          items:
+            $ref: '#/components/schemas/MarketPriceElementDto'
+          description: All summary period prices
+    PriceLevel:
+      enum:
+      - low
+      - medium
+      - high
+      type: string
+    MarketPriceElementDto:
+      required:
+      - period_start
+      - price_kwh
+      type: object
+      properties:
+        period_start:
+          type: string
+          description: Market price period start
+        price_kwh:
+          type: number
+          description: Market price during period per kwh
+          format: double
+    MarketPriceResponseDto:
+      required:
+      - currency
+      - from
+      - resolution
+      - to
+      - values
+      type: object
+      properties:
+        resolution:
+          minLength: 1
+          type: string
+          description: Resolution of the values array
+        currency:
+          minLength: 1
+          type: string
+          description: Currency of the price_kwh
+        from:
+          type: string
+          description: From date inclusive
+        to:
+          type: string
+          description: To date exclusive
+        values:
+          type: array
+          items:
+            $ref: '#/components/schemas/MarketPriceElementDto'
+          description: Values in the specified resolution. The size always matches the number of periods between from and two in the given resolution. May contain null.
+    Error:
+      type: object
+      properties:
+        type:
+          type: string
+          description: Type of error.
+          nullable: true
+          example: internal_error
+        category:
+          type: string
+          description: Error category.
+          nullable: true
+          example: internal_error
+        code:
+          type: string
+          description: Code describing the issue.
+          nullable: true
+          example: INTERNAL_ERROR
+        transaction_id:
+          type: string
+          description: Identifier for the session. Please provide this when contacting support.
+          nullable: true
+          example: 0HN18NN5QB401:00000001
+        message:
+          type: string
+          description: A message related to the error.
+          nullable: true
+          example: Something went wrong. Please try again later. If problem remains, please contact support.
+        description:
+          type: string
+          description: A description of the error for developers.
+          nullable: true
+          example: Internal server error, please try again later. If problem remains, please contact support.
+      description: Model returned for error responses.
+    MarketPriceResolution:
+      enum:
+      - day
+      - month
+      type: string
+    MarketPriceSummaryDto:
+      required:
+      - currency
+      - from
+      - resolution
+      - to
+      - values
+      type: object
+      properties:
+        resolution:
+          $ref: '#/components/schemas/MarketPriceResolution'
+        currency:
+          minLength: 1
+          type: string
+          description: Currency of the price_kwh
+        from:
+          type: string
+          description: From date
+        to:
+          type: string
+          description: To date exclusive
+        values:
+          type: array
+          items:
+            $ref: '#/components/schemas/MarketPriceSummaryElementDto'
+          description: Values in the specified resolution. The size always matches the number of periods between from and to in the given resolution. Collection may contain null entries for periods with no data.
+  securitySchemes:
+    BearerAuth:
+      type: http
+      scheme: bearer
+      description: The Eliq insights API uses bearer tokens to authenticate requests. Read more under Authentication tag.
+x-tagGroups:
+- name: Authentication
+  tags:
+  - Authentication
+- name: Users
+  tags:
+  - Users
+- name: Locations
+  tags:
+  - Locations
+  - Location Profile
+  - Energy Data
+  - Energy Usage Categories
+  - Energy Performance Certificate
+  - Similar Homes
+  - Budgets
+  - Advice
+  - Anomalies
+  - Market Price
+  - Price Formulas
+- name: Eliq Connect
+  tags:
+  - Eliq Connect
+- name: Health
+  tags:
+  - Health
+- name: Deprecated
+  tags:
+  - Breakdown
+  - Home Profile

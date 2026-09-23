@@ -1,0 +1,496 @@
+openapi: 3.2.0
+info:
+  title: Insights Energy Usage Categories API
+  version: 3.4.1
+  contact:
+    name: Insights Team
+    email: support_b2b@eliq.com
+  description: '# API Reference
+
+
+    The Eliq insights API is organized around REST.'
+servers:
+- url: http://localhost:3000
+security:
+- BearerAuth: []
+tags:
+- name: Energy Usage Categories
+paths:
+  /v3/locations/{locationId}/euc:
+    get:
+      tags:
+      - Energy Usage Categories
+      summary: Get energy usage categories (EUC) for a location
+      description: 'Get location energy usage by category.
+
+
+        Requested EUC period must be in a range of 28 - 366 days (minimum 1 month, maximum 1 year).
+
+
+        For cost to be available as a unit type, the location must have device price formulas set in our system.
+
+
+        Unit of m3 is only available with fuel of gas. Conversion between m3 and Wh values relies on a calorific rate being configured for a client. Please contact Eliq for more details about having this configuration in place.
+
+
+        ### Data requirements
+
+        EUC requires some prerequisites in order to work.
+
+        #### Electricity
+
+        * Monthly energy data: Minimum 30 days of data
+
+        - (Optional) Hourly energy data: Minimum 30 days of hourly or sub-hourly data
+
+        * Geo location: Address information
+
+        * Location profile: At least house type for residential profile or business type for business profile.
+
+
+        #### Gas
+
+        * Monthly energy data: Minimum one month of data
+
+        * Geo location: Address information
+
+        * Location profile: At least house type for residential profile or business type for business profile.
+
+
+        ### Electricity categories
+
+        | *Field* | *Description* |
+
+        | --- | --- |
+
+        | heating | Electricity usage used for space heating |
+
+        | washing | Electricity usage used for laundry |
+
+        | water_heating | Electricity usage used for water heating |
+
+        | lighting | Electricity usage used for lighting. |
+
+        | consumer_electronics | Electricity usage used for home electronics |
+
+        | cooking | Electricity usage used for cooking |
+
+        | always_on | Electricity usage used for always on appliances |
+
+        | fridge_freezer | Electricity usage used by fridge and freezers |
+
+        | cooling | Electricity usage used to cool the home |
+
+        | electric_vehicle | Electricity usage used for charging of cars |
+
+        | sauna | Electricity usage used for heating your sauna |
+
+        | other | Electricity usage used by appliances not matching other categories |
+
+
+        ### Gas categories
+
+        | *Field* | *Description* |
+
+        | --- | --- |
+
+        | heating | Gas usage used for heating |
+
+        | water_heating | Gas usage used for heating water |
+
+        | cooking | Gas usage usage used for cooking |'
+      operationId: get-v3-locations-locationId-euc
+      parameters:
+      - name: locationId
+        in: path
+        description: Location id
+        required: true
+        schema:
+          type: integer
+          format: int32
+      - name: from
+        in: query
+        description: From date
+        required: true
+        schema:
+          type: string
+          format: date-time
+      - name: to
+        in: query
+        description: To date, exclusive
+        required: true
+        schema:
+          type: string
+          format: date-time
+      - name: unit
+        in: query
+        description: 'Unit. Valid values: ''cost'', ''energy'', ''m3''.'
+        schema:
+          type: string
+          default: energy
+      - name: fuel
+        in: query
+        description: 'Fuel. Valid values: ''elec'', ''gas'', ''district_heating''.'
+        schema:
+          type: string
+          default: elec
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/EUC'
+              examples:
+                EUC data monthly:
+                  value:
+                    accuracy: medium
+                    total_value: 12881
+                    from: '2024-02-01T00:00:00'
+                    to: '2024-03-01T00:00:00'
+                    unit: energy
+                    breakdown:
+                    - category: lighting
+                      value: 1350
+                      percentage: 10.48
+                    - category: fridge_freezer
+                      value: 2203
+                      percentage: 17.1
+                    - category: washing
+                      value: 672
+                      percentage: 5.22
+                    - category: heating
+                      value: 8656
+                      percentage: 67.2
+                EUC data yearly:
+                  value:
+                    accuracy: medium
+                    total_value: 250340
+                    from: '2024-01-01T00:00:00'
+                    to: '2025-01-01T00:00:00'
+                    unit: energy
+                    breakdown:
+                    - category: lighting
+                      value: 135021
+                      percentage: 10.48
+                    - category: fridge_freezer
+                      value: 22031
+                      percentage: 17.1
+                    - category: washing
+                      value: 6722
+                      percentage: 5.22
+                    - category: heating
+                      value: 86566
+                      percentage: 67.2
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+              examples:
+                Not supported or missing profile type:
+                  value:
+                    code: NOT_SUPPORTED_PROFILE_TYPE
+                    transaction_id: 0HN1O72JU5P3C:00000001
+                    description: Locations profile type is not supported or missing for EUC.
+                Not enough home profile options:
+                  value:
+                    code: NOT_ENOUGH_HOME_PROFILE_OPTIONS_SET
+                    transaction_id: 0HN1O72JU5P3C:00000001
+                    description: Not enough home profile options set.
+                Not enough business profile options:
+                  value:
+                    code: NOT_ENOUGH_BUSINESS_PROFILE_OPTIONS_SET
+                    transaction_id: 0HN1O72JU5P3C:00000001
+                    description: All required business profile options must be set.
+                House type required:
+                  value:
+                    code: HOUSE_TYPE_REQUIRED_FOR_EUC
+                    transaction_id: 0HN1O72JU5P3C:00000001
+                    description: House type required for EUC.
+                Business type required:
+                  value:
+                    code: BUSINESS_TYPE_REQUIRED_FOR_EUC
+                    transaction_id: 0HN1O72JU5P3C:00000001
+                    description: Business type required for EUC.
+                Euc not supported for business type:
+                  value:
+                    code: EUC_NOT_SUPPORTED_FOR_BUSINESS_TYPE
+                    transaction_id: 0HN1O72JU5P3C:00000001
+                    description: EUC is not supported for the selected business type.
+                Not enough data points:
+                  value:
+                    code: NOT_ENOUGH_DATA_POINTS
+                    transaction_id: 0HN1O72JU5P3C:00000001
+                    description: Not enough data point for the requested period.
+                No consumption for solar:
+                  value:
+                    code: NO_CONSUMPTION_DATA_FOR_SOLAR_LOCATION
+                    transaction_id: 0HN1O72JU5P3C:00000001
+                    description: Solar panels are selected for this location, but we do not have consumption data in our platform.
+                At least daily resolution required:
+                  value:
+                    code: DAILY_RESOLUTION_OR_BETTER_REQUIRED_FOR_CUSTOM_PERIOD
+                    transaction_id: 0HN1O72JU5P3C:00000001
+                    description: Daily or hourly resolution required for the requested period.
+                From later than today:
+                  value:
+                    code: FROM_DATE_CANNOT_BE_LATER_THAN_TODAY_DATE
+                    transaction_id: 0HN1O72JU5P3C:00000001
+                    description: From date cannot be larger than todays date.
+                Timespan too large:
+                  value:
+                    code: TIMESPAN_TOO_LARGE
+                    transaction_id: 0HN1O72JU5P3C:00000001
+                    description: Timespan too large, one year or 366 days is the maximum allowed.
+                Timespan too small:
+                  value:
+                    code: TIMESPAN_TOO_SMALL
+                    transaction_id: 0HN1O72JU5P3C:00000001
+                    description: Timespan must be at least 28 days.
+                Current month not supported:
+                  value:
+                    code: EUC_FOR_CURRENT_MONTH_IS_NOT_SUPPORTED
+                    transaction_id: 0HN1O72JU5P3C:00000001
+                    description: EUC for current month is not supported.
+                Period spanning several months have mid-month from/to dates.:
+                  value:
+                    code: MULTI_MONTH_DATES_START_MID_MONTH
+                    transaction_id: 0HN1O72JU5P3C:00000001
+                    description: When requesting EUC for a period larger than 1 month, or 31 days, from and to dates must start on the 1st day of the month.
+                Monetary value not calculated:
+                  value:
+                    code: COST_NOT_FOUND_FOR_ALL_DATA_POINTS
+                    transaction_id: 0HN1O72JU5P3C:00000001
+                    description: Monetary value could not be calculated
+                From parameter missing:
+                  value:
+                    code: INVALID_PARAMETER
+                    transaction_id: 0HN1O72JU5P3C:00000001
+                    description: Parameter 'from' missing
+                To parameter missing:
+                  value:
+                    code: INVALID_PARAMETER
+                    transaction_id: 0HN1O72JU5P3C:00000001
+                    description: Parameter 'to' missing
+                Date range invalid:
+                  value:
+                    code: INVALID_PARAMETER
+                    transaction_id: 0HN1O72JU5P3C:00000001
+                    description: Parameter 'from' cannot be larger than 'to'
+                From parameter timezone unsupported:
+                  value:
+                    code: INVALID_PARAMETER
+                    transaction_id: 0HN1O72JU5P3C:00000001
+                    description: Parameter 'from' should not include a timezone offset
+                To parameter timezone unsupported:
+                  value:
+                    code: INVALID_PARAMETER
+                    transaction_id: 0HN1O72JU5P3C:00000001
+                    description: Parameter 'to' should not include a timezone offset
+                Unit parameter invalid:
+                  value:
+                    code: INVALID_PARAMETER
+                    transaction_id: 0HN1O72JU5P3C:00000001
+                    description: Invalid parameter 'unit'
+                Unit parameter is null:
+                  value:
+                    code: INVALID_PARAMETER
+                    transaction_id: 0HN1O72JU5P3C:00000001
+                    description: Invalid parameter 'unit'. Cannot be null
+                Unit is not allowed:
+                  value:
+                    code: INVALID_PARAMETER
+                    transaction_id: 0HN1O72JU5P3C:00000001
+                    description: 'Invalid parameter ''unit''. Should be one of: <allowed units>'
+                Fuel parameter is null:
+                  value:
+                    code: INVALID_PARAMETER
+                    transaction_id: 0HN1O72JU5P3C:00000001
+                    description: Invalid parameter 'fuel'. Cannot be null.
+                Fuel parameter unrecognized:
+                  value:
+                    code: INVALID_PARAMETER
+                    transaction_id: 0HN1O72JU5P3C:00000001
+                    description: Invalid parameter 'fuel'. Type of <provided fuel> unrecognized.
+                Unit not supported with fuel:
+                  value:
+                    code: INVALID_PARAMETER
+                    transaction_id: 0HN1O72JU5P3C:00000001
+                    description: Unit m3 is only supported for fuel types gas and district_heating.
+                No EUC categories could be calculated:
+                  value:
+                    code: NO_CATEGORIES_IDENTIFIED
+                    transaction_id: 0HN1O72JU5P3C:00000001
+                    description: No categories were identified for the selected location.
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+              examples:
+                Location not found:
+                  value:
+                    code: ENTITY_NOT_FOUND
+                    transaction_id: 0HN18NIB8K5RV:00000001
+                    description: Could not find the location.
+                Unit conversion rate not found:
+                  value:
+                    code: CLIENT_CONVERSION_RATE_NOT_FOUND
+                    transaction_id: 0HN18NIB8K5RV:00000001
+                    description: Conversion rate is missing for the client
+        '500':
+          description: Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+              examples:
+                Internal Error:
+                  value:
+                    code: INTERNAL_ERROR
+                    transaction_id: 0HN18NIB8K5RV:00000001
+                    description: Internal server error, please try again later. If problem remains, please contact support.
+components:
+  schemas:
+    EUC:
+      required:
+      - accuracy
+      - breakdown
+      - from
+      - to
+      - total_value
+      - unit
+      type: object
+      properties:
+        accuracy:
+          $ref: '#/components/schemas/EucAccuracy'
+        total_value:
+          type: number
+          description: Total value
+          format: double
+          example: 12881
+        from:
+          type: string
+          description: From date
+          format: date-time
+          example: '2024-02-01T00:00:00'
+        to:
+          type: string
+          description: To date
+          format: date-time
+          example: '2024-03-01T00:00:00'
+        unit:
+          minLength: 1
+          type: string
+          description: Unit
+          example: energy
+        breakdown:
+          type: array
+          items:
+            $ref: '#/components/schemas/EucCategoryResultModel'
+          description: A list of energy usage values for each category
+      description: Model containing energy usage by category
+    Error:
+      type: object
+      properties:
+        type:
+          type: string
+          description: Type of error.
+          nullable: true
+          example: internal_error
+        category:
+          type: string
+          description: Error category.
+          nullable: true
+          example: internal_error
+        code:
+          type: string
+          description: Code describing the issue.
+          nullable: true
+          example: INTERNAL_ERROR
+        transaction_id:
+          type: string
+          description: Identifier for the session. Please provide this when contacting support.
+          nullable: true
+          example: 0HN18NN5QB401:00000001
+        message:
+          type: string
+          description: A message related to the error.
+          nullable: true
+          example: Something went wrong. Please try again later. If problem remains, please contact support.
+        description:
+          type: string
+          description: A description of the error for developers.
+          nullable: true
+          example: Internal server error, please try again later. If problem remains, please contact support.
+      description: Model returned for error responses.
+    EucCategoryResultModel:
+      required:
+      - category
+      - percentage
+      - value
+      type: object
+      properties:
+        category:
+          minLength: 1
+          type: string
+          description: Category
+          example: lighting
+        value:
+          type: number
+          description: Energy usage value
+          format: double
+          example: 1350
+        percentage:
+          maximum: 100
+          minimum: 0
+          type: number
+          description: Percentage of total value
+          format: double
+          example: 10.48
+      description: Energy usage by category
+    EucAccuracy:
+      enum:
+      - high
+      - medium
+      - low
+      type: string
+      description: Result data accuracy
+  securitySchemes:
+    BearerAuth:
+      type: http
+      scheme: bearer
+      description: The Eliq insights API uses bearer tokens to authenticate requests. Read more under Authentication tag.
+x-tagGroups:
+- name: Authentication
+  tags:
+  - Authentication
+- name: Users
+  tags:
+  - Users
+- name: Locations
+  tags:
+  - Locations
+  - Location Profile
+  - Energy Data
+  - Energy Usage Categories
+  - Energy Performance Certificate
+  - Similar Homes
+  - Budgets
+  - Advice
+  - Anomalies
+  - Market Price
+  - Price Formulas
+- name: Eliq Connect
+  tags:
+  - Eliq Connect
+- name: Health
+  tags:
+  - Health
+- name: Deprecated
+  tags:
+  - Breakdown
+  - Home Profile

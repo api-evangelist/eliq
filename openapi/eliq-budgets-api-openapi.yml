@@ -1,0 +1,668 @@
+openapi: 3.2.0
+info:
+  title: Insights Budgets API
+  version: 3.4.1
+  contact:
+    name: Insights Team
+    email: support_b2b@eliq.com
+  description: '# API Reference
+
+
+    The Eliq insights API is organized around REST.'
+servers:
+- url: http://localhost:3000
+security:
+- BearerAuth: []
+tags:
+- name: Budgets
+paths:
+  /v3/locations/{locationId}/budgets:
+    parameters:
+    - schema:
+        type: string
+      name: locationId
+      in: path
+      required: true
+    get:
+      summary: Get location budgets
+      tags:
+      - Budgets
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Budget'
+              examples:
+                Example - No budgets enabled:
+                  value:
+                  - enabled: false
+                    type: budget_monthly
+                    fuel: elec
+                    resolution: month
+                    unit: energy
+                Example - Awaiting first run:
+                  value:
+                  - enabled: true
+                    type: budget_weekly
+                    fuel: elec
+                    resolution: week
+                    unit: energy
+                    limit: 200000
+                    status:
+                      forecast: null
+                      value: null
+                      result: null
+                      code: not_ok
+                      action:
+                        code: budget_awaiting_first_run
+                        description: Budget is awaiting first run
+                Example - Runned:
+                  value:
+                  - enabled: true
+                    type: budget_weekly
+                    fuel: elec
+                    resolution: week
+                    unit: energy
+                    limit: 200000
+                    config:
+                      mode: manual
+                      margin_percent: null
+                    status:
+                      code: ok
+                      result: currently_below
+                      value: 16370
+                      forecast: 120000
+                      period_start: '2020-05-11T00:00:00'
+                      period_end: '2020-05-18T00:00:00'
+                      data_until: '2020-05-13T00:00:00'
+                Example - Auto budget:
+                  value:
+                  - enabled: true
+                    type: budget_monthly
+                    fuel: elec
+                    resolution: month
+                    unit: energy
+                    limit: 144000
+                    config:
+                      mode: auto
+                      margin_percent: 20
+                    series:
+                      fuel: elec
+                      unit: energy
+                      resolution: month
+                      from: '2020-05-01T00:00:00'
+                      to: '2020-06-01T00:00:00'
+                      consumption_cumulative:
+                      - 12000
+                      - 28000
+                      - 41000
+                      - null
+                      forecast_cumulative:
+                      - 30000
+                      - 60000
+                      - 90000
+                      - 120000
+                    status:
+                      code: ok
+                      result: currently_below
+                      value: 41000
+                      forecast: 120000
+                      period_start: '2020-05-01T00:00:00'
+                      period_end: '2020-06-01T00:00:00'
+                      data_until: '2020-05-13T00:00:00'
+      operationId: get-v3-locations-locationId-budgets
+      description: 'Get a locations budgets. If a budget is enabled, the budget is active and will have a limit value.
+
+
+        The result of the last run will be in the ''status'' field. If ''status.code'' is "ok", values of the last run will be shown. If ''status.code'' is "not_ok", the budget have not been running or something went wrong during the last run.'
+      parameters:
+      - schema:
+          type: string
+          enum:
+          - elec
+          - gas
+          - district_heating
+        in: query
+        name: fuel
+        description: Optional. Fuel to get budgets for.
+      - schema:
+          type: string
+          enum:
+          - energy
+          - cost
+        in: query
+        name: unit
+        description: Optional. Unit to get budgets for.
+      - schema:
+          type: string
+          enum:
+          - week
+          - month
+        in: query
+        name: resolution
+        description: Optional. Resolution to get budgets for
+    put:
+      summary: Update location budgets
+      operationId: put-v3-locations-locationId-budgets
+      responses:
+        '200':
+          description: OK
+      description: Update a locations budget. A budget is unique by providing fuel, resolution and unit. To update a budget, all of these needs to be specified in the query parameters.
+      parameters:
+      - schema:
+          type: string
+          example: elec
+          enum:
+          - elec
+          - gas
+          - district_heating
+        in: query
+        name: fuel
+        required: true
+        description: Fuel
+      - schema:
+          type: string
+          enum:
+          - energy
+          - cost
+          example: energy
+        in: query
+        name: unit
+        description: Unit
+        required: true
+      - schema:
+          type: string
+          enum:
+          - week
+          - month
+          example: month
+        in: query
+        name: resolution
+        description: 'Resolution '
+        required: true
+      requestBody:
+        content:
+          application/json:
+            schema:
+              description: ''
+              type: object
+              x-examples:
+                example-1:
+                  enabled: true
+                  limit: 200000
+              properties:
+                enabled:
+                  type: boolean
+                  description: Whether to enable or disable budget
+                limit:
+                  type: number
+                  description: The limit to be set. Required when mode is 'manual'; ignored when mode is 'auto' (the limit is derived from the forecast).
+                  example: 20000
+                mode:
+                  type: string
+                  description: 'Optional. How the budget limit is determined. Defaults to `manual` when omitted (backwards compatible).
+
+                    - `manual`: use the provided `limit`.
+
+                    - `auto`: derive the limit automatically from the forecast at the start of each period using `margin_percent`.'
+                  enum:
+                  - manual
+                  - auto
+                  example: auto
+                margin_percent:
+                  type: number
+                  description: Optional. Percentage applied over the forecast when mode is 'auto'. Clamped server-side to [-50, 50]. Defaults to 20 when omitted.
+                  example: 20
+              required:
+              - enabled
+            examples:
+              Example - Manual limit:
+                value:
+                  enabled: true
+                  limit: 200000
+              Example - Auto with default margin:
+                value:
+                  enabled: true
+                  mode: auto
+              Example - Auto with custom margin:
+                value:
+                  enabled: true
+                  mode: auto
+                  margin_percent: 10
+      tags:
+      - Budgets
+  /v3/locations/{locationId}/budgets/history:
+    parameters:
+    - schema:
+        type: string
+      name: locationId
+      in: path
+      required: true
+    get:
+      summary: Get location budget history
+      operationId: get-v3-locations-locationId-budgets-history
+      tags:
+      - Budgets
+      description: 'Get past budget periods for a location as aligned time series. Each entry in `limit` and `consumption` corresponds to one period between `from` and `to` at the given `resolution`.
+
+
+        Clients derive each period''s result by comparing `consumption[i]` to `limit[i]` (at or below the limit = within budget, above = over budget).'
+      parameters:
+      - schema:
+          type: string
+          enum:
+          - elec
+          - gas
+          - district_heating
+          example: elec
+        in: query
+        name: fuel
+        description: Fuel to get budget history for.
+        required: true
+      - schema:
+          type: string
+          enum:
+          - energy
+          - cost
+          example: energy
+        in: query
+        name: unit
+        description: Unit to get budget history for.
+        required: true
+      - schema:
+          type: string
+          enum:
+          - week
+          - month
+          example: month
+        in: query
+        name: resolution
+        description: Resolution to get budget history for.
+        required: true
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BudgetHistory'
+              examples:
+                Example:
+                  value:
+                    fuel: elec
+                    unit: energy
+                    resolution: month
+                    from: '2020-01-01T00:00:00'
+                    to: '2020-04-01T00:00:00'
+                    limit:
+                    - 200000
+                    - 200000
+                    - 180000
+                    consumption:
+                    - 187500
+                    - 213000
+                    - 165200
+components:
+  schemas:
+    Budget:
+      description: Model for budget. Contains information about the budget, and when it last was run.
+      type: object
+      x-examples:
+        example-1:
+          enabled: true
+          type: budget_weekly
+          fuel: elec
+          resolution: week
+          unit: energy
+          limit: 200000
+          status:
+            code: ok
+            result: currently_below
+            value: 16370
+            forecast: 120000
+            period_start: '2020-05-11T00:00:00'
+            data_until: '2020-05-13T00:00:00'
+      examples:
+      - enabled: false
+        type: budget_monthly
+        fuel: elec
+        resolution: month
+        unit: energy
+      - enabled: true
+        type: budget_weekly
+        fuel: elec
+        resolution: week
+        unit: energy
+        limit: 200000
+        status:
+          code: not_ok
+          action:
+            code: budget_awaiting_first_run
+            description: Budget is awaiting first run
+      - enabled: true
+        type: budget_weekly
+        fuel: elec
+        resolution: week
+        unit: energy
+        limit: 200000
+        status:
+          code: ok
+          result: currently_below
+          value: 16370
+          forecast: 120000
+          period_start: '2020-05-11T00:00:00'
+          data_until: '2020-05-13T00:00:00'
+      title: Budget
+      properties:
+        enabled:
+          type: boolean
+          description: Whether budget is enabled or not
+        type:
+          type: string
+          minLength: 1
+          description: Type of budget
+          enum:
+          - budget_weekly
+          - budget_monthly
+          example: budget_monthly
+        fuel:
+          type: string
+          minLength: 1
+          description: Fuel it is enabled for
+          enum:
+          - elec
+          - gas
+          - district_heating
+          example: elec
+        resolution:
+          type: string
+          minLength: 1
+          description: Resolution of budget
+          enum:
+          - week
+          - month
+        unit:
+          type: string
+          minLength: 1
+          description: Unit of budget
+          enum:
+          - energy
+          - cost
+          example: energy
+        limit:
+          type:
+          - number
+          - 'null'
+          description: Limit of the budget in Wh, or currency (depending on unit)
+          example: 1234.5
+        suggested_limit:
+          type: number
+          description: If user want to set up a new budget this value could be used as a suggested limit. Only returned if a forecast could be made
+          example: 1234.5
+        config:
+          type: object
+          description: Configuration for how the budget limit is determined. Returned when the budget is enabled.
+          properties:
+            mode:
+              type: string
+              description: 'How the budget limit is set.
+
+                - `manual`: the limit is a fixed value provided by the client.
+
+                - `auto`: the limit is derived automatically from the forecast at the start of each period as `forecast * (1 + margin_percent / 100)`. The derived limit is frozen for the duration of the period.'
+              enum:
+              - manual
+              - auto
+              example: auto
+            margin_percent:
+              type:
+              - number
+              - 'null'
+              description: Percentage applied over the forecast when mode is 'auto'. Clamped server-side to [-50, 50]. Defaults to 20. Null when mode is 'manual'.
+              example: 20
+        series:
+          type: object
+          description: Cumulative consumption and forecast for the current budget period, one value per resolution step. Returned when the budget is enabled and a run has produced data.
+          properties:
+            fuel:
+              type: string
+              description: Fuel the series is for.
+              enum:
+              - elec
+              - gas
+              - district_heating
+              example: elec
+            unit:
+              type: string
+              description: Unit the series is for.
+              enum:
+              - energy
+              - cost
+              example: energy
+            resolution:
+              type: string
+              description: Resolution of the series.
+              enum:
+              - week
+              - month
+            from:
+              type:
+              - string
+              - 'null'
+              description: Start of the current period (inclusive).
+              format: date-time
+              example: '2020-05-11T00:00:00'
+            to:
+              type:
+              - string
+              - 'null'
+              description: End of the current period (exclusive).
+              format: date-time
+              example: '2020-05-18T00:00:00'
+            consumption_cumulative:
+              type: array
+              description: Cumulative actual consumption at each step from period start. Steps with no data yet are null.
+              items:
+                type:
+                - number
+                - 'null'
+              example:
+              - 5000
+              - 11000
+              - 16370
+              - null
+            forecast_cumulative:
+              type: array
+              description: Cumulative forecasted consumption at each step to the end of the period.
+              items:
+                type:
+                - number
+                - 'null'
+              example:
+              - 6000
+              - 12000
+              - 18000
+              - 24000
+        status:
+          type: object
+          description: Contains status about last run. Returned when the budget is enabled.
+          required:
+          - code
+          - value
+          - forecast
+          properties:
+            code:
+              type: string
+              minLength: 1
+              description: Indicates whether last run was successful or not.
+              enum:
+              - ok
+              - not_ok
+            result:
+              type:
+              - string
+              - 'null'
+              minLength: 1
+              description: Available if code 'ok'.
+              enum:
+              - currently_below
+              - forecasted_above
+              - above
+              - completed_below
+              - null
+              example: currently_below
+            value:
+              type:
+              - number
+              - 'null'
+              description: Accumulative value between period start and data_until, available if code 'ok'.
+              example: 123.4
+            forecast:
+              type:
+              - number
+              - 'null'
+              description: Forecast of value at end of period, available if code 'ok' and if a forecast could be made.
+            period_start:
+              type: string
+              minLength: 1
+              description: Start of the period, available if code 'ok'.
+              example: '2021-01-01T00:00:00'
+              format: date-time
+            period_end:
+              type: string
+              minLength: 1
+              description: End of the period, available if code 'ok'.
+              format: date-time
+              example: '2021-02-01T00:00:00'
+            data_until:
+              type: string
+              minLength: 1
+              description: Latest data value (exclusive), available if code 'ok'.
+              example: '2021-01-05T00:00:00'
+            action:
+              type: object
+              description: Available if code is 'not_ok'. Indicates what went wrong during last run
+              properties:
+                code:
+                  type: string
+                  description: Code explaining last runs fail.
+                  enum:
+                  - budget_awaiting_first_run
+                  - budget_not_enough_data
+                  example: budget_not_enough_data
+                description:
+                  type: string
+                  description: Description of last runs fail.
+                  example: Not enough data to run budget
+      required:
+      - enabled
+      - type
+      - fuel
+      - resolution
+      - unit
+    BudgetHistory:
+      description: Past budget periods for a location as aligned time series. Each index in `limit` and `consumption` corresponds to one period between `from` and `to` at `resolution`.
+      type: object
+      title: BudgetHistory
+      properties:
+        fuel:
+          type: string
+          description: Fuel the history is for.
+          enum:
+          - elec
+          - gas
+          - district_heating
+          example: elec
+        unit:
+          type: string
+          description: Unit the history is for.
+          enum:
+          - energy
+          - cost
+          example: energy
+        resolution:
+          type: string
+          description: Resolution of the history periods.
+          enum:
+          - week
+          - month
+          example: month
+        from:
+          type: string
+          description: Start of the first period (inclusive).
+          format: date-time
+          example: '2020-01-01T00:00:00'
+        to:
+          type: string
+          description: End of the last period (exclusive).
+          format: date-time
+          example: '2020-04-01T00:00:00'
+        limit:
+          type: array
+          description: Budget limit for each period. Null for periods where no budget was set.
+          items:
+            type:
+            - number
+            - 'null'
+          example:
+          - 200000
+          - 200000
+          - 180000
+        consumption:
+          type: array
+          description: Actual consumption for each period. Null for periods with no data.
+          items:
+            type:
+            - number
+            - 'null'
+          example:
+          - 187500
+          - 213000
+          - 165200
+      required:
+      - fuel
+      - unit
+      - resolution
+      - from
+      - to
+      - limit
+      - consumption
+  securitySchemes:
+    BearerAuth:
+      type: http
+      scheme: bearer
+      description: The Eliq insights API uses bearer tokens to authenticate requests. Read more under Authentication tag.
+x-tagGroups:
+- name: Authentication
+  tags:
+  - Authentication
+- name: Users
+  tags:
+  - Users
+- name: Locations
+  tags:
+  - Locations
+  - Location Profile
+  - Energy Data
+  - Energy Usage Categories
+  - Energy Performance Certificate
+  - Similar Homes
+  - Budgets
+  - Advice
+  - Anomalies
+  - Market Price
+  - Price Formulas
+- name: Eliq Connect
+  tags:
+  - Eliq Connect
+- name: Health
+  tags:
+  - Health
+- name: Deprecated
+  tags:
+  - Breakdown
+  - Home Profile

@@ -1,0 +1,821 @@
+openapi: 3.2.0
+info:
+  title: Eliq Data Management Jobs API
+  description: '# API Reference
+
+
+    The Eliq data management API is organized around REST.'
+  contact:
+    name: Support
+    email: support_b2b@eliq.com
+  version: 1.5.2
+tags:
+- name: Jobs
+paths:
+  /jobs/{entity}/{operation}:
+    post:
+      tags:
+      - Jobs
+      summary: Create job based on entity and operation and provided file
+      operationId: create-job
+      parameters:
+      - name: entity
+        in: path
+        description: Name of feature that will handle file.
+        required: true
+        schema:
+          type: string
+        example: user
+      - name: operation
+        in: path
+        description: Name of process used to identify if process will be upsert, delete or export data.
+        required: true
+        schema:
+          type: string
+        example: upsert
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/JobEntry'
+              examples:
+                Upsert Job:
+                  value:
+                    id: f4e2b270-8099-493a-b733-824ce7e99fa2
+                    reference: job-reference-1
+                    created_at_timestamp: '2026-09-06T22:06:51.2799367Z'
+                    state_updated_at_timestamp: '2026-09-06T22:06:51.2799394Z'
+                    entity: user
+                    operation: upsert
+                    state: completed
+                    number_of_rows: 10
+                    number_of_successful_rows: 10
+                    number_of_failed_rows: 0
+                    file_format: ndjson
+                    type: import
+                Export Job:
+                  value:
+                    id: bf5e31a5-4b70-41fb-b0f6-a8372142befc
+                    reference: job-reference-2
+                    created_at_timestamp: '2026-09-06T22:06:51.2800022Z'
+                    state_updated_at_timestamp: '2026-09-06T22:06:51.2800026Z'
+                    entity: user
+                    operation: export
+                    state: completed
+                    number_of_rows: 10
+                    number_of_successful_rows: 10
+                    number_of_failed_rows: 0
+                    file_format: ndjson
+                    type: export
+                Delete Job:
+                  value:
+                    id: 1a55f2f4-38f5-4ed0-99cb-6a389c405d1c
+                    reference: job-reference-3
+                    created_at_timestamp: '2026-09-06T22:06:51.2800188Z'
+                    state_updated_at_timestamp: '2026-09-06T22:06:51.280019Z'
+                    entity: user
+                    operation: delete
+                    state: completed
+                    number_of_rows: 10
+                    number_of_successful_rows: 10
+                    number_of_failed_rows: 0
+                    file_format: ndjson
+                    type: import
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorDetails'
+              examples:
+                No file provided. Make sure the name in content-disposition is set to 'content' and that a filename is set:
+                  value:
+                    code: JOB_FILE_MISSING
+                    description: No file provided. Make sure the name in content-disposition is set to 'content' and that a filename is set
+                    request_id: 65e2ea86-470f-4363-9295-35d6b473981a
+                The provided file is too large:
+                  value:
+                    code: JOB_FILE_TOO_LARGE
+                    description: The provided file is too large
+                    request_id: 65e2ea86-470f-4363-9295-35d6b473981a
+                No format provided for the file (file extension). Please refer to documentation for supported file formats:
+                  value:
+                    code: JOB_FILE_FORMAT_MISSING
+                    description: No format provided for the file (file extension). Please refer to documentation for supported file formats
+                    request_id: 65e2ea86-470f-4363-9295-35d6b473981a
+                The file format provided is invalid. Please refer to documentation for supported file formats:
+                  value:
+                    code: JOB_FILE_FORMAT_INVALID
+                    description: The file format provided is invalid. Please refer to documentation for supported file formats
+                    request_id: 65e2ea86-470f-4363-9295-35d6b473981a
+                No filename provided (a.k.a. 'reference'). Please refer to documentation for filename limitations:
+                  value:
+                    code: JOB_FILE_NAME_MISSING
+                    description: No filename provided (a.k.a. 'reference'). Please refer to documentation for filename limitations
+                    request_id: 65e2ea86-470f-4363-9295-35d6b473981a
+                The name of the file is invalid (a.k.a. 'reference'). Please refer to documentation for filename limitations:
+                  value:
+                    code: JOB_FILE_NAME_INVALID
+                    description: The name of the file is invalid (a.k.a. 'reference'). Please refer to documentation for filename limitations
+                    request_id: 65e2ea86-470f-4363-9295-35d6b473981a
+                A job is already associated with the provided file name (a.k.a. 'reference').:
+                  value:
+                    code: JOB_REFERENCE_ALREADY_EXISTS
+                    description: A job is already associated with the provided file name (a.k.a. 'reference').
+                    request_id: 65e2ea86-470f-4363-9295-35d6b473981a
+                The provided entity is invalid. This may be due to that it is not yet supported:
+                  value:
+                    code: JOB_ENTITY_INVALID
+                    description: The provided entity is invalid. This may be due to that it is not yet supported
+                    request_id: 65e2ea86-470f-4363-9295-35d6b473981a
+                The provided operation for entity is invalid. This may be due to that it is not yet supported:
+                  value:
+                    code: JOB_OPERATION_INVALID
+                    description: The provided operation for entity is invalid. This may be due to that it is not yet supported
+                    request_id: 65e2ea86-470f-4363-9295-35d6b473981a
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorDetails'
+              examples:
+                Job with specified id could not be found:
+                  value:
+                    code: JOB_NOT_FOUND
+                    description: Job with specified id could not be found
+                    request_id: 65e2ea86-470f-4363-9295-35d6b473981a
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorDetails'
+              examples:
+                Internal server error. If problem remains, please contact support:
+                  value:
+                    code: INTERNAL_ERROR
+                    description: Internal server error. If problem remains, please contact support
+                    request_id: 65e2ea86-470f-4363-9295-35d6b473981a
+  /jobs/{jobId}/cancel:
+    get:
+      tags:
+      - Jobs
+      summary: Cancel job before it is finished by job id
+      operationId: cancel-job
+      parameters:
+      - name: jobId
+        in: path
+        description: Job Id - Guid
+        required: true
+        schema:
+          type: string
+        example: 69510063-ae87-ef11-8474-000d3a3a3c76
+      responses:
+        '202':
+          description: Accepted
+          content:
+            application/json:
+              schema:
+                type: string
+              examples:
+                Job cancelled:
+                  value: 69510063-ae87-ef11-8474-000d3a3a3c76
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorDetails'
+              examples:
+                Job is already canceled:
+                  value:
+                    code: JOB_IS_CANCELLED
+                    description: Job is already canceled
+                    request_id: 65e2ea86-470f-4363-9295-35d6b473981a
+                Job is already completed:
+                  value:
+                    code: JOB_IS_COMPLETED
+                    description: Job is already completed
+                    request_id: 65e2ea86-470f-4363-9295-35d6b473981a
+                Job state cannot be changed:
+                  value:
+                    code: JOB_STATE_CANNOT_BE_CHANGED
+                    description: Job state cannot be changed
+                    request_id: 65e2ea86-470f-4363-9295-35d6b473981a
+                Failed to identify job state:
+                  value:
+                    code: FAILED_TO_IDENTIFY_JOB_STATE
+                    description: Failed to identify job state
+                    request_id: 65e2ea86-470f-4363-9295-35d6b473981a
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorDetails'
+              examples:
+                Internal server error. If problem remains, please contact support:
+                  value:
+                    code: INTERNAL_ERROR
+                    description: Internal server error. If problem remains, please contact support
+                    request_id: 65e2ea86-470f-4363-9295-35d6b473981a
+  /jobs:
+    get:
+      tags:
+      - Jobs
+      summary: Get jobs based on job state, id or name reference
+      operationId: get-jobs
+      parameters:
+      - name: after_id
+        in: query
+        description: ''
+        schema:
+          type: string
+      - name: reference
+        in: query
+        description: Reference given to job when creating it
+        schema:
+          type: string
+        example: file-1
+      - name: state
+        in: query
+        description: State of job
+        schema:
+          type: string
+        example: received
+      - name: limit
+        in: query
+        description: 'Maximum count of jobs to return, (max: 500)'
+        schema:
+          type: integer
+          format: int32
+          default: 100
+        example: 400
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/JobEntry'
+              examples:
+                Get Jobs example:
+                  value:
+                  - id: 69510063-ae87-ef11-8474-000d3a3a3c76
+                    reference: job-reference-1
+                    created_at_timestamp: '2024-01-01T12:00:00Z'
+                    state_updated_at_timestamp: '2024-01-01T13:00:00Z'
+                    entity: test
+                    operation: upsert
+                    state: queued
+                    number_of_rows: 10
+                    number_of_successful_rows: 10
+                    number_of_failed_rows: 0
+                    file_format: ndjson
+                    type: import
+                  - id: d11191ef-57db-49d4-88b1-db918b674b2b
+                    reference: job-reference-2
+                    created_at_timestamp: '2024-01-01T12:00:00Z'
+                    state_updated_at_timestamp: '2024-01-01T13:00:00Z'
+                    entity: test
+                    operation: upsert
+                    state: canceled
+                    number_of_rows: 10
+                    number_of_successful_rows: 10
+                    number_of_failed_rows: 0
+                    file_format: ndjson
+                    type: import
+                  - id: 2ce5e42f-4e16-41dc-9366-379937f56aa2
+                    reference: job-reference-3
+                    created_at_timestamp: '2024-01-01T12:00:00Z'
+                    state_updated_at_timestamp: '2024-01-01T13:00:00Z'
+                    entity: test
+                    operation: upsert
+                    state: completed
+                    number_of_rows: 10
+                    number_of_successful_rows: 10
+                    number_of_failed_rows: 0
+                    file_format: ndjson
+                    type: import
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorDetails'
+              examples:
+                Job with specified id could not be found:
+                  value:
+                    code: JOB_NOT_FOUND
+                    description: Job with specified id could not be found
+                    request_id: 65e2ea86-470f-4363-9295-35d6b473981a
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorDetails'
+              examples:
+                Internal server error. If problem remains, please contact support:
+                  value:
+                    code: INTERNAL_ERROR
+                    description: Internal server error. If problem remains, please contact support
+                    request_id: 65e2ea86-470f-4363-9295-35d6b473981a
+  /jobs/{jobId}:
+    get:
+      tags:
+      - Jobs
+      summary: Get Job details by job id
+      operationId: get-job
+      parameters:
+      - name: jobId
+        in: path
+        description: Job Id - Guid
+        required: true
+        schema:
+          type: string
+        example: 69510063-ae87-ef11-8474-000d3a3a3c76
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/JobEntry'
+              examples:
+                Get Job example:
+                  value:
+                    id: 69510063-ae87-ef11-8474-000d3a3a3c76
+                    reference: job-reference-1
+                    created_at_timestamp: '2024-01-01T12:00:00Z'
+                    state_updated_at_timestamp: '2024-01-01T13:00:00Z'
+                    entity: test
+                    operation: upsert
+                    state: completed
+                    number_of_rows: 10
+                    number_of_successful_rows: 10
+                    number_of_failed_rows: 0
+                    file_format: ndjson
+                    type: import
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorDetails'
+              examples:
+                Job with specified id could not be found:
+                  value:
+                    code: JOB_NOT_FOUND
+                    description: Job with specified id could not be found
+                    request_id: 65e2ea86-470f-4363-9295-35d6b473981a
+                ? The job result is not found. This may be due to that the result has been removed. Please refer to documentation for result lifetime.
+                : value:
+                    code: JOB_RESULT_NOT_FOUND
+                    description: The job result is not found. This may be due to that the result has been removed. Please refer to documentation for result lifetime.
+                    request_id: 65e2ea86-470f-4363-9295-35d6b473981a
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorDetails'
+              examples:
+                Internal server error. If problem remains, please contact support:
+                  value:
+                    code: INTERNAL_ERROR
+                    description: Internal server error. If problem remains, please contact support
+                    request_id: 65e2ea86-470f-4363-9295-35d6b473981a
+  /jobs/{jobId}/failures:
+    get:
+      tags:
+      - Jobs
+      summary: Get errors and details from job
+      operationId: get-job-failures
+      parameters:
+      - name: jobId
+        in: path
+        description: Job Id - Guid
+        required: true
+        schema:
+          type: string
+        example: 69510063-ae87-ef11-8474-000d3a3a3c76
+      - name: after_row_number
+        in: query
+        description: ''
+        schema:
+          type: string
+      - name: limit
+        in: query
+        description: ''
+        schema:
+          type: integer
+          format: int32
+          default: 100
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/JobFailedRow'
+              examples:
+                Get Job Failures example:
+                  value:
+                  - row_number: 1
+                    error_code: Error message 1
+                    error_description: Error details 1
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorDetails'
+              examples:
+                Job with specified id could not be found:
+                  value:
+                    code: JOB_NOT_FOUND
+                    description: Job with specified id could not be found
+                    request_id: 65e2ea86-470f-4363-9295-35d6b473981a
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorDetails'
+              examples:
+                Internal server error. If problem remains, please contact support:
+                  value:
+                    code: INTERNAL_ERROR
+                    description: Internal server error. If problem remains, please contact support
+                    request_id: 65e2ea86-470f-4363-9295-35d6b473981a
+  /jobs/{jobId}/content:
+    get:
+      tags:
+      - Jobs
+      summary: Get Job content - the .ndjson file provided as the input when the Job was…
+      operationId: get-job-content
+      parameters:
+      - name: jobId
+        in: path
+        description: Job Id - Guid
+        required: true
+        schema:
+          type: string
+        example: 69510063-ae87-ef11-8474-000d3a3a3c76
+      responses:
+        '200':
+          description: OK
+          content:
+            application/x-ndjson:
+              schema:
+                type: string
+              examples:
+                Energy High Resolution Upsert:
+                  value: '{"meter_id":"example-electricity-meter","values":[{"interval_start":"2025-09-01T00:00:00Z","energy_wh":638},{"interval_start":"2025-09-01T01:00:00Z","energy_wh":757}]}'
+                Location Upsert:
+                  value: '{"user_id":"example-user-id-1","id":"example-location-id-1","address":{"country_code":"SE","postal_code":"41537","street_address":"Address","city":"Gothenburg"}}'
+        '404':
+          description: Not Found
+          content:
+            application/x-ndjson:
+              schema:
+                $ref: '#/components/schemas/ErrorDetails'
+              examples:
+                Job with specified id could not be found:
+                  value:
+                    code: JOB_NOT_FOUND
+                    description: Job with specified id could not be found
+                    request_id: 65e2ea86-470f-4363-9295-35d6b473981a
+        '500':
+          description: Internal Server Error
+          content:
+            application/x-ndjson:
+              schema:
+                $ref: '#/components/schemas/ErrorDetails'
+              examples:
+                Internal server error. If problem remains, please contact support:
+                  value:
+                    code: INTERNAL_ERROR
+                    description: Internal server error. If problem remains, please contact support
+                    request_id: 65e2ea86-470f-4363-9295-35d6b473981a
+  /jobs/{jobId}/result:
+    get:
+      tags:
+      - Jobs
+      summary: Get Job result. Export include result object containing exported details
+      operationId: get-job-result
+      parameters:
+      - name: jobId
+        in: path
+        description: Job Id - Guid
+        required: true
+        schema:
+          type: string
+        example: 69510063-ae87-ef11-8474-000d3a3a3c76
+      responses:
+        '200':
+          description: OK
+          content:
+            application/x-ndjson:
+              schema:
+                $ref: '#/components/schemas/JobResultRow'
+              examples:
+                Energy Period Export:
+                  value:
+                    is_successful: true
+                    result:
+                    - client_id: 123456789
+                      device_ref: test_device_extRef
+                      from: '2024-10-01'
+                      to: '2024-10-03'
+                      energy_wh: 100.0
+                      is_estimated: false
+                      registers:
+                      - id: '1'
+                        energy_wh: 10.0
+                      - id: '2'
+                        energy_wh: 90.0
+                    input:
+                      id: 1
+                Energy High Resolution Export:
+                  value:
+                    is_successful: true
+                    result:
+                    - interval_start: '2024-10-01T10:00:00Z'
+                      energy_wh: 100.0
+                      is_estimated: false
+                    input:
+                      id: 1
+        '404':
+          description: Not Found
+          content:
+            application/x-ndjson:
+              schema:
+                $ref: '#/components/schemas/ErrorDetails'
+              examples:
+                Job with specified id could not be found:
+                  value:
+                    code: JOB_NOT_FOUND
+                    description: Job with specified id could not be found
+                    request_id: 65e2ea86-470f-4363-9295-35d6b473981a
+        '500':
+          description: Internal Server Error
+          content:
+            application/x-ndjson:
+              schema:
+                $ref: '#/components/schemas/ErrorDetails'
+              examples:
+                The job has not yet finished.:
+                  value:
+                    code: JOB_NOT_YET_FINISHED
+                    description: The job has not yet finished.
+                    request_id: 65e2ea86-470f-4363-9295-35d6b473981a
+                The type of the job does not support retrieval of results.:
+                  value:
+                    code: JOB_TYPE_DOES_NOT_SUPPORT_RESULT
+                    description: The type of the job does not support retrieval of results.
+                    request_id: 65e2ea86-470f-4363-9295-35d6b473981a
+  /jobs/{jobId}/result/{page}:
+    get:
+      tags:
+      - Jobs
+      summary: Get Job result. Export include result object containing exported details
+      operationId: get-job-result-page
+      parameters:
+      - name: jobId
+        in: path
+        description: ''
+        required: true
+        schema:
+          type: string
+        example: 69510063-ae87-ef11-8474-000d3a3a3c76
+      - name: page
+        in: path
+        description: ''
+        required: true
+        schema:
+          type: integer
+          format: int32
+        example: 1
+      responses:
+        '200':
+          description: OK
+          content:
+            application/x-ndjson:
+              schema:
+                $ref: '#/components/schemas/JobResultRow'
+              examples:
+                Energy Period Export:
+                  value:
+                    is_successful: true
+                    result:
+                    - client_id: 123456789
+                      device_ref: test_device_extRef
+                      from: '2024-10-01'
+                      to: '2024-10-03'
+                      energy_wh: 100.0
+                      is_estimated: false
+                      registers:
+                      - id: '1'
+                        energy_wh: 10.0
+                      - id: '2'
+                        energy_wh: 90.0
+                    input:
+                      id: 1
+                Energy High Resolution Export:
+                  value:
+                    is_successful: true
+                    result:
+                    - interval_start: '2024-10-01T10:00:00Z'
+                      energy_wh: 100.0
+                      is_estimated: false
+                    input:
+                      id: 1
+        '404':
+          description: Not Found
+          content:
+            application/x-ndjson:
+              schema:
+                $ref: '#/components/schemas/ErrorDetails'
+              examples:
+                Job with specified id could not be found:
+                  value:
+                    code: JOB_NOT_FOUND
+                    description: Job with specified id could not be found
+                    request_id: 65e2ea86-470f-4363-9295-35d6b473981a
+        '500':
+          description: Internal Server Error
+          content:
+            application/x-ndjson:
+              schema:
+                $ref: '#/components/schemas/ErrorDetails'
+              examples:
+                The job has not yet finished.:
+                  value:
+                    code: JOB_NOT_YET_FINISHED
+                    description: The job has not yet finished.
+                    request_id: 65e2ea86-470f-4363-9295-35d6b473981a
+                The type of the job does not support retrieval of results.:
+                  value:
+                    code: JOB_TYPE_DOES_NOT_SUPPORT_RESULT
+                    description: The type of the job does not support retrieval of results.
+                    request_id: 65e2ea86-470f-4363-9295-35d6b473981a
+components:
+  schemas:
+    JobFailedRow:
+      type: object
+      properties:
+        row_number:
+          type:
+          - integer
+          - 'null'
+          format: int32
+        error_code:
+          type:
+          - string
+          - 'null'
+        error_description:
+          type:
+          - string
+          - 'null'
+    JobEntryStateType:
+      enum:
+      - received
+      - queued
+      - processing
+      - failed
+      - completed
+      - canceled
+      type: string
+    FileRowError:
+      type: object
+      properties:
+        code:
+          type:
+          - string
+          - 'null'
+        description:
+          type:
+          - string
+          - 'null'
+    JobType:
+      enum:
+      - import
+      - export
+      - multi-file
+      type: string
+    JobEntry:
+      type: object
+      properties:
+        id:
+          type:
+          - string
+          - 'null'
+        reference:
+          type:
+          - string
+          - 'null'
+        created_at_timestamp:
+          type: string
+        state_updated_at_timestamp:
+          type: string
+        entity:
+          type:
+          - string
+          - 'null'
+        operation:
+          $ref: '#/components/schemas/JobOperationType'
+        state:
+          $ref: '#/components/schemas/JobEntryStateType'
+        number_of_rows:
+          type:
+          - integer
+          - 'null'
+          format: int32
+        number_of_successful_rows:
+          type:
+          - integer
+          - 'null'
+          format: int32
+        number_of_failed_rows:
+          type:
+          - integer
+          - 'null'
+          format: int32
+        file_format:
+          type:
+          - string
+          - 'null'
+        type:
+          $ref: '#/components/schemas/JobType'
+    JobOperationType:
+      enum:
+      - upsert
+      - delete
+      - export
+      - multi-file-export
+      type: string
+    ErrorDetails:
+      required:
+      - code
+      - description
+      type: object
+      properties:
+        code:
+          minLength: 1
+          type: string
+        description:
+          minLength: 1
+          type: string
+        request_id:
+          type:
+          - string
+          - 'null'
+    JobResultRow:
+      type: object
+      properties:
+        is_successful:
+          type: boolean
+        error:
+          $ref: '#/components/schemas/FileRowError'
+        result: {}
+        input: {}
+x-tagGroups:
+- name: Users
+  tags:
+  - User
+- name: Locations
+  tags:
+  - Location
+  - Location profile
+  - Location home profile
+  - Location price formulas
+- name: Meters
+  tags:
+  - Meter
+  - Meter Energy Day
+  - Meter Energy High Resolution
+  - Meter Energy Reads
+  - Meter Energy Period
+  - Meter Max Demand
+  - Meter Price Formulas
+- name: Jobs
+  tags:
+  - Jobs
+- name: Portfolio
+  tags:
+  - Portfolio Accounts
+  - Portfolio Groups
+  - Portfolio Locations
+  - Portfolio Users
+- name: Client details
+  tags:
+  - Client details

@@ -1,0 +1,46 @@
+openapi: 3.2.0
+info:
+  title: Eliq auth .well Known API
+  version: 2.0.0
+  description: '# Eliq auth API
+
+
+    Used to obtain access tokens for Eliq APIs, most commonly the Eliq data management API and Eliq insights API.'
+servers:
+- url: https://auth-api.eliq.com
+  description: Production
+- url: https://auth-api-uat.eliq.com
+  description: UAT
+tags:
+- name: .well Known
+paths:
+  /.well-known/jwks.json:
+    get:
+      summary: JSON Web Key Set
+      operationId: get-jwks
+      description: Returns the public keys used to verify token signatures. Use this endpoint to validate JWTs issued by the auth API.
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                description: JWKS document containing the public signing keys.
+      tags:
+      - .well Known
+  /.well-known/openid-configuration:
+    get:
+      summary: OpenID configuration
+      operationId: get-openid-configuration
+      description: Returns the OpenID Connect discovery document, including supported endpoints, signing algorithms, and claim types.
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                description: OpenID Connect discovery document.
+      tags:
+      - .well Known

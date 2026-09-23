@@ -1,0 +1,310 @@
+openapi: 3.2.0
+info:
+  title: Eliq Data Management Portfolio Users API
+  description: '# API Reference
+
+
+    The Eliq data management API is organized around REST.'
+  contact:
+    name: Support
+    email: support_b2b@eliq.com
+  version: 1.5.2
+tags:
+- name: Portfolio Users
+paths:
+  /portfolio/accounts/{accountId}/users/{id}:
+    put:
+      tags:
+      - Portfolio Users
+      summary: Create or update portfolio user
+      description: 'Create or update user on an account for the portfolio.
+
+        If a user with the given id does not exist on the account, a new account user will be created.
+
+        If a user with id exists on the account, that user will be updated.'
+      operationId: put-portfolio-users
+      parameters:
+      - name: accountId
+        in: path
+        description: Account identifier
+        required: true
+        schema:
+          type: string
+        example: 6ad04dc2-0db7-4f96-a10d-5a6aff002d05
+      - name: id
+        in: path
+        description: User identifier
+        required: true
+        schema:
+          type: string
+        example: c26ad04d-0db7-4f96-a10d-d055a6aff002
+      requestBody:
+        description: ''
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PortfolioUser'
+      responses:
+        '200':
+          description: Portfolio user was updated
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PortfolioUser'
+        '201':
+          description: Portfolio user was created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PortfolioUser'
+        '400':
+          description: Bad request. See error code and description for more info
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorDetails'
+              examples:
+                Job with specified id could not be found:
+                  value:
+                    code: JOB_NOT_FOUND
+                    description: Job with specified id could not be found
+                    request_id: 65e2ea86-470f-4363-9295-35d6b473981a
+        '404':
+          description: Portfolio account was not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorDetails'
+              examples:
+                Job with specified id could not be found:
+                  value:
+                    code: JOB_NOT_FOUND
+                    description: Job with specified id could not be found
+                    request_id: 65e2ea86-470f-4363-9295-35d6b473981a
+    delete:
+      tags:
+      - Portfolio Users
+      summary: Delete user on portfolio account
+      operationId: delete-portfolio-users
+      parameters:
+      - name: accountId
+        in: path
+        description: Account identifier
+        required: true
+        schema:
+          type: string
+        example: 6ad04dc2-0db7-4f96-a10d-5a6aff002d05
+      - name: id
+        in: path
+        description: User identifier
+        required: true
+        schema:
+          type: string
+        example: c26ad04d-0db7-4f96-a10d-d055a6aff002
+      responses:
+        '204':
+          description: Portfolio user was deleted
+        '400':
+          description: Bad request. See error code and description for more info
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorDetails'
+              examples:
+                Job with specified id could not be found:
+                  value:
+                    code: JOB_NOT_FOUND
+                    description: Job with specified id could not be found
+                    request_id: 65e2ea86-470f-4363-9295-35d6b473981a
+        '404':
+          description: Portfolio user was not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorDetails'
+              examples:
+                Job with specified id could not be found:
+                  value:
+                    code: JOB_NOT_FOUND
+                    description: Job with specified id could not be found
+                    request_id: 65e2ea86-470f-4363-9295-35d6b473981a
+    get:
+      tags:
+      - Portfolio Users
+      summary: Get user on portfolio account
+      operationId: get-portfolio-users
+      parameters:
+      - name: accountId
+        in: path
+        description: Account identifier
+        required: true
+        schema:
+          type: string
+        example: 6ad04dc2-0db7-4f96-a10d-5a6aff002d05
+      - name: id
+        in: path
+        description: User identifier
+        required: true
+        schema:
+          type: string
+        example: c26ad04d-0db7-4f96-a10d-d055a6aff002
+      responses:
+        '200':
+          description: Ok
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PortfolioUser'
+        '400':
+          description: Bad request. See error code and description for more info
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorDetails'
+              examples:
+                Job with specified id could not be found:
+                  value:
+                    code: JOB_NOT_FOUND
+                    description: Job with specified id could not be found
+                    request_id: 65e2ea86-470f-4363-9295-35d6b473981a
+        '404':
+          description: Portfolio user was not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorDetails'
+              examples:
+                Job with specified id could not be found:
+                  value:
+                    code: JOB_NOT_FOUND
+                    description: Job with specified id could not be found
+                    request_id: 65e2ea86-470f-4363-9295-35d6b473981a
+  /portfolio/accounts/{accountId}/users:
+    get:
+      tags:
+      - Portfolio Users
+      summary: Get all user on porfolio account
+      operationId: get-portfolio-users-list
+      parameters:
+      - name: accountId
+        in: path
+        description: Account identifier
+        required: true
+        schema:
+          type: string
+        example: 6ad04dc2-0db7-4f96-a10d-5a6aff002d05
+      responses:
+        '200':
+          description: Ok
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/PortfolioUser'
+        '400':
+          description: Bad request. See error code and description for more info
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorDetails'
+              examples:
+                Job with specified id could not be found:
+                  value:
+                    code: JOB_NOT_FOUND
+                    description: Job with specified id could not be found
+                    request_id: 65e2ea86-470f-4363-9295-35d6b473981a
+        '404':
+          description: Portfolio account was not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorDetails'
+              examples:
+                Job with specified id could not be found:
+                  value:
+                    code: JOB_NOT_FOUND
+                    description: Job with specified id could not be found
+                    request_id: 65e2ea86-470f-4363-9295-35d6b473981a
+components:
+  schemas:
+    PortfolioUserRole:
+      enum:
+      - user
+      - admin
+      - owner
+      type: string
+    ErrorDetails:
+      required:
+      - code
+      - description
+      type: object
+      properties:
+        code:
+          minLength: 1
+          type: string
+        description:
+          minLength: 1
+          type: string
+        request_id:
+          type:
+          - string
+          - 'null'
+    PortfolioUser:
+      required:
+      - name
+      - role
+      type: object
+      properties:
+        id:
+          type:
+          - string
+          - 'null'
+        name:
+          minLength: 1
+          type: string
+        role:
+          $ref: '#/components/schemas/PortfolioUserRole'
+        created_at_utc:
+          type: string
+        last_logon_utc:
+          type:
+          - string
+          - 'null'
+        magic_link_emails:
+          type:
+          - array
+          - 'null'
+          items:
+            type: string
+x-tagGroups:
+- name: Users
+  tags:
+  - User
+- name: Locations
+  tags:
+  - Location
+  - Location profile
+  - Location home profile
+  - Location price formulas
+- name: Meters
+  tags:
+  - Meter
+  - Meter Energy Day
+  - Meter Energy High Resolution
+  - Meter Energy Reads
+  - Meter Energy Period
+  - Meter Max Demand
+  - Meter Price Formulas
+- name: Jobs
+  tags:
+  - Jobs
+- name: Portfolio
+  tags:
+  - Portfolio Accounts
+  - Portfolio Groups
+  - Portfolio Locations
+  - Portfolio Users
+- name: Client details
+  tags:
+  - Client details

@@ -1,0 +1,849 @@
+openapi: 3.2.0
+info:
+  title: Insights Similar Homes API
+  version: 3.4.1
+  contact:
+    name: Insights Team
+    email: support_b2b@eliq.com
+  description: '# API Reference
+
+
+    The Eliq insights API is organized around REST.'
+servers:
+- url: http://localhost:3000
+security:
+- BearerAuth: []
+tags:
+- name: Similar Homes
+paths:
+  /v3/locations/{locationId}/similarhomes:
+    get:
+      tags:
+      - Similar Homes
+      summary: Get similar homes group
+      description: 'Get information of which homes the location is compared to.
+
+
+        Note that heating_degree_days are only available for countries where the climate zones differ so much that it has a substantial impact on the heating consumption and therefore impacts the comparison. It''s currently supported for France, Finland, Norway, Sweden and the U.K.
+
+
+        Possible result status action codes:
+
+        | *code* | *description* |
+
+        | --- | --- |
+
+        | sh_home_profile_insufficent | The home profile for the location is insufficient. Please ask a user to provide additional home profile details. |
+
+        | sh_no_matching_group | No group could be found for the location. |'
+      operationId: get-v3-locations-locationId-similarhomes
+      parameters:
+      - name: locationId
+        in: path
+        description: Location id
+        required: true
+        schema:
+          type: integer
+          format: int32
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SimilarHomesGroupResultModel'
+              examples:
+                Similar homes group:
+                  value:
+                    result:
+                      filters:
+                      - key: house_type
+                        description: House
+                        type: limit_values
+                        limit_values:
+                        - house
+                      - key: heating_type_primary
+                        description: Air air pump
+                        type: limit_values
+                        limit_values:
+                        - air_air_pump
+                      - key: living_area
+                        description: '{LimitMin}-{LimitMax}m²'
+                        type: limit_range
+                        limit_range:
+                          min: 120
+                          max: 200
+                      - key: heating_degree_days
+                        description: Warmer climate
+                        type: limit_range
+                        limit_range:
+                          min: 0
+                          max: 3000
+                      - key: electric_cars
+                        description: Single electric car
+                        type: limit_range
+                        limit_range:
+                          min: 1
+                          max: 1
+                      contributors: 492
+                    result_status:
+                      code: ok
+                Home profile insufficient:
+                  value:
+                    result_status:
+                      code: not_ok
+                      action:
+                        code: sh_home_profile_insufficent
+                        description: Please update your home profile to get a result
+                No matching group:
+                  value:
+                    result_status:
+                      code: not_ok
+                      action:
+                        code: sh_no_matching_group
+                        description: Could not find any group matching your home profile, please check that your home profile is correctly specified.
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+              examples:
+                Location not found:
+                  value:
+                    type: client_error
+                    category: entity_not_found
+                    code: ENTITY_NOT_FOUND
+                    transaction_id: 0HN18NIB8K5RV:00000001
+                    message: Something went wrong, please try again later. If problem remains, please contact support.
+                    description: Could not find the location.
+        '500':
+          description: Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+              examples:
+                Internal Error:
+                  value:
+                    type: internal_error
+                    category: internal_error
+                    code: INTERNAL_ERROR
+                    transaction_id: 0HN18NIB8K5RV:00000001
+                    message: Something went wrong. Please try again later. If problem remains, please contact support.
+                    description: Internal server error, please try again later. If problem remains, please contact support.
+  /v3/locations/{locationId}/similarhomes/consumption:
+    get:
+      tags:
+      - Similar Homes
+      summary: Get similar homes consumption
+      description: 'This endpoint returns an array of average energy consumption values for a similar homes group.
+
+
+        Maximum requested time span by resolution:
+
+        * day: 31 days
+
+        * month: 12 months
+
+
+        For cost to be available as a unit type, the location must have device price formulas set in our system.
+
+
+        To date is exclusive and not included in the data range, as is with all endpoints having date range parameters. It is rounded down to the closest start of the period for the given resolution.
+
+
+        Possible result status action codes:
+
+        | *code* | *description* |
+
+        | --- | --- |
+
+        | sh_home_profile_insufficent | The home profile for the location is insufficient. Please ask a user to provide additional home profile details. |
+
+        | sh_not_enough_contributers | There is not enough energy consumption data for the homes in the similar homes group. This can happen if the period requested is in the future, or if we still have not received consumption data for the requested period. |
+
+        | sh_no_matching_group | No group could be found for the location. |
+
+        | sh_no_price_information | Locations device price formulas are missing. Documentation on price formulas can be found in the Data Management API. |'
+      operationId: get-v3-locations-locationId-similarhomes-consumption
+      parameters:
+      - name: locationId
+        in: path
+        description: Location id
+        required: true
+        schema:
+          type: integer
+          format: int32
+      - name: resolution
+        in: query
+        description: 'Resolution. Valid values: ''day'', ''month''.'
+        required: true
+        schema:
+          type: string
+      - name: from
+        in: query
+        description: From date
+        required: true
+        schema:
+          type: string
+          format: date-time
+      - name: to
+        in: query
+        description: To date, exclusive
+        required: true
+        schema:
+          type: string
+          format: date-time
+      - name: fuel
+        in: query
+        description: 'Fuel. Valid values: ''elec'', ''gas''.'
+        schema:
+          type: string
+          default: elec
+      - name: unit
+        in: query
+        description: 'Unit. Valid values: ''cost'', ''energy''.'
+        schema:
+          type: string
+          default: energy
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SimilarHomesConsumptionResultModel'
+              examples:
+                Similar homes monthly data:
+                  value:
+                    result:
+                      values:
+                      - 446.37
+                      - 445.21
+                      resolution: month
+                      fuel: elec
+                      unit: energy
+                      from: '2023-01-01T00:00:00'
+                      to: '2023-03-01T00:00:00'
+                    result_status:
+                      code: ok
+                Home profile insufficient:
+                  value:
+                    result_status:
+                      code: not_ok
+                      action:
+                        code: sh_home_profile_insufficent
+                        description: Please update your home profile to get a result
+                Not enough contributors:
+                  value:
+                    result_status:
+                      code: not_ok
+                      action:
+                        code: sh_not_enough_contributers
+                        description: Not enough similar homes data for the specified time period. Please try again in a few days
+                No matching group:
+                  value:
+                    result_status:
+                      code: not_ok
+                      action:
+                        code: sh_no_matching_group
+                        description: Could not find any group matching your home profile, please check that your home profile is correctly specified.
+                No price information:
+                  value:
+                    result_status:
+                      code: not_ok
+                      action:
+                        code: sh_no_price_information
+                        description: No price information could be found for the location in the given timespan
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+              examples:
+                Invalid parameter:
+                  value:
+                    type: client_error
+                    category: invalid_parameter
+                    code: INVALID_PARAMETER
+                    transaction_id: 0HN1O72JU5P3C:00000001
+                    message: Something went wrong, please try again later. If problem remains, please contact support.
+                    description: Invalid parameter details
+                From parameter missing:
+                  value:
+                    type: client_error
+                    category: invalid_parameter
+                    code: INVALID_PARAMETER
+                    transaction_id: 0HN1O72JU5P3C:00000001
+                    message: Something went wrong, please try again later. If problem remains, please contact support.
+                    description: Parameter 'from' missing
+                To parameter missing:
+                  value:
+                    type: client_error
+                    category: invalid_parameter
+                    code: INVALID_PARAMETER
+                    transaction_id: 0HN1O72JU5P3C:00000001
+                    message: Something went wrong, please try again later. If problem remains, please contact support.
+                    description: Parameter 'to' missing
+                Date range invalid:
+                  value:
+                    type: client_error
+                    category: invalid_parameter
+                    code: INVALID_PARAMETER
+                    transaction_id: 0HN1O72JU5P3C:00000001
+                    message: Something went wrong, please try again later. If problem remains, please contact support.
+                    description: Parameter 'from' cannot be larger than 'to'
+                From parameter timezone unsupported:
+                  value:
+                    type: client_error
+                    category: invalid_parameter
+                    code: INVALID_PARAMETER
+                    transaction_id: 0HN1O72JU5P3C:00000001
+                    message: Something went wrong, please try again later. If problem remains, please contact support.
+                    description: Parameter 'from' should not include a timezone offset
+                To parameter timezone unsupported:
+                  value:
+                    type: client_error
+                    category: invalid_parameter
+                    code: INVALID_PARAMETER
+                    transaction_id: 0HN1O72JU5P3C:00000001
+                    message: Something went wrong, please try again later. If problem remains, please contact support.
+                    description: Parameter 'to' should not include a timezone offset
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+              examples:
+                Location not found:
+                  value:
+                    type: client_error
+                    category: entity_not_found
+                    code: ENTITY_NOT_FOUND
+                    transaction_id: 0HN18NIB8K5RV:00000001
+                    message: Something went wrong, please try again later. If problem remains, please contact support.
+                    description: Could not find the location.
+        '500':
+          description: Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+              examples:
+                Internal Error:
+                  value:
+                    type: internal_error
+                    category: internal_error
+                    code: INTERNAL_ERROR
+                    transaction_id: 0HN18NIB8K5RV:00000001
+                    message: Something went wrong. Please try again later. If problem remains, please contact support.
+                    description: Internal server error, please try again later. If problem remains, please contact support.
+  /v3/locations/{locationId}/similarhomes/report:
+    get:
+      tags:
+      - Similar Homes
+      summary: Get similar homes report
+      description: 'Get energy consumption data for similar homes. Contains an average value and deciles, from 1st to 10th (maximum value), for the group.
+
+
+        Maximum requested time span by resolution:
+
+        * day: 31 days
+
+        * month: 12 months
+
+
+        For cost to be available as a unit type, the location must have device price formulas set in our system.
+
+
+        To date is exclusive and not included in the data range, as is with all endpoints having date range parameters. It is rounded down to the closest start of the period for the given resolution.
+
+
+        Possible result status action codes:
+
+        | *code* | *description* |
+
+        | --- | --- |
+
+        | sh_home_profile_insufficent | The home profile for the location is insufficient. Please ask a user to provide additional home profile details. |
+
+        | sh_not_enough_contributers | There is not enough energy consumption data for the homes in the similar homes group. This can happen if the period requested is in the future, or if we still have not received consumption data for the requested period. |
+
+        | sh_no_matching_group | No group could be found for the location. |
+
+        | sh_no_price_information | Locations device price formulas are missing. Documentation on price formulas can be found in the Data Management API. |'
+      operationId: get-v3-locations-locationId-similarhomes-report
+      parameters:
+      - name: locationId
+        in: path
+        description: Location id
+        required: true
+        schema:
+          type: integer
+          format: int32
+      - name: from
+        in: query
+        description: From date
+        required: true
+        schema:
+          type: string
+          format: date-time
+      - name: to
+        in: query
+        description: To date, exclusive
+        required: true
+        schema:
+          type: string
+          format: date-time
+      - name: fuel
+        in: query
+        description: 'Fuel. Valid values: ''elec'', ''gas''.'
+        schema:
+          type: string
+      - name: unit
+        in: query
+        description: 'Unit. Valid values: ''cost'', ''energy''.'
+        schema:
+          type: string
+          default: energy
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SimilarHomesReportResultModel'
+              examples:
+                Similar homes report:
+                  value:
+                    result:
+                      value: 1807883
+                      distribution_values:
+                      - 906572
+                      - 1097816
+                      - 1362194
+                      - 1538083
+                      - 1644288
+                      - 1789743
+                      - 2011656
+                      - 2233231
+                      - 2549989
+                      - 3262674
+                      from: '2023-12-01T00:00:00'
+                      to: '2024-01-01T00:00:00'
+                    result_status:
+                      code: ok
+                Home profile insufficient:
+                  value:
+                    result_status:
+                      code: not_ok
+                      action:
+                        code: sh_home_profile_insufficent
+                        description: Please update your home profile to get a result
+                Not enough contributors:
+                  value:
+                    result_status:
+                      code: not_ok
+                      action:
+                        code: sh_not_enough_contributers
+                        description: Not enough similar homes data for the specified time period. Please try again in a few days
+                No matching group:
+                  value:
+                    result_status:
+                      code: not_ok
+                      action:
+                        code: sh_no_matching_group
+                        description: Could not find any group matching your home profile, please check that your home profile is correctly specified.
+                No price information:
+                  value:
+                    result_status:
+                      code: not_ok
+                      action:
+                        code: sh_no_price_information
+                        description: No price information could be found for the location in the given timespan
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+              examples:
+                Invalid parameter:
+                  value:
+                    type: client_error
+                    category: invalid_parameter
+                    code: INVALID_PARAMETER
+                    transaction_id: 0HN1O72JU5P3C:00000001
+                    message: Something went wrong, please try again later. If problem remains, please contact support.
+                    description: Invalid parameter details
+                From parameter missing:
+                  value:
+                    type: client_error
+                    category: invalid_parameter
+                    code: INVALID_PARAMETER
+                    transaction_id: 0HN1O72JU5P3C:00000001
+                    message: Something went wrong, please try again later. If problem remains, please contact support.
+                    description: Parameter 'from' missing
+                To parameter missing:
+                  value:
+                    type: client_error
+                    category: invalid_parameter
+                    code: INVALID_PARAMETER
+                    transaction_id: 0HN1O72JU5P3C:00000001
+                    message: Something went wrong, please try again later. If problem remains, please contact support.
+                    description: Parameter 'to' missing
+                Date range invalid:
+                  value:
+                    type: client_error
+                    category: invalid_parameter
+                    code: INVALID_PARAMETER
+                    transaction_id: 0HN1O72JU5P3C:00000001
+                    message: Something went wrong, please try again later. If problem remains, please contact support.
+                    description: Parameter 'from' cannot be larger than 'to'
+                From parameter timezone unsupported:
+                  value:
+                    type: client_error
+                    category: invalid_parameter
+                    code: INVALID_PARAMETER
+                    transaction_id: 0HN1O72JU5P3C:00000001
+                    message: Something went wrong, please try again later. If problem remains, please contact support.
+                    description: Parameter 'from' should not include a timezone offset
+                To parameter timezone unsupported:
+                  value:
+                    type: client_error
+                    category: invalid_parameter
+                    code: INVALID_PARAMETER
+                    transaction_id: 0HN1O72JU5P3C:00000001
+                    message: Something went wrong, please try again later. If problem remains, please contact support.
+                    description: Parameter 'to' should not include a timezone offset
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+              examples:
+                Location not found:
+                  value:
+                    type: client_error
+                    category: entity_not_found
+                    code: ENTITY_NOT_FOUND
+                    transaction_id: 0HN18NIB8K5RV:00000001
+                    message: Something went wrong, please try again later. If problem remains, please contact support.
+                    description: Could not find the location.
+        '500':
+          description: Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+              examples:
+                Internal Error:
+                  value:
+                    type: internal_error
+                    category: internal_error
+                    code: INTERNAL_ERROR
+                    transaction_id: 0HN18NIB8K5RV:00000001
+                    message: Something went wrong. Please try again later. If problem remains, please contact support.
+                    description: Internal server error, please try again later. If problem remains, please contact support.
+components:
+  schemas:
+    SimilarHomesGroup:
+      required:
+      - contributors
+      - filters
+      type: object
+      properties:
+        filters:
+          minItems: 1
+          type: array
+          items:
+            $ref: '#/components/schemas/SimilarHomesGroupFilter'
+          description: A list of filters that was used when finding a similar homes group.
+        contributors:
+          type: integer
+          description: Number of contributors in the group.
+          format: int32
+          example: 1
+      description: Description of similar homes that a location is compared to.
+    SimilarHomesGroupFilterType:
+      enum:
+      - limit_values
+      - limit_range
+      type: string
+      description: Describes whether 'limit_values' or 'limit_range' should be used.
+    SimilarHomesResultStatus:
+      required:
+      - code
+      type: object
+      properties:
+        code:
+          $ref: '#/components/schemas/SimilarHomesResultStatusCode'
+        action:
+          $ref: '#/components/schemas/SimilarHomesResultStatusAction'
+      description: Contains information about the result, and whether it was successful or not.
+    SimilarHomesGroupResultModel:
+      required:
+      - result_status
+      type: object
+      properties:
+        result:
+          $ref: '#/components/schemas/SimilarHomesGroup'
+        result_status:
+          $ref: '#/components/schemas/SimilarHomesResultStatus'
+      description: Model containing similar homes group result.
+    LimitRange:
+      required:
+      - max
+      - min
+      type: object
+      properties:
+        min:
+          type: number
+          description: Minimum number in the range. For example, if key is 'living_area' and min is 150, it means minimum 150 square meters.
+          format: double
+          example: 150
+        max:
+          type: number
+          description: Maximum number in the range. For example, if key is 'living_area' and max is 200, it means maximum 200 square meters.
+          format: double
+          example: 200
+      description: Available if type is 'limit_range'. Contains minimum and maximum values for the given key.
+    SimilarHomesUnitType:
+      enum:
+      - energy
+      - cost
+      type: string
+      description: Matches with the value passed in query parameters of the request, or a default value.
+    SimilarHomesConsumptionResultModel:
+      required:
+      - result_status
+      type: object
+      properties:
+        result:
+          $ref: '#/components/schemas/SimilarHomesConsumption'
+        result_status:
+          $ref: '#/components/schemas/SimilarHomesResultStatus'
+      description: Model containing similar homes consumption result.
+    SimilarHomesFuelType:
+      enum:
+      - elec
+      - gas
+      type: string
+      description: Matches with the value passed in query parameters of the request, or a default value.
+    SimilarHomesConsumption:
+      required:
+      - from
+      - fuel
+      - resolution
+      - to
+      - unit
+      type: object
+      properties:
+        consumption:
+          type: array
+          items:
+            type: integer
+            format: int32
+          description: Will always contain the exact amount of elements as there are time frames between 'to' and 'from' with the given 'resolution'. Values inside the array can be null if no energy data exists (one day always contains 24 values). Values are whole numbers.
+          nullable: true
+          deprecated: true
+        values:
+          type: array
+          items:
+            type: number
+            format: double
+          description: Contains cost or energy depending on the query parameters of the request. Will always contain the exact amount of elements as there are time frames between 'to' and 'from' with the given 'resolution'. Values inside the array can be null if no energy data exists (one day always contains 24 values). Values are floating-point numbers.
+          nullable: true
+        resolution:
+          $ref: '#/components/schemas/SimilarHomesResolutionType'
+        fuel:
+          $ref: '#/components/schemas/SimilarHomesFuelType'
+        unit:
+          $ref: '#/components/schemas/SimilarHomesUnitType'
+        from:
+          type: string
+          description: From date
+          format: date-time
+          example: '2021-01-01T00:00:00'
+        to:
+          type: string
+          description: To date
+          format: date-time
+          example: '2021-02-01T00:00:00'
+      description: Similar homes consumption data.
+    SimilarHomesResolutionType:
+      enum:
+      - day
+      - month
+      type: string
+      description: Matches with the value passed in query parameters of the request.
+    Error:
+      type: object
+      properties:
+        type:
+          type: string
+          description: Type of error.
+          nullable: true
+          example: internal_error
+        category:
+          type: string
+          description: Error category.
+          nullable: true
+          example: internal_error
+        code:
+          type: string
+          description: Code describing the issue.
+          nullable: true
+          example: INTERNAL_ERROR
+        transaction_id:
+          type: string
+          description: Identifier for the session. Please provide this when contacting support.
+          nullable: true
+          example: 0HN18NN5QB401:00000001
+        message:
+          type: string
+          description: A message related to the error.
+          nullable: true
+          example: Something went wrong. Please try again later. If problem remains, please contact support.
+        description:
+          type: string
+          description: A description of the error for developers.
+          nullable: true
+          example: Internal server error, please try again later. If problem remains, please contact support.
+      description: Model returned for error responses.
+    SimilarHomesReport:
+      required:
+      - distribution_values
+      - from
+      - to
+      - value
+      type: object
+      properties:
+        value:
+          type: number
+          description: Average energy in Wh or cost for similar homes over the requested period
+          format: double
+        distribution_values:
+          type: array
+          items:
+            type: number
+            format: double
+          description: Similar homes consumption data deciles. Contains values for all 10 ranks of deciles - starting from 1st and ending with 10th decile. The 1st decile has 10 per cent of the data set below it, the 2nd decile has 20 per cent of the data set below and so on. The 10th decile has 100 per cent of the data set below, making it a maximum value for the dataset.
+        energy_wh:
+          type: integer
+          description: Average energy Wh for similar homes over the requested period
+          format: int32
+          nullable: true
+          deprecated: true
+        distribution:
+          type: array
+          items:
+            type: integer
+            format: int32
+          description: Distribution of similar homes energy Wh consumption in deciles
+          nullable: true
+          deprecated: true
+        from:
+          type: string
+          description: From date
+          format: date-time
+        to:
+          type: string
+          description: To date
+          format: date-time
+      description: Similar homes report for the requested period.
+    SimilarHomesResultStatusCode:
+      enum:
+      - ok
+      - not_ok
+      type: string
+      description: Indicating whether there is a result or not.
+    SimilarHomesGroupFilter:
+      required:
+      - description
+      - key
+      - type
+      type: object
+      properties:
+        key:
+          minLength: 1
+          type: string
+          description: This key refers to keys in home profile, for example 'house_type', 'heating_type_primary' or 'living_area'.
+          example: house_type
+        description:
+          minLength: 1
+          type: string
+          description: Description for the filter.
+          example: House
+        type:
+          $ref: '#/components/schemas/SimilarHomesGroupFilterType'
+        limit_range:
+          $ref: '#/components/schemas/LimitRange'
+        limit_values:
+          type: array
+          items:
+            type: string
+          description: Available if type is 'limit_values'. For example, for key 'house_type', this would include the list of house types the location is compared with.
+          nullable: true
+      description: Similar homes group filter.
+    SimilarHomesResultStatusAction:
+      type: object
+      properties:
+        code:
+          type: string
+          description: A code for the action that should be taken. Please refer to documentation of specific endpoint for more information.
+          nullable: true
+        description:
+          type: string
+          description: A description of the action that should be taken.
+          nullable: true
+      description: Available in cases where there are actions that can be done to make the result successful, such as entering information in the home profile options.
+    SimilarHomesReportResultModel:
+      required:
+      - result_status
+      type: object
+      properties:
+        result:
+          $ref: '#/components/schemas/SimilarHomesReport'
+        result_status:
+          $ref: '#/components/schemas/SimilarHomesResultStatus'
+      description: Model containing similar homes report result.
+  securitySchemes:
+    BearerAuth:
+      type: http
+      scheme: bearer
+      description: The Eliq insights API uses bearer tokens to authenticate requests. Read more under Authentication tag.
+x-tagGroups:
+- name: Authentication
+  tags:
+  - Authentication
+- name: Users
+  tags:
+  - Users
+- name: Locations
+  tags:
+  - Locations
+  - Location Profile
+  - Energy Data
+  - Energy Usage Categories
+  - Energy Performance Certificate
+  - Similar Homes
+  - Budgets
+  - Advice
+  - Anomalies
+  - Market Price
+  - Price Formulas
+- name: Eliq Connect
+  tags:
+  - Eliq Connect
+- name: Health
+  tags:
+  - Health
+- name: Deprecated
+  tags:
+  - Breakdown
+  - Home Profile

@@ -1,0 +1,159 @@
+openapi: 3.2.0
+info:
+  title: Eliq Intelligence Info API
+  description: '# API Reference
+
+
+    The Eliq Intelligence API is organized around REST.'
+  contact:
+    name: Support
+    email: support_b2b@eliq.com
+  version: 1.0.0
+security:
+- Bearer: []
+tags:
+- name: Info
+paths:
+  /info/auth:
+    get:
+      tags:
+      - Info
+      summary: Get Entra authentication information for the application
+      responses:
+        '200':
+          description: Successful
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AuthInfoResult'
+      operationId: getInfoAuth
+      x-operation-id-source: derived
+  /info/me:
+    get:
+      tags:
+      - Info
+      summary: Get information about the current user
+      responses:
+        '200':
+          description: Successful
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MyInfoResult'
+      operationId: getInfoMe
+      x-operation-id-source: derived
+  /info/configuration:
+    get:
+      tags:
+      - Info
+      summary: Get the Intelligence API configuration for the client
+      responses:
+        '200':
+          description: Successful
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/IntelligenceApiConfiguration'
+        '404':
+          description: No configuration found for the client
+      operationId: getInfoConfiguration
+      x-operation-id-source: derived
+components:
+  schemas:
+    MyInfoResult:
+      required:
+      - client_id
+      - roles
+      type: object
+      properties:
+        client_id:
+          type: integer
+          description: Client Id of active user
+          format: int64
+          example: 5435964696
+        roles:
+          type: array
+          items:
+            type: string
+          description: Roles of active user
+          example:
+          - Support
+          - EliqConfigurator
+          - ClientConfigurator
+      additionalProperties: false
+      description: Information about the active user
+    DashboardsConfiguration:
+      type: object
+      properties:
+        enabled:
+          type: boolean
+          description: Whether embedded dashboards are enabled for the client
+          example: true
+        items:
+          type:
+          - array
+          - 'null'
+          items:
+            $ref: '#/components/schemas/DashboardConfigurationItem'
+          description: The dashboards available to the client
+      additionalProperties: false
+      description: DataBricks dashboards available for embedding in the application
+    AuthInfoResult:
+      required:
+      - entra_application_id
+      - entra_tenant_id
+      type: object
+      properties:
+        entra_tenant_id:
+          minLength: 1
+          type: string
+          description: Entra tenant id
+          example: dc4a5e2f-2537-4f0f-ba68-f79bc8d57fa8
+        entra_application_id:
+          minLength: 1
+          type: string
+          description: Entra application id
+          example: b77ee01b-e19b-4fe5-b73b-5d4d810910d1
+      additionalProperties: false
+      description: Authorization information for the application
+    DashboardConfigurationItem:
+      type: object
+      properties:
+        id:
+          type:
+          - string
+          - 'null'
+          description: Id of the published DataBricks dashboard
+          example: 01ef2a3b4c5d6e7f8a9b0c1d2e3f4a5b
+        name:
+          type:
+          - string
+          - 'null'
+          description: Display name shown in the application
+          example: Energy Overview
+        external_value_scope:
+          type:
+          - string
+          - 'null'
+          description: 'What the dashboard''s dataset queries are filtered by. "client" injects the client id, "user" injects a
+
+            per-user hash. Defaults to "client" when omitted.'
+          example: client
+      additionalProperties: false
+      description: A published DataBricks dashboard the client is allowed to embed
+    IntelligenceApiConfiguration:
+      type: object
+      properties:
+        application_name:
+          type:
+          - string
+          - 'null'
+        dashboards:
+          $ref: '#/components/schemas/DashboardsConfiguration'
+      additionalProperties: false
+  securitySchemes:
+    Bearer:
+      type: http
+      description: Enter JWT Bearer token **_only_**
+      scheme: bearer
+      bearerFormat: JWT

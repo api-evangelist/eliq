@@ -1,0 +1,2376 @@
+openapi: 3.2.0
+info:
+  title: Eliq Location profile API
+  version: '1.0'
+  description: 'Operations tagged Location profile across 2 of this provider''s published API definitions: eliq-data-management-api-openapi.json, eliq-insights-api-openapi.yaml. Each path carries the servers of the definition it was published in.'
+servers:
+- url: http://localhost:3000
+tags:
+- name: Location Profile
+paths:
+  /locations/{locationId}/profile/type:
+    post:
+      tags:
+      - Location Profile
+      summary: Set location profile type
+      operationId: set-locations-locationId-profile-type
+      parameters:
+      - name: locationId
+        in: path
+        description: Unique identifier of location
+        required: true
+        schema:
+          type: string
+      requestBody:
+        description: Location profile type object to set
+        content:
+          application/json-patch+json:
+            schema:
+              $ref: '#/components/schemas/LocationProfileType'
+            examples:
+              Location profile:
+                value:
+                  type: residential
+          application/json:
+            schema:
+              $ref: '#/components/schemas/LocationProfileType'
+            examples:
+              Location profile:
+                value:
+                  type: residential
+          text/json:
+            schema:
+              $ref: '#/components/schemas/LocationProfileType'
+            examples:
+              Location profile:
+                value:
+                  type: residential
+          application/*+json:
+            schema:
+              $ref: '#/components/schemas/LocationProfileType'
+            examples:
+              Location profile:
+                value:
+                  type: residential
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/LocationProfileType'
+              examples:
+                Location profile:
+                  value:
+                    type: residential
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorDetails'
+              examples:
+                Parameter 'locationId' must not be null or empty:
+                  value:
+                    code: LOCATION_ID_MISSING
+                    description: Parameter 'locationId' must not be null or empty
+                    request_id: 65e2ea86-470f-4363-9295-35d6b473981a
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorDetails'
+              examples:
+                Missing value:
+                  value:
+                    code: LOCATION_NOT_FOUND
+                    description: Location with given id could not be found
+                    request_id: 65e2ea86-470f-4363-9295-35d6b473981a
+                Missing profile value with given id:
+                  value:
+                    code: PROFILE_VALUE_NOT_FOUND
+                    description: Location profile value not found for given id
+                    request_id: 65e2ea86-470f-4363-9295-35d6b473981a
+                User with given id could not be found:
+                  value:
+                    code: USER_NOT_FOUND
+                    description: User with given id could not be found
+                    request_id: 65e2ea86-470f-4363-9295-35d6b473981a
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorDetails'
+              examples:
+                Internal server error. If problem remains, please contact support:
+                  value:
+                    code: INTERNAL_ERROR
+                    description: Internal server error. If problem remains, please contact support
+                    request_id: 65e2ea86-470f-4363-9295-35d6b473981a
+    get:
+      tags:
+      - Location Profile
+      summary: Get location profile type
+      operationId: get-locations-locationId-profile-type
+      parameters:
+      - name: locationId
+        in: path
+        description: Unique identifier of location
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/LocationProfileType'
+              examples:
+                Location profile:
+                  value:
+                    type: residential
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorDetails'
+              examples:
+                Parameter 'locationId' must not be null or empty:
+                  value:
+                    code: LOCATION_ID_MISSING
+                    description: Parameter 'locationId' must not be null or empty
+                    request_id: 65e2ea86-470f-4363-9295-35d6b473981a
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorDetails'
+              examples:
+                Missing value:
+                  value:
+                    code: LOCATION_NOT_FOUND
+                    description: Location with given id could not be found
+                    request_id: 65e2ea86-470f-4363-9295-35d6b473981a
+                Missing profile value with given id:
+                  value:
+                    code: PROFILE_VALUE_NOT_FOUND
+                    description: Location profile value not found for given id
+                    request_id: 65e2ea86-470f-4363-9295-35d6b473981a
+                User with given id could not be found:
+                  value:
+                    code: USER_NOT_FOUND
+                    description: User with given id could not be found
+                    request_id: 65e2ea86-470f-4363-9295-35d6b473981a
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorDetails'
+              examples:
+                Internal server error. If problem remains, please contact support:
+                  value:
+                    code: INTERNAL_ERROR
+                    description: Internal server error. If problem remains, please contact support
+                    request_id: 65e2ea86-470f-4363-9295-35d6b473981a
+  /locations/{locationId}/profile:
+    post:
+      tags:
+      - Location Profile
+      summary: Set location profile values
+      operationId: set-locations-locationId-profile-values
+      parameters:
+      - name: locationId
+        in: path
+        description: Unique identifier of location
+        required: true
+        schema:
+          type: string
+      requestBody:
+        description: Location profile objects to create
+        content:
+          application/json-patch+json:
+            schema:
+              type: array
+              items:
+                $ref: '#/components/schemas/LocationProfileValueRequest'
+          application/json:
+            schema:
+              type: array
+              items:
+                $ref: '#/components/schemas/LocationProfileValueRequest'
+          text/json:
+            schema:
+              type: array
+              items:
+                $ref: '#/components/schemas/LocationProfileValueRequest'
+          application/*+json:
+            schema:
+              type: array
+              items:
+                $ref: '#/components/schemas/LocationProfileValueRequest'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/LocationProfileValueResponse'
+              examples:
+                Location profile:
+                  value:
+                  - id: 00000000-0000-0000-0000-000000000000
+                    key: house_type
+                    value: apartment
+                    from: '2024-09-01T00:00:00'
+                  - id: 00000000-0000-0000-0000-000000000000
+                    key: living_area
+                    value: 450
+                    from: '2024-09-01T00:00:00'
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorDetails'
+              examples:
+                Parameter 'locationId' must not be null or empty:
+                  value:
+                    code: LOCATION_ID_MISSING
+                    description: Parameter 'locationId' must not be null or empty
+                    request_id: 65e2ea86-470f-4363-9295-35d6b473981a
+                Property key missing:
+                  value:
+                    code: PROPERTY_KEY_MISSING
+                    description: Property key missing
+                    request_id: 65e2ea86-470f-4363-9295-35d6b473981a
+                Property value missing:
+                  value:
+                    code: PROPERTY_VALUE_MISSING
+                    description: Property value missing
+                    request_id: 65e2ea86-470f-4363-9295-35d6b473981a
+                Property key 'propertyKey' not found:
+                  value:
+                    code: PROPERTY_KEY_INVALID
+                    description: Property key 'propertyKey' not found
+                    request_id: 65e2ea86-470f-4363-9295-35d6b473981a
+                Invalid input for property 'propertyKey':
+                  value:
+                    code: PROPERTY_VALUE_INVALID
+                    description: Invalid input for property 'propertyKey'
+                    request_id: 65e2ea86-470f-4363-9295-35d6b473981a
+                Key date values must be unique for a single location.:
+                  value:
+                    code: KEY_DATE_VALUE_ALREADY_EXISTS
+                    description: Key date values must be unique for a single location. Key 'propertyKey' with From 'propertyKeyFrom' already exists for the location
+                    request_id: 65e2ea86-470f-4363-9295-35d6b473981a
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorDetails'
+              examples:
+                Missing value:
+                  value:
+                    code: LOCATION_NOT_FOUND
+                    description: Location with given id could not be found
+                    request_id: 65e2ea86-470f-4363-9295-35d6b473981a
+                Missing profile value with given id:
+                  value:
+                    code: PROFILE_VALUE_NOT_FOUND
+                    description: Location profile value not found for given id
+                    request_id: 65e2ea86-470f-4363-9295-35d6b473981a
+                User with given id could not be found:
+                  value:
+                    code: USER_NOT_FOUND
+                    description: User with given id could not be found
+                    request_id: 65e2ea86-470f-4363-9295-35d6b473981a
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorDetails'
+              examples:
+                Internal server error. If problem remains, please contact support:
+                  value:
+                    code: INTERNAL_ERROR
+                    description: Internal server error. If problem remains, please contact support
+                    request_id: 65e2ea86-470f-4363-9295-35d6b473981a
+    get:
+      tags:
+      - Location Profile
+      summary: Get location profile
+      operationId: get-locations-locationId-profile
+      parameters:
+      - name: locationId
+        in: path
+        description: Unique identifier of location
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/LocationProfileSettings'
+              examples:
+                Location profile:
+                  value:
+                    settings:
+                    - key: house_type
+                      data_type: single_select
+                      possible_values:
+                      - value: apartment
+                        developer_description: Apartment
+                      - value: house_detached
+                        developer_description: House - detached
+                      - value: holiday_home
+                        developer_description: Holiday home / summer house
+                      - value: semi_detached
+                        developer_description: House - semi detached
+                      dependent_properties: []
+                      developer_description: Type of dwelling
+                      tags:
+                      - required_for_euc_to_work
+                      - required_for_sh_to_work
+                      group: ''
+                    - key: living_area
+                      data_type: number
+                      limits:
+                        min: 0.0
+                        max: 1000.0
+                        step: 1.0
+                      dependent_properties: []
+                      developer_description: Size of heated living space in square meters
+                      tags:
+                      - required_for_sh_to_work
+                      group: ''
+                    - key: persons
+                      data_type: number
+                      limits:
+                        min: 0.0
+                        max: 10.0
+                        step: 1.0
+                      dependent_properties: []
+                      developer_description: Number of people living in the home
+                      group: ''
+                    - key: heating_type_primary
+                      data_type: single_select
+                      possible_values:
+                      - value: district_heating
+                        developer_description: District heating
+                      - value: radiators
+                        developer_description: Electric radiators
+                      - value: air_air_pump
+                        developer_description: Air-air heat pump
+                      - value: air_water_pump
+                        developer_description: Air-water heat pump
+                      dependent_properties: []
+                      developer_description: Type of dwelling
+                      tags:
+                      - required_for_euc_to_work
+                      - required_for_sh_to_work
+                      group: ''
+                    - key: gas_stoves
+                      data_type: number
+                      limits:
+                        min: 0.0
+                        max: 5.0
+                        step: 1.0
+                      dependent_properties: []
+                      developer_description: Number of gas hobs
+                      group: cooking
+                    groups:
+                    - cooking
+                Location profile with selected values:
+                  value:
+                    settings:
+                    - key: house_type
+                      data_type: single_select
+                      selected_values:
+                      - id: 00000000-0000-0000-0000-000000000000
+                        value: semi_detached
+                      possible_values:
+                      - value: apartment
+                        developer_description: Apartment
+                      - value: house_detached
+                        developer_description: House - detached
+                      - value: holiday_home
+                        developer_description: Holiday home / summer house
+                      - value: semi_detached
+                        developer_description: House - semi detached
+                      dependent_properties: []
+                      developer_description: Type of dwelling
+                      tags:
+                      - required_for_euc_to_work
+                      - required_for_sh_to_work
+                      group: ''
+                    - key: living_area
+                      data_type: number
+                      selected_values:
+                      - id: 00000000-0000-0000-0000-000000000000
+                        value: 125
+                      limits:
+                        min: 0.0
+                        max: 1000.0
+                        step: 1.0
+                      dependent_properties: []
+                      developer_description: Size of heated living space in square meters
+                      tags:
+                      - required_for_sh_to_work
+                      group: ''
+                    - key: persons
+                      data_type: number
+                      selected_values:
+                      - id: 00000000-0000-0000-0000-000000000000
+                        value: 5
+                        from: '2024-07-01T00:00:00'
+                      - id: 00000000-0000-0000-0000-000000000000
+                        value: 4
+                        from: '2023-01-10T00:00:00'
+                      - id: 00000000-0000-0000-0000-000000000000
+                        value: 3
+                      limits:
+                        min: 0.0
+                        max: 10.0
+                        step: 1.0
+                      dependent_properties: []
+                      developer_description: Number of people living in the home
+                      group: ''
+                    - key: heating_type_primary
+                      data_type: single_select
+                      selected_values:
+                      - id: 00000000-0000-0000-0000-000000000000
+                        value: air_air_pump
+                      possible_values:
+                      - value: district_heating
+                        developer_description: District heating
+                      - value: radiators
+                        developer_description: Electric radiators
+                      - value: air_air_pump
+                        developer_description: Air-air heat pump
+                      - value: air_water_pump
+                        developer_description: Air-water heat pump
+                      dependent_properties: []
+                      developer_description: Type of dwelling
+                      tags:
+                      - required_for_euc_to_work
+                      - required_for_sh_to_work
+                      group: ''
+                    - key: gas_stoves
+                      data_type: number
+                      limits:
+                        min: 0.0
+                        max: 5.0
+                        step: 1.0
+                      dependent_properties: []
+                      developer_description: Number of gas hobs
+                      group: cooking
+                    groups:
+                    - cooking
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorDetails'
+              examples:
+                Parameter 'locationId' must not be null or empty:
+                  value:
+                    code: LOCATION_ID_MISSING
+                    description: Parameter 'locationId' must not be null or empty
+                    request_id: 65e2ea86-470f-4363-9295-35d6b473981a
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorDetails'
+              examples:
+                Missing value:
+                  value:
+                    code: LOCATION_NOT_FOUND
+                    description: Location with given id could not be found
+                    request_id: 65e2ea86-470f-4363-9295-35d6b473981a
+                Missing profile value with given id:
+                  value:
+                    code: PROFILE_VALUE_NOT_FOUND
+                    description: Location profile value not found for given id
+                    request_id: 65e2ea86-470f-4363-9295-35d6b473981a
+                User with given id could not be found:
+                  value:
+                    code: USER_NOT_FOUND
+                    description: User with given id could not be found
+                    request_id: 65e2ea86-470f-4363-9295-35d6b473981a
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorDetails'
+              examples:
+                Internal server error. If problem remains, please contact support:
+                  value:
+                    code: INTERNAL_ERROR
+                    description: Internal server error. If problem remains, please contact support
+                    request_id: 65e2ea86-470f-4363-9295-35d6b473981a
+  /locations/{locationId}/profile/{id}:
+    patch:
+      tags:
+      - Location Profile
+      summary: Patch location profile value
+      operationId: patch-locations-locationId-profile-value
+      parameters:
+      - name: locationId
+        in: path
+        description: Unique identifier of location
+        required: true
+        schema:
+          type: string
+      - name: id
+        in: path
+        description: Identifier for location profile value
+        required: true
+        schema:
+          type: string
+          format: uuid
+      requestBody:
+        description: Location profile object to patch
+        content:
+          application/json-patch+json:
+            schema:
+              $ref: '#/components/schemas/PatchLocationProfileRequestModel'
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PatchLocationProfileRequestModel'
+          text/json:
+            schema:
+              $ref: '#/components/schemas/PatchLocationProfileRequestModel'
+          application/*+json:
+            schema:
+              $ref: '#/components/schemas/PatchLocationProfileRequestModel'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/LocationProfileValueResponse'
+              examples:
+                Location profile:
+                  value:
+                    id: 00000000-0000-0000-0000-000000000000
+                    key: house_type
+                    value: apartment
+                    from: '2024-09-01T00:00:00'
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorDetails'
+              examples:
+                Parameter 'locationId' must not be null or empty:
+                  value:
+                    code: LOCATION_ID_MISSING
+                    description: Parameter 'locationId' must not be null or empty
+                    request_id: 65e2ea86-470f-4363-9295-35d6b473981a
+                Property key missing:
+                  value:
+                    code: PROPERTY_KEY_MISSING
+                    description: Property key missing
+                    request_id: 65e2ea86-470f-4363-9295-35d6b473981a
+                Property value missing:
+                  value:
+                    code: PROPERTY_VALUE_MISSING
+                    description: Property value missing
+                    request_id: 65e2ea86-470f-4363-9295-35d6b473981a
+                Property key 'propertyKey' not found:
+                  value:
+                    code: PROPERTY_KEY_INVALID
+                    description: Property key 'propertyKey' not found
+                    request_id: 65e2ea86-470f-4363-9295-35d6b473981a
+                Invalid input for property 'propertyKey':
+                  value:
+                    code: PROPERTY_VALUE_INVALID
+                    description: Invalid input for property 'propertyKey'
+                    request_id: 65e2ea86-470f-4363-9295-35d6b473981a
+                Key date values must be unique for a single location.:
+                  value:
+                    code: KEY_DATE_VALUE_ALREADY_EXISTS
+                    description: Key date values must be unique for a single location. Key 'propertyKey' with From 'propertyKeyFrom' already exists for the location
+                    request_id: 65e2ea86-470f-4363-9295-35d6b473981a
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorDetails'
+              examples:
+                Missing value:
+                  value:
+                    code: LOCATION_NOT_FOUND
+                    description: Location with given id could not be found
+                    request_id: 65e2ea86-470f-4363-9295-35d6b473981a
+                Missing profile value with given id:
+                  value:
+                    code: PROFILE_VALUE_NOT_FOUND
+                    description: Location profile value not found for given id
+                    request_id: 65e2ea86-470f-4363-9295-35d6b473981a
+                User with given id could not be found:
+                  value:
+                    code: USER_NOT_FOUND
+                    description: User with given id could not be found
+                    request_id: 65e2ea86-470f-4363-9295-35d6b473981a
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorDetails'
+              examples:
+                Internal server error. If problem remains, please contact support:
+                  value:
+                    code: INTERNAL_ERROR
+                    description: Internal server error. If problem remains, please contact support
+                    request_id: 65e2ea86-470f-4363-9295-35d6b473981a
+    delete:
+      tags:
+      - Location Profile
+      summary: Delete location profile
+      operationId: delete-locations-locationId-profile
+      parameters:
+      - name: locationId
+        in: path
+        description: Unique identifier of location
+        required: true
+        schema:
+          type: string
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+      responses:
+        '204':
+          description: No Content
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NoContentResult'
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorDetails'
+              examples:
+                Parameter 'locationId' must not be null or empty:
+                  value:
+                    code: LOCATION_ID_MISSING
+                    description: Parameter 'locationId' must not be null or empty
+                    request_id: 65e2ea86-470f-4363-9295-35d6b473981a
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorDetails'
+              examples:
+                Missing value:
+                  value:
+                    code: LOCATION_NOT_FOUND
+                    description: Location with given id could not be found
+                    request_id: 65e2ea86-470f-4363-9295-35d6b473981a
+                Missing profile value with given id:
+                  value:
+                    code: PROFILE_VALUE_NOT_FOUND
+                    description: Location profile value not found for given id
+                    request_id: 65e2ea86-470f-4363-9295-35d6b473981a
+                User with given id could not be found:
+                  value:
+                    code: USER_NOT_FOUND
+                    description: User with given id could not be found
+                    request_id: 65e2ea86-470f-4363-9295-35d6b473981a
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorDetails'
+              examples:
+                Internal server error. If problem remains, please contact support:
+                  value:
+                    code: INTERNAL_ERROR
+                    description: Internal server error. If problem remains, please contact support
+                    request_id: 65e2ea86-470f-4363-9295-35d6b473981a
+  /v3/locations/{locationId}/profile/type:
+    get:
+      tags:
+      - Location Profile
+      summary: Get location profile type
+      description: Get the profile type for the location.
+      operationId: get-v3-location-profile-type
+      parameters:
+      - name: locationId
+        in: path
+        description: Location id
+        required: true
+        schema:
+          type: integer
+          format: int32
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/LocationProfileType_2'
+              examples:
+                Residential type:
+                  value:
+                    type: residential
+                Business type:
+                  value:
+                    type: business
+                Type undefined:
+                  value:
+                    type: undefined
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+              examples:
+                Location not found:
+                  value:
+                    code: ENTITY_NOT_FOUND
+                    transaction_id: 0HN18NIB8K5RV:00000001
+                    description: Could not find the location.
+      security:
+      - BearerAuth: []
+    post:
+      tags:
+      - Location Profile
+      summary: Set location profile type
+      description: 'Before setting the location profile type, ensure the client location profile configuration is set.
+
+        - Business configuration is required to set business location types.
+
+        - Residential configuration is required to set residential location types.
+
+
+        Note: Locations that previously used the Home profile feature are automatically assigned the Residential profile type.
+
+        You do not need to set the profile type for those locations. Only newly created locations that did not use the Home profile feature require a profile type to be set.'
+      operationId: post-v3-location-profile-type
+      parameters:
+      - name: locationId
+        in: path
+        description: Location id
+        required: true
+        schema:
+          type: integer
+          format: int32
+      requestBody:
+        description: Profile type
+        content:
+          application/json-patch+json:
+            schema:
+              $ref: '#/components/schemas/LocationProfileType_2'
+            examples:
+              Residential type:
+                value:
+                  type: residential
+              Business type:
+                value:
+                  type: business
+          application/json:
+            schema:
+              $ref: '#/components/schemas/LocationProfileType_2'
+            examples:
+              Residential type:
+                value:
+                  type: residential
+              Business type:
+                value:
+                  type: business
+          text/json:
+            schema:
+              $ref: '#/components/schemas/LocationProfileType_2'
+            examples:
+              Residential type:
+                value:
+                  type: residential
+              Business type:
+                value:
+                  type: business
+          application/*+json:
+            schema:
+              $ref: '#/components/schemas/LocationProfileType_2'
+            examples:
+              Residential type:
+                value:
+                  type: residential
+              Business type:
+                value:
+                  type: business
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/LocationProfileType_2'
+              examples:
+                Residential type:
+                  value:
+                    type: residential
+                Business type:
+                  value:
+                    type: business
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+              examples:
+                Change not allowed:
+                  value:
+                    code: EXISTING_PROFILE_VALUES_FOUND
+                    transaction_id: 0HN18NIB8K5RV:00000001
+                    description: Can not change profile type for a configured profile with existing values
+                Profile settings not configured:
+                  value:
+                    code: PROFILE_CONFIGURATION_NOT_FOUND
+                    transaction_id: 0HN18NIB8K5RV:00000001
+                    description: Profile settings not configured
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+              examples:
+                Location not found:
+                  value:
+                    code: ENTITY_NOT_FOUND
+                    transaction_id: 0HN18NIB8K5RV:00000001
+                    description: Could not find the location.
+      security:
+      - BearerAuth: []
+    servers:
+    - url: http://localhost:3000
+  /v3/locations/{locationId}/profile:
+    get:
+      tags:
+      - Location Profile
+      summary: Get location profile
+      description: This includes all available profile options and any selected values for the location.
+      operationId: get-v3-location-profile
+      parameters:
+      - name: locationId
+        in: path
+        description: Location id
+        required: true
+        schema:
+          type: integer
+          format: int32
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/LocationProfileSettings_2'
+              examples:
+                Location profile:
+                  value:
+                    settings:
+                    - key: house_type
+                      data_type: single_select
+                      possible_values:
+                      - value: apartment
+                        developer_description: Apartment
+                      - value: house_detached
+                        developer_description: House - detached
+                      - value: holiday_home
+                        developer_description: Holiday home / summer house
+                      - value: semi_detached
+                        developer_description: House - semi detached
+                      - value: townhouse
+                        developer_description: House - townhouse
+                      - value: other
+                        developer_description: Other
+                      dependent_properties: []
+                      developer_description: Type of dwelling
+                      tags:
+                      - required_for_euc_to_work
+                      - required_for_sh_to_work
+                      group: ''
+                    - key: living_area
+                      data_type: number
+                      limits:
+                        min: 0
+                        max: 800
+                        step: 1
+                      dependent_properties: []
+                      developer_description: Size of heated living space in square meters
+                      tags:
+                      - required_for_sh_to_work
+                      group: ''
+                    - key: persons
+                      data_type: number
+                      limits:
+                        min: 0
+                        max: 10
+                        step: 1
+                      dependent_properties: []
+                      developer_description: Number of people living in the home
+                      group: ''
+                    - key: heating_type_primary
+                      data_type: single_select
+                      possible_values:
+                      - value: district_heating
+                        developer_description: District heating
+                      - value: radiators
+                        developer_description: Electric radiators
+                      - value: air_air_pump
+                        developer_description: Air-air heat pump
+                      - value: air_water_pump
+                        developer_description: Air-water heat pump
+                      - value: water_pan
+                        developer_description: Electric boiler
+                      - value: mountain_sea_earth
+                        developer_description: Ground source heat pump
+                      - value: exhaust_air_heat_pump
+                        developer_description: Exhaust air heat pump
+                      - value: other
+                        developer_description: Other
+                      dependent_properties:
+                      - key: house_type
+                        accepted_values:
+                        - house_detached
+                        - townhouse
+                        - semi_detached
+                        - holiday_home
+                        - other
+                      developer_description: Primary way of heating the location
+                      tags:
+                      - required_for_sh_to_work
+                      group: ''
+                    - key: heating_type_other
+                      data_type: multiple_select
+                      possible_values:
+                      - value: district_heating
+                        developer_description: District heating
+                      - value: radiators
+                        developer_description: Electric radiators
+                      - value: air_air_pump
+                        developer_description: Air-air heat pump
+                      - value: air_water_pump
+                        developer_description: Air-water heat pump
+                      - value: water_pan
+                        developer_description: Electric boiler
+                      - value: mountain_sea_earth
+                        developer_description: Ground source heat pump
+                      - value: exhaust_air_heat_pump
+                        developer_description: Exhaust air heat pump
+                      - value: floor_heat
+                        developer_description: Electric floor heat
+                      - value: other
+                        developer_description: Other
+                      dependent_properties:
+                      - key: house_type
+                        accepted_values:
+                        - house_detached
+                        - townhouse
+                        - semi_detached
+                        - holiday_home
+                        - other
+                      developer_description: Non-primary ways of heating the location
+                      group: ''
+                    - key: hotwater_type
+                      data_type: single_select
+                      possible_values:
+                      - value: hot_water_tank
+                        developer_description: Storage water heater
+                      - value: air_air_pump
+                        developer_description: Air-air heat pump
+                      - value: air_water_pump
+                        developer_description: Air-water heat pump
+                      - value: mountain_sea_earth
+                        developer_description: Ground source heat pump
+                      - value: exhaust_air_heat_pump
+                        developer_description: Exhaust air heat pump
+                      - value: district_heating
+                        developer_description: District heating
+                      - value: other
+                        developer_description: Other
+                      dependent_properties: []
+                      developer_description: Primary way of heating water
+                      group: ''
+                    - key: gas_stoves
+                      data_type: number
+                      limits:
+                        min: 0
+                        max: 5
+                        step: 1
+                      dependent_properties: []
+                      developer_description: Number of gas hobs
+                      group: cooking
+                    - key: gas_ovens
+                      data_type: number
+                      limits:
+                        min: 0
+                        max: 5
+                        step: 1
+                      dependent_properties: []
+                      developer_description: Number of gas ovens
+                      group: cooking
+                    - key: electric_stoves
+                      data_type: number
+                      limits:
+                        min: 0
+                        max: 5
+                        step: 1
+                      dependent_properties: []
+                      developer_description: Number of electric hobs
+                      group: cooking
+                    - key: electric_ovens
+                      data_type: number
+                      limits:
+                        min: 0
+                        max: 5
+                        step: 1
+                      dependent_properties: []
+                      developer_description: Number of electric ovens
+                      group: cooking
+                    - key: microwaves
+                      data_type: number
+                      limits:
+                        min: 0
+                        max: 5
+                        step: 1
+                      dependent_properties: []
+                      developer_description: Number of microwaves
+                      group: cooking
+                    - key: dishwashers
+                      data_type: number
+                      limits:
+                        min: 0
+                        max: 5
+                        step: 1
+                      dependent_properties: []
+                      developer_description: Number of dishwashers
+                      group: appliances
+                    - key: washing_machines
+                      data_type: number
+                      limits:
+                        min: 0
+                        max: 5
+                        step: 1
+                      dependent_properties: []
+                      developer_description: Number of washing machines
+                      group: appliances
+                    - key: dryers
+                      data_type: number
+                      limits:
+                        min: 0
+                        max: 5
+                        step: 1
+                      dependent_properties: []
+                      developer_description: Number of electric dryers
+                      group: appliances
+                    - key: tv
+                      data_type: number
+                      limits:
+                        min: 0
+                        max: 10
+                        step: 1
+                      dependent_properties: []
+                      developer_description: Number of TVs
+                      group: appliances
+                    - key: game_consoles
+                      data_type: number
+                      limits:
+                        min: 0
+                        max: 10
+                        step: 1
+                      dependent_properties: []
+                      developer_description: Number of game consoles
+                      group: ''
+                    - key: laptops
+                      data_type: number
+                      limits:
+                        min: 0
+                        max: 5
+                        step: 1
+                      dependent_properties: []
+                      developer_description: Number of laptops
+                      group: ''
+                    - key: stationary_computers
+                      data_type: number
+                      limits:
+                        min: 0
+                        max: 5
+                        step: 1
+                      dependent_properties: []
+                      developer_description: Number of desktop/stationary computers
+                      group: ''
+                    - key: fridges
+                      data_type: number
+                      limits:
+                        min: 0
+                        max: 5
+                        step: 1
+                      dependent_properties: []
+                      developer_description: Number of fridges
+                      group: fridges_and_freezers
+                    - key: freezers
+                      data_type: number
+                      limits:
+                        min: 0
+                        max: 5
+                        step: 1
+                      dependent_properties: []
+                      developer_description: Number of freezers
+                      group: fridges_and_freezers
+                    - key: fridge_freezers
+                      data_type: number
+                      limits:
+                        min: 0
+                        max: 5
+                        step: 1
+                      dependent_properties: []
+                      developer_description: Number of combined fridge-freezer units
+                      group: fridges_and_freezers
+                    - key: solar_installed
+                      data_type: number
+                      limits:
+                        min: 0
+                        max: 50
+                        step: 1
+                      dependent_properties: []
+                      developer_description: Photovoltaic panels (kW)
+                      group: ''
+                    - key: electric_cars
+                      data_type: number
+                      limits:
+                        min: 0
+                        max: 5
+                        step: 1
+                      dependent_properties: []
+                      developer_description: Number of EVs that are charged at the location
+                      group: ''
+                    - key: swimming_pool
+                      data_type: number
+                      limits:
+                        min: 0
+                        max: 5
+                        step: 1
+                      dependent_properties: []
+                      developer_description: Number of swimming pools (where electricity is used in the heating of the water)
+                      group: ''
+                    groups:
+                    - fridges_and_freezers
+                    - appliances
+                    - cooking
+                Location profile with selected values:
+                  value:
+                    settings:
+                    - key: house_type
+                      data_type: single_select
+                      selected_values:
+                      - id: 023fd646-b383-ee11-8925-000d3a2e6931
+                        value: semi_detached
+                      possible_values:
+                      - value: apartment
+                        developer_description: Apartment
+                      - value: house_detached
+                        developer_description: House - detached
+                      - value: holiday_home
+                        developer_description: Holiday home / summer house
+                      - value: semi_detached
+                        developer_description: House - semi detached
+                      - value: townhouse
+                        developer_description: House - townhouse
+                      - value: other
+                        developer_description: Other
+                      dependent_properties: []
+                      developer_description: Type of dwelling
+                      tags:
+                      - required_for_euc_to_work
+                      - required_for_sh_to_work
+                      group: ''
+                    - key: living_area
+                      data_type: number
+                      selected_values:
+                      - id: 053fd646-b383-ee11-8925-000d3a2e6931
+                        value: 115
+                      limits:
+                        min: 0
+                        max: 800
+                        step: 1
+                      dependent_properties: []
+                      developer_description: Size of heated living space in square meters
+                      tags:
+                      - required_for_sh_to_work
+                      group: ''
+                    - key: persons
+                      data_type: number
+                      selected_values:
+                      - id: a7606e31-454f-ef11-86c3-6045bdf530b7
+                        value: 5
+                        from: '2024-07-01T00:00:00'
+                      - id: da188f27-454f-ef11-86c3-6045bdf530b7
+                        value: 4
+                        from: '2023-01-10T00:00:00'
+                      - id: 103fd646-b383-ee11-8925-000d3a2e6931
+                        value: 3
+                      limits:
+                        min: 0
+                        max: 10
+                        step: 1
+                      dependent_properties: []
+                      developer_description: Number of people living in the home
+                      group: ''
+                    - key: heating_type_primary
+                      data_type: single_select
+                      selected_values:
+                      - id: 19ab5ad4-5f88-ee11-8925-000d3a2e6931
+                        value: air_air_pump
+                      possible_values:
+                      - value: district_heating
+                        developer_description: District heating
+                      - value: radiators
+                        developer_description: Electric radiators
+                      - value: air_air_pump
+                        developer_description: Air-air heat pump
+                      - value: air_water_pump
+                        developer_description: Air-water heat pump
+                      - value: water_pan
+                        developer_description: Electric boiler
+                      - value: mountain_sea_earth
+                        developer_description: Ground source heat pump
+                      - value: exhaust_air_heat_pump
+                        developer_description: Exhaust air heat pump
+                      - value: other
+                        developer_description: Other
+                      dependent_properties:
+                      - key: house_type
+                        accepted_values:
+                        - house_detached
+                        - townhouse
+                        - semi_detached
+                        - holiday_home
+                        - other
+                      developer_description: Primary way of heating the location
+                      tags:
+                      - required_for_sh_to_work
+                      group: ''
+                    - key: heating_type_other
+                      data_type: multiple_select
+                      possible_values:
+                      - value: district_heating
+                        developer_description: District heating
+                      - value: radiators
+                        developer_description: Electric radiators
+                      - value: air_air_pump
+                        developer_description: Air-air heat pump
+                      - value: air_water_pump
+                        developer_description: Air-water heat pump
+                      - value: water_pan
+                        developer_description: Electric boiler
+                      - value: mountain_sea_earth
+                        developer_description: Ground source heat pump
+                      - value: exhaust_air_heat_pump
+                        developer_description: Exhaust air heat pump
+                      - value: floor_heat
+                        developer_description: Electric floor heat
+                      - value: other
+                        developer_description: Other
+                      dependent_properties:
+                      - key: house_type
+                        accepted_values:
+                        - house_detached
+                        - townhouse
+                        - semi_detached
+                        - holiday_home
+                        - other
+                      developer_description: Non-primary ways of heating the location
+                      group: ''
+                    - key: hotwater_type
+                      data_type: single_select
+                      possible_values:
+                      - value: hot_water_tank
+                        developer_description: Storage water heater
+                      - value: air_air_pump
+                        developer_description: Air-air heat pump
+                      - value: air_water_pump
+                        developer_description: Air-water heat pump
+                      - value: mountain_sea_earth
+                        developer_description: Ground source heat pump
+                      - value: exhaust_air_heat_pump
+                        developer_description: Exhaust air heat pump
+                      - value: district_heating
+                        developer_description: District heating
+                      - value: other
+                        developer_description: Other
+                      dependent_properties: []
+                      developer_description: Primary way of heating water
+                      group: ''
+                    - key: gas_stoves
+                      data_type: number
+                      limits:
+                        min: 0
+                        max: 5
+                        step: 1
+                      dependent_properties: []
+                      developer_description: Number of gas hobs
+                      group: cooking
+                    - key: gas_ovens
+                      data_type: number
+                      limits:
+                        min: 0
+                        max: 5
+                        step: 1
+                      dependent_properties: []
+                      developer_description: Number of gas ovens
+                      group: cooking
+                    - key: electric_stoves
+                      data_type: number
+                      limits:
+                        min: 0
+                        max: 5
+                        step: 1
+                      dependent_properties: []
+                      developer_description: Number of electric hobs
+                      group: cooking
+                    - key: electric_ovens
+                      data_type: number
+                      limits:
+                        min: 0
+                        max: 5
+                        step: 1
+                      dependent_properties: []
+                      developer_description: Number of electric ovens
+                      group: cooking
+                    - key: microwaves
+                      data_type: number
+                      limits:
+                        min: 0
+                        max: 5
+                        step: 1
+                      dependent_properties: []
+                      developer_description: Number of microwaves
+                      group: cooking
+                    - key: dishwashers
+                      data_type: number
+                      limits:
+                        min: 0
+                        max: 5
+                        step: 1
+                      dependent_properties: []
+                      developer_description: Number of dishwashers
+                      group: appliances
+                    - key: washing_machines
+                      data_type: number
+                      limits:
+                        min: 0
+                        max: 5
+                        step: 1
+                      dependent_properties: []
+                      developer_description: Number of washing machines
+                      group: appliances
+                    - key: dryers
+                      data_type: number
+                      limits:
+                        min: 0
+                        max: 5
+                        step: 1
+                      dependent_properties: []
+                      developer_description: Number of electric dryers
+                      group: appliances
+                    - key: tv
+                      data_type: number
+                      limits:
+                        min: 0
+                        max: 10
+                        step: 1
+                      dependent_properties: []
+                      developer_description: Number of TVs
+                      group: ''
+                    - key: game_consoles
+                      data_type: number
+                      limits:
+                        min: 0
+                        max: 10
+                        step: 1
+                      dependent_properties: []
+                      developer_description: Number of game consoles
+                      group: ''
+                    - key: laptops
+                      data_type: number
+                      limits:
+                        min: 0
+                        max: 5
+                        step: 1
+                      dependent_properties: []
+                      developer_description: Number of laptops
+                      group: ''
+                    - key: stationary_computers
+                      data_type: number
+                      limits:
+                        min: 0
+                        max: 5
+                        step: 1
+                      dependent_properties: []
+                      developer_description: Number of desktop/stationary computers
+                      group: ''
+                    - key: fridges
+                      data_type: number
+                      limits:
+                        min: 0
+                        max: 5
+                        step: 1
+                      dependent_properties: []
+                      developer_description: Number of fridges
+                      group: fridges_and_freezers
+                    - key: freezers
+                      data_type: number
+                      limits:
+                        min: 0
+                        max: 5
+                        step: 1
+                      dependent_properties: []
+                      developer_description: Number of freezers
+                      group: fridges_and_freezers
+                    - key: fridge_freezers
+                      data_type: number
+                      limits:
+                        min: 0
+                        max: 5
+                        step: 1
+                      dependent_properties: []
+                      developer_description: Number of combined fridge-freezer units
+                      group: fridges_and_freezers
+                    - key: solar_installed
+                      data_type: number
+                      limits:
+                        min: 0
+                        max: 50
+                        step: 1
+                      dependent_properties: []
+                      developer_description: Photovoltaic panels (kW)
+                      group: ''
+                    - key: electric_cars
+                      data_type: number
+                      limits:
+                        min: 0
+                        max: 5
+                        step: 1
+                      dependent_properties: []
+                      developer_description: Number of EVs that are charged at the location
+                      group: ''
+                    - key: swimming_pool
+                      data_type: number
+                      limits:
+                        min: 0
+                        max: 5
+                        step: 1
+                      dependent_properties: []
+                      developer_description: Number of swimming pools (where electricity is used in the heating of the water)
+                      group: ''
+                    groups:
+                    - cooking
+                    - appliances
+                    - fridges_and_freezers
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+              examples:
+                Location not found:
+                  value:
+                    code: ENTITY_NOT_FOUND
+                    transaction_id: 0HN18NIB8K5RV:00000001
+                    description: Could not find the location.
+                Profile settings not configured:
+                  value:
+                    code: PROFILE_CONFIGURATION_NOT_FOUND
+                    transaction_id: 0HN18NIB8K5RV:00000001
+                    description: Profile settings not configured
+      security:
+      - BearerAuth: []
+    post:
+      tags:
+      - Location Profile
+      summary: Add new location profile values
+      description: 'Used in order to add new historic values to the location profile, specifying how and when it has changed.
+
+
+        Existing values can be updated via PATCH location profile''s value.
+
+
+        If a user''s location profile genuinely changed, POST Add new location profile values should be used in order to make full use of the historic location profile feature.
+
+
+        It''s technically possible to omit the historic location profile functionality, use POST Add new location profile values to create the property and PATCH location profile''s value to update it. But we strongly recommend making use of the historic location profile functionality.
+
+
+        For example:
+
+        A user has entered that he has 2 electric boilers at his location when he actually meant 1. This can be corrected using PATCH location profile''s value.
+
+        However, in the scenario where the user has had a single boiler since 2022-01-01, and decided to purchase a 2nd boiler on 2024-01-01, POST Add new location profile values should be used to make use of the historic profile feature.'
+      operationId: set-v3-location-profile-values
+      parameters:
+      - name: locationId
+        in: path
+        description: Location id
+        required: true
+        schema:
+          type: integer
+          format: int32
+      requestBody:
+        description: Values to add
+        content:
+          application/json:
+            schema:
+              type: array
+              items:
+                $ref: '#/components/schemas/LocationProfileValueRequest_2'
+            examples:
+              Payload:
+                value:
+                - key: house_type
+                  value: apartment
+                  from: '2024-09-01T00:00:00'
+                - key: living_area
+                  value: 450
+                  from: '2024-09-01T00:00:00'
+                - key: heating_type_other
+                  value:
+                  - heat_pump
+                  - wood_burning
+                  from: '2024-01-01T00:00:00'
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/LocationProfileValueResponse_2'
+              examples:
+                Location profile values result:
+                  value:
+                  - id: cde1e994-0b03-4a63-99ae-373becd4da3c
+                    key: house_type
+                    value: apartment
+                    from: '2024-09-01T00:00:00'
+                  - id: a9b70bd2-113b-4724-8076-5469da03eb15
+                    key: living_area
+                    value: 450
+                    from: '2024-09-01T00:00:00'
+                Location profile value (no date):
+                  value:
+                  - id: 57209a2d-18e9-4e68-8889-59a7d874b497
+                    key: house_type
+                    value: apartment
+                  - id: 237bcf08-7377-4b48-9106-ec061ea7ee60
+                    key: heating_type_primary
+                    value: district_heating
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+              examples:
+                Empty input provided:
+                  value:
+                    code: INVALID_INPUT
+                    transaction_id: 0HN18NIB8K5RV:00000001
+                    description: Empty input provided
+                Key was not provided:
+                  value:
+                    code: INVALID_INPUT
+                    transaction_id: 0HN18NIB8K5RV:00000001
+                    description: Key was not provided
+                Value was not provided:
+                  value:
+                    code: INVALID_INPUT
+                    transaction_id: 0HN18NIB8K5RV:00000001
+                    description: Value was not provided for Key 'heating_type'
+                Key mismatch:
+                  value:
+                    code: KEY_MISSING_FROM_CONFIGURATION
+                    transaction_id: 0HN18NIB8K5RV:00000001
+                    description: Key 'ice_makers' does not match any allowed settings
+                Key date value already exists:
+                  value:
+                    code: KEY_DATE_VALUE_ALREADY_EXISTS
+                    transaction_id: 0HN18NIB8K5RV:00000001
+                    description: Key 'heating_type' with From 'null' already exists for the location
+                Key date values must be unique:
+                  value:
+                    code: DUPLICATE_KEY_VALUE_PAIRS
+                    transaction_id: 0HN18NIB8K5RV:00000001
+                    description: 'Key date values must be unique for a single location. The following duplicates were found: Key ''persons'' From ''2024-01-01'''
+                Unsupported type:
+                  value:
+                    code: INVALID_INPUT_VALUE_FORMAT
+                    transaction_id: 0HN18NIB8K5RV:00000001
+                    description: 'Unsupported type used for number: System.String'
+                Profile type not configured:
+                  value:
+                    code: PROFILE_TYPE_NOT_CONFIGURED
+                    transaction_id: 0HN18NIB8K5RV:00000001
+                    description: Profile type not configured
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+              examples:
+                Location not found:
+                  value:
+                    code: ENTITY_NOT_FOUND
+                    transaction_id: 0HN18NIB8K5RV:00000001
+                    description: Could not find the location.
+                Profile settings not configured:
+                  value:
+                    code: PROFILE_CONFIGURATION_NOT_FOUND
+                    transaction_id: 0HN18NIB8K5RV:00000001
+                    description: Profile settings not configured
+      security:
+      - BearerAuth: []
+    servers:
+    - url: http://localhost:3000
+  /v3/locations/{locationId}/profile/completion:
+    get:
+      tags:
+      - Location Profile
+      summary: Get location profile completion percentage
+      description: 'Returns the percentage of settings which have a value set.
+
+        If 2 out of 20 total settings have a value set, the response is 10%, if 10 out of 20 settings are
+
+        set, response is 50%, etc.'
+      operationId: get-v3-location-profile-completion
+      parameters:
+      - name: locationId
+        in: path
+        description: Location id
+        required: true
+        schema:
+          type: integer
+          format: int32
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/LocationProfileCompletionResponse'
+              examples:
+                Location profile 10% complete:
+                  value:
+                    completion_percentage: 10
+                Location profile 24% complete:
+                  value:
+                    completion_percentage: 24
+                Location profile 100% complete:
+                  value:
+                    completion_percentage: 100
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+              examples:
+                Location not found:
+                  value:
+                    code: ENTITY_NOT_FOUND
+                    transaction_id: 0HN18NIB8K5RV:00000001
+                    description: Could not find the location.
+                Profile settings not configured:
+                  value:
+                    code: PROFILE_CONFIGURATION_NOT_FOUND
+                    transaction_id: 0HN18NIB8K5RV:00000001
+                    description: Profile settings not configured
+      security:
+      - BearerAuth: []
+    servers:
+    - url: http://localhost:3000
+  /v3/locations/{locationId}/profile/{profileValueId}:
+    patch:
+      tags:
+      - Location Profile
+      summary: Patch location profile's value
+      description: 'This endpoint can be used to update a specific location profile''s value.
+
+
+        We strongly recommend using this endpoint only for correcting mistakes a user has made while entering his location profile and using the POST Add new location profile values endpoint in order to create historic change entries of the location profile.
+
+
+        For example:
+
+        A user has entered that he has 2 electric boilers at his location when he actually meant 1. This can be corrected using PATCH location profile''s value.
+
+        In the scenario where the user has had a single boiler since 2022-01-01, and decided to purchase a 2nd boiler on 2024-01-01, we recommend using POST Add new location profile values to make use of the historic location profile feature.'
+      operationId: patch-v3-location-profile-value
+      parameters:
+      - name: locationId
+        in: path
+        description: Location id
+        required: true
+        schema:
+          type: integer
+          format: int32
+      - name: profileValueId
+        in: path
+        description: Profile value id
+        required: true
+        schema:
+          type: string
+          format: uuid
+      requestBody:
+        description: PATCH request model
+        content:
+          application/json-patch+json:
+            schema:
+              $ref: '#/components/schemas/PatchLocationProfileRequestModel_2'
+            examples:
+              Payload with string value:
+                value:
+                  from: '2024-01-01T00:00:00'
+                  value: apartment
+              Payload with number value:
+                value:
+                  from: '2024-01-01T00:00:00'
+                  value: 4
+              Payload with empty value:
+                value:
+                  from: '2024-01-01T00:00:00'
+              Payload with empty from:
+                value:
+                  value: apartment
+              Payload for multi-select properties:
+                value:
+                  from: '2024-01-01T00:00:00'
+                  value:
+                  - heat_pump
+                  - wood_burning
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PatchLocationProfileRequestModel_2'
+            examples:
+              Payload with string value:
+                value:
+                  from: '2024-01-01T00:00:00'
+                  value: apartment
+              Payload with number value:
+                value:
+                  from: '2024-01-01T00:00:00'
+                  value: 4
+              Payload with empty value:
+                value:
+                  from: '2024-01-01T00:00:00'
+              Payload with empty from:
+                value:
+                  value: apartment
+              Payload for multi-select properties:
+                value:
+                  from: '2024-01-01T00:00:00'
+                  value:
+                  - heat_pump
+                  - wood_burning
+          text/json:
+            schema:
+              $ref: '#/components/schemas/PatchLocationProfileRequestModel_2'
+            examples:
+              Payload with string value:
+                value:
+                  from: '2024-01-01T00:00:00'
+                  value: apartment
+              Payload with number value:
+                value:
+                  from: '2024-01-01T00:00:00'
+                  value: 4
+              Payload with empty value:
+                value:
+                  from: '2024-01-01T00:00:00'
+              Payload with empty from:
+                value:
+                  value: apartment
+              Payload for multi-select properties:
+                value:
+                  from: '2024-01-01T00:00:00'
+                  value:
+                  - heat_pump
+                  - wood_burning
+          application/*+json:
+            schema:
+              $ref: '#/components/schemas/PatchLocationProfileRequestModel_2'
+            examples:
+              Payload with string value:
+                value:
+                  from: '2024-01-01T00:00:00'
+                  value: apartment
+              Payload with number value:
+                value:
+                  from: '2024-01-01T00:00:00'
+                  value: 4
+              Payload with empty value:
+                value:
+                  from: '2024-01-01T00:00:00'
+              Payload with empty from:
+                value:
+                  value: apartment
+              Payload for multi-select properties:
+                value:
+                  from: '2024-01-01T00:00:00'
+                  value:
+                  - heat_pump
+                  - wood_burning
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/LocationProfileValueResponse_2'
+              examples:
+                Patch location profile value result:
+                  value:
+                    id: 1332d259-8aef-4566-b8b7-529f47d16ff1
+                    key: house_type
+                    value: apartment
+                    from: '2024-09-01T00:00:00'
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+              examples:
+                Profile value not found for location:
+                  value:
+                    code: PROFILE_VALUE_NOT_FOUND
+                    transaction_id: 0HN18NIB8K5RV:00000001
+                    description: Profile value not found for given location and id.
+      security:
+      - BearerAuth: []
+    delete:
+      tags:
+      - Location Profile
+      summary: Delete location profile's value
+      description: Delete location profile's value by id.
+      operationId: delete-v3-location-profile-value
+      parameters:
+      - name: locationId
+        in: path
+        description: Location id
+        required: true
+        schema:
+          type: integer
+          format: int32
+      - name: profileValueId
+        in: path
+        description: Profile value id
+        required: true
+        schema:
+          type: string
+          format: uuid
+      responses:
+        '204':
+          description: No Content
+          content:
+            application/json:
+              schema:
+                type: string
+              examples:
+                Success:
+                  value: ''
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+              examples:
+                Profile value not found for location:
+                  value:
+                    code: PROFILE_VALUE_NOT_FOUND
+                    transaction_id: 0HN18NIB8K5RV:00000001
+                    description: Profile value not found for given location and id.
+      security:
+      - BearerAuth: []
+    servers:
+    - url: http://localhost:3000
+components:
+  schemas:
+    LocationProfileValueRequest:
+      required:
+      - key
+      - value
+      type: object
+      properties:
+        key:
+          minLength: 1
+          type: string
+        value: {}
+        from:
+          type:
+          - string
+          - 'null'
+          format: date-time
+    LocationProfileSettings:
+      required:
+      - groups
+      - settings
+      type: object
+      properties:
+        settings:
+          type: array
+          items:
+            $ref: '#/components/schemas/LocationProfileSetting'
+        groups:
+          uniqueItems: true
+          type: array
+          items:
+            type: string
+    LocationProfileSelectedValue:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        value: {}
+        from:
+          type:
+          - string
+          - 'null'
+          format: date-time
+    LocationProfilePropertyRequirement:
+      type: object
+      properties:
+        key:
+          type:
+          - string
+          - 'null'
+        accepted_values:
+          type:
+          - array
+          - 'null'
+          items: {}
+    LocationProfilePossibleValue:
+      type: object
+      properties:
+        value:
+          type:
+          - string
+          - 'null'
+        developer_description:
+          type:
+          - string
+          - 'null'
+    LocationProfileTag:
+      enum:
+      - required_for_sh_to_work
+      - required_for_euc_to_work
+      type: string
+    LocationProfileSetting:
+      required:
+      - data_type
+      - dependent_properties
+      - developer_description
+      - group
+      - key
+      - possible_values
+      - selected_values
+      - tags
+      type: object
+      properties:
+        key:
+          minLength: 1
+          type: string
+        data_type:
+          $ref: '#/components/schemas/LocationProfileDataType'
+        selected_values:
+          type: array
+          items:
+            $ref: '#/components/schemas/LocationProfileSelectedValue'
+        possible_values:
+          type: array
+          items:
+            $ref: '#/components/schemas/LocationProfilePossibleValue'
+        limits:
+          $ref: '#/components/schemas/LocationPropertyLimit'
+        dependent_properties:
+          type: array
+          items:
+            $ref: '#/components/schemas/LocationProfilePropertyRequirement'
+        developer_description:
+          minLength: 1
+          type: string
+        tags:
+          type: array
+          items:
+            $ref: '#/components/schemas/LocationProfileTag'
+        group:
+          minLength: 1
+          type: string
+    ProfileType:
+      enum:
+      - residential
+      - business
+      - undefined
+      type: string
+    LocationProfileDataType:
+      enum:
+      - single_select
+      - multiple_select
+      - number
+      type: string
+    NoContentResult:
+      type: object
+      properties:
+        statusCode:
+          type: integer
+          format: int32
+    LocationProfileValueResponse:
+      required:
+      - key
+      - value
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        key:
+          minLength: 1
+          type: string
+        value: {}
+        from:
+          type:
+          - string
+          - 'null'
+          format: date-time
+    LocationProfileType:
+      type: object
+      properties:
+        type:
+          $ref: '#/components/schemas/ProfileType'
+    LocationPropertyLimit:
+      type: object
+      properties:
+        min:
+          type: number
+          format: double
+        max:
+          type: number
+          format: double
+        step:
+          type: number
+          format: double
+    ErrorDetails:
+      required:
+      - code
+      - description
+      type: object
+      properties:
+        code:
+          minLength: 1
+          type: string
+        description:
+          minLength: 1
+          type: string
+        request_id:
+          type:
+          - string
+          - 'null'
+    PatchLocationProfileRequestModel:
+      type: object
+      properties:
+        from:
+          type:
+          - string
+          - 'null'
+          format: date-time
+        value: {}
+    LocationProfileValueRequest_2:
+      required:
+      - key
+      - value
+      type: object
+      properties:
+        key:
+          minLength: 1
+          type: string
+          description: Identifier for the setting
+        value:
+          description: Selected value. Depending on the specified data_type, this value can be a number (number), string (single_select) or a list of strings (multiple_select).
+        from:
+          type: string
+          description: Value is valid from this date. If not specified, the value is valid from the beginning of time.
+          format: date-time
+          nullable: true
+      description: Location profile value input
+    LocationProfileSettings_2:
+      required:
+      - groups
+      - settings
+      type: object
+      properties:
+        settings:
+          type: array
+          items:
+            $ref: '#/components/schemas/LocationProfileSetting_2'
+        groups:
+          type: array
+          items:
+            type: string
+    LocationProfileSelectedValue_2:
+      required:
+      - id
+      - value
+      type: object
+      properties:
+        id:
+          type: string
+          description: Unique identifier for the selected value
+          format: uuid
+        value:
+          description: Selected value. Depending on the specified data_type, this value can be a number (number), string (single_select) or a list of strings (multiple_select).
+        from:
+          type: string
+          description: Value is valid from this date. If not specified, the value is valid from the beginning of time.
+          format: date-time
+          nullable: true
+      description: Selected value with metadata
+    LocationProfilePossibleValue_2:
+      required:
+      - developer_description
+      - value
+      type: object
+      properties:
+        value:
+          minLength: 1
+          type: string
+          description: Value to select
+        developer_description:
+          minLength: 1
+          type: string
+          description: Description not meant for end users
+      description: A possible value for a location profile setting. Available when the specified data_type is single_select or multiple_select.
+    LocationProfileTag_2:
+      enum:
+      - required_for_sh_to_work
+      - required_for_euc_to_work
+      type: string
+      description: Tag for location profile
+    LocationProfileCompletionResponse:
+      required:
+      - completion_percentage
+      type: object
+      properties:
+        completion_percentage:
+          type: integer
+          format: int32
+    LocationPropertyRequirement:
+      type: object
+      properties:
+        key:
+          type: string
+          description: Unique key for the property to depend on.
+          nullable: true
+        accepted_values:
+          type: array
+          items: {}
+          description: Accepted values. Based on the dependent properties data_type, values can be a number or a string.
+          nullable: true
+      description: Properties that are required for a setting to be valid.
+    LocationProfileSetting_2:
+      required:
+      - data_type
+      - dependent_properties
+      - developer_description
+      - group
+      - key
+      type: object
+      properties:
+        key:
+          minLength: 1
+          type: string
+          description: Identifier for the setting
+        data_type:
+          $ref: '#/components/schemas/LocationProfileDataType_2'
+        selected_values:
+          type: array
+          items:
+            $ref: '#/components/schemas/LocationProfileSelectedValue_2'
+          nullable: true
+        possible_values:
+          type: array
+          items:
+            $ref: '#/components/schemas/LocationProfilePossibleValue_2'
+          nullable: true
+        limits:
+          $ref: '#/components/schemas/LocationPropertyLimit_2'
+        dependent_properties:
+          type: array
+          items:
+            $ref: '#/components/schemas/LocationPropertyRequirement'
+        developer_description:
+          minLength: 0
+          type: string
+          description: Description not meant for end users
+        tags:
+          type: array
+          items:
+            $ref: '#/components/schemas/LocationProfileTag_2'
+          description: 'Denotes whether settings is required for Similar homes or EUC to work.
+
+            If empty - Similar homes/EUC do not require this setting.'
+          nullable: true
+        group:
+          minLength: 0
+          type: string
+          description: The group (or category) to which this setting belongs to
+          example: cooking, appliances, fridges_and_freezers
+      description: Location profile key setting
+    ProfileType_2:
+      enum:
+      - residential
+      - business
+      - undefined
+      type: string
+      description: Profile type
+    Error:
+      type: object
+      properties:
+        type:
+          type: string
+          description: Type of error.
+          nullable: true
+          example: internal_error
+        category:
+          type: string
+          description: Error category.
+          nullable: true
+          example: internal_error
+        code:
+          type: string
+          description: Code describing the issue.
+          nullable: true
+          example: INTERNAL_ERROR
+        transaction_id:
+          type: string
+          description: Identifier for the session. Please provide this when contacting support.
+          nullable: true
+          example: 0HN18NN5QB401:00000001
+        message:
+          type: string
+          description: A message related to the error.
+          nullable: true
+          example: Something went wrong. Please try again later. If problem remains, please contact support.
+        description:
+          type: string
+          description: A description of the error for developers.
+          nullable: true
+          example: Internal server error, please try again later. If problem remains, please contact support.
+      description: Model returned for error responses.
+    LocationProfileDataType_2:
+      enum:
+      - single_select
+      - multiple_select
+      - number
+      type: string
+      description: Data type
+    LocationProfileValueResponse_2:
+      required:
+      - id
+      - key
+      - value
+      type: object
+      properties:
+        id:
+          type: string
+          description: Unique identifier for the selected value
+          format: uuid
+        key:
+          minLength: 1
+          type: string
+          description: Identifier for the setting
+        value:
+          description: Selected value. Depending on the specified data_type, this value can be a number (number), string (single_select) or a list of strings (multiple_select).
+        from:
+          type: string
+          description: Value is valid from this date. If not specified, the value is valid from the beginning of time.
+          format: date-time
+          nullable: true
+      description: Location profile value result
+    LocationProfileType_2:
+      required:
+      - type
+      type: object
+      properties:
+        type:
+          $ref: '#/components/schemas/ProfileType_2'
+    LocationPropertyLimit_2:
+      required:
+      - max
+      - min
+      - step
+      type: object
+      properties:
+        min:
+          type: number
+          format: double
+        max:
+          type: number
+          format: double
+        step:
+          type: number
+          format: double
+      description: Limitations set for profile setting values. Available when the specified data_type is number.
+    PatchLocationProfileRequestModel_2:
+      type: object
+      properties:
+        from:
+          type: string
+          description: The date on which a location profile's value changed
+          format: date-time
+        value:
+          description: The value of the location profile's property
+  securitySchemes:
+    BearerAuth:
+      type: http
+      scheme: bearer
+      description: The Eliq insights API uses bearer tokens to authenticate requests. Read more under Authentication tag.
+x-refined-from:
+- eliq-data-management-api-openapi.json
+- eliq-insights-api-openapi.yaml

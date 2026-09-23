@@ -1,0 +1,350 @@
+openapi: 3.2.0
+info:
+  title: Insights Eliq Connect API
+  version: 3.4.1
+  contact:
+    name: Insights Team
+    email: support_b2b@eliq.com
+  description: '# API Reference
+
+
+    The Eliq insights API is organized around REST.'
+servers:
+- url: http://localhost:3000
+security:
+- BearerAuth: []
+tags:
+- name: Eliq Connect
+paths:
+  /v3/users/{userId}/connections/web-portal-uri:
+    parameters:
+    - schema:
+        type: integer
+      name: userId
+      in: path
+      required: true
+      description: Eliq internal id of user.
+    - schema:
+        type: string
+      name: callback_uri
+      in: query
+      required: false
+      description: (Optional) A URL to be used for inserting a 'Back' button on Eliq Connect pages that redirects to this callback URI. The URL must be HTML encoded.
+    - schema:
+        type: string
+      name: linkout_callback_uri
+      in: query
+      required: false
+      description: (Optional) A URI that specifies whether to open a specific app or URL instead of the Eliq Connect web view when a linkout occurs. The URI must be HTML encoded.
+    get:
+      summary: Get Eliq Connect Web URI
+      tags:
+      - Eliq Connect
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/EliqConnectUriResponse'
+              examples:
+                example-1:
+                  value:
+                    uri: https://connect.eliq.io/login?callbackUri={callback_uri}&linkOutCallbackUri={linkout_callback_uri}&ticketId={SSO_TICKET}
+      operationId: get-v3-users-userId-connections-web-portal-uri
+      description: 'Get link to Eliq Connect Web. The link includes {callback_uri} and {linkout_callback_uri} URI''s if provided in request.
+
+        Link also includes a single-use token which is used to login the user to the web. The single-use token is valid for 15 minutes, and can only be used once.'
+  /v3/users/{userId}/connections:
+    parameters:
+    - schema:
+        type: integer
+      name: userId
+      in: path
+      required: true
+      description: Eliq internal id of user
+    get:
+      summary: Get User Connections
+      operationId: get-v3-users-userId-connections
+      description: 'Get all connections associated with a user.
+
+
+        ### Connection statuses
+
+
+        | *Status* | *Description* |
+
+        | --- | --- |
+
+        | connected | The connection is connected, which means Eliq have access to manage connection entities for the connection. |
+
+        | awaiting_confirmation | A connection request has been generated, but not yet approved. This may be due to that the grid operator need to approve the request, or a user action is required. |
+
+        | disconnected | Eliq has lost access to the connection. User input is needed which is managed in Eliq Connect Web. |'
+      tags:
+      - Eliq Connect
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Connection'
+              examples:
+                Example:
+                  value:
+                  - id: 20b4adc8-2ae9-4f99-b50d-af0933042f58
+                    display_name: Connection display name
+                    provider: provider_name
+                    status: connected
+  /v3/connections/{connectionId}/connection-entities:
+    parameters:
+    - schema:
+        type: string
+      name: connectionId
+      in: path
+      required: true
+    get:
+      summary: Get connection entities
+      tags:
+      - Eliq Connect
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/ConnectionEntity'
+              examples:
+                Example:
+                  value:
+                  - id: 20b4adc8-2ae9-4f99-b50d-af0933042f58
+                    display_name: Electricity meter
+                    type: meter
+                    location_id: 1234
+                    meter:
+                      fuel: elec
+                      type: import
+                      supply_start_date: '2021-01-01'
+                      supply_end_date: '2022-01-01'
+                      data_available_from_date: '2021-01-01'
+                      data_available_to_date: '2022-06-05'
+      operationId: get-v3-connections-connectionId-connection-entities
+      description: 'Get all (configured) entities associated with the connection.
+
+
+        A connection may have several entities associated with it. In some scenarios, the configuration of these connection entities needs to be done by the end-user. This opens up the possibility that some entities are not configured in Eliq for a connection - only configured entities will be available in this endpoint.'
+  /v3/locations/{locationId}/connection-meta-data:
+    parameters:
+    - schema:
+        type: string
+      name: locationId
+      in: path
+      required: true
+    get:
+      summary: Get location connection meta data
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ConnectionMetaData'
+              examples:
+                Status ok:
+                  value:
+                    status: ok
+      operationId: get-v3-locations-locationId-connection-meta-data
+      description: 'Get connection meta data for a location. This endpoint enables connection logic to be handled on a location basis, rather than on a user basis.
+
+
+        ### Connection meta-data statuses
+
+
+        | *Status* | *Description* |
+
+        | --- | --- |
+
+        | ok | The connection related to the location is all ok. Connection entities (at least one) have been configured and data is available. No actions needed by the user. |
+
+        | not_connected | There are no connection related to the location. The user should be prompted with a message asking to setup a connection. Send the user of to Eliq Connect. |
+
+        | action_required | A connection exist, but there is an action required by the user to make it work. The user should be prompted with a message saying he/she needs to fill in some more information, and send the user of to Eliq Connect. |
+
+        | awaiting_confirmation | Connection created, but not yet validated by the provider. E.g. awaiting approval from DSO. At this stage, there are no actions that can be done to change the status. Prompt message that a process has been started. |
+
+        | awaiting_first_data_sync | The connection has been configured and is ready to go. Energy data has though not been synced for the at least one of the connection entities. |'
+      tags:
+      - Eliq Connect
+components:
+  schemas:
+    ConnectionMetaData:
+      title: ConnectionMetaData
+      x-stoplight:
+        id: 8hppqt6r7illo
+      type: object
+      properties:
+        status:
+          type: string
+          description: Meta data status
+          enum:
+          - ok
+          - not_connected
+          - action_required
+          - awaiting_confirmation
+          - awaiting_first_data_sync
+          example: ok
+    Connection:
+      type: object
+      x-examples:
+        example-1:
+          id: 20b4adc8-2ae9-4f99-b50d-af0933042f58
+          display_name: Connection display name
+          provider: provider_name
+          status: connected
+      description: ''
+      properties:
+        id:
+          type: string
+          description: Id of connection
+          example: 20b4adc8-2ae9-4f99-b50d-af0933042f58
+        display_name:
+          type: string
+          description: A display friendly name of the connection. Can be displayed to the end-user
+          example: Connection display name
+        provider:
+          type: string
+          description: What provider the connection belongs to. Please contact Eliq for list of possible values, this is specific per client.
+          example: provider_name
+        status:
+          type: string
+          description: Status of connection
+          enum:
+          - connected
+          - awaiting_confirmation
+          - disconnected
+          example: connected
+    EliqConnectUriResponse:
+      title: EliqConnectUriResponse
+      x-stoplight:
+        id: x2vp8xc7rnr3y
+      type: object
+      properties:
+        uri:
+          type: string
+          example: https://connect.eliq.io/login?callbackUri={callback_uri}&linkOutCallbackUri={linkout_callback_uri}&ticketId={SSO_TICKET}
+          description: Uri to redirect the user to
+    ConnectionEntity:
+      type: object
+      x-examples:
+        example-1:
+          id: string
+          display_name: string
+          type: string
+          location_id: 0
+          meter:
+            fuel: string
+            type: string
+            supply_start_date: string
+            supply_end_date: null
+            data_available_from_date: string
+            data_available_to_date: string
+      title: ConnectionEntity
+      properties:
+        id:
+          type: string
+          description: Id of connection entity
+          example: 20b4adc8-2ae9-4f99-b50d-af0933042f58
+        display_name:
+          type: string
+          description: Display friendly name for connection entity. Can be displayed to end-user.
+          example: Electricity meter
+        type:
+          type: string
+          description: Type of entity
+          enum:
+          - meter
+          example: meter
+        location_id:
+          type: integer
+          description: Location id the entity belongs to
+          example: 1234
+        meter:
+          type: object
+          description: Available if type is 'meter'
+          properties:
+            fuel:
+              type: string
+              description: Fuel measured by meter
+              example: elec
+              enum:
+              - elec
+              - gas
+              - district_heating
+            type:
+              type: string
+              description: Which direction it measures
+              enum:
+              - import
+              - export
+              - consumption
+              - production
+              example: import
+            supply_start_date:
+              type: string
+              format: date
+              example: '2021-01-01'
+            supply_end_date:
+              type:
+              - string
+              - 'null'
+              example: '2022-01-01'
+            data_available_from_date:
+              type:
+              - string
+              - 'null'
+              example: '2021-01-01'
+            data_available_to_date:
+              type:
+              - string
+              - 'null'
+              example: '2022-06-05'
+  securitySchemes:
+    BearerAuth:
+      type: http
+      scheme: bearer
+      description: The Eliq insights API uses bearer tokens to authenticate requests. Read more under Authentication tag.
+x-tagGroups:
+- name: Authentication
+  tags:
+  - Authentication
+- name: Users
+  tags:
+  - Users
+- name: Locations
+  tags:
+  - Locations
+  - Location Profile
+  - Energy Data
+  - Energy Usage Categories
+  - Energy Performance Certificate
+  - Similar Homes
+  - Budgets
+  - Advice
+  - Anomalies
+  - Market Price
+  - Price Formulas
+- name: Eliq Connect
+  tags:
+  - Eliq Connect
+- name: Health
+  tags:
+  - Health
+- name: Deprecated
+  tags:
+  - Breakdown
+  - Home Profile

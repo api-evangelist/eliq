@@ -1,0 +1,272 @@
+openapi: 3.2.0
+info:
+  title: Insights Anomalies API
+  version: 3.4.1
+  contact:
+    name: Insights Team
+    email: support_b2b@eliq.com
+  description: '# API Reference
+
+
+    The Eliq insights API is organized around REST.'
+servers:
+- url: http://localhost:3000
+security:
+- BearerAuth: []
+tags:
+- name: Anomalies
+paths:
+  /v3/locations/{locationId}/anomalies:
+    parameters:
+    - schema:
+        type: string
+      name: locationId
+      in: path
+      required: true
+      description: Location id
+    get:
+      summary: Get anomalies
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Anomaly'
+              examples:
+                Example response:
+                  value:
+                  - type: daily_anomaly
+                    fuel: elec
+                    status:
+                      code: ok
+                      data_until: '2020-05-20T00:00:00'
+                      result: none
+                  - type: high_monthly_forecast
+                    fuel: elec
+                    status:
+                      code: not_ok
+                      action:
+                        code: anomaly_awaiting_first_run
+                        description: Anomaly is awaiting first run
+        '404':
+          description: 'Bad Request
+
+
+            Possible errors
+
+
+            | *type* | *category* | *description* |
+
+            | --- | --- | --- |
+
+            | client_error | entity_not_found | Could not find the location. |'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+              examples:
+                Error:
+                  value:
+                    type: client_error
+                    category: entity_not_found
+                    code: ENTITY_NOT_FOUND
+                    description: Could not find the location.
+                    message: 'Something went wrong, please try again later. If problem remains, please contact support (error: 1ad3a534117d4).'
+                    transaction_id: 37c4ef86-d525-42c8-b65f-9b4cfcce0df6
+      operationId: get-v3-location-anomalies
+      parameters:
+      - schema:
+          type: string
+          enum:
+          - elec
+          - gas
+          - district_heating
+          example: elec
+        in: query
+        name: fuel
+        description: Filter for anomalies
+      - schema:
+          type: string
+          enum:
+          - daily_anomaly
+          - high_monthly_forecast
+          example: high_monthly_forecast
+        in: query
+        name: type
+        description: Filter for type of anomaly
+      description: 'Get anomalies for a location. The result of the last run will be in the ''status'' field. If ''status.code'' is "ok", values of the last run will be shown. If ''status.code'' is "not_ok", the anomaly have not been running or something went wrong during the last run.
+
+
+        Anomalies can be sent out as a push notification in Eliq White Label Solution, or as a webhook event in API solution'
+      tags:
+      - Anomalies
+components:
+  schemas:
+    Error:
+      type: object
+      properties:
+        type:
+          type: string
+          description: Type of error.
+          nullable: true
+          example: internal_error
+        category:
+          type: string
+          description: Error category.
+          nullable: true
+          example: internal_error
+        code:
+          type: string
+          description: Code describing the issue.
+          nullable: true
+          example: INTERNAL_ERROR
+        transaction_id:
+          type: string
+          description: Identifier for the session. Please provide this when contacting support.
+          nullable: true
+          example: 0HN18NN5QB401:00000001
+        message:
+          type: string
+          description: A message related to the error.
+          nullable: true
+          example: Something went wrong. Please try again later. If problem remains, please contact support.
+        description:
+          type: string
+          description: A description of the error for developers.
+          nullable: true
+          example: Internal server error, please try again later. If problem remains, please contact support.
+      description: Model returned for error responses.
+    Anomaly:
+      description: Anomaly object
+      type: object
+      x-examples:
+        example-1:
+          type: high_monthly_forecast
+          fuel: elec
+          status:
+            code: not_ok
+            data_until: '2020-05-20T00:00:00'
+            result: none
+            action:
+              code: anomaly_awaiting_first_run
+              description: Anomaly is awaiting first run
+      examples:
+      - type: daily_anomaly
+        fuel: elec
+        status:
+          code: ok
+          data_until: '2020-05-20T00:00:00'
+          result: none
+      properties:
+        type:
+          type: string
+          minLength: 1
+          description: Anomaly type
+          enum:
+          - daily_anomaly
+          - high_monthly_forecast
+          example: daily_anomaly
+        fuel:
+          type: string
+          minLength: 1
+          example: elec
+          enum:
+          - elec
+          - gas
+          - district_heating
+          description: Fuel for anomaly
+        status:
+          type: object
+          required:
+          - code
+          properties:
+            code:
+              type: string
+              minLength: 1
+              enum:
+              - ok
+              - not_ok
+              example: ok
+              description: Status code indicating whether last run was successful or not
+            data_until:
+              type:
+              - string
+              - 'null'
+              minLength: 1
+              description: Which date the last data point had during last run (local date for location)
+              format: date-time
+              example: '2020-05-20T00:00:00'
+            result:
+              type:
+              - string
+              - 'null'
+              minLength: 1
+              description: Result from last run. Null if code is 'not_ok'
+              enum:
+              - none
+              - low
+              - high
+            action:
+              type:
+              - object
+              - 'null'
+              description: Available if code is 'not_ok'. Indicates what went wrong during last run
+              required:
+              - code
+              - description
+              properties:
+                code:
+                  type: string
+                  minLength: 1
+                  description: Code explaining last runs fail
+                  example: anomaly_awaiting_first_run
+                  enum:
+                  - anomaly_not_enough_data
+                  - anomaly_awaiting_first_run
+                description:
+                  type: string
+                  minLength: 1
+                  description: Description of last runs fail
+                  example: Anomaly is awaiting first run
+      required:
+      - type
+      - fuel
+      - status
+  securitySchemes:
+    BearerAuth:
+      type: http
+      scheme: bearer
+      description: The Eliq insights API uses bearer tokens to authenticate requests. Read more under Authentication tag.
+x-tagGroups:
+- name: Authentication
+  tags:
+  - Authentication
+- name: Users
+  tags:
+  - Users
+- name: Locations
+  tags:
+  - Locations
+  - Location Profile
+  - Energy Data
+  - Energy Usage Categories
+  - Energy Performance Certificate
+  - Similar Homes
+  - Budgets
+  - Advice
+  - Anomalies
+  - Market Price
+  - Price Formulas
+- name: Eliq Connect
+  tags:
+  - Eliq Connect
+- name: Health
+  tags:
+  - Health
+- name: Deprecated
+  tags:
+  - Breakdown
+  - Home Profile

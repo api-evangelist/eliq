@@ -1,0 +1,451 @@
+openapi: 3.2.0
+info:
+  title: Eliq Data Management Location home profile API
+  description: '# API Reference
+
+
+    The Eliq data management API is organized around REST.'
+  contact:
+    name: Support
+    email: support_b2b@eliq.com
+  version: 1.5.2
+tags:
+- name: Location home profile
+paths:
+  /locations/{locationId}/homeprofile:
+    get:
+      tags:
+      - Location home profile
+      summary: Get a location home profile
+      operationId: get-locations-locationId-homeprofile
+      parameters:
+      - name: locationId
+        in: path
+        description: Unique identifier of location
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/HomeProfileProperty'
+              examples:
+                Location home profile:
+                  value:
+                  - key: house_type
+                    value: house
+                    value_type: String
+                  - key: heating_type_primary
+                    value: district_heating
+                    value_type: String
+                  - key: rooms
+                    value: 2
+                    value_type: Int64
+                Location home profile not created:
+                  value: []
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorDetails'
+              examples:
+                Parameter 'locationId' must not be null or empty:
+                  value:
+                    code: LOCATION_ID_MISSING
+                    description: Parameter 'locationId' must not be null or empty
+                    request_id: 65e2ea86-470f-4363-9295-35d6b473981a
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorDetails'
+              examples:
+                Missing value:
+                  value:
+                    code: LOCATION_NOT_FOUND
+                    description: Location with given id could not be found
+                    request_id: 65e2ea86-470f-4363-9295-35d6b473981a
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorDetails'
+              examples:
+                Internal server error. If problem remains, please contact support:
+                  value:
+                    code: INTERNAL_ERROR
+                    description: Internal server error. If problem remains, please contact support
+                    request_id: 65e2ea86-470f-4363-9295-35d6b473981a
+      deprecated: true
+    put:
+      tags:
+      - Location home profile
+      summary: Create a home profile for location
+      description: 'The home profile will be overwritten with the inputted values. Please make sure to provide the complete home profile before updating.
+
+        Available home profile keys and values can be provided by Eliq, not yet available in the Data Management API. This can also be retrieved in Eliq Insights API'
+      operationId: put-locations-locationId-homeprofile
+      parameters:
+      - name: locationId
+        in: path
+        description: Unique identifier of location
+        required: true
+        schema:
+          type: string
+      requestBody:
+        description: Home profile object to create
+        content:
+          application/json:
+            schema:
+              type: array
+              items:
+                $ref: '#/components/schemas/HomeProfileProperty'
+            examples:
+              Location home profile:
+                value:
+                - key: house_type
+                  value: house
+                  value_type: String
+                - key: heating_type_primary
+                  value: district_heating
+                  value_type: String
+                - key: rooms
+                  value: 2
+                  value_type: Int64
+              Location home profile not created:
+                value: []
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/HomeProfileProperty'
+              examples:
+                Location home profile:
+                  value:
+                  - key: house_type
+                    value: house
+                    value_type: String
+                  - key: heating_type_primary
+                    value: district_heating
+                    value_type: String
+                  - key: rooms
+                    value: 2
+                    value_type: Int64
+        '201':
+          description: Created
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/HomeProfileProperty'
+              examples:
+                Location home profile:
+                  value:
+                  - key: house_type
+                    value: house
+                    value_type: String
+                  - key: heating_type_primary
+                    value: district_heating
+                    value_type: String
+                  - key: rooms
+                    value: 2
+                    value_type: Int64
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorDetails'
+              examples:
+                Home profile must not be null:
+                  value:
+                    code: HOME_PROFILE_MISSING
+                    description: Home profile must not be null
+                    request_id: 65e2ea86-470f-4363-9295-35d6b473981a
+                Input not supported for multiple_select. Only a list of strings is allowed and all selected values must be valid options.:
+                  value:
+                    code: HOME_PROFILE_VALUE_INVALID
+                    description: Input not supported for multiple_select. Only a list of strings is allowed and all selected values must be valid options.
+                    request_id: 65e2ea86-470f-4363-9295-35d6b473981a
+                Input not supported for single_select. Only a string value is allowed and it must be a valid option:
+                  value:
+                    code: HOME_PROFILE_VALUE_INVALID
+                    description: Input not supported for single_select. Only a string value is allowed and it must be a valid option
+                    request_id: 65e2ea86-470f-4363-9295-35d6b473981a
+                Input not supported for number. Only a number is allowed and it must fall within the limits.:
+                  value:
+                    code: HOME_PROFILE_VALUE_INVALID
+                    description: Input not supported for number. Only a number is allowed and it must fall within the limits.
+                    request_id: 65e2ea86-470f-4363-9295-35d6b473981a
+                Data type {unknown_type} does not exist. Only number, single_select and multiple_select is allowed:
+                  value:
+                    code: HOME_PROFILE_VALUE_INVALID
+                    description: Data type {unknown_type} does not exist. Only number, single_select and multiple_select is allowed
+                    request_id: 65e2ea86-470f-4363-9295-35d6b473981a
+                ? Property value missing for property at index {invalidPropertyIndex} with key '{invalidProperty.Key}', check if all properties has key and value
+                : value:
+                    code: HOME_PROFILE_VALUE_MISSING
+                    description: Property value missing for property at index {invalidPropertyIndex} with key '{invalidProperty.Key}', check if all properties has key and value
+                    request_id: 65e2ea86-470f-4363-9295-35d6b473981a
+                'No such property found: ''{property.Key}''':
+                  value:
+                    code: HOME_PROFILE_KEY_INVALID
+                    description: 'No such property found: ''{property.Key}'''
+                    request_id: 65e2ea86-470f-4363-9295-35d6b473981a
+                Property key missing:
+                  value:
+                    code: HOME_PROFILE_KEY_MISSING
+                    description: Property key missing
+                    request_id: 65e2ea86-470f-4363-9295-35d6b473981a
+                ? Property key missing for property at index {invalidPropertyIndex} with value '{invalidProperty.Value}', check if all properties has key and value
+                : value:
+                    code: HOME_PROFILE_KEY_MISSING
+                    description: Property key missing for property at index {invalidPropertyIndex} with value '{invalidProperty.Value}', check if all properties has key and value
+                    request_id: 65e2ea86-470f-4363-9295-35d6b473981a
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorDetails'
+              examples:
+                Missing value:
+                  value:
+                    code: LOCATION_NOT_FOUND
+                    description: Location with given id could not be found
+                    request_id: 65e2ea86-470f-4363-9295-35d6b473981a
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorDetails'
+              examples:
+                Internal server error. If problem remains, please contact support:
+                  value:
+                    code: INTERNAL_ERROR
+                    description: Internal server error. If problem remains, please contact support
+                    request_id: 65e2ea86-470f-4363-9295-35d6b473981a
+      deprecated: true
+    delete:
+      tags:
+      - Location home profile
+      summary: Delete all location home profile elements
+      operationId: delete-locations-locationId-homeprofile
+      parameters:
+      - name: locationId
+        in: path
+        description: Unique identifier of location
+        required: true
+        schema:
+          type: string
+      responses:
+        '204':
+          description: No Content
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NoContentResult'
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorDetails'
+              examples:
+                Home profile must not be null:
+                  value:
+                    code: LOCATION_ID_MISSING
+                    description: Parameter 'locationId' must not be null or empty
+                    request_id: 65e2ea86-470f-4363-9295-35d6b473981a
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorDetails'
+              examples:
+                Missing value:
+                  value:
+                    code: LOCATION_NOT_FOUND
+                    description: Location with given id could not be found
+                    request_id: 65e2ea86-470f-4363-9295-35d6b473981a
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorDetails'
+              examples:
+                Internal server error. If problem remains, please contact support:
+                  value:
+                    code: INTERNAL_ERROR
+                    description: Internal server error. If problem remains, please contact support
+                    request_id: 65e2ea86-470f-4363-9295-35d6b473981a
+      deprecated: true
+    post:
+      tags:
+      - Location home profile
+      summary: Update a property of location home profile
+      operationId: post-locations-locationId-homeprofile
+      parameters:
+      - name: locationId
+        in: path
+        description: Unique identifier of location
+        required: true
+        schema:
+          type: string
+      requestBody:
+        description: Home profile property to update
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/HomeProfileProperty'
+      responses:
+        '204':
+          description: No Content
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/OkObjectResult'
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorDetails'
+              examples:
+                Home profile must not be null:
+                  value:
+                    code: LOCATION_ID_MISSING
+                    description: Parameter 'locationId' must not be null or empty
+                    request_id: 65e2ea86-470f-4363-9295-35d6b473981a
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorDetails'
+              examples:
+                Missing value:
+                  value:
+                    code: LOCATION_NOT_FOUND
+                    description: Location with given id could not be found
+                    request_id: 65e2ea86-470f-4363-9295-35d6b473981a
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorDetails'
+              examples:
+                Internal server error. If problem remains, please contact support:
+                  value:
+                    code: INTERNAL_ERROR
+                    description: Internal server error. If problem remains, please contact support
+                    request_id: 65e2ea86-470f-4363-9295-35d6b473981a
+      deprecated: true
+components:
+  schemas:
+    IOutputFormatter:
+      type: object
+    HomeProfileProperty:
+      type: object
+      properties:
+        key:
+          type:
+          - string
+          - 'null'
+        value: {}
+        value_type: {}
+    NoContentResult:
+      type: object
+      properties:
+        statusCode:
+          type: integer
+          format: int32
+    ErrorDetails:
+      required:
+      - code
+      - description
+      type: object
+      properties:
+        code:
+          minLength: 1
+          type: string
+        description:
+          minLength: 1
+          type: string
+        request_id:
+          type:
+          - string
+          - 'null'
+    OkObjectResult:
+      type: object
+      properties:
+        value: {}
+        formatters:
+          type:
+          - array
+          - 'null'
+          items:
+            $ref: '#/components/schemas/IOutputFormatter'
+        contentTypes:
+          type:
+          - array
+          - 'null'
+          items:
+            type: string
+        declaredType:
+          type:
+          - string
+          - 'null'
+        statusCode:
+          type:
+          - integer
+          - 'null'
+          format: int32
+x-tagGroups:
+- name: Users
+  tags:
+  - User
+- name: Locations
+  tags:
+  - Location
+  - Location profile
+  - Location home profile
+  - Location price formulas
+- name: Meters
+  tags:
+  - Meter
+  - Meter Energy Day
+  - Meter Energy High Resolution
+  - Meter Energy Reads
+  - Meter Energy Period
+  - Meter Max Demand
+  - Meter Price Formulas
+- name: Jobs
+  tags:
+  - Jobs
+- name: Portfolio
+  tags:
+  - Portfolio Accounts
+  - Portfolio Groups
+  - Portfolio Locations
+  - Portfolio Users
+- name: Client details
+  tags:
+  - Client details

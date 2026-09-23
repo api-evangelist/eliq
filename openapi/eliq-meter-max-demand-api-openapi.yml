@@ -1,0 +1,1112 @@
+openapi: 3.2.0
+info:
+  title: Eliq Data Management Meter Max Demand API
+  description: '# API Reference
+
+
+    The Eliq data management API is organized around REST.'
+  contact:
+    name: Support
+    email: support_b2b@eliq.com
+  version: 1.5.2
+tags:
+- name: Meter Max Demand
+paths:
+  /meters/{id}/max-demand/{resolution}:
+    post:
+      tags:
+      - Meter Max Demand
+      summary: Creates or updates max demand (peak power) data for a meter with a specified…
+      operationId: post-max-demand-meterid
+      parameters:
+      - name: id
+        in: path
+        description: Meter external reference
+        required: true
+        schema:
+          type: string
+      - name: resolution
+        in: path
+        description: The data resolution for the specified meter
+        required: true
+        schema:
+          type: string
+      requestBody:
+        description: Max demand object to create or update
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/DeviceMaxDemand'
+      responses:
+        '204':
+          description: No Content
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NoContentResult'
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorDetails'
+              examples:
+                Request input is missing. This may be caused by incorrect format of input.:
+                  value:
+                    code: INPUT_MISSING
+                    description: Request input is missing. This may be caused by incorrect format of input.
+                    request_id: 65e2ea86-470f-4363-9295-35d6b473981a
+                Parameter 'id' must not be null or empty:
+                  value:
+                    code: METER_ID_MISSING
+                    description: Parameter 'id' must not be null or empty
+                    request_id: 65e2ea86-470f-4363-9295-35d6b473981a
+                Max Demand for the same Meter and Date already exist:
+                  value:
+                    code: DUPLICATE_FOUND
+                    description: Max Demand for the same Meter and Date already exist
+                    request_id: 65e2ea86-470f-4363-9295-35d6b473981a
+                Missing Unit Type:
+                  value:
+                    code: MISSING_UNIT_TYPE
+                    description: Missing Unit Type
+                    request_id: 65e2ea86-470f-4363-9295-35d6b473981a
+                For Max Demand resolution monthly date have to be first day of the month:
+                  value:
+                    code: INVALID_MONTHLY_DAY
+                    description: For Max Demand resolution monthly date have to be first day of the month
+                    request_id: 65e2ea86-470f-4363-9295-35d6b473981a
+                Invalid date:
+                  value:
+                    code: INVALID_DATE
+                    description: Invalid date
+                    request_id: 65e2ea86-470f-4363-9295-35d6b473981a
+                Invalid From Date:
+                  value:
+                    code: INVALID_FROM_DATE
+                    description: Invalid From Date
+                    request_id: 65e2ea86-470f-4363-9295-35d6b473981a
+                Invalid To Date:
+                  value:
+                    code: INVALID_TO_DATE
+                    description: Invalid To Date
+                    request_id: 65e2ea86-470f-4363-9295-35d6b473981a
+                Max demand resolution is not supported:
+                  value:
+                    code: MAX_DEMAND_RESOLUTION_NOT_SUPPORTED
+                    description: Max demand resolution is not supported
+                    request_id: 65e2ea86-470f-4363-9295-35d6b473981a
+                Missing max demand limit input data:
+                  value:
+                    code: MISSING_INPUT
+                    description: Missing max demand limit input data
+                    request_id: 65e2ea86-470f-4363-9295-35d6b473981a
+                Max demand limit for the same meter already exists:
+                  value:
+                    code: DUPLICATE_FOUND
+                    description: Max demand limit for the same meter already exists
+                    request_id: 65e2ea86-470f-4363-9295-35d6b473981a
+                Unit type is not supported:
+                  value:
+                    code: NOT_SUPPORTED_UNIT_TYPE
+                    description: Unit type is not supported
+                    request_id: 65e2ea86-470f-4363-9295-35d6b473981a
+                Meter id is missing:
+                  value:
+                    code: METER_ID_MISSING
+                    description: Meter id is missing
+                    request_id: 65e2ea86-470f-4363-9295-35d6b473981a
+                Missing resolution:
+                  value:
+                    code: MISSING_RESOLUTION
+                    description: Missing resolution
+                    request_id: 65e2ea86-470f-4363-9295-35d6b473981a
+                Not Supported Resolution:
+                  value:
+                    code: NOT_SUPPORTED_RESOLUTION
+                    description: Not Supported Resolution
+                    request_id: 65e2ea86-470f-4363-9295-35d6b473981a
+                Min value have to be smaller than Max value:
+                  value:
+                    code: MIN_VALUE_BIGGER_OR_EQUAL_MAX_VALUE
+                    description: Min value have to be smaller than Max value
+                    request_id: 65e2ea86-470f-4363-9295-35d6b473981a
+                Target value cannot be smaller than Min value:
+                  value:
+                    code: TARGET_VALUE_SMALLER_THAN_MIN_VALUE
+                    description: Target value cannot be smaller than Min value
+                    request_id: 65e2ea86-470f-4363-9295-35d6b473981a
+                Target value cannot be bigger than Max Value:
+                  value:
+                    code: TARGET_VALUE_BIGGER_THAN_MAX_VALUE
+                    description: Target value cannot be bigger than Max Value
+                    request_id: 65e2ea86-470f-4363-9295-35d6b473981a
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorDetails'
+              examples:
+                Max demand was not found:
+                  value:
+                    code: MAX_DEMAND_NOT_FOUND
+                    description: Max demand was not found
+                    request_id: 65e2ea86-470f-4363-9295-35d6b473981a
+                Missing Max Demand Input data:
+                  value:
+                    code: MISSING_INPUT
+                    description: Missing Max Demand Input data
+                    request_id: 65e2ea86-470f-4363-9295-35d6b473981a
+                Max demand limit was not found:
+                  value:
+                    code: MAX_DEMAND_LIMIT_NOT_FOUND
+                    description: Max demand limit was not found
+                    request_id: 65e2ea86-470f-4363-9295-35d6b473981a
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorDetails'
+              examples:
+                Internal server error. If problem remains, please contact support:
+                  value:
+                    code: INTERNAL_ERROR
+                    description: Internal server error. If problem remains, please contact support
+                    request_id: 65e2ea86-470f-4363-9295-35d6b473981a
+    get:
+      tags:
+      - Meter Max Demand
+      summary: Gets the stored max demand (peak power) data for a meter with a specified…
+      operationId: get-max-demand-meterid
+      parameters:
+      - name: id
+        in: path
+        description: Meter external reference
+        required: true
+        schema:
+          type: string
+      - name: resolution
+        in: path
+        description: The data resolution for the specified meter
+        required: true
+        schema:
+          type: string
+      - name: from
+        in: query
+        description: From date. Inclusive
+        schema:
+          type: string
+      - name: to
+        in: query
+        description: To date. Exclusive
+        schema:
+          type: string
+      - name: unit
+        in: query
+        description: 'Unit for the max demand data (ex.: Kilovolt-ampere - kva)'
+        schema:
+          type: string
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/DeviceMaxDemand'
+              examples:
+                Max demands:
+                  value:
+                  - date: '2024-01-01'
+                    value: 8.0
+                    unit: kva
+                  - date: '2024-01-02'
+                    value: 7.7
+                    unit: kva
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorDetails'
+              examples:
+                Request input is missing. This may be caused by incorrect format of input.:
+                  value:
+                    code: INPUT_MISSING
+                    description: Request input is missing. This may be caused by incorrect format of input.
+                    request_id: 65e2ea86-470f-4363-9295-35d6b473981a
+                Parameter 'id' must not be null or empty:
+                  value:
+                    code: METER_ID_MISSING
+                    description: Parameter 'id' must not be null or empty
+                    request_id: 65e2ea86-470f-4363-9295-35d6b473981a
+                Max Demand for the same Meter and Date already exist:
+                  value:
+                    code: DUPLICATE_FOUND
+                    description: Max Demand for the same Meter and Date already exist
+                    request_id: 65e2ea86-470f-4363-9295-35d6b473981a
+                Missing Unit Type:
+                  value:
+                    code: MISSING_UNIT_TYPE
+                    description: Missing Unit Type
+                    request_id: 65e2ea86-470f-4363-9295-35d6b473981a
+                For Max Demand resolution monthly date have to be first day of the month:
+                  value:
+                    code: INVALID_MONTHLY_DAY
+                    description: For Max Demand resolution monthly date have to be first day of the month
+                    request_id: 65e2ea86-470f-4363-9295-35d6b473981a
+                Invalid date:
+                  value:
+                    code: INVALID_DATE
+                    description: Invalid date
+                    request_id: 65e2ea86-470f-4363-9295-35d6b473981a
+                Invalid From Date:
+                  value:
+                    code: INVALID_FROM_DATE
+                    description: Invalid From Date
+                    request_id: 65e2ea86-470f-4363-9295-35d6b473981a
+                Invalid To Date:
+                  value:
+                    code: INVALID_TO_DATE
+                    description: Invalid To Date
+                    request_id: 65e2ea86-470f-4363-9295-35d6b473981a
+                Max demand resolution is not supported:
+                  value:
+                    code: MAX_DEMAND_RESOLUTION_NOT_SUPPORTED
+                    description: Max demand resolution is not supported
+                    request_id: 65e2ea86-470f-4363-9295-35d6b473981a
+                Missing max demand limit input data:
+                  value:
+                    code: MISSING_INPUT
+                    description: Missing max demand limit input data
+                    request_id: 65e2ea86-470f-4363-9295-35d6b473981a
+                Max demand limit for the same meter already exists:
+                  value:
+                    code: DUPLICATE_FOUND
+                    description: Max demand limit for the same meter already exists
+                    request_id: 65e2ea86-470f-4363-9295-35d6b473981a
+                Unit type is not supported:
+                  value:
+                    code: NOT_SUPPORTED_UNIT_TYPE
+                    description: Unit type is not supported
+                    request_id: 65e2ea86-470f-4363-9295-35d6b473981a
+                Meter id is missing:
+                  value:
+                    code: METER_ID_MISSING
+                    description: Meter id is missing
+                    request_id: 65e2ea86-470f-4363-9295-35d6b473981a
+                Missing resolution:
+                  value:
+                    code: MISSING_RESOLUTION
+                    description: Missing resolution
+                    request_id: 65e2ea86-470f-4363-9295-35d6b473981a
+                Not Supported Resolution:
+                  value:
+                    code: NOT_SUPPORTED_RESOLUTION
+                    description: Not Supported Resolution
+                    request_id: 65e2ea86-470f-4363-9295-35d6b473981a
+                Min value have to be smaller than Max value:
+                  value:
+                    code: MIN_VALUE_BIGGER_OR_EQUAL_MAX_VALUE
+                    description: Min value have to be smaller than Max value
+                    request_id: 65e2ea86-470f-4363-9295-35d6b473981a
+                Target value cannot be smaller than Min value:
+                  value:
+                    code: TARGET_VALUE_SMALLER_THAN_MIN_VALUE
+                    description: Target value cannot be smaller than Min value
+                    request_id: 65e2ea86-470f-4363-9295-35d6b473981a
+                Target value cannot be bigger than Max Value:
+                  value:
+                    code: TARGET_VALUE_BIGGER_THAN_MAX_VALUE
+                    description: Target value cannot be bigger than Max Value
+                    request_id: 65e2ea86-470f-4363-9295-35d6b473981a
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorDetails'
+              examples:
+                Max demand was not found:
+                  value:
+                    code: MAX_DEMAND_NOT_FOUND
+                    description: Max demand was not found
+                    request_id: 65e2ea86-470f-4363-9295-35d6b473981a
+                Missing Max Demand Input data:
+                  value:
+                    code: MISSING_INPUT
+                    description: Missing Max Demand Input data
+                    request_id: 65e2ea86-470f-4363-9295-35d6b473981a
+                Max demand limit was not found:
+                  value:
+                    code: MAX_DEMAND_LIMIT_NOT_FOUND
+                    description: Max demand limit was not found
+                    request_id: 65e2ea86-470f-4363-9295-35d6b473981a
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorDetails'
+              examples:
+                Internal server error. If problem remains, please contact support:
+                  value:
+                    code: INTERNAL_ERROR
+                    description: Internal server error. If problem remains, please contact support
+                    request_id: 65e2ea86-470f-4363-9295-35d6b473981a
+    delete:
+      tags:
+      - Meter Max Demand
+      summary: Deletes the max demand (peak power) data for a meter with a specified…
+      operationId: delete-max-demand-meterid
+      parameters:
+      - name: id
+        in: path
+        description: Meter external reference
+        required: true
+        schema:
+          type: string
+      - name: resolution
+        in: path
+        description: The data resolution for the specified meter
+        required: true
+        schema:
+          type: string
+      - name: from
+        in: query
+        description: From date. Inclusive
+        schema:
+          type: string
+      - name: to
+        in: query
+        description: To date. Exclusive
+        schema:
+          type: string
+      - name: unit
+        in: query
+        description: 'Unit for the max demand data (ex.: Kilovolt-ampere - kva)'
+        schema:
+          type: string
+      responses:
+        '204':
+          description: No Content
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NoContentResult'
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorDetails'
+              examples:
+                Request input is missing. This may be caused by incorrect format of input.:
+                  value:
+                    code: INPUT_MISSING
+                    description: Request input is missing. This may be caused by incorrect format of input.
+                    request_id: 65e2ea86-470f-4363-9295-35d6b473981a
+                Parameter 'id' must not be null or empty:
+                  value:
+                    code: METER_ID_MISSING
+                    description: Parameter 'id' must not be null or empty
+                    request_id: 65e2ea86-470f-4363-9295-35d6b473981a
+                Max Demand for the same Meter and Date already exist:
+                  value:
+                    code: DUPLICATE_FOUND
+                    description: Max Demand for the same Meter and Date already exist
+                    request_id: 65e2ea86-470f-4363-9295-35d6b473981a
+                Missing Unit Type:
+                  value:
+                    code: MISSING_UNIT_TYPE
+                    description: Missing Unit Type
+                    request_id: 65e2ea86-470f-4363-9295-35d6b473981a
+                For Max Demand resolution monthly date have to be first day of the month:
+                  value:
+                    code: INVALID_MONTHLY_DAY
+                    description: For Max Demand resolution monthly date have to be first day of the month
+                    request_id: 65e2ea86-470f-4363-9295-35d6b473981a
+                Invalid date:
+                  value:
+                    code: INVALID_DATE
+                    description: Invalid date
+                    request_id: 65e2ea86-470f-4363-9295-35d6b473981a
+                Invalid From Date:
+                  value:
+                    code: INVALID_FROM_DATE
+                    description: Invalid From Date
+                    request_id: 65e2ea86-470f-4363-9295-35d6b473981a
+                Invalid To Date:
+                  value:
+                    code: INVALID_TO_DATE
+                    description: Invalid To Date
+                    request_id: 65e2ea86-470f-4363-9295-35d6b473981a
+                Max demand resolution is not supported:
+                  value:
+                    code: MAX_DEMAND_RESOLUTION_NOT_SUPPORTED
+                    description: Max demand resolution is not supported
+                    request_id: 65e2ea86-470f-4363-9295-35d6b473981a
+                Missing max demand limit input data:
+                  value:
+                    code: MISSING_INPUT
+                    description: Missing max demand limit input data
+                    request_id: 65e2ea86-470f-4363-9295-35d6b473981a
+                Max demand limit for the same meter already exists:
+                  value:
+                    code: DUPLICATE_FOUND
+                    description: Max demand limit for the same meter already exists
+                    request_id: 65e2ea86-470f-4363-9295-35d6b473981a
+                Unit type is not supported:
+                  value:
+                    code: NOT_SUPPORTED_UNIT_TYPE
+                    description: Unit type is not supported
+                    request_id: 65e2ea86-470f-4363-9295-35d6b473981a
+                Meter id is missing:
+                  value:
+                    code: METER_ID_MISSING
+                    description: Meter id is missing
+                    request_id: 65e2ea86-470f-4363-9295-35d6b473981a
+                Missing resolution:
+                  value:
+                    code: MISSING_RESOLUTION
+                    description: Missing resolution
+                    request_id: 65e2ea86-470f-4363-9295-35d6b473981a
+                Not Supported Resolution:
+                  value:
+                    code: NOT_SUPPORTED_RESOLUTION
+                    description: Not Supported Resolution
+                    request_id: 65e2ea86-470f-4363-9295-35d6b473981a
+                Min value have to be smaller than Max value:
+                  value:
+                    code: MIN_VALUE_BIGGER_OR_EQUAL_MAX_VALUE
+                    description: Min value have to be smaller than Max value
+                    request_id: 65e2ea86-470f-4363-9295-35d6b473981a
+                Target value cannot be smaller than Min value:
+                  value:
+                    code: TARGET_VALUE_SMALLER_THAN_MIN_VALUE
+                    description: Target value cannot be smaller than Min value
+                    request_id: 65e2ea86-470f-4363-9295-35d6b473981a
+                Target value cannot be bigger than Max Value:
+                  value:
+                    code: TARGET_VALUE_BIGGER_THAN_MAX_VALUE
+                    description: Target value cannot be bigger than Max Value
+                    request_id: 65e2ea86-470f-4363-9295-35d6b473981a
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorDetails'
+              examples:
+                Max demand was not found:
+                  value:
+                    code: MAX_DEMAND_NOT_FOUND
+                    description: Max demand was not found
+                    request_id: 65e2ea86-470f-4363-9295-35d6b473981a
+                Missing Max Demand Input data:
+                  value:
+                    code: MISSING_INPUT
+                    description: Missing Max Demand Input data
+                    request_id: 65e2ea86-470f-4363-9295-35d6b473981a
+                Max demand limit was not found:
+                  value:
+                    code: MAX_DEMAND_LIMIT_NOT_FOUND
+                    description: Max demand limit was not found
+                    request_id: 65e2ea86-470f-4363-9295-35d6b473981a
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorDetails'
+              examples:
+                Internal server error. If problem remains, please contact support:
+                  value:
+                    code: INTERNAL_ERROR
+                    description: Internal server error. If problem remains, please contact support
+                    request_id: 65e2ea86-470f-4363-9295-35d6b473981a
+  /meters/{id}/max-demand/limits/{resolution}:
+    delete:
+      tags:
+      - Meter Max Demand
+      summary: Deletes the max demand (peak power) limits for a meter with a specified…
+      operationId: delete-max-demand-limit-meterid
+      parameters:
+      - name: id
+        in: path
+        description: Meter external reference
+        required: true
+        schema:
+          type: string
+      - name: resolution
+        in: path
+        description: The data resolution for the specified meter
+        required: true
+        schema:
+          type: string
+      - name: unit
+        in: query
+        description: 'Unit for the max demand data (ex.: Kilovolt-ampere - kva)'
+        schema:
+          type: string
+      responses:
+        '204':
+          description: No Content
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NoContentResult'
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorDetails'
+              examples:
+                Request input is missing. This may be caused by incorrect format of input.:
+                  value:
+                    code: INPUT_MISSING
+                    description: Request input is missing. This may be caused by incorrect format of input.
+                    request_id: 65e2ea86-470f-4363-9295-35d6b473981a
+                Parameter 'id' must not be null or empty:
+                  value:
+                    code: METER_ID_MISSING
+                    description: Parameter 'id' must not be null or empty
+                    request_id: 65e2ea86-470f-4363-9295-35d6b473981a
+                Max Demand for the same Meter and Date already exist:
+                  value:
+                    code: DUPLICATE_FOUND
+                    description: Max Demand for the same Meter and Date already exist
+                    request_id: 65e2ea86-470f-4363-9295-35d6b473981a
+                Missing Unit Type:
+                  value:
+                    code: MISSING_UNIT_TYPE
+                    description: Missing Unit Type
+                    request_id: 65e2ea86-470f-4363-9295-35d6b473981a
+                For Max Demand resolution monthly date have to be first day of the month:
+                  value:
+                    code: INVALID_MONTHLY_DAY
+                    description: For Max Demand resolution monthly date have to be first day of the month
+                    request_id: 65e2ea86-470f-4363-9295-35d6b473981a
+                Invalid date:
+                  value:
+                    code: INVALID_DATE
+                    description: Invalid date
+                    request_id: 65e2ea86-470f-4363-9295-35d6b473981a
+                Invalid From Date:
+                  value:
+                    code: INVALID_FROM_DATE
+                    description: Invalid From Date
+                    request_id: 65e2ea86-470f-4363-9295-35d6b473981a
+                Invalid To Date:
+                  value:
+                    code: INVALID_TO_DATE
+                    description: Invalid To Date
+                    request_id: 65e2ea86-470f-4363-9295-35d6b473981a
+                Max demand resolution is not supported:
+                  value:
+                    code: MAX_DEMAND_RESOLUTION_NOT_SUPPORTED
+                    description: Max demand resolution is not supported
+                    request_id: 65e2ea86-470f-4363-9295-35d6b473981a
+                Missing max demand limit input data:
+                  value:
+                    code: MISSING_INPUT
+                    description: Missing max demand limit input data
+                    request_id: 65e2ea86-470f-4363-9295-35d6b473981a
+                Max demand limit for the same meter already exists:
+                  value:
+                    code: DUPLICATE_FOUND
+                    description: Max demand limit for the same meter already exists
+                    request_id: 65e2ea86-470f-4363-9295-35d6b473981a
+                Unit type is not supported:
+                  value:
+                    code: NOT_SUPPORTED_UNIT_TYPE
+                    description: Unit type is not supported
+                    request_id: 65e2ea86-470f-4363-9295-35d6b473981a
+                Meter id is missing:
+                  value:
+                    code: METER_ID_MISSING
+                    description: Meter id is missing
+                    request_id: 65e2ea86-470f-4363-9295-35d6b473981a
+                Missing resolution:
+                  value:
+                    code: MISSING_RESOLUTION
+                    description: Missing resolution
+                    request_id: 65e2ea86-470f-4363-9295-35d6b473981a
+                Not Supported Resolution:
+                  value:
+                    code: NOT_SUPPORTED_RESOLUTION
+                    description: Not Supported Resolution
+                    request_id: 65e2ea86-470f-4363-9295-35d6b473981a
+                Min value have to be smaller than Max value:
+                  value:
+                    code: MIN_VALUE_BIGGER_OR_EQUAL_MAX_VALUE
+                    description: Min value have to be smaller than Max value
+                    request_id: 65e2ea86-470f-4363-9295-35d6b473981a
+                Target value cannot be smaller than Min value:
+                  value:
+                    code: TARGET_VALUE_SMALLER_THAN_MIN_VALUE
+                    description: Target value cannot be smaller than Min value
+                    request_id: 65e2ea86-470f-4363-9295-35d6b473981a
+                Target value cannot be bigger than Max Value:
+                  value:
+                    code: TARGET_VALUE_BIGGER_THAN_MAX_VALUE
+                    description: Target value cannot be bigger than Max Value
+                    request_id: 65e2ea86-470f-4363-9295-35d6b473981a
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorDetails'
+              examples:
+                Max demand was not found:
+                  value:
+                    code: MAX_DEMAND_NOT_FOUND
+                    description: Max demand was not found
+                    request_id: 65e2ea86-470f-4363-9295-35d6b473981a
+                Missing Max Demand Input data:
+                  value:
+                    code: MISSING_INPUT
+                    description: Missing Max Demand Input data
+                    request_id: 65e2ea86-470f-4363-9295-35d6b473981a
+                Max demand limit was not found:
+                  value:
+                    code: MAX_DEMAND_LIMIT_NOT_FOUND
+                    description: Max demand limit was not found
+                    request_id: 65e2ea86-470f-4363-9295-35d6b473981a
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorDetails'
+              examples:
+                Internal server error. If problem remains, please contact support:
+                  value:
+                    code: INTERNAL_ERROR
+                    description: Internal server error. If problem remains, please contact support
+                    request_id: 65e2ea86-470f-4363-9295-35d6b473981a
+    post:
+      tags:
+      - Meter Max Demand
+      summary: Creates or updates the max demand (peak power) limits for a meter with a…
+      operationId: post-max-demand-limit-meterid
+      parameters:
+      - name: id
+        in: path
+        description: Meter external reference
+        required: true
+        schema:
+          type: string
+      - name: resolution
+        in: path
+        description: The data resolution for the specified meter
+        required: true
+        schema:
+          type: string
+      requestBody:
+        description: Max demand limits object to create or update
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/DeviceMaxDemandLimit'
+            examples:
+              Max demand limit:
+                value:
+                  min: 1.0
+                  target: 5.0
+                  max: 9.5
+                  unit: kva
+      responses:
+        '204':
+          description: No Content
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NoContentResult'
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorDetails'
+              examples:
+                Request input is missing. This may be caused by incorrect format of input.:
+                  value:
+                    code: INPUT_MISSING
+                    description: Request input is missing. This may be caused by incorrect format of input.
+                    request_id: 65e2ea86-470f-4363-9295-35d6b473981a
+                Parameter 'id' must not be null or empty:
+                  value:
+                    code: METER_ID_MISSING
+                    description: Parameter 'id' must not be null or empty
+                    request_id: 65e2ea86-470f-4363-9295-35d6b473981a
+                Max Demand for the same Meter and Date already exist:
+                  value:
+                    code: DUPLICATE_FOUND
+                    description: Max Demand for the same Meter and Date already exist
+                    request_id: 65e2ea86-470f-4363-9295-35d6b473981a
+                Missing Unit Type:
+                  value:
+                    code: MISSING_UNIT_TYPE
+                    description: Missing Unit Type
+                    request_id: 65e2ea86-470f-4363-9295-35d6b473981a
+                For Max Demand resolution monthly date have to be first day of the month:
+                  value:
+                    code: INVALID_MONTHLY_DAY
+                    description: For Max Demand resolution monthly date have to be first day of the month
+                    request_id: 65e2ea86-470f-4363-9295-35d6b473981a
+                Invalid date:
+                  value:
+                    code: INVALID_DATE
+                    description: Invalid date
+                    request_id: 65e2ea86-470f-4363-9295-35d6b473981a
+                Invalid From Date:
+                  value:
+                    code: INVALID_FROM_DATE
+                    description: Invalid From Date
+                    request_id: 65e2ea86-470f-4363-9295-35d6b473981a
+                Invalid To Date:
+                  value:
+                    code: INVALID_TO_DATE
+                    description: Invalid To Date
+                    request_id: 65e2ea86-470f-4363-9295-35d6b473981a
+                Max demand resolution is not supported:
+                  value:
+                    code: MAX_DEMAND_RESOLUTION_NOT_SUPPORTED
+                    description: Max demand resolution is not supported
+                    request_id: 65e2ea86-470f-4363-9295-35d6b473981a
+                Missing max demand limit input data:
+                  value:
+                    code: MISSING_INPUT
+                    description: Missing max demand limit input data
+                    request_id: 65e2ea86-470f-4363-9295-35d6b473981a
+                Max demand limit for the same meter already exists:
+                  value:
+                    code: DUPLICATE_FOUND
+                    description: Max demand limit for the same meter already exists
+                    request_id: 65e2ea86-470f-4363-9295-35d6b473981a
+                Unit type is not supported:
+                  value:
+                    code: NOT_SUPPORTED_UNIT_TYPE
+                    description: Unit type is not supported
+                    request_id: 65e2ea86-470f-4363-9295-35d6b473981a
+                Meter id is missing:
+                  value:
+                    code: METER_ID_MISSING
+                    description: Meter id is missing
+                    request_id: 65e2ea86-470f-4363-9295-35d6b473981a
+                Missing resolution:
+                  value:
+                    code: MISSING_RESOLUTION
+                    description: Missing resolution
+                    request_id: 65e2ea86-470f-4363-9295-35d6b473981a
+                Not Supported Resolution:
+                  value:
+                    code: NOT_SUPPORTED_RESOLUTION
+                    description: Not Supported Resolution
+                    request_id: 65e2ea86-470f-4363-9295-35d6b473981a
+                Min value have to be smaller than Max value:
+                  value:
+                    code: MIN_VALUE_BIGGER_OR_EQUAL_MAX_VALUE
+                    description: Min value have to be smaller than Max value
+                    request_id: 65e2ea86-470f-4363-9295-35d6b473981a
+                Target value cannot be smaller than Min value:
+                  value:
+                    code: TARGET_VALUE_SMALLER_THAN_MIN_VALUE
+                    description: Target value cannot be smaller than Min value
+                    request_id: 65e2ea86-470f-4363-9295-35d6b473981a
+                Target value cannot be bigger than Max Value:
+                  value:
+                    code: TARGET_VALUE_BIGGER_THAN_MAX_VALUE
+                    description: Target value cannot be bigger than Max Value
+                    request_id: 65e2ea86-470f-4363-9295-35d6b473981a
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorDetails'
+              examples:
+                Max demand was not found:
+                  value:
+                    code: MAX_DEMAND_NOT_FOUND
+                    description: Max demand was not found
+                    request_id: 65e2ea86-470f-4363-9295-35d6b473981a
+                Missing Max Demand Input data:
+                  value:
+                    code: MISSING_INPUT
+                    description: Missing Max Demand Input data
+                    request_id: 65e2ea86-470f-4363-9295-35d6b473981a
+                Max demand limit was not found:
+                  value:
+                    code: MAX_DEMAND_LIMIT_NOT_FOUND
+                    description: Max demand limit was not found
+                    request_id: 65e2ea86-470f-4363-9295-35d6b473981a
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorDetails'
+              examples:
+                Internal server error. If problem remains, please contact support:
+                  value:
+                    code: INTERNAL_ERROR
+                    description: Internal server error. If problem remains, please contact support
+                    request_id: 65e2ea86-470f-4363-9295-35d6b473981a
+    get:
+      tags:
+      - Meter Max Demand
+      summary: Gets the max demand (peak power) limits for a meter with a specified resolution…
+      operationId: get-max-demand-limit-meterid
+      parameters:
+      - name: id
+        in: path
+        description: Meter external reference
+        required: true
+        schema:
+          type: string
+      - name: resolution
+        in: path
+        description: The data resolution for the specified meter
+        required: true
+        schema:
+          type: string
+      - name: unit
+        in: query
+        description: 'Unit for the max demand data (ex.: Kilovolt-ampere - kva)'
+        schema:
+          type: string
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NoContentResult'
+              examples:
+                Max demand limit:
+                  value:
+                    min: 1.0
+                    target: 5.0
+                    max: 9.5
+                    unit: kva
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorDetails'
+              examples:
+                Request input is missing. This may be caused by incorrect format of input.:
+                  value:
+                    code: INPUT_MISSING
+                    description: Request input is missing. This may be caused by incorrect format of input.
+                    request_id: 65e2ea86-470f-4363-9295-35d6b473981a
+                Parameter 'id' must not be null or empty:
+                  value:
+                    code: METER_ID_MISSING
+                    description: Parameter 'id' must not be null or empty
+                    request_id: 65e2ea86-470f-4363-9295-35d6b473981a
+                Max Demand for the same Meter and Date already exist:
+                  value:
+                    code: DUPLICATE_FOUND
+                    description: Max Demand for the same Meter and Date already exist
+                    request_id: 65e2ea86-470f-4363-9295-35d6b473981a
+                Missing Unit Type:
+                  value:
+                    code: MISSING_UNIT_TYPE
+                    description: Missing Unit Type
+                    request_id: 65e2ea86-470f-4363-9295-35d6b473981a
+                For Max Demand resolution monthly date have to be first day of the month:
+                  value:
+                    code: INVALID_MONTHLY_DAY
+                    description: For Max Demand resolution monthly date have to be first day of the month
+                    request_id: 65e2ea86-470f-4363-9295-35d6b473981a
+                Invalid date:
+                  value:
+                    code: INVALID_DATE
+                    description: Invalid date
+                    request_id: 65e2ea86-470f-4363-9295-35d6b473981a
+                Invalid From Date:
+                  value:
+                    code: INVALID_FROM_DATE
+                    description: Invalid From Date
+                    request_id: 65e2ea86-470f-4363-9295-35d6b473981a
+                Invalid To Date:
+                  value:
+                    code: INVALID_TO_DATE
+                    description: Invalid To Date
+                    request_id: 65e2ea86-470f-4363-9295-35d6b473981a
+                Max demand resolution is not supported:
+                  value:
+                    code: MAX_DEMAND_RESOLUTION_NOT_SUPPORTED
+                    description: Max demand resolution is not supported
+                    request_id: 65e2ea86-470f-4363-9295-35d6b473981a
+                Missing max demand limit input data:
+                  value:
+                    code: MISSING_INPUT
+                    description: Missing max demand limit input data
+                    request_id: 65e2ea86-470f-4363-9295-35d6b473981a
+                Max demand limit for the same meter already exists:
+                  value:
+                    code: DUPLICATE_FOUND
+                    description: Max demand limit for the same meter already exists
+                    request_id: 65e2ea86-470f-4363-9295-35d6b473981a
+                Unit type is not supported:
+                  value:
+                    code: NOT_SUPPORTED_UNIT_TYPE
+                    description: Unit type is not supported
+                    request_id: 65e2ea86-470f-4363-9295-35d6b473981a
+                Meter id is missing:
+                  value:
+                    code: METER_ID_MISSING
+                    description: Meter id is missing
+                    request_id: 65e2ea86-470f-4363-9295-35d6b473981a
+                Missing resolution:
+                  value:
+                    code: MISSING_RESOLUTION
+                    description: Missing resolution
+                    request_id: 65e2ea86-470f-4363-9295-35d6b473981a
+                Not Supported Resolution:
+                  value:
+                    code: NOT_SUPPORTED_RESOLUTION
+                    description: Not Supported Resolution
+                    request_id: 65e2ea86-470f-4363-9295-35d6b473981a
+                Min value have to be smaller than Max value:
+                  value:
+                    code: MIN_VALUE_BIGGER_OR_EQUAL_MAX_VALUE
+                    description: Min value have to be smaller than Max value
+                    request_id: 65e2ea86-470f-4363-9295-35d6b473981a
+                Target value cannot be smaller than Min value:
+                  value:
+                    code: TARGET_VALUE_SMALLER_THAN_MIN_VALUE
+                    description: Target value cannot be smaller than Min value
+                    request_id: 65e2ea86-470f-4363-9295-35d6b473981a
+                Target value cannot be bigger than Max Value:
+                  value:
+                    code: TARGET_VALUE_BIGGER_THAN_MAX_VALUE
+                    description: Target value cannot be bigger than Max Value
+                    request_id: 65e2ea86-470f-4363-9295-35d6b473981a
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorDetails'
+              examples:
+                Max demand was not found:
+                  value:
+                    code: MAX_DEMAND_NOT_FOUND
+                    description: Max demand was not found
+                    request_id: 65e2ea86-470f-4363-9295-35d6b473981a
+                Missing Max Demand Input data:
+                  value:
+                    code: MISSING_INPUT
+                    description: Missing Max Demand Input data
+                    request_id: 65e2ea86-470f-4363-9295-35d6b473981a
+                Max demand limit was not found:
+                  value:
+                    code: MAX_DEMAND_LIMIT_NOT_FOUND
+                    description: Max demand limit was not found
+                    request_id: 65e2ea86-470f-4363-9295-35d6b473981a
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorDetails'
+              examples:
+                Internal server error. If problem remains, please contact support:
+                  value:
+                    code: INTERNAL_ERROR
+                    description: Internal server error. If problem remains, please contact support
+                    request_id: 65e2ea86-470f-4363-9295-35d6b473981a
+components:
+  schemas:
+    DeviceMaxDemandLimit:
+      type: object
+      properties:
+        min:
+          type: number
+          format: double
+        target:
+          type: number
+          format: double
+        max:
+          type: number
+          format: double
+        unit:
+          type:
+          - string
+          - 'null'
+    ErrorDetails:
+      required:
+      - code
+      - description
+      type: object
+      properties:
+        code:
+          minLength: 1
+          type: string
+        description:
+          minLength: 1
+          type: string
+        request_id:
+          type:
+          - string
+          - 'null'
+    NoContentResult:
+      type: object
+      properties:
+        statusCode:
+          type: integer
+          format: int32
+    DeviceMaxDemand:
+      type: object
+      properties:
+        date:
+          type: string
+        value:
+          type: number
+          format: double
+        unit:
+          type:
+          - string
+          - 'null'
+x-tagGroups:
+- name: Users
+  tags:
+  - User
+- name: Locations
+  tags:
+  - Location
+  - Location profile
+  - Location home profile
+  - Location price formulas
+- name: Meters
+  tags:
+  - Meter
+  - Meter Energy Day
+  - Meter Energy High Resolution
+  - Meter Energy Reads
+  - Meter Energy Period
+  - Meter Max Demand
+  - Meter Price Formulas
+- name: Jobs
+  tags:
+  - Jobs
+- name: Portfolio
+  tags:
+  - Portfolio Accounts
+  - Portfolio Groups
+  - Portfolio Locations
+  - Portfolio Users
+- name: Client details
+  tags:
+  - Client details

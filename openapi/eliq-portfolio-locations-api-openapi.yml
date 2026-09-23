@@ -1,0 +1,291 @@
+openapi: 3.2.0
+info:
+  title: Eliq Data Management Portfolio Locations API
+  description: '# API Reference
+
+
+    The Eliq data management API is organized around REST.'
+  contact:
+    name: Support
+    email: support_b2b@eliq.com
+  version: 1.5.2
+tags:
+- name: Portfolio Locations
+paths:
+  /portfolio/accounts/{accountId}/locations/{id}:
+    put:
+      tags:
+      - Portfolio Locations
+      summary: Create or update portfolio location
+      description: 'Create or update connection between location and account for the portfolio.
+
+        If a location with the given id does not exist on the account, a new account location will be created.
+
+        If a location with id exists on the account, that location will be updated.'
+      operationId: put-portfolio-locations
+      parameters:
+      - name: accountId
+        in: path
+        description: Account identifier
+        required: true
+        schema:
+          type: string
+        example: 6ad04dc2-0db7-4f96-a10d-5a6aff002d05
+      - name: id
+        in: path
+        description: Location identifier
+        required: true
+        schema:
+          type: string
+        example: ea395dfc-74da-4cd0-bf59-368046371f85
+      requestBody:
+        description: ''
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PortfolioLocation'
+      responses:
+        '200':
+          description: Portfolio location was updated
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PortfolioLocation'
+        '201':
+          description: Portfolio location was created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PortfolioLocation'
+        '400':
+          description: Bad request. See error code and description for more info
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorDetails'
+              examples:
+                Job with specified id could not be found:
+                  value:
+                    code: JOB_NOT_FOUND
+                    description: Job with specified id could not be found
+                    request_id: 65e2ea86-470f-4363-9295-35d6b473981a
+        '404':
+          description: Portfolio account was not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorDetails'
+              examples:
+                Job with specified id could not be found:
+                  value:
+                    code: JOB_NOT_FOUND
+                    description: Job with specified id could not be found
+                    request_id: 65e2ea86-470f-4363-9295-35d6b473981a
+    delete:
+      tags:
+      - Portfolio Locations
+      summary: Remove location from portfolio account
+      operationId: delete-portfolio-locations
+      parameters:
+      - name: accountId
+        in: path
+        description: Account identifier
+        required: true
+        schema:
+          type: string
+        example: 6ad04dc2-0db7-4f96-a10d-5a6aff002d05
+      - name: id
+        in: path
+        description: Location identifier
+        required: true
+        schema:
+          type: string
+        example: ea395dfc-74da-4cd0-bf59-368046371f85
+      responses:
+        '204':
+          description: Portfolio location was deleted
+        '400':
+          description: Bad request. See error code and description for more info
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorDetails'
+              examples:
+                Job with specified id could not be found:
+                  value:
+                    code: JOB_NOT_FOUND
+                    description: Job with specified id could not be found
+                    request_id: 65e2ea86-470f-4363-9295-35d6b473981a
+        '404':
+          description: Portfolio location was not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorDetails'
+              examples:
+                Job with specified id could not be found:
+                  value:
+                    code: JOB_NOT_FOUND
+                    description: Job with specified id could not be found
+                    request_id: 65e2ea86-470f-4363-9295-35d6b473981a
+    get:
+      tags:
+      - Portfolio Locations
+      summary: Get location on portfolio account
+      operationId: get-portfolio-locations
+      parameters:
+      - name: accountId
+        in: path
+        description: Account identifier
+        required: true
+        schema:
+          type: string
+        example: 6ad04dc2-0db7-4f96-a10d-5a6aff002d05
+      - name: id
+        in: path
+        description: Location identifier
+        required: true
+        schema:
+          type: string
+        example: ea395dfc-74da-4cd0-bf59-368046371f85
+      responses:
+        '200':
+          description: Ok
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PortfolioLocation'
+        '400':
+          description: Bad request. See error code and description for more info
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorDetails'
+              examples:
+                Job with specified id could not be found:
+                  value:
+                    code: JOB_NOT_FOUND
+                    description: Job with specified id could not be found
+                    request_id: 65e2ea86-470f-4363-9295-35d6b473981a
+        '404':
+          description: Portfolio location was not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorDetails'
+              examples:
+                Job with specified id could not be found:
+                  value:
+                    code: JOB_NOT_FOUND
+                    description: Job with specified id could not be found
+                    request_id: 65e2ea86-470f-4363-9295-35d6b473981a
+  /portfolio/accounts/{accountId}/locations:
+    get:
+      tags:
+      - Portfolio Locations
+      summary: Get all locations on porfolio account
+      operationId: get-portfolio-locations-list
+      parameters:
+      - name: accountId
+        in: path
+        description: Account identifier
+        required: true
+        schema:
+          type: string
+        example: 6ad04dc2-0db7-4f96-a10d-5a6aff002d05
+      responses:
+        '200':
+          description: Ok
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/PortfolioLocation'
+        '400':
+          description: Bad request. See error code and description for more info
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorDetails'
+              examples:
+                Job with specified id could not be found:
+                  value:
+                    code: JOB_NOT_FOUND
+                    description: Job with specified id could not be found
+                    request_id: 65e2ea86-470f-4363-9295-35d6b473981a
+        '404':
+          description: Portfolio account was not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorDetails'
+              examples:
+                Job with specified id could not be found:
+                  value:
+                    code: JOB_NOT_FOUND
+                    description: Job with specified id could not be found
+                    request_id: 65e2ea86-470f-4363-9295-35d6b473981a
+components:
+  schemas:
+    PortfolioLocation:
+      required:
+      - name
+      type: object
+      properties:
+        id:
+          type:
+          - string
+          - 'null'
+        name:
+          minLength: 1
+          type: string
+        created_at_utc:
+          type: string
+    ErrorDetails:
+      required:
+      - code
+      - description
+      type: object
+      properties:
+        code:
+          minLength: 1
+          type: string
+        description:
+          minLength: 1
+          type: string
+        request_id:
+          type:
+          - string
+          - 'null'
+x-tagGroups:
+- name: Users
+  tags:
+  - User
+- name: Locations
+  tags:
+  - Location
+  - Location profile
+  - Location home profile
+  - Location price formulas
+- name: Meters
+  tags:
+  - Meter
+  - Meter Energy Day
+  - Meter Energy High Resolution
+  - Meter Energy Reads
+  - Meter Energy Period
+  - Meter Max Demand
+  - Meter Price Formulas
+- name: Jobs
+  tags:
+  - Jobs
+- name: Portfolio
+  tags:
+  - Portfolio Accounts
+  - Portfolio Groups
+  - Portfolio Locations
+  - Portfolio Users
+- name: Client details
+  tags:
+  - Client details

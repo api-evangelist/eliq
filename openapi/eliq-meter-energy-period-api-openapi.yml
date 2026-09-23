@@ -1,0 +1,496 @@
+openapi: 3.2.0
+info:
+  title: Eliq Data Management Meter Energy Period API
+  description: '# API Reference
+
+
+    The Eliq data management API is organized around REST.'
+  contact:
+    name: Support
+    email: support_b2b@eliq.com
+  version: 1.5.2
+tags:
+- name: Meter Energy Period
+paths:
+  /meters/{id}/energy/period:
+    post:
+      tags:
+      - Meter Energy Period
+      summary: Creates or updates periodic (monthly or higher) energy data for a meter
+      operationId: post-period-energy-data-meterid
+      parameters:
+      - name: id
+        in: path
+        description: Meter external reference
+        required: true
+        schema:
+          type: string
+      requestBody:
+        description: Periodic energy data object
+        content:
+          application/json:
+            schema:
+              type: array
+              items:
+                $ref: '#/components/schemas/EnergyMonthlyData'
+            examples:
+              Energy periodic data:
+                value:
+                - client_id: 0
+                  from: '2024-01-01'
+                  to: '2024-02-01'
+                  energy_wh: 35000.0
+                  is_estimated: false
+                  registers:
+                  - id: '123'
+                    energy_wh: 10000.0
+                  - id: '456'
+                    energy_wh: 25000.0
+                - client_id: 0
+                  from: '2024-02-01'
+                  to: '2024-03-01'
+                  energy_wh: 20000.0
+                  is_estimated: false
+                  registers:
+                  - id: '123'
+                    energy_wh: 10000.0
+                  - id: '456'
+                    energy_wh: 10000.0
+                - client_id: 0
+                  from: '2024-03-01'
+                  to: '2024-04-01'
+                  energy_wh: 80000.0
+                  is_estimated: false
+                  registers:
+                  - id: '123'
+                    energy_wh: 10000.0
+                  - id: '456'
+                    energy_wh: 70000.0
+      responses:
+        '204':
+          description: No Content
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NoContentResult'
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorDetails'
+              examples:
+                Request input is missing. This may be caused by incorrect format of input.:
+                  value:
+                    code: INPUT_MISSING
+                    description: Request input is missing. This may be caused by incorrect format of input.
+                    request_id: 65e2ea86-470f-4363-9295-35d6b473981a
+                Parameter 'id' must not be null or empty:
+                  value:
+                    code: METER_ID_MISSING
+                    description: Parameter 'id' must not be null or empty
+                    request_id: 65e2ea86-470f-4363-9295-35d6b473981a
+                Request body 'energyMonthlyData' must not be null or empty:
+                  value:
+                    code: ENERGY_MONTHLY_DATA_MUST_NOT_BE_NULL
+                    description: Request body 'energyMonthlyData' must not be null or empty
+                    request_id: 65e2ea86-470f-4363-9295-35d6b473981a
+                Sequence contains duplicate date ranges:
+                  value:
+                    code: SEQUENCE_MUST_NOT_CONTAIN_DUPLICATE_DATES
+                    description: Sequence contains duplicate date ranges
+                    request_id: 65e2ea86-470f-4363-9295-35d6b473981a
+                Either 'energy_wh' or 'energy_m3' must be provided:
+                  value:
+                    code: ENERGY_WH_OR_ENERGY_M3_MUST_NOT_BE_NULL
+                    description: Either 'energy_wh' or 'energy_m3' must be provided
+                    request_id: 65e2ea86-470f-4363-9295-35d6b473981a
+                '''energy_wh'' and ''energy_m3'' cannot be provided together':
+                  value:
+                    code: ENERGY_WH_AND_ENERGY_M3_MUST_NOT_BE_PROVIDED_TOGETHER
+                    description: '''energy_wh'' and ''energy_m3'' cannot be provided together'
+                    request_id: 65e2ea86-470f-4363-9295-35d6b473981a
+                '''energy_m3'' cannot be used on a meter whose fuel type does not support it':
+                  value:
+                    code: ENERGY_M3_MUST_NOT_BE_ADDED_ON_UNSUPPORTED_FUEL_METER
+                    description: '''energy_m3'' cannot be used on a meter whose fuel type does not support it'
+                    request_id: 65e2ea86-470f-4363-9295-35d6b473981a
+                Parameter 'from' is missing or invalid:
+                  value:
+                    code: FROM_MISSING
+                    description: Parameter 'from' is missing or invalid
+                    request_id: 65e2ea86-470f-4363-9295-35d6b473981a
+                Parameter 'to' is missing or invalid:
+                  value:
+                    code: TO_MISSING
+                    description: Parameter 'to' is missing or invalid
+                    request_id: 65e2ea86-470f-4363-9295-35d6b473981a
+                Parameter 'registers[].energy_wh' must not be null:
+                  value:
+                    code: REGISTERS_ENERGY_MUST_NOT_BE_NULL
+                    description: Parameter 'registers[].energy_wh' must not be null
+                    request_id: 65e2ea86-470f-4363-9295-35d6b473981a
+                Parameter 'registers[].id' must not be null or empty:
+                  value:
+                    code: REGISTERS_ID_CANNOT_BE_NULL
+                    description: Parameter 'registers[].id' must not be null or empty
+                    request_id: 65e2ea86-470f-4363-9295-35d6b473981a
+                Registers contain duplicate 'id' values:
+                  value:
+                    code: REGISTERS_CANNOT_HAVE_SAME_ID
+                    description: Registers contain duplicate 'id' values
+                    request_id: 65e2ea86-470f-4363-9295-35d6b473981a
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorDetails'
+              examples:
+                Meter with given id could not be found:
+                  value:
+                    code: METER_NOT_FOUND
+                    description: Meter with given id could not be found
+                    request_id: 65e2ea86-470f-4363-9295-35d6b473981a
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorDetails'
+              examples:
+                Internal server error. If problem remains, please contact support:
+                  value:
+                    code: INTERNAL_ERROR
+                    description: Internal server error. If problem remains, please contact support
+                    request_id: 65e2ea86-470f-4363-9295-35d6b473981a
+    get:
+      tags:
+      - Meter Energy Period
+      summary: Gets the stored periodic (monthly or higher) energy data for a meter within a…
+      operationId: get-period-energy-data-meterid
+      parameters:
+      - name: id
+        in: path
+        description: Meter external reference
+        required: true
+        schema:
+          type: string
+      - name: FromDate
+        in: query
+        schema:
+          type: string
+      - name: From
+        in: query
+        schema:
+          type: string
+      - name: ToDate
+        in: query
+        schema:
+          type: string
+      - name: To
+        in: query
+        schema:
+          type: string
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/EnergyMonthlyData'
+              examples:
+                Energy periodic data:
+                  value:
+                  - client_id: 0
+                    from: '2024-01-01'
+                    to: '2024-02-01'
+                    energy_wh: 35000.0
+                    is_estimated: false
+                    registers:
+                    - id: '123'
+                      energy_wh: 10000.0
+                    - id: '456'
+                      energy_wh: 25000.0
+                  - client_id: 0
+                    from: '2024-02-01'
+                    to: '2024-03-01'
+                    energy_wh: 20000.0
+                    is_estimated: false
+                    registers:
+                    - id: '123'
+                      energy_wh: 10000.0
+                    - id: '456'
+                      energy_wh: 10000.0
+                  - client_id: 0
+                    from: '2024-03-01'
+                    to: '2024-04-01'
+                    energy_wh: 80000.0
+                    is_estimated: false
+                    registers:
+                    - id: '123'
+                      energy_wh: 10000.0
+                    - id: '456'
+                      energy_wh: 70000.0
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorDetails'
+              examples:
+                Missing parameters 'from' and 'to'. This may be caused by incorrect date format, please refer to documentation:
+                  value:
+                    code: DATE_RANGE_MISSING
+                    description: Missing parameters 'from' and 'to'. This may be caused by incorrect date format, please refer to documentation
+                    request_id: 65e2ea86-470f-4363-9295-35d6b473981a
+                Parameter 'id' must not be null or empty:
+                  value:
+                    code: METER_ID_MISSING
+                    description: Parameter 'id' must not be null or empty
+                    request_id: 65e2ea86-470f-4363-9295-35d6b473981a
+                From date is missing. This may be caused by incorrect date format, please refer to documentation:
+                  value:
+                    code: FROM_MISSING
+                    description: From date is missing. This may be caused by incorrect date format, please refer to documentation
+                    request_id: 65e2ea86-470f-4363-9295-35d6b473981a
+                To date is missing. This may be caused by incorrect date format, please refer to documentation:
+                  value:
+                    code: TO_MISSING
+                    description: To date is missing. This may be caused by incorrect date format, please refer to documentation
+                    request_id: 65e2ea86-470f-4363-9295-35d6b473981a
+                Date range is invalid i.e. 'from' date is after 'to' date:
+                  value:
+                    code: DATE_RANGE_INVALID
+                    description: Date range is invalid i.e. 'from' date is after 'to' date
+                    request_id: 65e2ea86-470f-4363-9295-35d6b473981a
+                Maximum range between 'from' and 'to' exceeded. Please refer to documentation:
+                  value:
+                    code: DATE_RANGE_LIMIT_EXCEEDED
+                    description: Maximum range between 'from' and 'to' exceeded. Please refer to documentation
+                    request_id: 65e2ea86-470f-4363-9295-35d6b473981a
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorDetails'
+              examples:
+                Meter with given id could not be found:
+                  value:
+                    code: METER_NOT_FOUND
+                    description: Meter with given id could not be found
+                    request_id: 65e2ea86-470f-4363-9295-35d6b473981a
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorDetails'
+              examples:
+                Internal server error. If problem remains, please contact support:
+                  value:
+                    code: INTERNAL_ERROR
+                    description: Internal server error. If problem remains, please contact support
+                    request_id: 65e2ea86-470f-4363-9295-35d6b473981a
+    delete:
+      tags:
+      - Meter Energy Period
+      summary: Deletes the stored periodic (monthly or higher) energy data for a meter within…
+      operationId: delete-period-energy-data-meterid
+      parameters:
+      - name: id
+        in: path
+        description: Meter external reference
+        required: true
+        schema:
+          type: string
+      - name: FromDate
+        in: query
+        schema:
+          type: string
+      - name: From
+        in: query
+        schema:
+          type: string
+      - name: ToDate
+        in: query
+        schema:
+          type: string
+      - name: To
+        in: query
+        schema:
+          type: string
+      responses:
+        '204':
+          description: No Content
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NoContentResult'
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorDetails'
+              examples:
+                Missing parameters 'from' and 'to'. This may be caused by incorrect date format, please refer to documentation:
+                  value:
+                    code: DATE_RANGE_MISSING
+                    description: Missing parameters 'from' and 'to'. This may be caused by incorrect date format, please refer to documentation
+                    request_id: 65e2ea86-470f-4363-9295-35d6b473981a
+                Parameter 'id' must not be null or empty:
+                  value:
+                    code: METER_ID_MISSING
+                    description: Parameter 'id' must not be null or empty
+                    request_id: 65e2ea86-470f-4363-9295-35d6b473981a
+                From date is missing. This may be caused by incorrect date format, please refer to documentation:
+                  value:
+                    code: FROM_MISSING
+                    description: From date is missing. This may be caused by incorrect date format, please refer to documentation
+                    request_id: 65e2ea86-470f-4363-9295-35d6b473981a
+                To date is missing. This may be caused by incorrect date format, please refer to documentation:
+                  value:
+                    code: TO_MISSING
+                    description: To date is missing. This may be caused by incorrect date format, please refer to documentation
+                    request_id: 65e2ea86-470f-4363-9295-35d6b473981a
+                Date range is invalid i.e. 'from' date is after 'to' date:
+                  value:
+                    code: DATE_RANGE_INVALID
+                    description: Date range is invalid i.e. 'from' date is after 'to' date
+                    request_id: 65e2ea86-470f-4363-9295-35d6b473981a
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorDetails'
+              examples:
+                Meter with given id could not be found:
+                  value:
+                    code: METER_NOT_FOUND
+                    description: Meter with given id could not be found
+                    request_id: 65e2ea86-470f-4363-9295-35d6b473981a
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorDetails'
+              examples:
+                Internal server error. If problem remains, please contact support:
+                  value:
+                    code: INTERNAL_ERROR
+                    description: Internal server error. If problem remains, please contact support
+                    request_id: 65e2ea86-470f-4363-9295-35d6b473981a
+components:
+  schemas:
+    ErrorDetails:
+      required:
+      - code
+      - description
+      type: object
+      properties:
+        code:
+          minLength: 1
+          type: string
+        description:
+          minLength: 1
+          type: string
+        request_id:
+          type:
+          - string
+          - 'null'
+    EnergyMonthlyData:
+      type: object
+      properties:
+        client_id:
+          type: integer
+          format: int64
+        device_ref:
+          type:
+          - string
+          - 'null'
+        from:
+          type:
+          - string
+          - 'null'
+        to:
+          type:
+          - string
+          - 'null'
+        energy_wh:
+          type:
+          - number
+          - 'null'
+          format: float
+        energy_m3:
+          type:
+          - number
+          - 'null'
+          format: float
+        is_estimated:
+          type: boolean
+        registers:
+          type:
+          - array
+          - 'null'
+          items:
+            $ref: '#/components/schemas/Register'
+    NoContentResult:
+      type: object
+      properties:
+        statusCode:
+          type: integer
+          format: int32
+    Register:
+      type: object
+      properties:
+        id:
+          type:
+          - string
+          - 'null'
+        energy_wh:
+          type:
+          - number
+          - 'null'
+          format: float
+        energy_m3:
+          type:
+          - number
+          - 'null'
+          format: float
+x-tagGroups:
+- name: Users
+  tags:
+  - User
+- name: Locations
+  tags:
+  - Location
+  - Location profile
+  - Location home profile
+  - Location price formulas
+- name: Meters
+  tags:
+  - Meter
+  - Meter Energy Day
+  - Meter Energy High Resolution
+  - Meter Energy Reads
+  - Meter Energy Period
+  - Meter Max Demand
+  - Meter Price Formulas
+- name: Jobs
+  tags:
+  - Jobs
+- name: Portfolio
+  tags:
+  - Portfolio Accounts
+  - Portfolio Groups
+  - Portfolio Locations
+  - Portfolio Users
+- name: Client details
+  tags:
+  - Client details

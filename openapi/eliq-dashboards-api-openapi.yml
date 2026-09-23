@@ -1,0 +1,83 @@
+openapi: 3.2.0
+info:
+  title: Eliq Intelligence Dashboards API
+  description: '# API Reference
+
+
+    The Eliq Intelligence API is organized around REST.'
+  contact:
+    name: Support
+    email: support_b2b@eliq.com
+  version: 1.0.0
+security:
+- Bearer: []
+tags:
+- name: Dashboards
+paths:
+  /dashboards/{dashboard_id}/token:
+    post:
+      tags:
+      - Dashboards
+      summary: Mint a user-scoped token for embedding a dashboard with @databricks/aibi-client
+      parameters:
+      - name: dashboard_id
+        in: path
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          description: Successful
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DashboardEmbedTokenResult'
+        '401':
+          description: The token carries no user identifier
+        '404':
+          description: Dashboards are not enabled for the client, or the dashboard is not available
+      operationId: postDashboardsByDashboardIdToken
+      x-operation-id-source: derived
+components:
+  schemas:
+    DashboardEmbedTokenResult:
+      required:
+      - dashboard_id
+      - expires_in_seconds
+      - instance_url
+      - token
+      - workspace_id
+      type: object
+      properties:
+        instance_url:
+          minLength: 1
+          type: string
+          description: Base URL of the DataBricks workspace instance
+          example: https://adb-1234567890123456.7.azuredatabricks.net
+        workspace_id:
+          minLength: 1
+          type: string
+          description: Id of the DataBricks workspace
+          example: '1234567890123456'
+        dashboard_id:
+          minLength: 1
+          type: string
+          description: Id of the published dashboard
+          example: 01ef2a3b4c5d6e7f8a9b0c1d2e3f4a5b
+        token:
+          minLength: 1
+          type: string
+          description: User-scoped token authorizing the embedded dashboard
+        expires_in_seconds:
+          type: integer
+          description: Number of seconds until the token expires; request a new token before then
+          format: int32
+          example: 600
+      additionalProperties: false
+      description: Everything the frontend needs to embed a dashboard with @databricks/aibi-client
+  securitySchemes:
+    Bearer:
+      type: http
+      description: Enter JWT Bearer token **_only_**
+      scheme: bearer
+      bearerFormat: JWT

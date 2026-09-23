@@ -1,0 +1,919 @@
+openapi: 3.2.0
+info:
+  title: Insights Users API
+  version: 3.4.1
+  contact:
+    name: Insights Team
+    email: support_b2b@eliq.com
+  description: '# API Reference
+
+
+    The Eliq insights API is organized around REST.'
+servers:
+- url: http://localhost:3000
+security:
+- BearerAuth: []
+tags:
+- name: Users
+paths:
+  /v3/users/{userId}:
+    parameters:
+    - schema:
+        type: integer
+      name: userId
+      in: path
+      required: true
+      description: Eliq internal id of user
+    get:
+      summary: Get user by Eliq internal ID
+      tags:
+      - Users
+      responses:
+        '200':
+          description: User Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+              examples:
+                John Doe:
+                  value:
+                    id: 1234
+                    ext_ref: aec78361-f5b6-44cc-b9e6-935bd5053592
+                    name: John
+                    phone: '+46731234123'
+                    email: john.doe@email.com
+                    language_code: en-GB
+        '404':
+          description: 'User Not Found
+
+
+            This error is thrown if no user with the given id could not be found'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+              examples:
+                User not found:
+                  value:
+                    type: client_error
+                    category: invalid_parameter
+                    code: USER_NOT_FOUND
+                    description: Could not find user with Id '123'
+                    message: 'Something went wrong, please try again later. If problem remains, please contact support (error: 1ad3a534117d4).'
+                    transaction_id: 37c4ef86-d525-42c8-b65f-9b4cfcce0df6
+      operationId: get-v3-users-userId
+      description: Retrieve the information of the user with the matching user ID.
+  /v3/users/{userId}/consents:
+    parameters:
+    - schema:
+        type: integer
+      name: userId
+      in: path
+      required: true
+      description: Eliq internal id of user
+    get:
+      summary: Get User Consents
+      tags:
+      - Users
+      responses:
+        '200':
+          description: Get list of user consents
+          content:
+            application/json:
+              schema:
+                x-examples:
+                  example-1:
+                  - version_id: 2f321e42-c1fe-4abf-8f16-44dcce756943
+                    name: privacy_policy
+                    given_consent: true
+                    language_code: en-GB
+                type: array
+                items:
+                  $ref: '#/components/schemas/Consent'
+              examples:
+                List of consents:
+                  value:
+                  - version_id: f5bba2be-cf4f-4f7e-8237-7476025da0ff
+                    name: terms_and_conditions
+                    given_consent: false
+                    is_updated: true
+                    is_mandatory: true
+                    timestamp: '2022-06-28T13:54:43.369558Z'
+                    language_code: en-GB
+                    data:
+                      url: https://your-website-url.com/terms-and-conditions
+                  - version_id: 43cceb46-e598-43c1-8f25-d6d30b765d9a
+                    name: privacy_policy
+                    given_consent: true
+                    is_updated: false
+                    is_mandatory: true
+                    timestamp: '2022-06-25T10:11:30.2211223Z'
+                    language_code: en-GB
+                    data:
+                      url: https://your-website-url.com/privacy_policy
+        '404':
+          description: 'User Not Found
+
+
+            This error is thrown if no user with the given id could not be found'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+              examples:
+                User not found:
+                  value:
+                    type: client_error
+                    category: invalid_parameter
+                    code: USER_NOT_FOUND
+                    description: Could not find user with Id '123'
+                    message: 'Something went wrong, please try again later. If problem remains, please contact support (error: 1ad3a534117d4).'
+                    transaction_id: 37c4ef86-d525-42c8-b65f-9b4cfcce0df6
+      operationId: get-v3-users-userId-consents
+      description: Retrieve the list of the user consents.
+    put:
+      summary: Update User Consents
+      operationId: put-v3-users-userId-consents
+      responses:
+        '200':
+          description: OK
+      description: Update single or multiple consents for a user.
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: array
+              x-examples:
+                example-1:
+                - version_id: 2f321e42-c1fe-4abf-8f16-44dcce756943
+                  name: privacy_policy
+                  given_consent: true
+                  language_code: en-GB
+              items:
+                type: object
+                properties:
+                  version_id:
+                    type: string
+                  name:
+                    type: string
+                  given_consent:
+                    type: boolean
+                  language_code:
+                    type: string
+                required:
+                - version_id
+                - name
+                - given_consent
+                - language_code
+      tags:
+      - Users
+  /v3/users:
+    parameters: []
+    get:
+      summary: Get user by Eliq external reference
+      tags:
+      - Users
+      responses:
+        '200':
+          description: User Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+              examples:
+                John Doe:
+                  value:
+                    id: 1234
+                    ext_ref: aec78361-f5b6-44cc-b9e6-935bd5053592
+                    name: John
+                    phone: '+46731234123'
+                    email: john.doe@email.com
+                    language_code: en-GB
+        '404':
+          description: 'User Not Found
+
+
+            This error is thrown if no user with the given extref could not be found'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+              examples:
+                User not found:
+                  value:
+                    type: client_error
+                    category: user_not_found
+                    code: USER_NOT_FOUND
+                    description: Could not find user with Id '123'
+                    message: 'Something went wrong, please try again later. If problem remains, please contact support (error: 1ad3a534117d4).'
+                    transaction_id: 37c4ef86-d525-42c8-b65f-9b4cfcce0df6
+      operationId: get-v3-users-userExtref
+      description: Retrieve the information of the user with the matching user external reference (client's id). This request should be used to query the API using the ID sent in through Eliq data management API
+      parameters:
+      - schema:
+          type: string
+          example: aec78361-f5b6-44cc-b9e6-935bd5053592
+        in: query
+        name: extref
+        description: User external reference
+        required: true
+  /v3/Users/{userId}/locations:
+    get:
+      tags:
+      - Users
+      summary: Get user locations
+      description: Retrieve locations attached to the user with the matching user ID.
+      operationId: get--v3-users-userId-locations
+      parameters:
+      - name: userId
+        in: path
+        description: User's id
+        required: true
+        schema:
+          type: integer
+          format: int32
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Location'
+              examples:
+                User locations response:
+                  value:
+                  - id: 1233
+                    name: Stora Badhusgatan 17-20
+                    ext_ref: '4537899'
+                    timezone: Europe/Berlin
+                    address:
+                      street_address: Stora Badhusgatan 17-20
+                      postal_code: '41120'
+                      city: Göteborg
+                      country_code: SE
+                      lon: 22.12
+                      lat: 56.32
+                    fuels:
+                      elec:
+                        import:
+                          resolution: hour
+                          data_from: '2019-01-01T00:00:00'
+                          data_to: '2020-01-01T00:00:00'
+                          source: smart_meter
+                          sync_status: ok
+                        export:
+                          resolution: hour
+                          data_from: '2019-01-01T00:00:00'
+                          data_to: '2020-01-01T00:00:00'
+                          source: smart_meter
+                          sync_status: ok
+                        consumption:
+                          resolution: hour
+                          data_from: '2019-01-01T00:00:00'
+                          data_to: '2020-01-01T00:00:00'
+                          source: pv_disagg
+                          sync_status: waiting_for_data
+                        production:
+                          resolution: hour
+                          data_from: '2019-01-01T00:00:00'
+                          data_to: '2020-01-01T00:00:00'
+                          source: pv_disagg
+                          sync_status: ok
+                      gas:
+                        import:
+                          resolution: hour
+                          data_from: '2019-01-01T00:00:00'
+                          data_to: '2020-01-01T00:00:00'
+                          source: smart_meter
+                          sync_status: waiting_for_data
+                    meters:
+                    - id: e7c8938fe06a44a7923ed89da281705e
+                      model: Standard Energy V1
+                      user_setup_completed: true
+                      name_user: Main house meter
+                      fuel_type: elec
+                      direction: import
+                      is_sub_meter: false
+                      category_user: other
+                      supply_start_date: '2026-01-01T00:00:00'
+                      supply_end_date: '2026-12-31T00:00:00'
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+              examples:
+                User not found:
+                  value:
+                    type: client_error
+                    category: user_not_found
+                    code: USER_NOT_FOUND
+                    transaction_id: 0HN18NIB8K5RV:00000001
+                    description: Could not find user with Id '1234567'
+                User's Location not found:
+                  value:
+                    type: client_error
+                    category: entity_not_found
+                    code: ENTITY_NOT_FOUND
+                    transaction_id: 0HN18NIB8K5RV:00000001
+                    description: Could not find the location.
+        '500':
+          description: Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+              examples:
+                Internal Error:
+                  value:
+                    type: internal_error
+                    category: internal_error
+                    code: INTERNAL_ERROR
+                    transaction_id: 0HN18NIB8K5RV:00000001
+                    message: Something went wrong. Please try again later. If problem remains, please contact support.
+                    description: Internal server error, please try again later. If problem remains, please contact support.
+  /v3/Users/{userId}/sent_notifications:
+    get:
+      tags:
+      - Users
+      summary: Get user sent notifications
+      description: 'Retrieve notifications which were triggered for a user.
+
+
+        Notifications can be filtered using the notification_types query parameter and paged using the limit/cursor parameters.'
+      operationId: get-v3-users-userId-notifications
+      parameters:
+      - name: userId
+        in: path
+        description: User's id
+        required: true
+        schema:
+          type: integer
+          format: int32
+      - name: cursor
+        in: query
+        description: The paging cursor, which consists of the notification id, which you can use to page through the notifications. If provided, endpoint will return notifications with ids greater than the value provided in the cursor.
+        schema:
+          type: integer
+          format: int32
+      - name: limit
+        in: query
+        description: Number of notifications to return in the response.
+        schema:
+          type: integer
+          format: int32
+      - name: notification_types
+        in: query
+        description: Comma separated notification types for filtering purposes. Can be null.
+        schema:
+          type: string
+      - name: language_code
+        in: query
+        description: Returns the notification content in the requested language (e.g. `en-GB`). Currently only Monthly Report notifications are available in multiple languages.
+        schema:
+          type: string
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/UserNotification'
+              examples:
+                User notifications response:
+                  value:
+                  - id: 181093332
+                    header: Negative electricity prices tomorrow!
+                    content: Between 22:00-00:00 tomorrow the market electricity price is below zero!
+                    read: false
+                    created_date: '2025-11-03T16:33:31.797'
+                    event:
+                      created_date: '2025-11-03T16:33:31.797'
+                      type: market_price_next_day_hour_price_alert
+                  - id: 174322255
+                    header: Low market prices tomorrow
+                    content: Tomorrow the average market prices are low, averaging at 0,24 kr/kWh 🙂. The price will be at its lowest 06:00-07:00 at 0,11 kr/kWh.
+                    read: false
+                    created_date: '2025-11-03T16:33:31.797'
+                    event:
+                      created_date: '2025-11-03T16:33:31.797'
+                      type: market_price_next_day_avg_price_alert
+                  - id: 164333124
+                    header: Unusually high consumption
+                    content: On Sunday your consumption was much higher than usual. Check if any appliances are left on or not working properly.
+                    read: false
+                    created_date: '2025-11-03T16:33:31.797'
+                    event:
+                      created_date: '2025-11-03T16:33:31.797'
+                      type: daily_anomaly
+                  - id: 154325555
+                    header: Your usage was higher than usual
+                    content: Your usage was higher this month than last month. Check your usage breakdown to see what may have caused this.
+                    read: false
+                    created_date: '2025-11-03T16:33:31.797'
+                    event:
+                      created_date: '2025-11-03T16:33:31.797'
+                      type: monthly_anomaly
+                  - id: 141256783
+                    header: Weekly electricity budget exceeded
+                    content: You've just gone over your electricity budget for this week. Get ready for a new challenge next week.
+                    read: false
+                    created_date: '2025-11-03T16:33:31.797'
+                    event:
+                      created_date: '2025-11-03T16:33:31.797'
+                      type: budget
+                  - id: 134324576
+                    header: Low credit alert
+                    content: Your balance is low please top up now
+                    read: false
+                    created_date: '2025-11-03T16:33:31.797'
+                    event:
+                      created_date: '2025-11-03T16:33:31.797'
+                      type: low_credit
+                  - id: 123245636
+                    header: Your consumption in October.
+                    content: You consumed 10 % more than the previous month. Check out all your insights in the app.
+                    read: false
+                    created_date: '2025-11-03T16:33:31.797'
+                    event:
+                      created_date: '2025-11-03T16:33:31.797'
+                      type: monthly_insight
+                  - id: 116523765
+                    header: Off supply warning
+                    content: You are, or about to go off supply, please contact us if you need support
+                    read: false
+                    created_date: '2025-11-03T16:33:31.797'
+                    event:
+                      created_date: '2025-11-03T16:33:31.797'
+                      type: off_supply_warning
+                  - id: 101093332
+                    header: Your consent is expiring soon
+                    content: Your consent for data sharing will expire in 1 day(s). Please go to Account → Add/Remove Digital Meter and click Renew Consent. If your consent expires, we won’t be able to provide you with insights.
+                    read: false
+                    created_date: '2025-11-03T16:33:31.797'
+                    event:
+                      created_date: '2025-11-03T16:33:31.797'
+                      type: custom
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+              examples:
+                User not found:
+                  value:
+                    type: client_error
+                    category: user_not_found
+                    code: USER_NOT_FOUND
+                    transaction_id: 0HN18NIB8K5RV:00000001
+                    description: Could not find user with Id '1234567'
+                User's Location not found:
+                  value:
+                    type: client_error
+                    category: entity_not_found
+                    code: ENTITY_NOT_FOUND
+                    transaction_id: 0HN18NIB8K5RV:00000001
+                    description: Could not find the location.
+        '500':
+          description: Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+              examples:
+                Internal Error:
+                  value:
+                    type: internal_error
+                    category: internal_error
+                    code: INTERNAL_ERROR
+                    transaction_id: 0HN18NIB8K5RV:00000001
+                    message: Something went wrong. Please try again later. If problem remains, please contact support.
+                    description: Internal server error, please try again later. If problem remains, please contact support.
+components:
+  schemas:
+    LocationFuelItem:
+      required:
+      - resolution
+      - source
+      type: object
+      properties:
+        resolution:
+          minLength: 1
+          type: string
+          description: Energy data sampling resolution.
+          example: 15min
+        data_from:
+          type: string
+          description: Available from date.
+          format: date-time
+          nullable: true
+          example: '2021-01-01T00:00:00'
+        data_to:
+          type: string
+          description: Available to date.
+          format: date-time
+          nullable: true
+          example: '2021-03-01T00:00:00'
+        source:
+          $ref: '#/components/schemas/FuelSource'
+        sync_status:
+          $ref: '#/components/schemas/SyncStatus'
+      description: General data about a fuel item.
+    Event:
+      type: object
+      properties:
+        created_date:
+          type: string
+          format: date-time
+          nullable: true
+        type:
+          type: string
+          nullable: true
+        source:
+          type: object
+          description: 'The source of the event. This can for example be a monitor object or a report object
+
+            To figure out which object it is, look at Type'
+          nullable: true
+    Consent:
+      type: object
+      x-examples:
+        example-1:
+          version_id: f2283b35-c2c7-4a4f-90f4-49e493c69d7
+          name: terms_and_conditions
+          type: login_consent
+          given_consent: false
+          is_updated: true
+          is_mandatory: true
+          timestamp: '2022-06-28T13:54:43.369558Z'
+          language_code: en-GB
+          data:
+            url: https://your-website-url.com/terms-and-conditions
+      properties:
+        version_id:
+          type: string
+        name:
+          type: string
+        type:
+          type: string
+        given_consent:
+          type: boolean
+        is_updated:
+          type: boolean
+        is_mandatory:
+          type: boolean
+        timestamp:
+          type: string
+        language_code:
+          type: string
+        data:
+          type: object
+          properties:
+            url:
+              type: string
+              description: Nullable, such as the terms and conditions page on a website, etc.
+      examples: []
+    User:
+      description: Get user information
+      type: object
+      x-examples:
+        example-1:
+          id: 1234
+          ext_ref: aec78361-f5b6-44cc-b9e6-935bd5053592
+          forname: John
+          surname: Doe
+          phone: '987643212'
+          email: john.doe@email.com
+          language_code: en-GB
+      examples:
+      - id: 1234
+        ext_ref: aec78361-f5b6-44cc-b9e6-935bd5053592
+        name: John
+        phone: '+46731234123'
+        email: john.doe@email.com
+        language_code: en-GB
+      properties:
+        id:
+          type: number
+          example: 1234
+          description: Eliq internal ID
+        client_id:
+          type: number
+          example: 123456789
+          description: Eliq internal Client ID
+        ext_ref:
+          type: string
+          minLength: 1
+          description: Eliq external reference. Client's user ID (ID in data management API)
+          example: aec78361-f5b6-44cc-b9e6-935bd5053592
+        name:
+          type: string
+          example: John
+          description: Users name
+        forename:
+          type: string
+          deprecated: true
+          description: Users forename
+        surname:
+          type: string
+          deprecated: true
+          description: Users surname
+        phone:
+          type: string
+          example: '+46731234123'
+          description: User phone number
+        email:
+          type: string
+          example: john.doe@email.com
+          format: email
+          description: User email
+        language_code:
+          type: string
+          minLength: 1
+          example: en-GB
+          description: Users selected language code. Translations shown in app and messages will be sent in this language
+      required:
+      - id
+      - ext_ref
+      - language_code
+    SyncStatus:
+      enum:
+      - ok
+      - waiting_for_data
+      type: string
+      description: Data synchronization status.
+    LocationFuels:
+      type: object
+      properties:
+        elec:
+          $ref: '#/components/schemas/LocationFuel'
+        gas:
+          $ref: '#/components/schemas/LocationFuel'
+        district_heating:
+          $ref: '#/components/schemas/LocationFuel'
+      description: Available fuel data
+    Location:
+      required:
+      - address
+      - ext_ref
+      - fuels
+      - id
+      - meters
+      - timezone
+      type: object
+      properties:
+        id:
+          type: integer
+          description: ID
+          format: int32
+          example: 150
+        name:
+          type: string
+          description: Name
+          nullable: true
+          example: My Location
+        ext_ref:
+          minLength: 1
+          type: string
+          description: External (utility) reference.
+        timezone:
+          minLength: 1
+          type: string
+          description: Iana timezone
+          example: Europe/Berlin
+        address:
+          $ref: '#/components/schemas/Address'
+        fuels:
+          $ref: '#/components/schemas/LocationFuels'
+        meters:
+          type: array
+          items:
+            $ref: '#/components/schemas/LocationMeter'
+          description: Meters present at a location.
+      description: Location data.
+    Error:
+      type: object
+      properties:
+        type:
+          type: string
+          description: Type of error.
+          nullable: true
+          example: internal_error
+        category:
+          type: string
+          description: Error category.
+          nullable: true
+          example: internal_error
+        code:
+          type: string
+          description: Code describing the issue.
+          nullable: true
+          example: INTERNAL_ERROR
+        transaction_id:
+          type: string
+          description: Identifier for the session. Please provide this when contacting support.
+          nullable: true
+          example: 0HN18NN5QB401:00000001
+        message:
+          type: string
+          description: A message related to the error.
+          nullable: true
+          example: Something went wrong. Please try again later. If problem remains, please contact support.
+        description:
+          type: string
+          description: A description of the error for developers.
+          nullable: true
+          example: Internal server error, please try again later. If problem remains, please contact support.
+      description: Model returned for error responses.
+    Address:
+      required:
+      - country_code
+      - street_address
+      type: object
+      properties:
+        street_address:
+          minLength: 1
+          type: string
+          description: Street address.
+          example: Riksgatan 1
+        postal_code:
+          type: string
+          description: Postal code.
+          nullable: true
+          example: 117 40
+        city:
+          type: string
+          description: City name.
+          nullable: true
+          example: Stockholm
+        country_code:
+          minLength: 1
+          type: string
+          description: Country code (ISO 3166-1 alpha-2).
+          example: SE
+        lon:
+          type: number
+          description: The geographical longitude coordinate.
+          format: double
+          nullable: true
+          example: 18.07187
+        lat:
+          type: number
+          description: The geographical latitude coordinate.
+          format: double
+          nullable: true
+          example: 59.3257
+      description: General address data including latitude and longitude.
+    FuelSource:
+      enum:
+      - smart_meter
+      - non_smart_meter
+      - load_curve_estimation
+      - pv_disagg
+      type: string
+      description: Source of fuel data.
+    LocationFuel:
+      type: object
+      properties:
+        import:
+          $ref: '#/components/schemas/LocationFuelItem'
+        export:
+          $ref: '#/components/schemas/LocationFuelItem'
+        consumption:
+          $ref: '#/components/schemas/LocationFuelItem'
+        production:
+          $ref: '#/components/schemas/LocationFuelItem'
+      description: Fuel data
+    UserNotification:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+        header:
+          type: string
+          nullable: true
+        content:
+          type: string
+          nullable: true
+        read:
+          type: boolean
+          nullable: true
+        created_date:
+          type: string
+          format: date-time
+          nullable: true
+        event:
+          $ref: '#/components/schemas/Event'
+    LocationMeter:
+      required:
+      - direction
+      - fuel_type
+      - id
+      - is_sub_meter
+      - user_setup_completed
+      type: object
+      properties:
+        id:
+          minLength: 1
+          type: string
+          description: ID.
+          example: e7c8938fe06a44a7923ed89da281705e
+        model:
+          minLength: 1
+          type: string
+          description: Model.
+          example: Standard Energy V1
+        user_setup_completed:
+          type: boolean
+          description: A true/false value depicting whether user setup is complete.
+          example: true
+        name_user:
+          type: string
+          description: Name given by the user.
+          nullable: true
+          example: MyName
+        name_suggested:
+          type: string
+          description: Name suggested.
+          nullable: true
+          example: Standard Energy V1
+        fuel_type:
+          minLength: 1
+          type: string
+          description: Type of fuel sampled.
+          example: elec
+        direction:
+          minLength: 1
+          type: string
+          description: Fuel direction.
+          example: import
+        is_sub_meter:
+          type: boolean
+          description: A true/false values depicting whether this is a sub-meter.
+          example: false
+        category_user:
+          type: string
+          description: Category which was provided by the user.
+          nullable: true
+          example: My Category
+        category_suggested:
+          type: string
+          description: The category suggested.
+          nullable: true
+          example: other
+        supply_start_date:
+          type: string
+          description: Supply start date.
+          format: date-time
+          nullable: true
+          example: '2026-01-01T00:00:00'
+        supply_end_date:
+          type: string
+          description: Supply end date.
+          format: date-time
+          nullable: true
+          example: '2026-12-31T00:00:00'
+      description: Meter data.
+  securitySchemes:
+    BearerAuth:
+      type: http
+      scheme: bearer
+      description: The Eliq insights API uses bearer tokens to authenticate requests. Read more under Authentication tag.
+x-tagGroups:
+- name: Authentication
+  tags:
+  - Authentication
+- name: Users
+  tags:
+  - Users
+- name: Locations
+  tags:
+  - Locations
+  - Location Profile
+  - Energy Data
+  - Energy Usage Categories
+  - Energy Performance Certificate
+  - Similar Homes
+  - Budgets
+  - Advice
+  - Anomalies
+  - Market Price
+  - Price Formulas
+- name: Eliq Connect
+  tags:
+  - Eliq Connect
+- name: Health
+  tags:
+  - Health
+- name: Deprecated
+  tags:
+  - Breakdown
+  - Home Profile

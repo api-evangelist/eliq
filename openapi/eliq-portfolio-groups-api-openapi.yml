@@ -1,0 +1,379 @@
+openapi: 3.2.0
+info:
+  title: Eliq Data Management Portfolio Groups API
+  description: '# API Reference
+
+
+    The Eliq data management API is organized around REST.'
+  contact:
+    name: Support
+    email: support_b2b@eliq.com
+  version: 1.5.2
+tags:
+- name: Portfolio Groups
+paths:
+  /portfolio/accounts/{accountId}/groups:
+    post:
+      tags:
+      - Portfolio Groups
+      summary: Create (update not allowed) portfolio group
+      description: Create (update not allowed) portfolio group, which enables aggregate view for multiple locations.
+      operationId: put-portfolio-groups
+      parameters:
+      - name: accountId
+        in: path
+        description: Account identifier
+        required: true
+        schema:
+          type: string
+        example: 6ad04dc2-0db7-4f96-a10d-5a6aff002d05
+      requestBody:
+        description: ''
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PortfolioGroupAddDto'
+      responses:
+        '201':
+          description: Portfolio group was created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PortfolioGroup'
+        '400':
+          description: Bad request. See error code and description for more info
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorDetails'
+              examples:
+                Job with specified id could not be found:
+                  value:
+                    code: JOB_NOT_FOUND
+                    description: Job with specified id could not be found
+                    request_id: 65e2ea86-470f-4363-9295-35d6b473981a
+        '404':
+          description: Portfolio account was not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorDetails'
+              examples:
+                Job with specified id could not be found:
+                  value:
+                    code: JOB_NOT_FOUND
+                    description: Job with specified id could not be found
+                    request_id: 65e2ea86-470f-4363-9295-35d6b473981a
+    get:
+      tags:
+      - Portfolio Groups
+      summary: Get all groups on porfolio account
+      operationId: get-portfolio-groups-list
+      parameters:
+      - name: accountId
+        in: path
+        description: Account identifier
+        required: true
+        schema:
+          type: string
+        example: 6ad04dc2-0db7-4f96-a10d-5a6aff002d05
+      responses:
+        '200':
+          description: Ok
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/PortfolioGroup'
+        '400':
+          description: Bad request. See error code and description for more info
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorDetails'
+              examples:
+                Job with specified id could not be found:
+                  value:
+                    code: JOB_NOT_FOUND
+                    description: Job with specified id could not be found
+                    request_id: 65e2ea86-470f-4363-9295-35d6b473981a
+        '404':
+          description: Portfolio account was not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorDetails'
+              examples:
+                Job with specified id could not be found:
+                  value:
+                    code: JOB_NOT_FOUND
+                    description: Job with specified id could not be found
+                    request_id: 65e2ea86-470f-4363-9295-35d6b473981a
+  /portfolio/accounts/{accountId}/groups/{id}:
+    delete:
+      tags:
+      - Portfolio Groups
+      summary: Delete group on portfolio account
+      description: Not allowed to delete groups created in portfolio api by portfolio user
+      operationId: delete-portfolio-groups
+      parameters:
+      - name: accountId
+        in: path
+        description: Account identifier
+        required: true
+        schema:
+          type: string
+        example: 6ad04dc2-0db7-4f96-a10d-5a6aff002d05
+      - name: id
+        in: path
+        description: Group identifier
+        required: true
+        schema:
+          type: string
+          format: uuid
+        example: c26ad04d-0db7-4f96-a10d-d055a6aff002
+      responses:
+        '204':
+          description: Portfolio group was deleted
+        '400':
+          description: Bad request. See error code and description for more info
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorDetails'
+              examples:
+                Job with specified id could not be found:
+                  value:
+                    code: JOB_NOT_FOUND
+                    description: Job with specified id could not be found
+                    request_id: 65e2ea86-470f-4363-9295-35d6b473981a
+        '403':
+          description: Group created by Portfolio user cannot be deleted from this Api
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorDetails'
+              examples:
+                Job with specified id could not be found:
+                  value:
+                    code: JOB_NOT_FOUND
+                    description: Job with specified id could not be found
+                    request_id: 65e2ea86-470f-4363-9295-35d6b473981a
+        '404':
+          description: Portfolio group or account was not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorDetails'
+              examples:
+                Job with specified id could not be found:
+                  value:
+                    code: JOB_NOT_FOUND
+                    description: Job with specified id could not be found
+                    request_id: 65e2ea86-470f-4363-9295-35d6b473981a
+    get:
+      tags:
+      - Portfolio Groups
+      summary: Get group on portfolio account
+      operationId: get-portfolio-groups
+      parameters:
+      - name: accountId
+        in: path
+        description: Account identifier
+        required: true
+        schema:
+          type: string
+        example: 6ad04dc2-0db7-4f96-a10d-5a6aff002d05
+      - name: id
+        in: path
+        description: Group identifier
+        required: true
+        schema:
+          type: string
+          format: uuid
+        example: c26ad04d-0db7-4f96-a10d-d055a6aff002
+      responses:
+        '200':
+          description: Ok
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PortfolioGroup'
+        '400':
+          description: Bad request. See error code and description for more info
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorDetails'
+              examples:
+                Job with specified id could not be found:
+                  value:
+                    code: JOB_NOT_FOUND
+                    description: Job with specified id could not be found
+                    request_id: 65e2ea86-470f-4363-9295-35d6b473981a
+        '404':
+          description: Portfolio group or account was not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorDetails'
+              examples:
+                Job with specified id could not be found:
+                  value:
+                    code: JOB_NOT_FOUND
+                    description: Job with specified id could not be found
+                    request_id: 65e2ea86-470f-4363-9295-35d6b473981a
+components:
+  schemas:
+    PortfolioUserRole:
+      enum:
+      - user
+      - admin
+      - owner
+      type: string
+    PortfolioLocation:
+      required:
+      - name
+      type: object
+      properties:
+        id:
+          type:
+          - string
+          - 'null'
+        name:
+          minLength: 1
+          type: string
+        created_at_utc:
+          type: string
+    PortfolioUser:
+      required:
+      - name
+      - role
+      type: object
+      properties:
+        id:
+          type:
+          - string
+          - 'null'
+        name:
+          minLength: 1
+          type: string
+        role:
+          $ref: '#/components/schemas/PortfolioUserRole'
+        created_at_utc:
+          type: string
+        last_logon_utc:
+          type:
+          - string
+          - 'null'
+        magic_link_emails:
+          type:
+          - array
+          - 'null'
+          items:
+            type: string
+    PortfolioGroup:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        name:
+          type:
+          - string
+          - 'null'
+        status:
+          $ref: '#/components/schemas/PortfolioGroupStatus'
+        created_at_utc:
+          type: string
+        created_by_user_id:
+          type:
+          - string
+          - 'null'
+        users:
+          type:
+          - array
+          - 'null'
+          items:
+            $ref: '#/components/schemas/PortfolioUser'
+        locations:
+          type:
+          - array
+          - 'null'
+          items:
+            $ref: '#/components/schemas/PortfolioLocation'
+        created_by_user:
+          $ref: '#/components/schemas/PortfolioUser'
+    PortfolioGroupAddDto:
+      type: object
+      properties:
+        name:
+          type:
+          - string
+          - 'null'
+        users:
+          type:
+          - array
+          - 'null'
+          items:
+            type: string
+        locations:
+          type:
+          - array
+          - 'null'
+          items:
+            type: string
+    ErrorDetails:
+      required:
+      - code
+      - description
+      type: object
+      properties:
+        code:
+          minLength: 1
+          type: string
+        description:
+          minLength: 1
+          type: string
+        request_id:
+          type:
+          - string
+          - 'null'
+    PortfolioGroupStatus:
+      enum:
+      - in_progress
+      - active
+      - disabled
+      type: string
+x-tagGroups:
+- name: Users
+  tags:
+  - User
+- name: Locations
+  tags:
+  - Location
+  - Location profile
+  - Location home profile
+  - Location price formulas
+- name: Meters
+  tags:
+  - Meter
+  - Meter Energy Day
+  - Meter Energy High Resolution
+  - Meter Energy Reads
+  - Meter Energy Period
+  - Meter Max Demand
+  - Meter Price Formulas
+- name: Jobs
+  tags:
+  - Jobs
+- name: Portfolio
+  tags:
+  - Portfolio Accounts
+  - Portfolio Groups
+  - Portfolio Locations
+  - Portfolio Users
+- name: Client details
+  tags:
+  - Client details

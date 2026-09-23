@@ -1,0 +1,455 @@
+openapi: 3.2.0
+info:
+  title: Insights Price Formulas API
+  version: 3.4.1
+  contact:
+    name: Insights Team
+    email: support_b2b@eliq.com
+  description: '# API Reference
+
+
+    The Eliq insights API is organized around REST.'
+servers:
+- url: http://localhost:3000
+security:
+- BearerAuth: []
+tags:
+- name: Price Formulas
+paths:
+  /v3/locations/{locationId}/price-formula:
+    get:
+      tags:
+      - Price Formulas
+      summary: Get price formulas
+      description: Get a list of price formulas for a location and its meters
+      operationId: get-v3-locations-locationId-price-formula
+      parameters:
+      - name: locationId
+        in: path
+        description: Location id
+        required: true
+        schema:
+          type: integer
+          format: int32
+      - name: fuel
+        in: query
+        description: Fuel type
+        schema:
+          $ref: '#/components/schemas/Fuel'
+      - name: direction
+        in: query
+        description: Direction type
+        schema:
+          $ref: '#/components/schemas/PriceFormulaDirection'
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/MeterPriceFormula'
+              examples:
+                Location Fixed unit rate:
+                  value:
+                  - fuel: elec
+                    direction: import
+                    from: '2023-01-01T00:00:00'
+                    to: '2023-12-31T00:00:00'
+                    currency_code: GBP
+                    elements_array:
+                    - name: service_charge_day
+                      type: charge
+                      charge:
+                        resolution: day
+                        charge: 0.2
+                    - name: unit_rate_fixed
+                      type: unit_rate
+                      unit_rate:
+                        type: fixed
+                        fixed:
+                          unit_rate: 0.15
+                    source: client
+                Location Nordpool unit rate:
+                  value:
+                  - fuel: elec
+                    direction: import
+                    from: '2023-01-01T00:00:00'
+                    to: '2023-12-31T00:00:00'
+                    currency_code: GBP
+                    elements_array:
+                    - name: service_charge_day
+                      type: charge
+                      charge:
+                        resolution: day
+                        charge: 0.2
+                    - name: unit_rate_nordpool
+                      type: unit_rate
+                      unit_rate:
+                        type: nordpool
+                        nordpool:
+                          region: nordpool_no2
+                          resolution: hour
+                          multiplier: 1.25
+                    source: client
+                Meter Nordpool unit rate:
+                  value:
+                  - meter_id: 111ccf3a1907438fac72e0f231d137ff
+                    fuel: elec
+                    direction: import
+                    from: '2023-01-01T00:00:00'
+                    to: '2023-12-31T00:00:00'
+                    currency_code: GBP
+                    elements_array:
+                    - name: service_charge_day
+                      type: charge
+                      charge:
+                        resolution: day
+                        charge: 0.2
+                    - name: unit_rate_nordpool
+                      type: unit_rate
+                      unit_rate:
+                        type: nordpool
+                        nordpool:
+                          region: nordpool_no2
+                          resolution: hour
+                          multiplier: 1.25
+                    source: client
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+              examples:
+                Location not found:
+                  value:
+                    code: ENTITY_NOT_FOUND
+                    transaction_id: 0HN18NIB8K5RV:00000001
+                    description: Could not find the location.
+        '500':
+          description: Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+              examples:
+                Internal Error:
+                  value:
+                    code: INTERNAL_SERVER_ERROR
+                    transaction_id: 0HN18NIB8K5RV:00000001
+                    description: Internal server error.
+components:
+  schemas:
+    ChargeResolution:
+      enum:
+      - day
+      - month
+      type: string
+      description: Charge resolution
+    Element:
+      required:
+      - name
+      - type
+      type: object
+      properties:
+        name:
+          minLength: 1
+          type: string
+          description: Name of the price formula element
+        type:
+          $ref: '#/components/schemas/PriceElementType'
+        charge:
+          $ref: '#/components/schemas/Charge'
+        unit_rate:
+          $ref: '#/components/schemas/UnitRate'
+    SpotPrice:
+      type: object
+      properties:
+        provider:
+          $ref: '#/components/schemas/SpotPriceProvider'
+        region:
+          type: string
+          nullable: true
+        resolution:
+          $ref: '#/components/schemas/SpotPriceResolution'
+        multiplier:
+          type: number
+          format: double
+          nullable: true
+    Charge:
+      required:
+      - resolution
+      type: object
+      properties:
+        resolution:
+          $ref: '#/components/schemas/ChargeResolution'
+        charge:
+          type: number
+          description: Charge amount
+          format: double
+          nullable: true
+      description: Object containing the charge. Available when type is set to charge.
+    SpotPriceProvider:
+      enum:
+      - nordpool
+      - epex
+      type: string
+    Fixed:
+      required:
+      - unit_rate
+      type: object
+      properties:
+        unit_rate:
+          type: number
+          description: Fixed unit rate
+          format: double
+      description: Object containing spot price information. Available if unit rate type is set to 'fixed'
+    Fuel:
+      enum:
+      - elec
+      - gas
+      - district_heating
+      type: string
+      description: Fuel type
+    Block:
+      type: object
+      properties:
+        resolution:
+          $ref: '#/components/schemas/BlockResolution'
+        register_id:
+          type: string
+          nullable: true
+        unit_rate:
+          type: number
+          format: double
+        from_kwh:
+          type: integer
+          format: int64
+          nullable: true
+        to_kwh:
+          type: integer
+          format: int64
+          nullable: true
+        from_m3:
+          type: integer
+          format: int64
+          nullable: true
+        to_m3:
+          type: integer
+          format: int64
+          nullable: true
+    UnitRateType:
+      enum:
+      - fixed
+      - tou
+      - nordpool
+      - block
+      - spot_price
+      type: string
+      description: Unit rate type
+    PriceFormulaDirection:
+      enum:
+      - import
+      - export
+      type: string
+      description: Direction type
+    MeterPriceFormula:
+      type: object
+      properties:
+        meter_id:
+          type: string
+          description: Meter id. Applicable only for price formulas set on a meter. Location level formulas which can be applied to multiple meters will have this field empty.
+          nullable: true
+        fuel:
+          $ref: '#/components/schemas/Fuel'
+        direction:
+          $ref: '#/components/schemas/PriceFormulaDirection'
+        from:
+          type: string
+          description: Price formula start date.
+          format: date-time
+          nullable: true
+        to:
+          type: string
+          description: Price formula end date.
+          format: date-time
+          nullable: true
+        currency_code:
+          type: string
+          description: Price formula currency code.
+          nullable: true
+        elements_array:
+          type: array
+          items:
+            $ref: '#/components/schemas/Element'
+          description: List of elements
+          nullable: true
+        source:
+          $ref: '#/components/schemas/Source'
+    Tou:
+      type: object
+      properties:
+        register_id:
+          type: string
+          nullable: true
+        unit_rate:
+          type: number
+          format: double
+          nullable: true
+        intervals:
+          type: array
+          items:
+            $ref: '#/components/schemas/Interval'
+          nullable: true
+        skip_intervals:
+          type: boolean
+          nullable: true
+    Nordpool:
+      required:
+      - region
+      - resolution
+      type: object
+      properties:
+        region:
+          minLength: 1
+          type: string
+          description: Region
+        resolution:
+          $ref: '#/components/schemas/NordpoolResolution'
+        multiplier:
+          type: number
+          description: Multiplier. All Nordpool is by default without VAT. Specify VAT to be used, value 1.25 would result in 25% tax.
+          format: double
+          nullable: true
+      description: Object containing Nordpool information. Available if unit rate type is set to nordpool
+    NordpoolResolution:
+      enum:
+      - hour
+      type: string
+    PriceElementType:
+      enum:
+      - charge
+      - unit_rate
+      type: string
+      description: Formula element type.
+    BlockResolution:
+      enum:
+      - day
+      - year
+      type: string
+    Source:
+      enum:
+      - client
+      - user
+      type: string
+      description: Price formula source
+    Interval:
+      type: object
+      properties:
+        from_minute:
+          type: integer
+          format: int64
+          nullable: true
+        to_minute:
+          type: integer
+          format: int64
+          nullable: true
+    Error:
+      type: object
+      properties:
+        type:
+          type: string
+          description: Type of error.
+          nullable: true
+          example: internal_error
+        category:
+          type: string
+          description: Error category.
+          nullable: true
+          example: internal_error
+        code:
+          type: string
+          description: Code describing the issue.
+          nullable: true
+          example: INTERNAL_ERROR
+        transaction_id:
+          type: string
+          description: Identifier for the session. Please provide this when contacting support.
+          nullable: true
+          example: 0HN18NN5QB401:00000001
+        message:
+          type: string
+          description: A message related to the error.
+          nullable: true
+          example: Something went wrong. Please try again later. If problem remains, please contact support.
+        description:
+          type: string
+          description: A description of the error for developers.
+          nullable: true
+          example: Internal server error, please try again later. If problem remains, please contact support.
+      description: Model returned for error responses.
+    UnitRate:
+      required:
+      - type
+      type: object
+      properties:
+        type:
+          $ref: '#/components/schemas/UnitRateType'
+        fixed:
+          $ref: '#/components/schemas/Fixed'
+        tou:
+          $ref: '#/components/schemas/Tou'
+        nordpool:
+          $ref: '#/components/schemas/Nordpool'
+        block:
+          $ref: '#/components/schemas/Block'
+        spot_price:
+          $ref: '#/components/schemas/SpotPrice'
+        weekdays:
+          type: array
+          items:
+            type: string
+          nullable: true
+      description: Object containing the unit rate. Available when type is set to unit_rate.
+    SpotPriceResolution:
+      enum:
+      - hour
+      - 15min
+      type: string
+  securitySchemes:
+    BearerAuth:
+      type: http
+      scheme: bearer
+      description: The Eliq insights API uses bearer tokens to authenticate requests. Read more under Authentication tag.
+x-tagGroups:
+- name: Authentication
+  tags:
+  - Authentication
+- name: Users
+  tags:
+  - Users
+- name: Locations
+  tags:
+  - Locations
+  - Location Profile
+  - Energy Data
+  - Energy Usage Categories
+  - Energy Performance Certificate
+  - Similar Homes
+  - Budgets
+  - Advice
+  - Anomalies
+  - Market Price
+  - Price Formulas
+- name: Eliq Connect
+  tags:
+  - Eliq Connect
+- name: Health
+  tags:
+  - Health
+- name: Deprecated
+  tags:
+  - Breakdown
+  - Home Profile

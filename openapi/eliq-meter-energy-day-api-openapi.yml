@@ -1,0 +1,510 @@
+openapi: 3.2.0
+info:
+  title: Eliq Data Management Meter Energy Day API
+  description: '# API Reference
+
+
+    The Eliq data management API is organized around REST.'
+  contact:
+    name: Support
+    email: support_b2b@eliq.com
+  version: 1.5.2
+tags:
+- name: Meter Energy Day
+paths:
+  /meters/{id}/energy/day:
+    post:
+      tags:
+      - Meter Energy Day
+      summary: Creates or updates daily energy data for a meter
+      operationId: post-daily-energy-meterid
+      parameters:
+      - name: id
+        in: path
+        description: Meter external reference
+        required: true
+        schema:
+          type: string
+      requestBody:
+        description: Daily energy object to create or update
+        content:
+          application/json:
+            schema:
+              type: array
+              items:
+                $ref: '#/components/schemas/EnergyDailyData'
+            examples:
+              Energy daily data:
+                value:
+                - date: '2024-01-01'
+                  energy_wh: 1000.0
+                  is_estimated: false
+                  registers:
+                  - id: Register_ID
+                    energy_wh: 1000.0
+                - date: '2024-01-02'
+                  energy_wh: 950.0
+                  is_estimated: false
+                  registers:
+                  - id: Register_ID
+                    energy_wh: 950.0
+                - date: '2024-01-03'
+                  energy_wh: 820.0
+                  is_estimated: false
+                  registers:
+                  - id: Register_ID
+                    energy_wh: 820.0
+                - date: '2024-01-04'
+                  energy_wh: 120.0
+                  is_estimated: false
+                  registers:
+                  - id: Register_ID
+                    energy_wh: 120.0
+                - date: '2024-01-05'
+                  energy_wh: 1250.0
+                  is_estimated: false
+                  registers:
+                  - id: Register_ID
+                    energy_wh: 1250.0
+      responses:
+        '204':
+          description: No Content
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NoContentResult'
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorDetails'
+              examples:
+                Request input is missing. This may be caused by incorrect format of input.:
+                  value:
+                    code: INPUT_MISSING
+                    description: Request input is missing. This may be caused by incorrect format of input.
+                    request_id: 65e2ea86-470f-4363-9295-35d6b473981a
+                Parameter 'id' must not be null or empty:
+                  value:
+                    code: METER_ID_MISSING
+                    description: Parameter 'id' must not be null or empty
+                    request_id: 65e2ea86-470f-4363-9295-35d6b473981a
+                Element in sequence must have either parameter 'energy_wh' or 'energy_m3':
+                  value:
+                    code: ENERGY_ELEMENT_ENERGY_WH_AND_ENERGY_M3_MISSING
+                    description: Element in sequence must have either parameter 'energy_wh' or 'energy_m3'
+                    request_id: 65e2ea86-470f-4363-9295-35d6b473981a
+                Element in sequence must have either parameter 'energy_wh' or 'energy_m3' but not both:
+                  value:
+                    code: ENERGY_ELEMENT_BOTH_ENERGY_WH_AND_ENERGY_M3_SET
+                    description: Element in sequence must have either parameter 'energy_wh' or 'energy_m3' but not both
+                    request_id: 65e2ea86-470f-4363-9295-35d6b473981a
+                Element in sequence has 'energy_m3' but the meter's fuel does not support it. 'energy_wh' is supported:
+                  value:
+                    code: ENERGY_ELEMENT_ENERGY_M3_ON_UNSUPPORTED_FUEL_METER
+                    description: Element in sequence has 'energy_m3' but the meter's fuel does not support it. 'energy_wh' is supported
+                    request_id: 65e2ea86-470f-4363-9295-35d6b473981a
+                Maximum limit of element per request exceeded. Please refer to documentation for more information:
+                  value:
+                    code: ENERGY_SEQUENCE_LENGTH_LIMIT_EXCEEDED
+                    description: Maximum limit of element per request exceeded. Please refer to documentation for more information
+                    request_id: 65e2ea86-470f-4363-9295-35d6b473981a
+                Energy elements in sequence must be unique:
+                  value:
+                    code: ENERGY_SEQUENCE_CONTAINS_DUPLICATE_ELEMENTS
+                    description: Energy elements in sequence must be unique
+                    request_id: 65e2ea86-470f-4363-9295-35d6b473981a
+                Element in sequence missing parameter 'date'. This may be caused by incorrect date format, please refer to documentation:
+                  value:
+                    code: ENERGY_ELEMENT_DATE_MISSING
+                    description: Element in sequence missing parameter 'date'. This may be caused by incorrect date format, please refer to documentation
+                    request_id: 65e2ea86-470f-4363-9295-35d6b473981a
+                Parameter 'energy_wh' must not be negative:
+                  value:
+                    code: ENERGY_ELEMENT_ENERGY_WH_INVALID
+                    description: Parameter 'energy_wh' must not be negative
+                    request_id: 65e2ea86-470f-4363-9295-35d6b473981a
+                Parameter 'registers[].id' must not be null or empty:
+                  value:
+                    code: ENERGY_ELEMENT_REGISTER_ID_MISSING
+                    description: Parameter 'registers[].id' must not be null or empty
+                    request_id: 65e2ea86-470f-4363-9295-35d6b473981a
+                Registers in 'registers[]' must be unique:
+                  value:
+                    code: ENERGY_ELEMENT_CONTAINS_DUPLICATE_REGISTERS
+                    description: Registers in 'registers[]' must be unique
+                    request_id: 65e2ea86-470f-4363-9295-35d6b473981a
+                Parameter 'registers[].energy_wh' must not be null:
+                  value:
+                    code: ENERGY_ELEMENT_REGISTER_ENERGY_WH_MISSING
+                    description: Parameter 'registers[].energy_wh' must not be null
+                    request_id: 65e2ea86-470f-4363-9295-35d6b473981a
+                Element in sequence must have either parameter 'registers[].energy_wh' or 'registers[].energy_m3':
+                  value:
+                    code: ENERGY_ELEMENT_REGISTER_ENERGY_WH_AND_ENERGY_M3_MISSING
+                    description: Element in sequence must have either parameter 'registers[].energy_wh' or 'registers[].energy_m3'
+                    request_id: 65e2ea86-470f-4363-9295-35d6b473981a
+                Element in sequence must have either parameter 'registers[].energy_wh' or 'registers[].energy_m3' but not both:
+                  value:
+                    code: ENERGY_ELEMENT_REGISTER_BOTH_ENERGY_WH_AND_ENERGY_M3_SET
+                    description: Element in sequence must have either parameter 'registers[].energy_wh' or 'registers[].energy_m3' but not both
+                    request_id: 65e2ea86-470f-4363-9295-35d6b473981a
+                Parameter 'registers[].energy_wh' must not be negative:
+                  value:
+                    code: ENERGY_ELEMENT_REGISTER_ENERGY_WH_INVALID
+                    description: Parameter 'registers[].energy_wh' must not be negative
+                    request_id: 65e2ea86-470f-4363-9295-35d6b473981a
+                Parameter 'registers' elements 'energy_wh' sum have to be identical to parameter 'energy_wh':
+                  value:
+                    code: REGISTERS_ENERGY_WH_SUM_NOT_MATCH_DATA_ENERGY_WH
+                    description: Parameter 'registers' elements 'energy_wh' sum have to be identical to parameter 'energy_wh'
+                    request_id: 65e2ea86-470f-4363-9295-35d6b473981a
+                Parameter 'date' cannot be outside range of meter SupplyStartDate -> SupplyEndDate range:
+                  value:
+                    code: ENERGY_DAILY_DATE_IS_OUTSIDE_METER_SUPPLY_DATE_RANGE
+                    description: Parameter 'date' cannot be outside range of meter SupplyStartDate -> SupplyEndDate range
+                    request_id: 65e2ea86-470f-4363-9295-35d6b473981a
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorDetails'
+              examples:
+                Meter with given id could not be found:
+                  value:
+                    code: METER_NOT_FOUND
+                    description: Meter with given id could not be found
+                    request_id: 65e2ea86-470f-4363-9295-35d6b473981a
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorDetails'
+              examples:
+                Internal server error. If problem remains, please contact support:
+                  value:
+                    code: INTERNAL_ERROR
+                    description: Internal server error. If problem remains, please contact support
+                    request_id: 65e2ea86-470f-4363-9295-35d6b473981a
+    delete:
+      tags:
+      - Meter Energy Day
+      summary: Deletes the daily energy data for a meter
+      operationId: delete-daily-energy-meterid
+      parameters:
+      - name: id
+        in: path
+        description: Meter external reference
+        required: true
+        schema:
+          type: string
+      - name: FromDate
+        in: query
+        schema:
+          type: string
+      - name: From
+        in: query
+        schema:
+          type: string
+      - name: ToDate
+        in: query
+        schema:
+          type: string
+      - name: To
+        in: query
+        schema:
+          type: string
+      responses:
+        '204':
+          description: No Content
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NoContentResult'
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorDetails'
+              examples:
+                Missing parameters 'from' and 'to'. This may be caused by incorrect date format, please refer to documentation:
+                  value:
+                    code: DATE_RANGE_MISSING
+                    description: Missing parameters 'from' and 'to'. This may be caused by incorrect date format, please refer to documentation
+                    request_id: 65e2ea86-470f-4363-9295-35d6b473981a
+                Parameter 'id' must not be null or empty:
+                  value:
+                    code: METER_ID_MISSING
+                    description: Parameter 'id' must not be null or empty
+                    request_id: 65e2ea86-470f-4363-9295-35d6b473981a
+                From date is missing. This may be caused by incorrect date format, please refer to documentation:
+                  value:
+                    code: FROM_MISSING
+                    description: From date is missing. This may be caused by incorrect date format, please refer to documentation
+                    request_id: 65e2ea86-470f-4363-9295-35d6b473981a
+                To date is missing. This may be caused by incorrect date format, please refer to documentation:
+                  value:
+                    code: TO_MISSING
+                    description: To date is missing. This may be caused by incorrect date format, please refer to documentation
+                    request_id: 65e2ea86-470f-4363-9295-35d6b473981a
+                Date range is invalid i.e. 'from' date is after 'to' date:
+                  value:
+                    code: DATE_RANGE_INVALID
+                    description: Date range is invalid i.e. 'from' date is after 'to' date
+                    request_id: 65e2ea86-470f-4363-9295-35d6b473981a
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorDetails'
+              examples:
+                Meter with given id could not be found:
+                  value:
+                    code: METER_NOT_FOUND
+                    description: Meter with given id could not be found
+                    request_id: 65e2ea86-470f-4363-9295-35d6b473981a
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorDetails'
+              examples:
+                Internal server error. If problem remains, please contact support:
+                  value:
+                    code: INTERNAL_ERROR
+                    description: Internal server error. If problem remains, please contact support
+                    request_id: 65e2ea86-470f-4363-9295-35d6b473981a
+    get:
+      tags:
+      - Meter Energy Day
+      summary: Gets the stored daily energy data for a meter within a specified timespan
+      operationId: get-daily-energy-meterid
+      parameters:
+      - name: id
+        in: path
+        description: Meter external reference
+        required: true
+        schema:
+          type: string
+      - name: FromDate
+        in: query
+        schema:
+          type: string
+      - name: From
+        in: query
+        schema:
+          type: string
+      - name: ToDate
+        in: query
+        schema:
+          type: string
+      - name: To
+        in: query
+        schema:
+          type: string
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/EnergyDailyData'
+              examples:
+                Energy daily data:
+                  value:
+                  - date: '2024-01-01'
+                    energy_wh: 1000.0
+                    is_estimated: false
+                    registers:
+                    - id: Register_ID
+                      energy_wh: 1000.0
+                  - date: '2024-01-02'
+                    energy_wh: 950.0
+                    is_estimated: false
+                    registers:
+                    - id: Register_ID
+                      energy_wh: 950.0
+                  - date: '2024-01-03'
+                    energy_wh: 820.0
+                    is_estimated: false
+                    registers:
+                    - id: Register_ID
+                      energy_wh: 820.0
+                  - date: '2024-01-04'
+                    energy_wh: 120.0
+                    is_estimated: false
+                    registers:
+                    - id: Register_ID
+                      energy_wh: 120.0
+                  - date: '2024-01-05'
+                    energy_wh: 1250.0
+                    is_estimated: false
+                    registers:
+                    - id: Register_ID
+                      energy_wh: 1250.0
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorDetails'
+              examples:
+                Missing parameters 'from' and 'to'. This may be caused by incorrect date format, please refer to documentation:
+                  value:
+                    code: DATE_RANGE_MISSING
+                    description: Missing parameters 'from' and 'to'. This may be caused by incorrect date format, please refer to documentation
+                    request_id: 65e2ea86-470f-4363-9295-35d6b473981a
+                Parameter 'id' must not be null or empty:
+                  value:
+                    code: METER_ID_MISSING
+                    description: Parameter 'id' must not be null or empty
+                    request_id: 65e2ea86-470f-4363-9295-35d6b473981a
+                From date is missing. This may be caused by incorrect date format, please refer to documentation:
+                  value:
+                    code: FROM_MISSING
+                    description: From date is missing. This may be caused by incorrect date format, please refer to documentation
+                    request_id: 65e2ea86-470f-4363-9295-35d6b473981a
+                To date is missing. This may be caused by incorrect date format, please refer to documentation:
+                  value:
+                    code: TO_MISSING
+                    description: To date is missing. This may be caused by incorrect date format, please refer to documentation
+                    request_id: 65e2ea86-470f-4363-9295-35d6b473981a
+                Date range is invalid i.e. 'from' date is after 'to' date:
+                  value:
+                    code: DATE_RANGE_INVALID
+                    description: Date range is invalid i.e. 'from' date is after 'to' date
+                    request_id: 65e2ea86-470f-4363-9295-35d6b473981a
+                Maximum range between 'from' and 'to' exceeded. Please refer to documentation:
+                  value:
+                    code: DATE_RANGE_LIMIT_EXCEEDED
+                    description: Maximum range between 'from' and 'to' exceeded. Please refer to documentation
+                    request_id: 65e2ea86-470f-4363-9295-35d6b473981a
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorDetails'
+              examples:
+                Meter with given id could not be found:
+                  value:
+                    code: METER_NOT_FOUND
+                    description: Meter with given id could not be found
+                    request_id: 65e2ea86-470f-4363-9295-35d6b473981a
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorDetails'
+              examples:
+                Internal server error. If problem remains, please contact support:
+                  value:
+                    code: INTERNAL_ERROR
+                    description: Internal server error. If problem remains, please contact support
+                    request_id: 65e2ea86-470f-4363-9295-35d6b473981a
+components:
+  schemas:
+    NoContentResult:
+      type: object
+      properties:
+        statusCode:
+          type: integer
+          format: int32
+    ErrorDetails:
+      required:
+      - code
+      - description
+      type: object
+      properties:
+        code:
+          minLength: 1
+          type: string
+        description:
+          minLength: 1
+          type: string
+        request_id:
+          type:
+          - string
+          - 'null'
+    Register:
+      type: object
+      properties:
+        id:
+          type:
+          - string
+          - 'null'
+        energy_wh:
+          type:
+          - number
+          - 'null'
+          format: float
+        energy_m3:
+          type:
+          - number
+          - 'null'
+          format: float
+    EnergyDailyData:
+      type: object
+      properties:
+        date:
+          type:
+          - string
+          - 'null'
+        energy_wh:
+          type:
+          - number
+          - 'null'
+          format: float
+        energy_m3:
+          type:
+          - number
+          - 'null'
+          format: float
+        is_estimated:
+          type: boolean
+        registers:
+          type:
+          - array
+          - 'null'
+          items:
+            $ref: '#/components/schemas/Register'
+x-tagGroups:
+- name: Users
+  tags:
+  - User
+- name: Locations
+  tags:
+  - Location
+  - Location profile
+  - Location home profile
+  - Location price formulas
+- name: Meters
+  tags:
+  - Meter
+  - Meter Energy Day
+  - Meter Energy High Resolution
+  - Meter Energy Reads
+  - Meter Energy Period
+  - Meter Max Demand
+  - Meter Price Formulas
+- name: Jobs
+  tags:
+  - Jobs
+- name: Portfolio
+  tags:
+  - Portfolio Accounts
+  - Portfolio Groups
+  - Portfolio Locations
+  - Portfolio Users
+- name: Client details
+  tags:
+  - Client details

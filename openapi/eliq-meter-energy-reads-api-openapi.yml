@@ -1,0 +1,589 @@
+openapi: 3.2.0
+info:
+  title: Eliq Data Management Meter Energy Reads API
+  description: '# API Reference
+
+
+    The Eliq data management API is organized around REST.'
+  contact:
+    name: Support
+    email: support_b2b@eliq.com
+  version: 1.5.2
+tags:
+- name: Meter Energy Reads
+paths:
+  /meters/{id}/reads:
+    post:
+      tags:
+      - Meter Energy Reads
+      summary: Creates or updates meter reads for a meter
+      operationId: post-meter-reads-meterid
+      parameters:
+      - name: id
+        in: path
+        description: Meter external reference
+        required: true
+        schema:
+          type: string
+      requestBody:
+        description: Meter reads object
+        content:
+          application/json:
+            schema:
+              type: array
+              items:
+                $ref: '#/components/schemas/NonSmartMeterReadDto'
+            examples:
+              Meter reads data:
+                value:
+                - date: '2024-01-01'
+                  source: customer
+                  quality: normal
+                  status: accepted
+                  unit: m3
+                  registers:
+                  - id: '123'
+                    index: 100
+                  - id: '456'
+                    index: 20
+                - date: '2024-02-01'
+                  source: customer
+                  quality: normal
+                  status: accepted
+                  unit: m3
+                  registers:
+                  - id: '123'
+                    index: 110
+                  - id: '456'
+                    index: 22
+                - date: '2024-03-01'
+                  source: customer
+                  quality: normal
+                  status: accepted
+                  unit: m3
+                  registers:
+                  - id: '123'
+                    index: 120
+                  - id: '456'
+                    index: 24
+                - date: '2024-04-01'
+                  source: customer
+                  quality: normal
+                  status: accepted
+                  unit: m3
+                  registers:
+                  - id: '123'
+                    index: 130
+                  - id: '456'
+                    index: 26
+                - date: '2024-05-01'
+                  source: customer
+                  quality: normal
+                  status: accepted
+                  unit: m3
+                  registers:
+                  - id: '123'
+                    index: 140
+                  - id: '456'
+                    index: 28
+                - date: '2024-06-01'
+                  source: customer
+                  quality: normal
+                  status: accepted
+                  unit: m3
+                  registers:
+                  - id: '123'
+                    index: 150
+                  - id: '456'
+                    index: 30
+      responses:
+        '204':
+          description: No Content
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NoContentResult'
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorDetails'
+              examples:
+                Request input is missing. This may be caused by incorrect format of input.:
+                  value:
+                    code: INPUT_MISSING
+                    description: Request input is missing. This may be caused by incorrect format of input.
+                    request_id: 65e2ea86-470f-4363-9295-35d6b473981a
+                Parameter 'id' must not be null or empty:
+                  value:
+                    code: METER_ID_MISSING
+                    description: Parameter 'id' must not be null or empty
+                    request_id: 65e2ea86-470f-4363-9295-35d6b473981a
+                Maximum limit of element per request exceeded. Please refer to documentation for more information:
+                  value:
+                    code: READ_SEQUENCE_LENGTH_LIMIT_EXCEEDED
+                    description: Maximum limit of element per request exceeded. Please refer to documentation for more information
+                    request_id: 65e2ea86-470f-4363-9295-35d6b473981a
+                Element in sequence missing parameter 'registers':
+                  value:
+                    code: READ_ELEMENT_REGISTERS_MISSING
+                    description: Element in sequence missing parameter 'registers'
+                    request_id: 65e2ea86-470f-4363-9295-35d6b473981a
+                Parameter 'registers[].id' must not be null or empty:
+                  value:
+                    code: READ_ELEMENT_REGISTER_ID_MISSING
+                    description: Parameter 'registers[].id' must not be null or empty
+                    request_id: 65e2ea86-470f-4363-9295-35d6b473981a
+                Energy elements in sequence must be unique:
+                  value:
+                    code: READ_SEQUENCE_CONTAINS_DUPLICATE_ELEMENTS
+                    description: Energy elements in sequence must be unique
+                    request_id: 65e2ea86-470f-4363-9295-35d6b473981a
+                Parameter 'registers[].index' must not be null:
+                  value:
+                    code: READ_ELEMENT_REGISTER_INDEX_MISSING
+                    description: Parameter 'registers[].index' must not be null
+                    request_id: 65e2ea86-470f-4363-9295-35d6b473981a
+                Parameter 'registers[].index' must not be negative:
+                  value:
+                    code: READ_ELEMENT_REGISTER_INDEX_INVALID
+                    description: Parameter 'registers[].index' must not be negative
+                    request_id: 65e2ea86-470f-4363-9295-35d6b473981a
+                Registers in 'registers[]' must be unique:
+                  value:
+                    code: READ_ELEMENT_CONTAINS_DUPLICATE_REGISTERS
+                    description: Registers in 'registers[]' must be unique
+                    request_id: 65e2ea86-470f-4363-9295-35d6b473981a
+                Element in sequence missing parameter 'date'. This may be caused by incorrect date format, please refer to documentation:
+                  value:
+                    code: READ_ELEMENT_DATE_MISSING
+                    description: Element in sequence missing parameter 'date'. This may be caused by incorrect date format, please refer to documentation
+                    request_id: 65e2ea86-470f-4363-9295-35d6b473981a
+                Parameter 'quality' must not be null:
+                  value:
+                    code: READ_ELEMENT_QUALITY_MISSING
+                    description: Parameter 'quality' must not be null
+                    request_id: 65e2ea86-470f-4363-9295-35d6b473981a
+                Parameter 'quality' invalid. Should be one of 'normal' or 'estimated':
+                  value:
+                    code: READ_ELEMENT_QUALITY_INVALID
+                    description: Parameter 'quality' invalid. Should be one of 'normal' or 'estimated'
+                    request_id: 65e2ea86-470f-4363-9295-35d6b473981a
+                Parameter 'status' must not be null:
+                  value:
+                    code: READ_ELEMENT_STATUS_MISSING
+                    description: Parameter 'status' must not be null
+                    request_id: 65e2ea86-470f-4363-9295-35d6b473981a
+                Parameter 'status' invalid. Should be one of 'accepted' or 'pending':
+                  value:
+                    code: READ_ELEMENT_STATUS_INVALID
+                    description: Parameter 'status' invalid. Should be one of 'accepted' or 'pending'
+                    request_id: 65e2ea86-470f-4363-9295-35d6b473981a
+                Parameter 'source' must not be null:
+                  value:
+                    code: READ_ELEMENT_SOURCE_MISSING
+                    description: Parameter 'source' must not be null
+                    request_id: 65e2ea86-470f-4363-9295-35d6b473981a
+                Parameter 'source' invalid. Should be one of 'customer', 'utility', 'smr' or 'system':
+                  value:
+                    code: READ_ELEMENT_SOURCE_INVALID
+                    description: Parameter 'source' invalid. Should be one of 'customer', 'utility', 'smr' or 'system'
+                    request_id: 65e2ea86-470f-4363-9295-35d6b473981a
+                Parameter 'unit' must not be null:
+                  value:
+                    code: READ_ELEMENT_UNIT_MISSING
+                    description: Parameter 'unit' must not be null
+                    request_id: 65e2ea86-470f-4363-9295-35d6b473981a
+                Parameter 'unit' invalid. Should be 'kwh' or 'm3':
+                  value:
+                    code: READ_ELEMENT_UNIT_INVALID
+                    description: Parameter 'unit' invalid. Should be 'kwh' or 'm3'
+                    request_id: 65e2ea86-470f-4363-9295-35d6b473981a
+                Parameter 'unit' has value 'm3' but the meter's fuel does not support it. 'kwh' is supported:
+                  value:
+                    code: READ_ELEMENT_UNIT_M3_ON_UNSUPPORTED_FUEL_METER
+                    description: Parameter 'unit' has value 'm3' but the meter's fuel does not support it. 'kwh' is supported
+                    request_id: 65e2ea86-470f-4363-9295-35d6b473981a
+                Meter associated with provided id does not support meter reads.:
+                  value:
+                    code: METER_MODEL_DOES_NOT_SUPPORT_READS
+                    description: Meter associated with provided id does not support meter reads.
+                    request_id: 65e2ea86-470f-4363-9295-35d6b473981a
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorDetails'
+              examples:
+                Meter with given id could not be found:
+                  value:
+                    code: METER_NOT_FOUND
+                    description: Meter with given id could not be found
+                    request_id: 65e2ea86-470f-4363-9295-35d6b473981a
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorDetails'
+              examples:
+                Internal server error. If problem remains, please contact support:
+                  value:
+                    code: INTERNAL_ERROR
+                    description: Internal server error. If problem remains, please contact support
+                    request_id: 65e2ea86-470f-4363-9295-35d6b473981a
+    get:
+      tags:
+      - Meter Energy Reads
+      summary: Gets the stored meter reads for a meter within a specified timespan
+      operationId: get-meter-reads-meterid
+      parameters:
+      - name: id
+        in: path
+        description: Meter external reference
+        required: true
+        schema:
+          type: string
+      - name: FromDate
+        in: query
+        schema:
+          type: string
+      - name: From
+        in: query
+        schema:
+          type: string
+      - name: ToDate
+        in: query
+        schema:
+          type: string
+      - name: To
+        in: query
+        schema:
+          type: string
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/NonSmartMeterReadDto'
+              examples:
+                Meter reads data:
+                  value:
+                  - date: '2024-01-01'
+                    source: customer
+                    quality: normal
+                    status: accepted
+                    unit: m3
+                    registers:
+                    - id: '123'
+                      index: 100
+                    - id: '456'
+                      index: 20
+                  - date: '2024-02-01'
+                    source: customer
+                    quality: normal
+                    status: accepted
+                    unit: m3
+                    registers:
+                    - id: '123'
+                      index: 110
+                    - id: '456'
+                      index: 22
+                  - date: '2024-03-01'
+                    source: customer
+                    quality: normal
+                    status: accepted
+                    unit: m3
+                    registers:
+                    - id: '123'
+                      index: 120
+                    - id: '456'
+                      index: 24
+                  - date: '2024-04-01'
+                    source: customer
+                    quality: normal
+                    status: accepted
+                    unit: m3
+                    registers:
+                    - id: '123'
+                      index: 130
+                    - id: '456'
+                      index: 26
+                  - date: '2024-05-01'
+                    source: customer
+                    quality: normal
+                    status: accepted
+                    unit: m3
+                    registers:
+                    - id: '123'
+                      index: 140
+                    - id: '456'
+                      index: 28
+                  - date: '2024-06-01'
+                    source: customer
+                    quality: normal
+                    status: accepted
+                    unit: m3
+                    registers:
+                    - id: '123'
+                      index: 150
+                    - id: '456'
+                      index: 30
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorDetails'
+              examples:
+                Missing parameters 'from' and 'to'. This may be caused by incorrect date format, please refer to documentation:
+                  value:
+                    code: DATE_RANGE_MISSING
+                    description: Missing parameters 'from' and 'to'. This may be caused by incorrect date format, please refer to documentation
+                    request_id: 65e2ea86-470f-4363-9295-35d6b473981a
+                Parameter 'id' must not be null or empty:
+                  value:
+                    code: METER_ID_MISSING
+                    description: Parameter 'id' must not be null or empty
+                    request_id: 65e2ea86-470f-4363-9295-35d6b473981a
+                From date is missing. This may be caused by incorrect date format, please refer to documentation:
+                  value:
+                    code: FROM_MISSING
+                    description: From date is missing. This may be caused by incorrect date format, please refer to documentation
+                    request_id: 65e2ea86-470f-4363-9295-35d6b473981a
+                To date is missing. This may be caused by incorrect date format, please refer to documentation:
+                  value:
+                    code: TO_MISSING
+                    description: To date is missing. This may be caused by incorrect date format, please refer to documentation
+                    request_id: 65e2ea86-470f-4363-9295-35d6b473981a
+                Date range is invalid i.e. 'from' date is after 'to' date:
+                  value:
+                    code: DATE_RANGE_INVALID
+                    description: Date range is invalid i.e. 'from' date is after 'to' date
+                    request_id: 65e2ea86-470f-4363-9295-35d6b473981a
+                Maximum range between 'from' and 'to' exceeded. Please refer to documentation:
+                  value:
+                    code: DATE_RANGE_LIMIT_EXCEEDED
+                    description: Maximum range between 'from' and 'to' exceeded. Please refer to documentation
+                    request_id: 65e2ea86-470f-4363-9295-35d6b473981a
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorDetails'
+              examples:
+                Meter with given id could not be found:
+                  value:
+                    code: METER_NOT_FOUND
+                    description: Meter with given id could not be found
+                    request_id: 65e2ea86-470f-4363-9295-35d6b473981a
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorDetails'
+              examples:
+                Internal server error. If problem remains, please contact support:
+                  value:
+                    code: INTERNAL_ERROR
+                    description: Internal server error. If problem remains, please contact support
+                    request_id: 65e2ea86-470f-4363-9295-35d6b473981a
+    delete:
+      tags:
+      - Meter Energy Reads
+      summary: Deletes the stored meter reads for a meter within a specified timespan
+      operationId: delete-meter-reads-meterid
+      parameters:
+      - name: id
+        in: path
+        description: Meter external reference
+        required: true
+        schema:
+          type: string
+      - name: FromDate
+        in: query
+        schema:
+          type: string
+      - name: From
+        in: query
+        schema:
+          type: string
+      - name: ToDate
+        in: query
+        schema:
+          type: string
+      - name: To
+        in: query
+        schema:
+          type: string
+      responses:
+        '204':
+          description: No Content
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NoContentResult'
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorDetails'
+              examples:
+                Missing parameters 'from' and 'to'. This may be caused by incorrect date format, please refer to documentation:
+                  value:
+                    code: DATE_RANGE_MISSING
+                    description: Missing parameters 'from' and 'to'. This may be caused by incorrect date format, please refer to documentation
+                    request_id: 65e2ea86-470f-4363-9295-35d6b473981a
+                Parameter 'id' must not be null or empty:
+                  value:
+                    code: METER_ID_MISSING
+                    description: Parameter 'id' must not be null or empty
+                    request_id: 65e2ea86-470f-4363-9295-35d6b473981a
+                From date is missing. This may be caused by incorrect date format, please refer to documentation:
+                  value:
+                    code: FROM_MISSING
+                    description: From date is missing. This may be caused by incorrect date format, please refer to documentation
+                    request_id: 65e2ea86-470f-4363-9295-35d6b473981a
+                To date is missing. This may be caused by incorrect date format, please refer to documentation:
+                  value:
+                    code: TO_MISSING
+                    description: To date is missing. This may be caused by incorrect date format, please refer to documentation
+                    request_id: 65e2ea86-470f-4363-9295-35d6b473981a
+                Date range is invalid i.e. 'from' date is after 'to' date:
+                  value:
+                    code: DATE_RANGE_INVALID
+                    description: Date range is invalid i.e. 'from' date is after 'to' date
+                    request_id: 65e2ea86-470f-4363-9295-35d6b473981a
+                Maximum range between 'from' and 'to' exceeded. Please refer to documentation:
+                  value:
+                    code: DATE_RANGE_LIMIT_EXCEEDED
+                    description: Maximum range between 'from' and 'to' exceeded. Please refer to documentation
+                    request_id: 65e2ea86-470f-4363-9295-35d6b473981a
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorDetails'
+              examples:
+                Meter with given id could not be found:
+                  value:
+                    code: METER_NOT_FOUND
+                    description: Meter with given id could not be found
+                    request_id: 65e2ea86-470f-4363-9295-35d6b473981a
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorDetails'
+              examples:
+                Internal server error. If problem remains, please contact support:
+                  value:
+                    code: INTERNAL_ERROR
+                    description: Internal server error. If problem remains, please contact support
+                    request_id: 65e2ea86-470f-4363-9295-35d6b473981a
+components:
+  schemas:
+    NonSmartMeterReadDto:
+      type: object
+      properties:
+        date:
+          type:
+          - string
+          - 'null'
+        source:
+          type:
+          - string
+          - 'null'
+        quality:
+          type:
+          - string
+          - 'null'
+        status:
+          type:
+          - string
+          - 'null'
+        unit:
+          type:
+          - string
+          - 'null'
+        registers:
+          type:
+          - array
+          - 'null'
+          items:
+            $ref: '#/components/schemas/NonSmartRegisterDto'
+    NonSmartRegisterDto:
+      type: object
+      properties:
+        id:
+          type:
+          - string
+          - 'null'
+        index:
+          type:
+          - integer
+          - 'null'
+          format: int32
+    ErrorDetails:
+      required:
+      - code
+      - description
+      type: object
+      properties:
+        code:
+          minLength: 1
+          type: string
+        description:
+          minLength: 1
+          type: string
+        request_id:
+          type:
+          - string
+          - 'null'
+    NoContentResult:
+      type: object
+      properties:
+        statusCode:
+          type: integer
+          format: int32
+x-tagGroups:
+- name: Users
+  tags:
+  - User
+- name: Locations
+  tags:
+  - Location
+  - Location profile
+  - Location home profile
+  - Location price formulas
+- name: Meters
+  tags:
+  - Meter
+  - Meter Energy Day
+  - Meter Energy High Resolution
+  - Meter Energy Reads
+  - Meter Energy Period
+  - Meter Max Demand
+  - Meter Price Formulas
+- name: Jobs
+  tags:
+  - Jobs
+- name: Portfolio
+  tags:
+  - Portfolio Accounts
+  - Portfolio Groups
+  - Portfolio Locations
+  - Portfolio Users
+- name: Client details
+  tags:
+  - Client details

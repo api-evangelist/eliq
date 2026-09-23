@@ -1,0 +1,829 @@
+openapi: 3.2.0
+info:
+  title: Eliq Data Management Location price formulas API
+  description: '# API Reference
+
+
+    The Eliq data management API is organized around REST.'
+  contact:
+    name: Support
+    email: support_b2b@eliq.com
+  version: 1.5.2
+tags:
+- name: Location price formulas
+paths:
+  /locations/{locationId}/priceformulas:
+    get:
+      tags:
+      - Location price formulas
+      summary: Get location price formulas
+      operationId: get-locations-locationId-priceformulas
+      parameters:
+      - name: locationId
+        in: path
+        description: Unique identifier of location
+        required: true
+        schema:
+          type: string
+      - name: fuel
+        in: query
+        description: Fuel of meter (elec, gas or district_heating) from the provided location. Optional
+        schema:
+          type: string
+      - name: direction
+        in: query
+        description: Type of meter (import, export). Optional
+        schema:
+          type: string
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/LocationPriceFormula'
+              examples:
+                Location price formulas:
+                  value:
+                  - fuel: elec
+                    source: client
+                    direction: import
+                    from: '2024-01-01'
+                    to: '2024-12-31'
+                    currency_code: SEK
+                    elements:
+                    - name: Daily charge
+                      type: charge
+                      charge:
+                        resolution: day
+                        charge: 1.0
+                    - name: Block unit rate
+                      type: unit_rate
+                      unit_rate:
+                        type: block
+                        block:
+                          resolution: day
+                          register_id: Register ID 1
+                          unit_rate: 1.0
+                          from_kwh: 0
+                          to_kwh: 2
+                    - name: Fixed unit rate
+                      type: unit_rate
+                      unit_rate:
+                        type: fixed
+                        fixed:
+                          unit_rate: 1.0
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorDetails'
+              examples:
+                Parameter 'id' must not be null or empty:
+                  value:
+                    code: LOCATION_ID_MISSING
+                    description: Parameter 'id' must not be null or empty
+                    request_id: 65e2ea86-470f-4363-9295-35d6b473981a
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorDetails'
+              examples:
+                Location with given id could not be found:
+                  value:
+                    code: LOCATION_NOT_FOUND
+                    description: Location with given id could not be found
+                    request_id: 65e2ea86-470f-4363-9295-35d6b473981a
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorDetails'
+              examples:
+                Internal server error. If problem remains, please contact support:
+                  value:
+                    code: INTERNAL_ERROR
+                    description: Internal server error. If problem remains, please contact support
+                    request_id: 65e2ea86-470f-4363-9295-35d6b473981a
+    post:
+      tags:
+      - Location price formulas
+      summary: Create or updates a location price formula
+      description: 'Note! A contract for a location is unique by the from date. Adding a price formula for a location with the same from date as an already
+
+        existing price formula will overwrite the existing price formula.'
+      operationId: post-locations-locationId-priceformulas
+      parameters:
+      - name: locationId
+        in: path
+        description: Unique identifier of location
+        required: true
+        schema:
+          type: string
+      requestBody:
+        description: Price formula object to create or update
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/LocationPriceFormula'
+            examples:
+              Location price formulas:
+                value:
+                  fuel: elec
+                  source: client
+                  name: Tariff
+                  direction: import
+                  from: '2024-01-01'
+                  to: '2024-12-31'
+                  currency_code: SEK
+                  elements:
+                  - name: Daily charge
+                    type: charge
+                    charge:
+                      resolution: day
+                      charge: 1.0
+                  - name: Block unit rate
+                    type: unit_rate
+                    unit_rate:
+                      type: block
+                      block:
+                        resolution: day
+                        register_id: Register ID 1
+                        unit_rate: 1.0
+                        from_kwh: 0
+                        to_kwh: 2
+                  - name: Fixed unit rate
+                    type: unit_rate
+                    unit_rate:
+                      type: fixed
+                      fixed:
+                        unit_rate: 1.0
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/LocationPriceFormula'
+              examples:
+                Location price formulas:
+                  value:
+                    fuel: elec
+                    source: client
+                    name: Tariff
+                    direction: import
+                    from: '2024-01-01'
+                    to: '2024-12-31'
+                    currency_code: SEK
+                    elements:
+                    - name: Daily charge
+                      type: charge
+                      charge:
+                        resolution: day
+                        charge: 1.0
+                    - name: Block unit rate
+                      type: unit_rate
+                      unit_rate:
+                        type: block
+                        block:
+                          resolution: day
+                          register_id: Register ID 1
+                          unit_rate: 1.0
+                          from_kwh: 0
+                          to_kwh: 2
+                    - name: Fixed unit rate
+                      type: unit_rate
+                      unit_rate:
+                        type: fixed
+                        fixed:
+                          unit_rate: 1.0
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorDetails'
+              examples:
+                Parameter 'id' must not be null or empty:
+                  value:
+                    code: LOCATION_ID_MISSING
+                    description: Parameter 'id' must not be null or empty
+                    request_id: 65e2ea86-470f-4363-9295-35d6b473981a
+                Request input is missing. This may be caused by incorrect format of input.:
+                  value:
+                    code: INPUT_MISSING
+                    description: Request input is missing. This may be caused by incorrect format of input.
+                    request_id: 65e2ea86-470f-4363-9295-35d6b473981a
+                Parameter 'from' must not be null or empty. This may be caused by incorrect format of input.:
+                  value:
+                    code: PRICE_FORMULA_FROM_DATE_MISSING
+                    description: Parameter 'from' must not be null or empty. This may be caused by incorrect format of input.
+                    request_id: 65e2ea86-470f-4363-9295-35d6b473981a
+                Parameter 'fuel' must not be null:
+                  value:
+                    code: PRICE_FORMULA_FUEL_MISSING
+                    description: Parameter 'fuel' must not be null
+                    request_id: 65e2ea86-470f-4363-9295-35d6b473981a
+                Parameter 'direction' must not be null:
+                  value:
+                    code: PRICE_FORMULA_DIRECTION_MISSING
+                    description: Parameter 'direction' must not be null
+                    request_id: 65e2ea86-470f-4363-9295-35d6b473981a
+                Parameter 'to' must not be null or empty. This may be caused by incorrect format of input.:
+                  value:
+                    code: PRICE_FORMULA_TO_DATE_MISSING
+                    description: Parameter 'to' must not be null or empty. This may be caused by incorrect format of input.
+                    request_id: 65e2ea86-470f-4363-9295-35d6b473981a
+                Parameter 'elements[].unit_rate' must be null for 'elements[].type = charge'.:
+                  value:
+                    code: PRICE_FORMULA_ELEMENT_CHARGE_INVALID
+                    description: Parameter 'elements[].unit_rate' must be null for 'elements[].type = charge'.
+                    request_id: 65e2ea86-470f-4363-9295-35d6b473981a
+                Parameter 'elements[].charge' must be null for 'elements[].type = unit_rate'.:
+                  value:
+                    code: PRICE_FORMULA_ELEMENT_UNIT_RATE_INVALID
+                    description: Parameter 'elements[].charge' must be null for 'elements[].type = unit_rate'.
+                    request_id: 65e2ea86-470f-4363-9295-35d6b473981a
+                Parameter 'elements[].unit_rate' must not be null or empty for 'elements[].type = unit_rate'.:
+                  value:
+                    code: PRICE_FORMULA_ELEMENT_UNIT_RATE_MISSING
+                    description: Parameter 'elements[].unit_rate' must not be null or empty for 'elements[].type = unit_rate'.
+                    request_id: 65e2ea86-470f-4363-9295-35d6b473981a
+                Parameter 'elements[].charge' must not be null or empty for 'elements[].type = charge'.:
+                  value:
+                    code: PRICE_FORMULA_ELEMENT_CHARGE_MISSING
+                    description: Parameter 'elements[].charge' must not be null or empty for 'elements[].type = charge'.
+                    request_id: 65e2ea86-470f-4363-9295-35d6b473981a
+                Parameters 'elements[].unit_rate.[tou,nordpool,block]' must be null for 'elements[].unit_rate.type = fixed':
+                  value:
+                    code: PRICE_FORMULA_ELEMENT_UNIT_RATE_VALUE_FOR_TYPE_FIXED_INVALID
+                    description: Parameters 'elements[].unit_rate.[tou,nordpool,block]' must be null for 'elements[].unit_rate.type = fixed'
+                    request_id: 65e2ea86-470f-4363-9295-35d6b473981a
+                Parameters 'elements[].unit_rate.[tou,fix,block]' must be null for 'elements[].unit_rate.type = nordpool':
+                  value:
+                    code: PRICE_FORMULA_ELEMENT_UNIT_RATE_VALUE_FOR_TYPE_NORDPOOL_INVALID
+                    description: Parameters 'elements[].unit_rate.[tou,fix,block]' must be null for 'elements[].unit_rate.type = nordpool'
+                    request_id: 65e2ea86-470f-4363-9295-35d6b473981a
+                Parameters 'elements[].unit_rate.[block,fix,norpool]' must be null for 'elements[].unit_rate.type = tou':
+                  value:
+                    code: PRICE_FORMULA_ELEMENT_UNIT_RATE_VALUE_FOR_TYPE_TOU_INVALID
+                    description: Parameters 'elements[].unit_rate.[block,fix,norpool]' must be null for 'elements[].unit_rate.type = tou'
+                    request_id: 65e2ea86-470f-4363-9295-35d6b473981a
+                Parameters 'elements[].unit_rate.[tou,fix,norpool]' must be null for 'elements[].unit_rate.type = block':
+                  value:
+                    code: PRICE_FORMULA_ELEMENT_UNIT_RATE_VALUE_FOR_TYPE_BLOCK_INVALID
+                    description: Parameters 'elements[].unit_rate.[tou,fix,norpool]' must be null for 'elements[].unit_rate.type = block'
+                    request_id: 65e2ea86-470f-4363-9295-35d6b473981a
+                Parameters 'elements[].unit_rate.block' must not be null for 'elements[].unit_rate.type = block':
+                  value:
+                    code: PRICE_FORMULA_ELEMENT_UNIT_RATE_BLOCK_MISSING
+                    description: Parameters 'elements[].unit_rate.block' must not be null for 'elements[].unit_rate.type = block'
+                    request_id: 65e2ea86-470f-4363-9295-35d6b473981a
+                Parameters 'elements[].unit_rate.block.register_id' must not be null or empty for 'elements[].unit_rate.type = block'.:
+                  value:
+                    code: PRICE_FORMULA_ELEMENT_UNIT_RATE_BLOCK_REGISTER_ID_MISSING
+                    description: Parameters 'elements[].unit_rate.block.register_id' must not be null or empty for 'elements[].unit_rate.type = block'.
+                    request_id: 65e2ea86-470f-4363-9295-35d6b473981a
+                Parameters 'elements[].unit_rate.block.unit_rate' must not be equal to 0 for 'elements[].unit_rate.type = block'.:
+                  value:
+                    code: PRICE_FORMULA_ELEMENT_UNIT_RATE_BLOCK_VALUE_INVALID
+                    description: Parameters 'elements[].unit_rate.block.unit_rate' must not be equal to 0 for 'elements[].unit_rate.type = block'.
+                    request_id: 65e2ea86-470f-4363-9295-35d6b473981a
+                Parameters 'elements[].unit_rate.block.from_kwh' cannot be null for 'elements[].unit_rate.type = block'.:
+                  value:
+                    code: PRICE_FORMULA_ELEMENT_UNIT_RATE_BLOCK_FROM_KWH_MISSING
+                    description: Parameters 'elements[].unit_rate.block.from_kwh' cannot be null for 'elements[].unit_rate.type = block'.
+                    request_id: 65e2ea86-470f-4363-9295-35d6b473981a
+                Parameters 'elements[].unit_rate.fixed' must not be null for 'elements[].unit_rate.type = fixed'.:
+                  value:
+                    code: PRICE_FORMULA_ELEMENT_UNIT_RATE_FIXED_MISSING
+                    description: Parameters 'elements[].unit_rate.fixed' must not be null for 'elements[].unit_rate.type = fixed'.
+                    request_id: 65e2ea86-470f-4363-9295-35d6b473981a
+                Parameters 'elements[].unit_rate.fixed.unit_rate' must not be equal to 0 for 'elements[].unit_rate.type = fixed'.:
+                  value:
+                    code: PRICE_FORMULA_ELEMENT_UNIT_RATE_FIXED_VALUE_INVALID
+                    description: Parameters 'elements[].unit_rate.fixed.unit_rate' must not be equal to 0 for 'elements[].unit_rate.type = fixed'.
+                    request_id: 65e2ea86-470f-4363-9295-35d6b473981a
+                Parameters 'elements[].unit_rate.nordpool' must not be null for 'elements[].unit_rate.type = nordpool'.:
+                  value:
+                    code: PRICE_FORMULA_ELEMENT_UNIT_RATE_NORDPOOL_MISSING
+                    description: Parameters 'elements[].unit_rate.nordpool' must not be null for 'elements[].unit_rate.type = nordpool'.
+                    request_id: 65e2ea86-470f-4363-9295-35d6b473981a
+                Parameters 'elements[].unit_rate.nordpool.region' must not be null for 'elements[].unit_rate.type = nordpool'.:
+                  value:
+                    code: PRICE_FORMULA_ELEMENT_UNIT_RATE_NORDPOOL_REGION_MISSING
+                    description: Parameters 'elements[].unit_rate.nordpool.region' must not be null for 'elements[].unit_rate.type = nordpool'.
+                    request_id: 65e2ea86-470f-4363-9295-35d6b473981a
+                ? Parameters 'elements[].unit_rate.nordpool.multiplier' must not be equal or less than 0 for 'elements[].unit_rate.type = nordpool'.
+                : value:
+                    code: PRICE_FORMULA_ELEMENT_UNIT_RATE_NORDPOOL_MULTIPLIER_INVALID
+                    description: Parameters 'elements[].unit_rate.nordpool.multiplier' must not be equal or less than 0 for 'elements[].unit_rate.type = nordpool'.
+                    request_id: 65e2ea86-470f-4363-9295-35d6b473981a
+                Parameters 'elements[].unit_rate.tou' must not be null for 'elements[].unit_rate.type = tou':
+                  value:
+                    code: PRICE_FORMULA_ELEMENT_UNIT_RATE_TOU_MISSING
+                    description: Parameters 'elements[].unit_rate.tou' must not be null for 'elements[].unit_rate.type = tou'
+                    request_id: 65e2ea86-470f-4363-9295-35d6b473981a
+                Parameters 'elements[].unit_rate.tou.register_id' must not be null for 'elements[].unit_rate.type = tou'.:
+                  value:
+                    code: PRICE_FORMULA_ELEMENT_UNIT_RATE_TOU_REGISTER_ID_MISSING
+                    description: Parameters 'elements[].unit_rate.tou.register_id' must not be null for 'elements[].unit_rate.type = tou'.
+                    request_id: 65e2ea86-470f-4363-9295-35d6b473981a
+                Parameters 'elements[].unit_rate.tou.unit_rate' must not be null, or equal to 0 for 'elements[].unit_rate.type = tou'.:
+                  value:
+                    code: PRICE_FORMULA_ELEMENT_UNIT_RATE_TOU_VALUE_INVALID
+                    description: Parameters 'elements[].unit_rate.tou.unit_rate' must not be null, or equal to 0 for 'elements[].unit_rate.type = tou'.
+                    request_id: 65e2ea86-470f-4363-9295-35d6b473981a
+                Parameters 'elements[].unit_rate.tou.intervals[]' must not be empty or null for 'elements[].unit_rate.type = tou'.:
+                  value:
+                    code: PRICE_FORMULA_ELEMENT_UNIT_RATE_VALUE_TOU_INTERVALS_MISSING
+                    description: Parameters 'elements[].unit_rate.tou.intervals[]' must not be empty or null for 'elements[].unit_rate.type = tou'.
+                    request_id: 65e2ea86-470f-4363-9295-35d6b473981a
+                Parameter 'currency_code' must not be null or empty:
+                  value:
+                    code: PRICE_FORMULA_CURRENCY_CODE_MISSING
+                    description: Parameter 'currency_code' must not be null or empty
+                    request_id: 65e2ea86-470f-4363-9295-35d6b473981a
+                Parameter 'element[].name' must not be null or empty.:
+                  value:
+                    code: PRICE_FORMULA_ELEMENT_NAME_MISSING
+                    description: Parameter 'element[].name' must not be null or empty.
+                    request_id: 65e2ea86-470f-4363-9295-35d6b473981a
+                ? Parameters 'elements[].unit_rate.tou.intervals[].from_minute' cannot be more than 1440 for 'elements[].unit_rate.type = tou'.
+                : value:
+                    code: PRICE_FORMULA_ELEMENT_UNIT_RATE_TOU_INTERVALS_FROM_MINUTE_INVALID
+                    description: Parameters 'elements[].unit_rate.tou.intervals[].from_minute' cannot be more than 1440 for 'elements[].unit_rate.type = tou'.
+                    request_id: 65e2ea86-470f-4363-9295-35d6b473981a
+                ? Parameters 'elements[].unit_rate.tou.intervals[].to_minute' cannot be more than 1440 for 'elements[].unit_rate.type = tou'.
+                : value:
+                    code: PRICE_FORMULA_ELEMENT_UNIT_RATE_TOU_INTERVALS_TO_MINUTE_INVALID
+                    description: Parameters 'elements[].unit_rate.tou.intervals[].to_minute' cannot be more than 1440 for 'elements[].unit_rate.type = tou'.
+                    request_id: 65e2ea86-470f-4363-9295-35d6b473981a
+                Parameters 'elements[].unit_rate.tou.intervals[].from_minute' cannot be less than 0 for 'elements[].unit_rate.type = tou'.:
+                  value:
+                    code: PRICE_FORMULA_ELEMENT_UNIT_RATE_TOU_INTERVALS_FROM_MINUTE_INVALID
+                    description: Parameters 'elements[].unit_rate.tou.intervals[].from_minute' cannot be less than 0 for 'elements[].unit_rate.type = tou'.
+                    request_id: 65e2ea86-470f-4363-9295-35d6b473981a
+                Parameters 'elements[].unit_rate.tou.intervals[].to_minute' cannot be less than 0 for 'elements[].unit_rate.type = tou'.:
+                  value:
+                    code: PRICE_FORMULA_ELEMENT_UNIT_RATE_TOU_INTERVALS_TO_MINUTE_INVALID
+                    description: Parameters 'elements[].unit_rate.tou.intervals[].to_minute' cannot be less than 0 for 'elements[].unit_rate.type = tou'.
+                    request_id: 65e2ea86-470f-4363-9295-35d6b473981a
+                Parameters 'elements[].unit_rate.block.to_kwh' cannot be null for 'elements[].unit_rate.type = block'.:
+                  value:
+                    code: PRICE_FORMULA_ELEMENT_UNIT_RATE_BLOCK_TO_KWH_MISSING
+                    description: Parameters 'elements[].unit_rate.block.to_kwh' cannot be null for 'elements[].unit_rate.type = block'.
+                    request_id: 65e2ea86-470f-4363-9295-35d6b473981a
+                Parameters 'elements[].unit_rate.nordpool.region' is invalid for 'elements[].unit_rate.type = nordpool'.:
+                  value:
+                    code: PRICE_FORMULA_ELEMENT_UNIT_RATE_NORDPOOL_REGION_INVALID
+                    description: Parameters 'elements[].unit_rate.nordpool.region' is invalid for 'elements[].unit_rate.type = nordpool'.
+                    request_id: 65e2ea86-470f-4363-9295-35d6b473981a
+                Parameter 'elements[].charge.charge' must not be null for 'elements[].type = charge'.:
+                  value:
+                    code: PRICE_FORMULA_ELEMENT_CHARGE_VALUE_MISSING
+                    description: Parameter 'elements[].charge.charge' must not be null for 'elements[].type = charge'.
+                    request_id: 65e2ea86-470f-4363-9295-35d6b473981a
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorDetails'
+              examples:
+                Location with given id could not be found:
+                  value:
+                    code: LOCATION_NOT_FOUND
+                    description: Location with given id could not be found
+                    request_id: 65e2ea86-470f-4363-9295-35d6b473981a
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorDetails'
+              examples:
+                Internal server error. If problem remains, please contact support:
+                  value:
+                    code: INTERNAL_ERROR
+                    description: Internal server error. If problem remains, please contact support
+                    request_id: 65e2ea86-470f-4363-9295-35d6b473981a
+    delete:
+      tags:
+      - Location price formulas
+      summary: Delete specific location price formula
+      description: Delete price formula with start date
+      operationId: delete-locations-locationId-priceformulas
+      parameters:
+      - name: locationId
+        in: path
+        description: Unique identifier of location
+        required: true
+        schema:
+          type: string
+      - name: fuel
+        in: query
+        description: Fuel of meter (elec, gas or district_heating) from the provided location
+        schema:
+          type: string
+      - name: direction
+        in: query
+        description: Type of meter (import, export)
+        schema:
+          type: string
+      - name: from
+        in: query
+        description: Start date of the price formula
+        schema:
+          type: string
+      responses:
+        '204':
+          description: No Content
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NoContentResult'
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorDetails'
+              examples:
+                Parameter 'id' must not be null or empty:
+                  value:
+                    code: LOCATION_ID_MISSING
+                    description: Parameter 'id' must not be null or empty
+                    request_id: 65e2ea86-470f-4363-9295-35d6b473981a
+                Parameter 'from' must not be null or empty. This may be caused by incorrect format of input.:
+                  value:
+                    code: PRICE_FORMULA_FROM_DATE_MISSING
+                    description: Parameter 'from' must not be null or empty. This may be caused by incorrect format of input.
+                    request_id: 65e2ea86-470f-4363-9295-35d6b473981a
+                Parameter 'fuel' must not be null:
+                  value:
+                    code: PRICE_FORMULA_FUEL_MISSING
+                    description: Parameter 'fuel' must not be null
+                    request_id: 65e2ea86-470f-4363-9295-35d6b473981a
+                Parameter 'direction' must not be null:
+                  value:
+                    code: PRICE_FORMULA_DIRECTION_MISSING
+                    description: Parameter 'direction' must not be null
+                    request_id: 65e2ea86-470f-4363-9295-35d6b473981a
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorDetails'
+              examples:
+                Location with given id could not be found:
+                  value:
+                    code: LOCATION_NOT_FOUND
+                    description: Location with given id could not be found
+                    request_id: 65e2ea86-470f-4363-9295-35d6b473981a
+                Price formula for the given 'meter_id' and 'from' date was not found.:
+                  value:
+                    code: PRICE_FORMULA_NOT_FOUND
+                    description: Price formula for the given 'meter_id' and 'from' date was not found.
+                    request_id: 65e2ea86-470f-4363-9295-35d6b473981a
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorDetails'
+              examples:
+                Internal server error. If problem remains, please contact support:
+                  value:
+                    code: INTERNAL_ERROR
+                    description: Internal server error. If problem remains, please contact support
+                    request_id: 65e2ea86-470f-4363-9295-35d6b473981a
+  /locations/{locationId}/priceformulas/all:
+    delete:
+      tags:
+      - Location price formulas
+      summary: Delete location all price formulas
+      operationId: delete-locations-all-priceformulas
+      parameters:
+      - name: locationId
+        in: path
+        description: Unique identifier of location
+        required: true
+        schema:
+          type: string
+      responses:
+        '204':
+          description: No Content
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NoContentResult'
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorDetails'
+              examples:
+                Parameter 'id' must not be null or empty:
+                  value:
+                    code: LOCATION_ID_MISSING
+                    description: Parameter 'id' must not be null or empty
+                    request_id: 65e2ea86-470f-4363-9295-35d6b473981a
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorDetails'
+              examples:
+                Location with given id could not be found:
+                  value:
+                    code: LOCATION_NOT_FOUND
+                    description: Location with given id could not be found
+                    request_id: 65e2ea86-470f-4363-9295-35d6b473981a
+                Price formula for the given 'meter_id' and 'from' date was not found.:
+                  value:
+                    code: PRICE_FORMULA_NOT_FOUND
+                    description: Price formula for the given 'meter_id' and 'from' date was not found.
+                    request_id: 65e2ea86-470f-4363-9295-35d6b473981a
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorDetails'
+              examples:
+                Internal server error. If problem remains, please contact support:
+                  value:
+                    code: INTERNAL_ERROR
+                    description: Internal server error. If problem remains, please contact support
+                    request_id: 65e2ea86-470f-4363-9295-35d6b473981a
+components:
+  schemas:
+    CapacityTariff:
+      type: object
+      properties:
+        charge_tariff:
+          type: number
+          format: double
+        minimum_contribution:
+          type: number
+          format: double
+        calculation_type:
+          type:
+          - string
+          - 'null'
+    Interval:
+      type: object
+      properties:
+        from_minute:
+          type:
+          - integer
+          - 'null'
+          format: int64
+        to_minute:
+          type:
+          - integer
+          - 'null'
+          format: int64
+    Tou:
+      type: object
+      properties:
+        register_id:
+          type:
+          - string
+          - 'null'
+        unit_rate:
+          type:
+          - number
+          - 'null'
+          format: double
+        intervals:
+          type:
+          - array
+          - 'null'
+          items:
+            $ref: '#/components/schemas/Interval'
+        skip_intervals:
+          type:
+          - boolean
+          - 'null'
+    Element:
+      type: object
+      properties:
+        name:
+          type:
+          - string
+          - 'null'
+        type:
+          type:
+          - string
+          - 'null'
+        charge:
+          $ref: '#/components/schemas/Charge'
+        unit_rate:
+          $ref: '#/components/schemas/UnitRate'
+    Block:
+      type: object
+      properties:
+        resolution:
+          type:
+          - string
+          - 'null'
+        register_id:
+          type:
+          - string
+          - 'null'
+        unit_rate:
+          type: number
+          format: double
+        from_kwh:
+          type:
+          - integer
+          - 'null'
+          format: int64
+        to_kwh:
+          type:
+          - integer
+          - 'null'
+          format: int64
+        from_m3:
+          type:
+          - integer
+          - 'null'
+          format: int64
+        to_m3:
+          type:
+          - integer
+          - 'null'
+          format: int64
+    SpotPrice:
+      type: object
+      properties:
+        provider:
+          type:
+          - string
+          - 'null'
+        region:
+          type:
+          - string
+          - 'null'
+        resolution:
+          type:
+          - string
+          - 'null'
+        multiplier:
+          type:
+          - number
+          - 'null'
+          format: double
+    Charge:
+      type: object
+      properties:
+        resolution:
+          type:
+          - string
+          - 'null'
+        charge:
+          type:
+          - number
+          - 'null'
+          format: double
+        type:
+          type:
+          - string
+          - 'null'
+        capacity_tariff:
+          $ref: '#/components/schemas/CapacityTariff'
+    NoContentResult:
+      type: object
+      properties:
+        statusCode:
+          type: integer
+          format: int32
+    UnitRate:
+      type: object
+      properties:
+        type:
+          type:
+          - string
+          - 'null'
+        fixed:
+          $ref: '#/components/schemas/Fixed'
+        tou:
+          $ref: '#/components/schemas/Tou'
+        block:
+          $ref: '#/components/schemas/Block'
+        spot_price:
+          $ref: '#/components/schemas/SpotPrice'
+        weekdays:
+          type:
+          - array
+          - 'null'
+          items:
+            type: string
+    LocationPriceFormula:
+      type: object
+      properties:
+        fuel:
+          type:
+          - string
+          - 'null'
+        source:
+          type:
+          - string
+          - 'null'
+        name:
+          type:
+          - string
+          - 'null'
+        direction:
+          type:
+          - string
+          - 'null'
+        from:
+          type:
+          - string
+          - 'null'
+        to:
+          type:
+          - string
+          - 'null'
+        currency_code:
+          type:
+          - string
+          - 'null'
+        elements:
+          type:
+          - array
+          - 'null'
+          items:
+            $ref: '#/components/schemas/Element'
+        price_multiplier:
+          type:
+          - number
+          - 'null'
+          format: double
+    ErrorDetails:
+      required:
+      - code
+      - description
+      type: object
+      properties:
+        code:
+          minLength: 1
+          type: string
+        description:
+          minLength: 1
+          type: string
+        request_id:
+          type:
+          - string
+          - 'null'
+    Fixed:
+      type: object
+      properties:
+        unit_rate:
+          type:
+          - number
+          - 'null'
+          format: double
+x-tagGroups:
+- name: Users
+  tags:
+  - User
+- name: Locations
+  tags:
+  - Location
+  - Location profile
+  - Location home profile
+  - Location price formulas
+- name: Meters
+  tags:
+  - Meter
+  - Meter Energy Day
+  - Meter Energy High Resolution
+  - Meter Energy Reads
+  - Meter Energy Period
+  - Meter Max Demand
+  - Meter Price Formulas
+- name: Jobs
+  tags:
+  - Jobs
+- name: Portfolio
+  tags:
+  - Portfolio Accounts
+  - Portfolio Groups
+  - Portfolio Locations
+  - Portfolio Users
+- name: Client details
+  tags:
+  - Client details

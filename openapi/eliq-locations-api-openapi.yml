@@ -1,0 +1,2016 @@
+openapi: 3.2.0
+info:
+  title: Insights Locations API
+  version: 3.4.1
+  contact:
+    name: Insights Team
+    email: support_b2b@eliq.com
+  description: '# API Reference
+
+
+    The Eliq insights API is organized around REST.'
+servers:
+- url: http://localhost:3000
+security:
+- BearerAuth: []
+tags:
+- name: Locations
+paths:
+  /v3/locations/{locationId}:
+    get:
+      tags:
+      - Locations
+      summary: Get location by internal id
+      description: 'Get location by Eliq internal ID
+
+
+        Retrieve the information of the location with the matching location ID.'
+      operationId: get-v3-locations-locationId
+      parameters:
+      - name: locationId
+        in: path
+        description: Location id
+        required: true
+        schema:
+          type: integer
+          format: int32
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Location'
+              examples:
+                Sample Location (with two meters):
+                  value:
+                    id: 1233
+                    name: Stora Badhusgatan 17-20
+                    ext_ref: '4537899'
+                    timezone: Europe/Berlin
+                    address:
+                      street_address: Stora Badhusgatan 17-20
+                      postal_code: '41120'
+                      city: Göteborg
+                      country_code: SE
+                      lon: 22.12
+                      lat: 56.32
+                    fuels:
+                      elec:
+                        import:
+                          resolution: hour
+                          data_from: '2019-01-01T00:00:00'
+                          data_to: '2020-01-01T00:00:00'
+                          source: smart_meter
+                          sync_status: ok
+                        export:
+                          resolution: hour
+                          data_from: '2019-01-01T00:00:00'
+                          data_to: '2020-01-01T00:00:00'
+                          source: smart_meter
+                          sync_status: ok
+                        consumption:
+                          resolution: hour
+                          data_from: '2019-01-01T00:00:00'
+                          data_to: '2020-01-01T00:00:00'
+                          source: pv_disagg
+                          sync_status: waiting_for_data
+                        production:
+                          resolution: hour
+                          data_from: '2019-01-01T00:00:00'
+                          data_to: '2020-01-01T00:00:00'
+                          source: pv_disagg
+                          sync_status: waiting_for_data
+                      gas:
+                        import:
+                          resolution: hour
+                          data_from: '2019-01-01T00:00:00'
+                          data_to: '2020-01-01T00:00:00'
+                          source: smart_meter
+                          sync_status: ok
+                    meters:
+                    - id: e01dbb49507f447fa8518249cd7620dd
+                      model: Standard Energy V1
+                      user_setup_completed: true
+                      name_user: Gas Energy Meter
+                      fuel_type: gas
+                      direction: import
+                      is_sub_meter: false
+                      category_user: washing
+                      supply_start_date: '2026-01-01T00:00:00'
+                      supply_end_date: '2026-12-31T00:00:00'
+                    - id: e4c8938fe06a44a7923ed89da281705e
+                      model: Standard Energy V1
+                      user_setup_completed: false
+                      name_suggested: Standard Energy V-2
+                      fuel_type: elec
+                      direction: import
+                      is_sub_meter: true
+                      category_suggested: washing
+                      supply_start_date: '2026-01-01T00:00:00'
+                      supply_end_date: '2026-12-31T00:00:00'
+                Location with meter setup:
+                  value:
+                    id: 1233
+                    name: Stora Badhusgatan 17-20
+                    ext_ref: '4537899'
+                    timezone: Europe/Berlin
+                    address:
+                      street_address: Stora Badhusgatan 17-20
+                      postal_code: '41120'
+                      city: Göteborg
+                      country_code: SE
+                      lon: 22.12
+                      lat: 56.32
+                    fuels:
+                      elec:
+                        import:
+                          resolution: hour
+                          data_from: '2019-01-01T00:00:00'
+                          data_to: '2020-01-01T00:00:00'
+                          source: smart_meter
+                          sync_status: ok
+                        export:
+                          resolution: hour
+                          data_from: '2019-01-01T00:00:00'
+                          data_to: '2020-01-01T00:00:00'
+                          source: smart_meter
+                          sync_status: ok
+                        consumption:
+                          resolution: hour
+                          data_from: '2019-01-01T00:00:00'
+                          data_to: '2020-01-01T00:00:00'
+                          source: pv_disagg
+                          sync_status: waiting_for_data
+                        production:
+                          resolution: hour
+                          data_from: '2019-01-01T00:00:00'
+                          data_to: '2020-01-01T00:00:00'
+                          source: pv_disagg
+                          sync_status: waiting_for_data
+                      gas:
+                        import:
+                          resolution: hour
+                          data_from: '2019-01-01T00:00:00'
+                          data_to: '2020-01-01T00:00:00'
+                          source: smart_meter
+                          sync_status: ok
+                    meters:
+                    - id: e7c8938fe06a44a7923ed89da281705e
+                      model: Standard Energy V1
+                      user_setup_completed: true
+                      name_user: Main house meter
+                      fuel_type: elec
+                      direction: import
+                      is_sub_meter: false
+                      category_user: other
+                      supply_start_date: '2026-01-01T00:00:00'
+                      supply_end_date: '2026-12-31T00:00:00'
+                Location without meter setup:
+                  value:
+                    id: 1233
+                    name: Stora Badhusgatan 17-20
+                    ext_ref: '4537899'
+                    timezone: Europe/Berlin
+                    address:
+                      street_address: Stora Badhusgatan 17-20
+                      postal_code: '41120'
+                      city: Göteborg
+                      country_code: SE
+                      lon: 22.12
+                      lat: 56.32
+                    fuels:
+                      elec:
+                        import:
+                          resolution: hour
+                          data_from: '2019-01-01T00:00:00'
+                          data_to: '2020-01-01T00:00:00'
+                          source: smart_meter
+                          sync_status: ok
+                        export:
+                          resolution: hour
+                          data_from: '2019-01-01T00:00:00'
+                          data_to: '2020-01-01T00:00:00'
+                          source: smart_meter
+                          sync_status: ok
+                        consumption:
+                          resolution: hour
+                          data_from: '2019-01-01T00:00:00'
+                          data_to: '2020-01-01T00:00:00'
+                          source: pv_disagg
+                          sync_status: waiting_for_data
+                        production:
+                          resolution: hour
+                          data_from: '2019-01-01T00:00:00'
+                          data_to: '2020-01-01T00:00:00'
+                          source: pv_disagg
+                          sync_status: waiting_for_data
+                      gas:
+                        import:
+                          resolution: hour
+                          data_from: '2019-01-01T00:00:00'
+                          data_to: '2020-01-01T00:00:00'
+                          source: smart_meter
+                          sync_status: ok
+                    meters:
+                    - id: e7c8938fe06a44a7923ed89da281705e
+                      model: Standard Energy V1
+                      user_setup_completed: false
+                      name_suggested: Standard Energy V1
+                      fuel_type: elec
+                      direction: import
+                      is_sub_meter: false
+                      category_suggested: other
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+              examples:
+                Location not found:
+                  value:
+                    type: client_error
+                    category: entity_not_found
+                    code: ENTITY_NOT_FOUND
+                    transaction_id: 0HN18NIB8K5RV:00000001
+                    message: Something went wrong, please try again later. If problem remains, please contact support.
+                    description: Could not find the location.
+        '500':
+          description: Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+              examples:
+                Internal Error:
+                  value:
+                    type: internal_error
+                    category: internal_error
+                    code: INTERNAL_ERROR
+                    transaction_id: 0HN18NIB8K5RV:00000001
+                    message: Something went wrong. Please try again later. If problem remains, please contact support.
+                    description: Internal server error, please try again later. If problem remains, please contact support.
+  /v3/locations:
+    get:
+      tags:
+      - Locations
+      summary: Get location by Eliq external reference
+      description: Retrieve the information of the location with the matching location external reference id.
+      operationId: get-v3-locations-locationExtref
+      parameters:
+      - name: extRef
+        in: query
+        description: Location external reference
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Location'
+              examples:
+                Sample Location (with two meters):
+                  value:
+                    id: 1233
+                    name: Stora Badhusgatan 17-20
+                    ext_ref: '4537899'
+                    timezone: Europe/Berlin
+                    address:
+                      street_address: Stora Badhusgatan 17-20
+                      postal_code: '41120'
+                      city: Göteborg
+                      country_code: SE
+                      lon: 22.12
+                      lat: 56.32
+                    fuels:
+                      elec:
+                        import:
+                          resolution: hour
+                          data_from: '2019-01-01T00:00:00'
+                          data_to: '2020-01-01T00:00:00'
+                          source: smart_meter
+                          sync_status: ok
+                        export:
+                          resolution: hour
+                          data_from: '2019-01-01T00:00:00'
+                          data_to: '2020-01-01T00:00:00'
+                          source: smart_meter
+                          sync_status: ok
+                        consumption:
+                          resolution: hour
+                          data_from: '2019-01-01T00:00:00'
+                          data_to: '2020-01-01T00:00:00'
+                          source: pv_disagg
+                          sync_status: waiting_for_data
+                        production:
+                          resolution: hour
+                          data_from: '2019-01-01T00:00:00'
+                          data_to: '2020-01-01T00:00:00'
+                          source: pv_disagg
+                          sync_status: waiting_for_data
+                      gas:
+                        import:
+                          resolution: hour
+                          data_from: '2019-01-01T00:00:00'
+                          data_to: '2020-01-01T00:00:00'
+                          source: smart_meter
+                          sync_status: ok
+                    meters:
+                    - id: e01dbb49507f447fa8518249cd7620dd
+                      user_setup_completed: true
+                      name_user: Gas Energy Meter
+                      fuel_type: gas
+                      direction: import
+                      is_sub_meter: false
+                      category_user: washing
+                    - id: e4c8938fe06a44a7923ed89da281705e
+                      user_setup_completed: false
+                      name_suggested: Standard Energy V-2
+                      fuel_type: elec
+                      direction: import
+                      is_sub_meter: true
+                      category_suggested: washing
+                Location with meter setup:
+                  value:
+                    id: 1233
+                    name: Stora Badhusgatan 17-20
+                    ext_ref: '4537899'
+                    timezone: Europe/Berlin
+                    address:
+                      street_address: Stora Badhusgatan 17-20
+                      postal_code: '41120'
+                      city: Göteborg
+                      country_code: SE
+                      lon: 22.12
+                      lat: 56.32
+                    fuels:
+                      elec:
+                        import:
+                          resolution: hour
+                          data_from: '2019-01-01T00:00:00'
+                          data_to: '2020-01-01T00:00:00'
+                          source: smart_meter
+                          sync_status: ok
+                        export:
+                          resolution: hour
+                          data_from: '2019-01-01T00:00:00'
+                          data_to: '2020-01-01T00:00:00'
+                          source: smart_meter
+                          sync_status: ok
+                        consumption:
+                          resolution: hour
+                          data_from: '2019-01-01T00:00:00'
+                          data_to: '2020-01-01T00:00:00'
+                          source: pv_disagg
+                          sync_status: waiting_for_data
+                        production:
+                          resolution: hour
+                          data_from: '2019-01-01T00:00:00'
+                          data_to: '2020-01-01T00:00:00'
+                          source: pv_disagg
+                          sync_status: waiting_for_data
+                      gas:
+                        import:
+                          resolution: hour
+                          data_from: '2019-01-01T00:00:00'
+                          data_to: '2020-01-01T00:00:00'
+                          source: smart_meter
+                          sync_status: ok
+                    meters:
+                    - id: e7c8938fe06a44a7923ed89da281705e
+                      user_setup_completed: true
+                      name_user: Main house meter
+                      fuel_type: elec
+                      direction: import
+                      is_sub_meter: false
+                      category_user: other
+                Location without meter setup:
+                  value:
+                    id: 1233
+                    name: Stora Badhusgatan 17-20
+                    ext_ref: '4537899'
+                    timezone: Europe/Berlin
+                    address:
+                      street_address: Stora Badhusgatan 17-20
+                      postal_code: '41120'
+                      city: Göteborg
+                      country_code: SE
+                      lon: 22.12
+                      lat: 56.32
+                    fuels:
+                      elec:
+                        import:
+                          resolution: hour
+                          data_from: '2019-01-01T00:00:00'
+                          data_to: '2020-01-01T00:00:00'
+                          source: smart_meter
+                          sync_status: ok
+                        export:
+                          resolution: hour
+                          data_from: '2019-01-01T00:00:00'
+                          data_to: '2020-01-01T00:00:00'
+                          source: smart_meter
+                          sync_status: ok
+                        consumption:
+                          resolution: hour
+                          data_from: '2019-01-01T00:00:00'
+                          data_to: '2020-01-01T00:00:00'
+                          source: pv_disagg
+                          sync_status: waiting_for_data
+                        production:
+                          resolution: hour
+                          data_from: '2019-01-01T00:00:00'
+                          data_to: '2020-01-01T00:00:00'
+                          source: pv_disagg
+                          sync_status: waiting_for_data
+                      gas:
+                        import:
+                          resolution: hour
+                          data_from: '2019-01-01T00:00:00'
+                          data_to: '2020-01-01T00:00:00'
+                          source: smart_meter
+                          sync_status: ok
+                    meters:
+                    - id: e7c8938fe06a44a7923ed89da281705e
+                      user_setup_completed: false
+                      name_suggested: Standard Energy V1
+                      fuel_type: elec
+                      direction: import
+                      is_sub_meter: false
+                      category_suggested: other
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+              examples:
+                Invalid parameter:
+                  value:
+                    type: client_error
+                    category: invalid_parameter
+                    code: INVALID_PARAMETER
+                    transaction_id: 0HN18NIB8K5RV:00000001
+                    message: Something went wrong, please try again later. If problem remains, please contact support.
+                    description: Parameter 'extref' missing
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+              examples:
+                Location not found:
+                  value:
+                    type: client_error
+                    category: entity_not_found
+                    code: ENTITY_NOT_FOUND
+                    transaction_id: 0HN18NIB8K5RV:00000001
+                    message: Something went wrong, please try again later. If problem remains, please contact support.
+                    description: Could not find the location.
+        '500':
+          description: Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+              examples:
+                Internal Error:
+                  value:
+                    type: internal_error
+                    category: internal_error
+                    code: INTERNAL_ERROR
+                    transaction_id: 0HN18NIB8K5RV:00000001
+                    message: Something went wrong. Please try again later. If problem remains, please contact support.
+                    description: Internal server error, please try again later. If problem remains, please contact support.
+  /v3/locations/{locationId}/notifications:
+    parameters:
+    - schema:
+        type: string
+      name: locationId
+      in: path
+      required: true
+    get:
+      summary: Get location Notifications
+      tags:
+      - Locations
+      responses:
+        '200':
+          description: Location found
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+                  schema:
+                    $ref: '#/components/schemas/Notification'
+                x-examples:
+                  example-1:
+                  - id: 37117550
+                    type: market_price_next_day_avg_price_alert
+                    read: true
+                    created_date: '2023-01-22T16:01:17.23'
+                    header: Tomorrows market electricity prices are high!
+                    content: Tomorrow the average market prices are high, averaging 1,66 kr/kWh. The prices peak 2,93 kr/kWh at 09:00-10:00.
+                  - id: 37054931
+                    type: market_price_next_day_hour_price_alert
+                    read: true
+                    created_date: '2023-01-21T16:00:39.18'
+                    header: Tomorrow the market prices are high!
+                    content: Tomorrow you should avoid using excess electricity between 18:00-19:00 when the price is 2,19 kr/kWh.
+                  - id: 36912603
+                    type: market_price_next_day_avg_price_alert
+                    read: true
+                    created_date: '2023-01-18T16:01:25.223'
+                    header: Tomorrows market electricity prices are high!
+                    content: Tomorrow the average market prices are high, averaging 1,49 kr/kWh. The prices peak 2,01 kr/kWh at 16:00-17:00.
+                  - id: 36831730
+                    type: market_price_next_day_avg_price_alert
+                    read: true
+                    created_date: '2023-01-14T16:01:32.003'
+                    header: Low market prices tomorrow
+                    content: Tomorrow the average market prices are low, averaging at 0,20 kr/kWh 🙂. The price will be at its lowest 05:00-06:00 at 0,05 kr/kWh.
+                  - id: 36770333
+                    type: market_price_next_day_avg_price_alert
+                    read: true
+                    created_date: '2023-01-13T16:00:36.033'
+                    header: Low market prices tomorrow
+                    content: Tomorrow the average market prices are low, averaging at 0,62 kr/kWh 🙂. The price will be at its lowest 23:00-00:00 at 0,40 kr/kWh.
+                  - id: 36169901
+                    type: market_price_next_day_avg_price_alert
+                    read: true
+                    created_date: '2022-12-31T16:01:46.243'
+                    header: Low market prices tomorrow
+                    content: Tomorrow the average market prices are low, averaging at 0,20 kr/kWh 🙂. The price will be at its lowest 04:00-05:00 at 0,00 kr/kWh.
+                  - id: 36101812
+                    type: market_price_next_day_hour_price_alert
+                    read: true
+                    created_date: '2022-12-30T16:01:46.15'
+                    header: Negative electricity prices tomorrow!
+                    content: Between 02:00-08:00 tomorrow the market electricity price is below zero!
+              examples:
+                example-1:
+                  value:
+                  - id: 37117550
+                    type: market_price_next_day_avg_price_alert
+                    read: true
+                    created_date: '2023-01-22T16:01:17.23'
+                    header: Tomorrows market electricity prices are high!
+                    content: Tomorrow the average market prices are high, averaging 1,66 kr/kWh. The prices peak 2,93 kr/kWh at 09:00-10:00.
+                  - id: 37054931
+                    type: market_price_next_day_hour_price_alert
+                    read: true
+                    created_date: '2023-01-21T16:00:39.18'
+                    header: Tomorrow the market prices are high!
+                    content: Tomorrow you should avoid using excess electricity between 18:00-19:00 when the price is 2,19 kr/kWh.
+                  - id: 36912603
+                    type: market_price_next_day_avg_price_alert
+                    read: true
+                    created_date: '2023-01-18T16:01:25.223'
+                    header: Tomorrows market electricity prices are high!
+                    content: Tomorrow the average market prices are high, averaging 1,49 kr/kWh. The prices peak 2,01 kr/kWh at 16:00-17:00.
+                  - id: 36831730
+                    type: market_price_next_day_avg_price_alert
+                    read: true
+                    created_date: '2023-01-14T16:01:32.003'
+                    header: Low market prices tomorrow
+                    content: Tomorrow the average market prices are low, averaging at 0,20 kr/kWh 🙂. The price will be at its lowest 05:00-06:00 at 0,05 kr/kWh.
+                  - id: 36770333
+                    type: market_price_next_day_avg_price_alert
+                    read: true
+                    created_date: '2023-01-13T16:00:36.033'
+                    header: Low market prices tomorrow
+                    content: Tomorrow the average market prices are low, averaging at 0,62 kr/kWh 🙂. The price will be at its lowest 23:00-00:00 at 0,40 kr/kWh.
+                  - id: 36169901
+                    type: market_price_next_day_avg_price_alert
+                    read: true
+                    created_date: '2022-12-31T16:01:46.243'
+                    header: Low market prices tomorrow
+                    content: Tomorrow the average market prices are low, averaging at 0,20 kr/kWh 🙂. The price will be at its lowest 04:00-05:00 at 0,00 kr/kWh.
+                  - id: 36101812
+                    type: market_price_next_day_hour_price_alert
+                    read: true
+                    created_date: '2022-12-30T16:01:46.15'
+                    header: Negative electricity prices tomorrow!
+                    content: Between 02:00-08:00 tomorrow the market electricity price is below zero!
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+              examples:
+                Error not found:
+                  value:
+                    type: client_error
+                    category: entity_not_found
+                    code: ENTITY_NOT_FOUND
+                    description: Could not find the location.
+                    message: 'Something went wrong, please try again later. If problem remains, please contact support (error: 1ad3a534117d4).'
+                    transaction_id: 37c4ef86-d525-42c8-b65f-9b4cfcce0df6
+      operationId: get-v3-locations-notification
+      description: Get notifications that has been generated for a location. This can be presented in a feed in an app, or used for an admin to check which notifications that have been sent out.
+      parameters: []
+  /v3/locations/{locationId}/notifications/settings:
+    parameters:
+    - schema:
+        type: string
+      name: locationId
+      in: path
+      required: true
+    get:
+      summary: Get Location Notifications Settings
+      tags:
+      - Locations
+      responses:
+        '200':
+          description: Location found
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    type:
+                      type: string
+                    type_id:
+                      type: integer
+                    enabled:
+                      type: boolean
+                    mute_email:
+                      type: boolean
+                    mute_push:
+                      type: boolean
+                    mute_text:
+                      type: boolean
+                x-examples:
+                  example-1:
+                  - type: meterreading_required
+                    type_id: 80
+                    enabled: true
+                    mute_email: true
+                    mute_push: false
+                    mute_text: true
+                  - type: bill_created
+                    type_id: 82
+                    enabled: true
+                    mute_email: true
+                    mute_push: false
+                    mute_text: true
+                  - type: daily_anomaly
+                    type_id: 90
+                    enabled: true
+                    mute_email: true
+                    mute_push: false
+                    mute_text: true
+                  - type: monthly_report_available
+                    type_id: 94
+                    enabled: true
+                    mute_email: true
+                    mute_push: false
+                    mute_text: true
+                  - type: budget
+                    type_id: 95
+                    enabled: true
+                    mute_email: true
+                    mute_push: false
+                    mute_text: true
+                  - type: custom
+                    type_id: 104
+                    enabled: true
+                    mute_email: true
+                    mute_push: false
+                    mute_text: true
+                  - type: market_price_next_day_avg_price_alert
+                    type_id: 105
+                    enabled: true
+                    mute_email: true
+                    mute_push: false
+                    mute_text: true
+                  - type: market_price_next_day_hour_price_alert
+                    type_id: 106
+                    enabled: true
+                    mute_email: true
+                    mute_push: false
+                    mute_text: true
+              examples:
+                example-1:
+                  value:
+                  - type: meterreading_required
+                    type_id: 80
+                    enabled: true
+                    mute_email: true
+                    mute_push: false
+                    mute_text: true
+                  - type: bill_created
+                    type_id: 82
+                    enabled: true
+                    mute_email: true
+                    mute_push: false
+                    mute_text: true
+                  - type: daily_anomaly
+                    type_id: 90
+                    enabled: true
+                    mute_email: true
+                    mute_push: false
+                    mute_text: true
+                  - type: monthly_report_available
+                    type_id: 94
+                    enabled: true
+                    mute_email: true
+                    mute_push: false
+                    mute_text: true
+                  - type: budget
+                    type_id: 95
+                    enabled: true
+                    mute_email: true
+                    mute_push: false
+                    mute_text: true
+                  - type: custom
+                    type_id: 104
+                    enabled: true
+                    mute_email: true
+                    mute_push: false
+                    mute_text: true
+                  - type: market_price_next_day_avg_price_alert
+                    type_id: 105
+                    enabled: true
+                    mute_email: true
+                    mute_push: false
+                    mute_text: true
+                  - type: market_price_next_day_hour_price_alert
+                    type_id: 106
+                    enabled: true
+                    mute_email: true
+                    mute_push: false
+                    mute_text: true
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+              examples:
+                Error not found:
+                  value:
+                    type: client_error
+                    category: entity_not_found
+                    code: ENTITY_NOT_FOUND
+                    description: Could not find the location.
+                    message: 'Something went wrong, please try again later. If problem remains, please contact support (error: 1ad3a534117d4).'
+                    transaction_id: 37c4ef86-d525-42c8-b65f-9b4cfcce0df6
+      operationId: get-v3-locations-notification-settings
+      description: Get notifications settings for a location.
+      parameters: []
+  /v3/locations/{locationId}/notifications/settings/{notificationTypeId}:
+    put:
+      tags:
+      - Locations
+      summary: Update notification settings per location
+      description: 'Can be used to enable/disable the notification and configure delivery channels.
+
+
+        An important note is that the notification is sent via all configured channels.
+
+        I.E. if none of the channels (email, text, push, webhook) are muted, ALL of them will be used in order to deliver the notification.'
+      operationId: put-v3-locations-locationId-notifications-settings
+      parameters:
+      - name: locationId
+        in: path
+        description: Location id
+        required: true
+        schema:
+          type: integer
+          format: int32
+      - name: notificationTypeId
+        in: path
+        description: Notification id
+        required: true
+        schema:
+          type: integer
+          format: int32
+      requestBody:
+        content:
+          application/json-patch+json:
+            schema:
+              $ref: '#/components/schemas/LocationNotificationSettingsInput'
+          application/json:
+            schema:
+              $ref: '#/components/schemas/LocationNotificationSettingsInput'
+          text/json:
+            schema:
+              $ref: '#/components/schemas/LocationNotificationSettingsInput'
+          application/*+json:
+            schema:
+              $ref: '#/components/schemas/LocationNotificationSettingsInput'
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NotificationSettingsResponse'
+              examples:
+                Notification update successful:
+                  value:
+                    notification_name: daily_anomaly
+                    notification_type_id: 90
+                    send_event_notification: false
+                    send_email: true
+                    send_push: true
+                    send_text: false
+                    send_webhook: true
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+              examples:
+                Input not provided:
+                  value:
+                    code: invalid_parameter
+                    transaction_id: 0HN1O72JU5P3C:00000001
+                    description: '''input'' cannot be null'
+                Notification type id not provided:
+                  value:
+                    code: invalid_parameter
+                    transaction_id: 0HN1O72JU5P3C:00000001
+                    description: '''notificationTypeId'' not provided'
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+              examples:
+                Location not found:
+                  value:
+                    code: LOCATION_NOT_FOUND
+                    transaction_id: 0HN1O72JU5P3C:00000001
+                    description: Location not found
+                Location owner not found:
+                  value:
+                    code: LOCATION_OWNER_NOT_FOUND
+                    transaction_id: 0HN1O72JU5P3C:00000001
+                    description: Location owner not found
+                Notification settings not found:
+                  value:
+                    code: NOTIFICATION_SETTINGS_NOT_FOUND
+                    transaction_id: 0HN1O72JU5P3C:00000001
+                    description: Notification settings not found
+        '500':
+          description: Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+              examples:
+                Internal Error:
+                  value:
+                    type: internal_error
+                    category: internal_error
+                    code: INTERNAL_ERROR
+                    transaction_id: 0HN18NIB8K5RV:00000001
+                    message: Something went wrong. Please try again later. If problem remains, please contact support.
+                    description: Internal server error, please try again later. If problem remains, please contact support.
+  /v3/locations/{locationId}/yearly_estimates:
+    get:
+      tags:
+      - Locations
+      summary: Get locations manual Annual Consumption values
+      description: 'Annual consumption values manually provided by end users.
+
+
+        User provided Annual Consumption data is used to generate estimated daily consumption for locations that have no actual meter data available yet.'
+      operationId: get-v3-locations-locationId-yearly_estimates
+      parameters:
+      - name: locationId
+        in: path
+        description: Location id
+        required: true
+        schema:
+          type: integer
+          format: int32
+      - name: year_from
+        in: query
+        description: Year from
+        schema:
+          type: integer
+          format: int32
+      - name: year_to
+        in: query
+        description: Year to, exclusive
+        schema:
+          type: integer
+          format: int32
+      - name: fuel
+        in: query
+        description: Fuel
+        schema:
+          $ref: '#/components/schemas/Fuel'
+      - name: type
+        in: query
+        description: Direction
+        schema:
+          $ref: '#/components/schemas/Direction'
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/YearlyEstimate'
+              examples:
+                Location consumption estimates:
+                  value:
+                  - fuel: elec
+                    type: consumption
+                    year: 2022
+                    source: user
+                    energy_wh: 78020
+                  - fuel: elec
+                    type: consumption
+                    year: 2023
+                    source: user
+                    energy_wh: 71515
+                Single location consumption estimate:
+                  value:
+                  - fuel: elec
+                    type: consumption
+                    year: 2020
+                    source: user
+                    energy_wh: 63000
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+              examples:
+                Invalid parameter fuel:
+                  value:
+                    type: client_error
+                    category: invalid_parameter
+                    code: INVALID_PARAMETER
+                    transaction_id: 0HN1O72JU5P3C:00000001
+                    message: Something went wrong, please try again later. If problem remains, please contact support.
+                    description: 'Invalid parameter ''fuel'': The value <argument> is not valid.'
+                Invalid parameter direction:
+                  value:
+                    type: client_error
+                    category: invalid_parameter
+                    code: INVALID_PARAMETER
+                    transaction_id: 0HN1O72JU5P3C:00000001
+                    message: Something went wrong, please try again later. If problem remains, please contact support.
+                    description: 'Invalid parameter ''direction'': The value <argument> is not valid.'
+                From parameter missing:
+                  value:
+                    type: client_error
+                    category: invalid_parameter
+                    code: INVALID_PARAMETER
+                    transaction_id: 0HN1O72JU5P3C:00000001
+                    message: Something went wrong, please try again later. If problem remains, please contact support.
+                    description: Parameter 'from' missing
+                To parameter missing:
+                  value:
+                    type: client_error
+                    category: invalid_parameter
+                    code: INVALID_PARAMETER
+                    transaction_id: 0HN1O72JU5P3C:00000001
+                    message: Something went wrong, please try again later. If problem remains, please contact support.
+                    description: Parameter 'to' missing
+                Date range invalid:
+                  value:
+                    type: client_error
+                    category: invalid_parameter
+                    code: INVALID_PARAMETER
+                    transaction_id: 0HN1O72JU5P3C:00000001
+                    message: Something went wrong, please try again later. If problem remains, please contact support.
+                    description: Parameter 'from' cannot be larger than 'to'
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+              examples:
+                Location not found:
+                  value:
+                    type: client_error
+                    category: entity_not_found
+                    code: ENTITY_NOT_FOUND
+                    transaction_id: 0HN18NIB8K5RV:00000001
+                    message: Something went wrong, please try again later. If problem remains, please contact support.
+                    description: Could not find the location.
+    post:
+      tags:
+      - Locations
+      summary: Post locations manual Annual Consumption values
+      description: 'Submit annual consumption value.
+
+
+        User provided Annual Consumption data is used to generate estimated daily consumption for locations that have no actual meter data available yet.'
+      operationId: post-v3-locations-locationId-yearly_estimates
+      parameters:
+      - name: locationId
+        in: path
+        description: Location id
+        required: true
+        schema:
+          type: integer
+          format: int32
+      requestBody:
+        description: ''
+        content:
+          application/json-patch+json:
+            schema:
+              $ref: '#/components/schemas/YearlyEstimate'
+            examples:
+              Location consumption estimate:
+                value:
+                  fuel: elec
+                  type: consumption
+                  year: 2022
+                  source: user
+                  energy_wh: 78020
+          application/json:
+            schema:
+              $ref: '#/components/schemas/YearlyEstimate'
+            examples:
+              Location consumption estimate:
+                value:
+                  fuel: elec
+                  type: consumption
+                  year: 2022
+                  source: user
+                  energy_wh: 78020
+          text/json:
+            schema:
+              $ref: '#/components/schemas/YearlyEstimate'
+            examples:
+              Location consumption estimate:
+                value:
+                  fuel: elec
+                  type: consumption
+                  year: 2022
+                  source: user
+                  energy_wh: 78020
+          application/*+json:
+            schema:
+              $ref: '#/components/schemas/YearlyEstimate'
+            examples:
+              Location consumption estimate:
+                value:
+                  fuel: elec
+                  type: consumption
+                  year: 2022
+                  source: user
+                  energy_wh: 78020
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/YearlyEstimate'
+              examples:
+                Location consumption estimate:
+                  value:
+                    fuel: elec
+                    type: consumption
+                    year: 2022
+                    source: user
+                    energy_wh: 78020
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+              examples:
+                Invalid parameter fuel:
+                  value:
+                    type: client_error
+                    category: invalid_parameter
+                    code: INVALID_PARAMETER
+                    transaction_id: 0HN1O72JU5P3C:00000001
+                    message: Something went wrong, please try again later. If problem remains, please contact support.
+                    description: 'Invalid parameter ''fuel'': The value <argument> is not valid.'
+                Invalid parameter direction:
+                  value:
+                    type: client_error
+                    category: invalid_parameter
+                    code: INVALID_PARAMETER
+                    transaction_id: 0HN1O72JU5P3C:00000001
+                    message: Something went wrong, please try again later. If problem remains, please contact support.
+                    description: 'Invalid parameter ''direction'': The value <argument> is not valid.'
+                Empty request error:
+                  value:
+                    type: client_error
+                    category: invalid_parameter
+                    code: INVALID_PARAMETER
+                    transaction_id: 0HN1O72JU5P3C:00000001
+                    message: Something went wrong, please try again later. If problem remains, please contact support.
+                    description: Request cannot be null
+                Missing energy value:
+                  value:
+                    type: client_error
+                    category: invalid_parameter
+                    code: INVALID_PARAMETER
+                    transaction_id: 0HN1O72JU5P3C:00000001
+                    message: Something went wrong, please try again later. If problem remains, please contact support.
+                    description: Parameter 'energy_wh' cannot be null
+                Negative energy value:
+                  value:
+                    type: client_error
+                    category: invalid_parameter
+                    code: INVALID_PARAMETER
+                    transaction_id: 0HN1O72JU5P3C:00000001
+                    message: Something went wrong, please try again later. If problem remains, please contact support.
+                    description: Parameter 'energy_wh' cannot be negative
+                Zero energy value:
+                  value:
+                    type: client_error
+                    category: invalid_parameter
+                    code: INVALID_PARAMETER
+                    transaction_id: 0HN1O72JU5P3C:00000001
+                    message: Something went wrong, please try again later. If problem remains, please contact support.
+                    description: Parameter 'energy_wh' cannot be zero
+                Missing year value:
+                  value:
+                    type: client_error
+                    category: invalid_parameter
+                    code: INVALID_PARAMETER
+                    transaction_id: 0HN1O72JU5P3C:00000001
+                    message: Something went wrong, please try again later. If problem remains, please contact support.
+                    description: Parameter 'year' cannot be null
+                Invalid year value:
+                  value:
+                    type: client_error
+                    category: invalid_parameter
+                    code: INVALID_PARAMETER
+                    transaction_id: 0HN1O72JU5P3C:00000001
+                    message: Something went wrong, please try again later. If problem remains, please contact support.
+                    description: Parameter 'year' is invalid
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+              examples:
+                Location not found:
+                  value:
+                    type: client_error
+                    category: entity_not_found
+                    code: ENTITY_NOT_FOUND
+                    transaction_id: 0HN18NIB8K5RV:00000001
+                    message: Something went wrong, please try again later. If problem remains, please contact support.
+                    description: Could not find the location.
+    delete:
+      tags:
+      - Locations
+      summary: Delete locations manual Annual Consumption Value
+      description: 'Deletes matching locations annual consumption value.
+
+
+        User provided Annual Consumption data is used to generate estimated daily consumption for locations that have no actual meter data available yet.'
+      operationId: delete-v3-locations-locationId-yearly_estimates
+      parameters:
+      - name: locationId
+        in: path
+        description: Location identifier
+        required: true
+        schema:
+          type: integer
+          format: int32
+      - name: fuel
+        in: query
+        description: Fuel type
+        required: true
+        schema:
+          $ref: '#/components/schemas/Fuel'
+      - name: type
+        in: query
+        description: Consumption type
+        required: true
+        schema:
+          $ref: '#/components/schemas/Direction'
+      - name: year
+        in: query
+        description: Year
+        required: true
+        schema:
+          type: integer
+          format: int32
+      responses:
+        '204':
+          description: No Content
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+              examples:
+                Invalid parameter fuel:
+                  value:
+                    type: client_error
+                    category: invalid_parameter
+                    code: INVALID_PARAMETER
+                    transaction_id: 0HN1O72JU5P3C:00000001
+                    message: Something went wrong, please try again later. If problem remains, please contact support.
+                    description: 'Invalid parameter ''fuel'': The value <argument> is not valid.'
+                Invalid parameter direction:
+                  value:
+                    type: client_error
+                    category: invalid_parameter
+                    code: INVALID_PARAMETER
+                    transaction_id: 0HN1O72JU5P3C:00000001
+                    message: Something went wrong, please try again later. If problem remains, please contact support.
+                    description: 'Invalid parameter ''direction'': The value <argument> is not valid.'
+                Invalid parameter year:
+                  value:
+                    type: client_error
+                    category: invalid_parameter
+                    code: INVALID_PARAMETER
+                    transaction_id: 0HN1O72JU5P3C:00000001
+                    message: Something went wrong, please try again later. If problem remains, please contact support.
+                    description: 'Invalid parameter ''year'': The value <argument> is not valid.'
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+              examples:
+                Location not found:
+                  value:
+                    type: client_error
+                    category: entity_not_found
+                    code: ENTITY_NOT_FOUND
+                    transaction_id: 0HN18NIB8K5RV:00000001
+                    message: Something went wrong, please try again later. If problem remains, please contact support.
+                    description: Could not find the location.
+        '500':
+          description: Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+  /v3/locations/{locationId}/yearly_estimates/suggestion:
+    parameters:
+    - schema:
+        type: string
+      name: locationId
+      in: path
+      required: true
+      description: Location identifier
+    get:
+      summary: Get location Annual Consumption Suggestion
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  country_code:
+                    type: string
+                  fuel:
+                    type: string
+                  yearly_consumption:
+                    type: object
+                    properties:
+                      units:
+                        type: string
+                      estimate:
+                        type: integer
+                      upper_bound:
+                        type: integer
+                      lower_bound:
+                        type: integer
+                      confidence_level:
+                        type: integer
+                x-examples:
+                  Example 1:
+                    country_code: be
+                    fuel: elec
+                    yearly_consumption:
+                      units: wh
+                      estimate: 2181236
+                      upper_bound: 7370570
+                      lower_bound: 7370570
+                      confidence_level: 96
+              examples:
+                Example 1:
+                  value:
+                    country_code: be
+                    fuel: elec
+                    yearly_consumption:
+                      units: wh
+                      estimate: 2181236
+                      upper_bound: 7370570
+                      lower_bound: 7370570
+                      confidence_level: 96
+        '400':
+          description: 'Bad Request
+
+
+            Possible errors
+
+
+            | *code* | *description* |
+
+            | --- | --- |
+
+            | CONFIDENCE_LEVEL_PERCENTAGE_CANNOT_BE_NULL | Confidence level percentage can not be null. |
+
+            | LOCATION_PROPERTIES_SETTINGS_IS_NOT_COMPLETE | Location home profile is not complete. |
+
+            | INVALID_PARAMETER | Invalid parameter ''fuel''. Should be one of: elec, gas, district_heating |
+
+            | ENTITY_NOT_FOUND | Could not find the location. |'
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  code:
+                    type: string
+                  transaction_id:
+                    type: string
+                  description:
+                    type: string
+                x-examples:
+                  Example 1:
+                    code: CONFIDENCE_LEVEL_PERCENTAGE_CANNOT_BE_NULL
+                    transaction_id: 0HMRB3B2I6UOR:0000000F
+                    description: Confidence level percentage can not be null.
+              examples:
+                Error example:
+                  value:
+                    type: client_error
+                    category: entity_not_found
+                    transaction_id: 0HMLS31S9QPFP:00002A1C
+                    message: Something went wrong, please try again later. If problem remains, please contact support.
+                    description: Could not find the location.
+      operationId: get-v3-locations-locationId-consumption/suggestion
+      description: 'This endpoint returns the “locations annual consumption Suggestion”.
+
+
+        Note: User''s home profile is required to generate this value. In order for this to work, the Eliq Platform must support the Country. Contact Eliq for an update on supported countries.
+
+
+        To be able to create the estimated suggestion a set of home profile values needs to be set. This can vary from country to country but typically these values are required; persons, heating_type_primary, house_type and hotwater_type.'
+      parameters:
+      - schema:
+          type: string
+        in: query
+        name: confidence_level_percentage
+        required: true
+        description: Confidence level percentage. Use 96 for the best result.
+      - schema:
+          type: string
+          enum:
+          - elec
+          - gas
+        in: query
+        name: fuel
+        description: Fuel type, currently gas is not supported in some countries
+      tags:
+      - Locations
+  /v3/locations/{locationId}/temperature:
+    parameters:
+    - schema:
+        type: string
+      name: locationId
+      in: path
+      required: true
+      description: Location id
+    get:
+      summary: Get temperature
+      tags:
+      - Locations
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TemperatureData'
+              examples:
+                Example:
+                  value:
+                    temperature:
+                    - 12
+                    - 13
+                    resolution: month
+                    from: '2021-01-01T00:00:00'
+                    to: '2021-03-01T00:00:00'
+        '400':
+          description: 'Bad Request
+
+
+            Possible errors
+
+
+            | *type* | *category* | *description* |
+
+            | --- | --- | --- |
+
+            | client_error | invalid_parameter | Timespan between ''from'' and ''to'' to large, max {maxTimeSpan} days for the given resolution" |
+
+            | client_error | invalid_parameter | Parameter ''to'' missing |
+
+            | client_error | invalid_parameter | Parameter ''from'' missing |
+
+            | client_error | invalid_parameter | Parameter ''from'' cannot be larger than ''to'' |
+
+            | client_error | invalid_parameter | Invalid parameter ''resolution''. Should be one of: 6min, 30min, hour, day, month |'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+              examples:
+                Error:
+                  value:
+                    type: client_error
+                    category: invalid_parameter
+                    code: INVALID_PARAMETER
+                    description: Invalid parameter 'to'. Cannot be null
+                    message: 'Something went wrong, please try again later. If problem remains, please contact support (error: 1ad3a534117d4).'
+                    transaction_id: 37c4ef86-d525-42c8-b65f-9b4cfcce0df6
+      operationId: get-v3-location-temperature
+      parameters:
+      - schema:
+          type: string
+          enum:
+          - day
+          - month
+          example: day
+        in: query
+        name: resolution
+        description: Resolution of temperature
+        required: true
+      - schema:
+          type: string
+          example: '2021-01-01'
+          format: date
+        in: query
+        name: from
+        description: From which date to retrieve temperature
+        required: true
+      - schema:
+          type: string
+          format: date
+          example: '2021-01-01'
+        in: query
+        name: to
+        description: The 'to date' represents the end date of the time period. The value is exclusive, indicating that the specified date is not included in the data range. It is rounded down to the closest start of the period for the given resolution.
+        required: true
+      description: 'Get the outdoor temperature in Celsius for a location
+
+
+        Maximum time spans for resolutions
+
+        * day: 31 days
+
+        * month: 1 year'
+components:
+  schemas:
+    Fuel:
+      enum:
+      - elec
+      - gas
+      - district_heating
+      type: string
+      description: Fuel type
+    LocationFuelItem:
+      required:
+      - resolution
+      - source
+      type: object
+      properties:
+        resolution:
+          minLength: 1
+          type: string
+          description: Energy data sampling resolution.
+          example: 15min
+        data_from:
+          type: string
+          description: Available from date.
+          format: date-time
+          nullable: true
+          example: '2021-01-01T00:00:00'
+        data_to:
+          type: string
+          description: Available to date.
+          format: date-time
+          nullable: true
+          example: '2021-03-01T00:00:00'
+        source:
+          $ref: '#/components/schemas/FuelSource'
+        sync_status:
+          $ref: '#/components/schemas/SyncStatus'
+      description: General data about a fuel item.
+    NotificationSettingsResponse:
+      type: object
+      properties:
+        notification_name:
+          type: string
+          description: The name of the notification
+          nullable: true
+        notification_type_id:
+          type: integer
+          description: Unique notification id
+          format: int32
+        notification_category:
+          type: string
+          description: Notification category
+          nullable: true
+        send_event_notification:
+          type: boolean
+          description: Specifies whether the notification should be sent (I.E. is the notification enabled).
+          nullable: true
+        send_email:
+          type: boolean
+          description: Specifies whether notification should be delivered by email.
+          nullable: true
+        send_push:
+          type: boolean
+          description: Specifies whether a push notification is delivered to the user's smartphone.
+          nullable: true
+        send_text:
+          type: boolean
+          description: Specifies whether the notification is sent via an SMS text message.
+          nullable: true
+        send_webhook:
+          type: boolean
+          description: Specifies whether the notification is sent via a webhook.
+          nullable: true
+    LocationNotificationSettingsInput:
+      required:
+      - notification_type_id
+      type: object
+      properties:
+        notification_type_id:
+          type: integer
+          description: The unique notification id
+          format: int32
+        enabled:
+          type: boolean
+          description: Specify whether the notification is enabled. Disabled notifications are not sent.
+          nullable: true
+        mute_email:
+          type: boolean
+          description: Specify whether delivery by email should be muted. True - not delivered, False - delivered.
+          nullable: true
+        mute_text:
+          type: boolean
+          description: Specify whether delivery by SMS text message should be muted. True - not delivered, False - delivered.
+          nullable: true
+        mute_push:
+          type: boolean
+          description: Specify whether push notification delivery to a user's smartphone should be muted. True - not delivered, False - delivered.
+          nullable: true
+        mute_webhook:
+          type: boolean
+          description: Specify whether webhook delivery should be muted. True - not delivered, False - delivered.
+          nullable: true
+      description: 'The various settings which can be configured for a notification.
+
+        An important note is that the notification is sent via all configured channels.
+
+        I.E. if none of the channels (email, text, push, webhook) are muted, ALL of them will be used in order to deliver the notification.'
+    SyncStatus:
+      enum:
+      - ok
+      - waiting_for_data
+      type: string
+      description: Data synchronization status.
+    LocationFuels:
+      type: object
+      properties:
+        elec:
+          $ref: '#/components/schemas/LocationFuel'
+        gas:
+          $ref: '#/components/schemas/LocationFuel'
+        district_heating:
+          $ref: '#/components/schemas/LocationFuel'
+      description: Available fuel data
+    Location:
+      required:
+      - address
+      - ext_ref
+      - fuels
+      - id
+      - meters
+      - timezone
+      type: object
+      properties:
+        id:
+          type: integer
+          description: ID
+          format: int32
+          example: 150
+        name:
+          type: string
+          description: Name
+          nullable: true
+          example: My Location
+        ext_ref:
+          minLength: 1
+          type: string
+          description: External (utility) reference.
+        timezone:
+          minLength: 1
+          type: string
+          description: Iana timezone
+          example: Europe/Berlin
+        address:
+          $ref: '#/components/schemas/Address'
+        fuels:
+          $ref: '#/components/schemas/LocationFuels'
+        meters:
+          type: array
+          items:
+            $ref: '#/components/schemas/LocationMeter'
+          description: Meters present at a location.
+      description: Location data.
+    Error:
+      type: object
+      properties:
+        type:
+          type: string
+          description: Type of error.
+          nullable: true
+          example: internal_error
+        category:
+          type: string
+          description: Error category.
+          nullable: true
+          example: internal_error
+        code:
+          type: string
+          description: Code describing the issue.
+          nullable: true
+          example: INTERNAL_ERROR
+        transaction_id:
+          type: string
+          description: Identifier for the session. Please provide this when contacting support.
+          nullable: true
+          example: 0HN18NN5QB401:00000001
+        message:
+          type: string
+          description: A message related to the error.
+          nullable: true
+          example: Something went wrong. Please try again later. If problem remains, please contact support.
+        description:
+          type: string
+          description: A description of the error for developers.
+          nullable: true
+          example: Internal server error, please try again later. If problem remains, please contact support.
+      description: Model returned for error responses.
+    Address:
+      required:
+      - country_code
+      - street_address
+      type: object
+      properties:
+        street_address:
+          minLength: 1
+          type: string
+          description: Street address.
+          example: Riksgatan 1
+        postal_code:
+          type: string
+          description: Postal code.
+          nullable: true
+          example: 117 40
+        city:
+          type: string
+          description: City name.
+          nullable: true
+          example: Stockholm
+        country_code:
+          minLength: 1
+          type: string
+          description: Country code (ISO 3166-1 alpha-2).
+          example: SE
+        lon:
+          type: number
+          description: The geographical longitude coordinate.
+          format: double
+          nullable: true
+          example: 18.07187
+        lat:
+          type: number
+          description: The geographical latitude coordinate.
+          format: double
+          nullable: true
+          example: 59.3257
+      description: General address data including latitude and longitude.
+    TemperatureData:
+      description: Model containing time series temperature data. Different parameters will be available depending on the data requested, see below for more information
+      type: object
+      x-examples:
+        example-1:
+          consumption:
+          - 446.37
+          - null
+          import:
+          - 446.37
+          - null
+          export:
+          - 446.37
+          - null
+          production:
+          - 446.37
+          - null
+          fuel: elec
+          unit: energy
+          resolution: month
+          from: '2019-01-01T00:00:00'
+          to: '2019-03-01T00:00:00'
+      examples:
+      - temperature:
+        - 12
+        - 13
+        resolution: month
+        from: '2021-01-01T00:00:00'
+        to: '2021-03-01T00:00:00'
+      title: Temperature data
+      properties:
+        temperature:
+          type: array
+          items:
+            type:
+            - number
+            - 'null'
+        resolution:
+          type: string
+          minLength: 1
+          description: Can be 'day' or 'month'. Matches with the value passed in query parameters of the request.
+          enum:
+          - day
+          - month
+        from:
+          type: string
+          minLength: 1
+          description: From date
+          example: '2021-01-01T00:00:00'
+        to:
+          type: string
+          minLength: 1
+          description: To date
+          example: '2021-02-01T00:00:00'
+      required:
+      - resolution
+      - from
+      - to
+    LocationFuel:
+      type: object
+      properties:
+        import:
+          $ref: '#/components/schemas/LocationFuelItem'
+        export:
+          $ref: '#/components/schemas/LocationFuelItem'
+        consumption:
+          $ref: '#/components/schemas/LocationFuelItem'
+        production:
+          $ref: '#/components/schemas/LocationFuelItem'
+      description: Fuel data
+    FuelSource:
+      enum:
+      - smart_meter
+      - non_smart_meter
+      - load_curve_estimation
+      - pv_disagg
+      type: string
+      description: Source of fuel data.
+    YearlyEstimate:
+      required:
+      - fuel
+      - source
+      - type
+      - year
+      type: object
+      properties:
+        fuel:
+          $ref: '#/components/schemas/Fuel'
+        type:
+          $ref: '#/components/schemas/Direction'
+        year:
+          type: integer
+          description: Year
+          format: int32
+        source:
+          minLength: 1
+          type: string
+          description: Source of the entry, e.g., user, system
+        energy_wh:
+          type: integer
+          description: Energy in Wh
+          format: int32
+          nullable: true
+      description: Model containing yearly estimate for a location
+    Direction:
+      enum:
+      - import
+      - export
+      - consumption
+      - production
+      type: string
+      description: Direction type
+    Notification:
+      description: 'Notification object. Content available in "object" is dependent on the notification type. '
+      type: object
+      x-examples:
+        example-1:
+          type: monthly_insight
+          id: 123456
+          read: false
+          created_date: '2021-05-17T13:35:22.473'
+          header: Ny månadsrapport
+          content: 'Hej Eva!
+
+            Din energianvändning för..'
+          object: null
+      examples:
+      - type: monthly_insight
+        id: 123456
+        read: true
+        created_date: '2021-05-17T13:35:22.473'
+        header: Ny månadsrapport
+        content: Hej Eva!\nDin energianvändning för..
+        object:
+          location_id: 1234
+          location_ext_ref: '{location_ext_ref}'
+          type: monthly_insight
+          fuel: elec
+          period_start: '2020-10-01T00:00:00.000'
+          period_end: '2020-11-01T00:00:00.000'
+          message:
+            language:
+              sv-SE:
+                header: Ny månadsrapport
+                content: 'Hej Eva!
+
+                  Din energianvändning för..'
+      title: Notification
+      properties:
+        type:
+          type: string
+          minLength: 1
+          description: Notification type
+          example: monthly_insight
+        id:
+          type: number
+          description: Eliq internal ID of the notification
+          example: 123456
+        read:
+          type: boolean
+          description: Could be used to indicate it the notification is read or not. Needs to be used together with PATCH notifications.
+          default: true
+        created_date:
+          type: string
+          minLength: 1
+          description: 'The date when the notification was created. The date is in UTC (Z flag is missing due to design mistake :)) '
+          format: date-time
+          example: '2021-05-17T13:35:22.473'
+        header:
+          type: string
+          minLength: 1
+          description: Header of notification. In language code set for the user
+          example: Ny månadsrapport
+        content:
+          type: string
+          minLength: 1
+          description: Content of notification in language code set for the user. May contain new line marker '\n'
+          example: Hej Eva!\nDin energianvändning för..
+        object:
+          type: object
+          description: 'Object containing detailed information from the source of the notification. E.g. a monthly insights object. '
+      required:
+      - type
+      - id
+      - read
+      - created_date
+      - header
+      - content
+    LocationMeter:
+      required:
+      - direction
+      - fuel_type
+      - id
+      - is_sub_meter
+      - user_setup_completed
+      type: object
+      properties:
+        id:
+          minLength: 1
+          type: string
+          description: ID.
+          example: e7c8938fe06a44a7923ed89da281705e
+        model:
+          minLength: 1
+          type: string
+          description: Model.
+          example: Standard Energy V1
+        user_setup_completed:
+          type: boolean
+          description: A true/false value depicting whether user setup is complete.
+          example: true
+        name_user:
+          type: string
+          description: Name given by the user.
+          nullable: true
+          example: MyName
+        name_suggested:
+          type: string
+          description: Name suggested.
+          nullable: true
+          example: Standard Energy V1
+        fuel_type:
+          minLength: 1
+          type: string
+          description: Type of fuel sampled.
+          example: elec
+        direction:
+          minLength: 1
+          type: string
+          description: Fuel direction.
+          example: import
+        is_sub_meter:
+          type: boolean
+          description: A true/false values depicting whether this is a sub-meter.
+          example: false
+        category_user:
+          type: string
+          description: Category which was provided by the user.
+          nullable: true
+          example: My Category
+        category_suggested:
+          type: string
+          description: The category suggested.
+          nullable: true
+          example: other
+        supply_start_date:
+          type: string
+          description: Supply start date.
+          format: date-time
+          nullable: true
+          example: '2026-01-01T00:00:00'
+        supply_end_date:
+          type: string
+          description: Supply end date.
+          format: date-time
+          nullable: true
+          example: '2026-12-31T00:00:00'
+      description: Meter data.
+  securitySchemes:
+    BearerAuth:
+      type: http
+      scheme: bearer
+      description: The Eliq insights API uses bearer tokens to authenticate requests. Read more under Authentication tag.
+x-tagGroups:
+- name: Authentication
+  tags:
+  - Authentication
+- name: Users
+  tags:
+  - Users
+- name: Locations
+  tags:
+  - Locations
+  - Location Profile
+  - Energy Data
+  - Energy Usage Categories
+  - Energy Performance Certificate
+  - Similar Homes
+  - Budgets
+  - Advice
+  - Anomalies
+  - Market Price
+  - Price Formulas
+- name: Eliq Connect
+  tags:
+  - Eliq Connect
+- name: Health
+  tags:
+  - Health
+- name: Deprecated
+  tags:
+  - Breakdown
+  - Home Profile
