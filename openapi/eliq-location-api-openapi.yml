@@ -503,72 +503,22 @@ components:
           - number
           - 'null'
           format: double
-    LocationAddress:
+    ErrorDetails:
+      required:
+      - code
+      - description
       type: object
       properties:
-        street_address:
+        code:
+          minLength: 1
+          type: string
+        description:
+          minLength: 1
+          type: string
+        request_id:
           type:
           - string
           - 'null'
-        postal_code:
-          type:
-          - string
-          - 'null'
-        city:
-          type:
-          - string
-          - 'null'
-        country_code:
-          type:
-          - string
-          - 'null'
-    Location:
-      type: object
-      properties:
-        id:
-          type:
-          - string
-          - 'null'
-        eliq_id:
-          type:
-          - integer
-          - 'null'
-          format: int32
-          readOnly: true
-        name:
-          type:
-          - string
-          - 'null'
-        user_id:
-          type:
-          - string
-          - 'null'
-        spot_price_region_id:
-          type:
-          - string
-          - 'null'
-        address:
-          $ref: '#/components/schemas/LocationAddress'
-        geo:
-          $ref: '#/components/schemas/LocationGeo'
-        meters:
-          type:
-          - array
-          - 'null'
-          items:
-            $ref: '#/components/schemas/Meter'
-        created_at_timestamp:
-          type:
-          - string
-          - 'null'
-        location_profile_type:
-          $ref: '#/components/schemas/ProfileType'
-    ProfileType:
-      enum:
-      - residential
-      - business
-      - undefined
-      type: string
     Meter:
       type: object
       properties:
@@ -636,22 +586,72 @@ components:
         statusCode:
           type: integer
           format: int32
-    ErrorDetails:
-      required:
-      - code
-      - description
+    LocationAddress:
       type: object
       properties:
-        code:
-          minLength: 1
-          type: string
-        description:
-          minLength: 1
-          type: string
-        request_id:
+        street_address:
           type:
           - string
           - 'null'
+        postal_code:
+          type:
+          - string
+          - 'null'
+        city:
+          type:
+          - string
+          - 'null'
+        country_code:
+          type:
+          - string
+          - 'null'
+    Location:
+      type: object
+      properties:
+        id:
+          type:
+          - string
+          - 'null'
+        eliq_id:
+          type:
+          - integer
+          - 'null'
+          format: int32
+          readOnly: true
+        name:
+          type:
+          - string
+          - 'null'
+        user_id:
+          type:
+          - string
+          - 'null'
+        spot_price_region_id:
+          type:
+          - string
+          - 'null'
+        address:
+          $ref: '#/components/schemas/LocationAddress'
+        geo:
+          $ref: '#/components/schemas/LocationGeo'
+        meters:
+          type:
+          - array
+          - 'null'
+          items:
+            $ref: '#/components/schemas/Meter'
+        created_at_timestamp:
+          type:
+          - string
+          - 'null'
+        location_profile_type:
+          $ref: '#/components/schemas/ProfileType'
+    ProfileType:
+      enum:
+      - residential
+      - business
+      - undefined
+      type: string
 x-tagGroups:
 - name: Users
   tags:

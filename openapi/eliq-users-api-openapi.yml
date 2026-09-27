@@ -498,320 +498,12 @@ paths:
                     description: Internal server error, please try again later. If problem remains, please contact support.
 components:
   schemas:
-    LocationFuelItem:
-      required:
-      - resolution
-      - source
-      type: object
-      properties:
-        resolution:
-          minLength: 1
-          type: string
-          description: Energy data sampling resolution.
-          example: 15min
-        data_from:
-          type: string
-          description: Available from date.
-          format: date-time
-          nullable: true
-          example: '2021-01-01T00:00:00'
-        data_to:
-          type: string
-          description: Available to date.
-          format: date-time
-          nullable: true
-          example: '2021-03-01T00:00:00'
-        source:
-          $ref: '#/components/schemas/FuelSource'
-        sync_status:
-          $ref: '#/components/schemas/SyncStatus'
-      description: General data about a fuel item.
-    Event:
-      type: object
-      properties:
-        created_date:
-          type: string
-          format: date-time
-          nullable: true
-        type:
-          type: string
-          nullable: true
-        source:
-          type: object
-          description: 'The source of the event. This can for example be a monitor object or a report object
-
-            To figure out which object it is, look at Type'
-          nullable: true
-    Consent:
-      type: object
-      x-examples:
-        example-1:
-          version_id: f2283b35-c2c7-4a4f-90f4-49e493c69d7
-          name: terms_and_conditions
-          type: login_consent
-          given_consent: false
-          is_updated: true
-          is_mandatory: true
-          timestamp: '2022-06-28T13:54:43.369558Z'
-          language_code: en-GB
-          data:
-            url: https://your-website-url.com/terms-and-conditions
-      properties:
-        version_id:
-          type: string
-        name:
-          type: string
-        type:
-          type: string
-        given_consent:
-          type: boolean
-        is_updated:
-          type: boolean
-        is_mandatory:
-          type: boolean
-        timestamp:
-          type: string
-        language_code:
-          type: string
-        data:
-          type: object
-          properties:
-            url:
-              type: string
-              description: Nullable, such as the terms and conditions page on a website, etc.
-      examples: []
-    User:
-      description: Get user information
-      type: object
-      x-examples:
-        example-1:
-          id: 1234
-          ext_ref: aec78361-f5b6-44cc-b9e6-935bd5053592
-          forname: John
-          surname: Doe
-          phone: '987643212'
-          email: john.doe@email.com
-          language_code: en-GB
-      examples:
-      - id: 1234
-        ext_ref: aec78361-f5b6-44cc-b9e6-935bd5053592
-        name: John
-        phone: '+46731234123'
-        email: john.doe@email.com
-        language_code: en-GB
-      properties:
-        id:
-          type: number
-          example: 1234
-          description: Eliq internal ID
-        client_id:
-          type: number
-          example: 123456789
-          description: Eliq internal Client ID
-        ext_ref:
-          type: string
-          minLength: 1
-          description: Eliq external reference. Client's user ID (ID in data management API)
-          example: aec78361-f5b6-44cc-b9e6-935bd5053592
-        name:
-          type: string
-          example: John
-          description: Users name
-        forename:
-          type: string
-          deprecated: true
-          description: Users forename
-        surname:
-          type: string
-          deprecated: true
-          description: Users surname
-        phone:
-          type: string
-          example: '+46731234123'
-          description: User phone number
-        email:
-          type: string
-          example: john.doe@email.com
-          format: email
-          description: User email
-        language_code:
-          type: string
-          minLength: 1
-          example: en-GB
-          description: Users selected language code. Translations shown in app and messages will be sent in this language
-      required:
-      - id
-      - ext_ref
-      - language_code
     SyncStatus:
       enum:
       - ok
       - waiting_for_data
       type: string
       description: Data synchronization status.
-    LocationFuels:
-      type: object
-      properties:
-        elec:
-          $ref: '#/components/schemas/LocationFuel'
-        gas:
-          $ref: '#/components/schemas/LocationFuel'
-        district_heating:
-          $ref: '#/components/schemas/LocationFuel'
-      description: Available fuel data
-    Location:
-      required:
-      - address
-      - ext_ref
-      - fuels
-      - id
-      - meters
-      - timezone
-      type: object
-      properties:
-        id:
-          type: integer
-          description: ID
-          format: int32
-          example: 150
-        name:
-          type: string
-          description: Name
-          nullable: true
-          example: My Location
-        ext_ref:
-          minLength: 1
-          type: string
-          description: External (utility) reference.
-        timezone:
-          minLength: 1
-          type: string
-          description: Iana timezone
-          example: Europe/Berlin
-        address:
-          $ref: '#/components/schemas/Address'
-        fuels:
-          $ref: '#/components/schemas/LocationFuels'
-        meters:
-          type: array
-          items:
-            $ref: '#/components/schemas/LocationMeter'
-          description: Meters present at a location.
-      description: Location data.
-    Error:
-      type: object
-      properties:
-        type:
-          type: string
-          description: Type of error.
-          nullable: true
-          example: internal_error
-        category:
-          type: string
-          description: Error category.
-          nullable: true
-          example: internal_error
-        code:
-          type: string
-          description: Code describing the issue.
-          nullable: true
-          example: INTERNAL_ERROR
-        transaction_id:
-          type: string
-          description: Identifier for the session. Please provide this when contacting support.
-          nullable: true
-          example: 0HN18NN5QB401:00000001
-        message:
-          type: string
-          description: A message related to the error.
-          nullable: true
-          example: Something went wrong. Please try again later. If problem remains, please contact support.
-        description:
-          type: string
-          description: A description of the error for developers.
-          nullable: true
-          example: Internal server error, please try again later. If problem remains, please contact support.
-      description: Model returned for error responses.
-    Address:
-      required:
-      - country_code
-      - street_address
-      type: object
-      properties:
-        street_address:
-          minLength: 1
-          type: string
-          description: Street address.
-          example: Riksgatan 1
-        postal_code:
-          type: string
-          description: Postal code.
-          nullable: true
-          example: 117 40
-        city:
-          type: string
-          description: City name.
-          nullable: true
-          example: Stockholm
-        country_code:
-          minLength: 1
-          type: string
-          description: Country code (ISO 3166-1 alpha-2).
-          example: SE
-        lon:
-          type: number
-          description: The geographical longitude coordinate.
-          format: double
-          nullable: true
-          example: 18.07187
-        lat:
-          type: number
-          description: The geographical latitude coordinate.
-          format: double
-          nullable: true
-          example: 59.3257
-      description: General address data including latitude and longitude.
-    FuelSource:
-      enum:
-      - smart_meter
-      - non_smart_meter
-      - load_curve_estimation
-      - pv_disagg
-      type: string
-      description: Source of fuel data.
-    LocationFuel:
-      type: object
-      properties:
-        import:
-          $ref: '#/components/schemas/LocationFuelItem'
-        export:
-          $ref: '#/components/schemas/LocationFuelItem'
-        consumption:
-          $ref: '#/components/schemas/LocationFuelItem'
-        production:
-          $ref: '#/components/schemas/LocationFuelItem'
-      description: Fuel data
-    UserNotification:
-      type: object
-      properties:
-        id:
-          type: integer
-          format: int64
-        header:
-          type: string
-          nullable: true
-        content:
-          type: string
-          nullable: true
-        read:
-          type: boolean
-          nullable: true
-        created_date:
-          type: string
-          format: date-time
-          nullable: true
-        event:
-          $ref: '#/components/schemas/Event'
     LocationMeter:
       required:
       - direction
@@ -882,6 +574,314 @@ components:
           nullable: true
           example: '2026-12-31T00:00:00'
       description: Meter data.
+    Address:
+      required:
+      - country_code
+      - street_address
+      type: object
+      properties:
+        street_address:
+          minLength: 1
+          type: string
+          description: Street address.
+          example: Riksgatan 1
+        postal_code:
+          type: string
+          description: Postal code.
+          nullable: true
+          example: 117 40
+        city:
+          type: string
+          description: City name.
+          nullable: true
+          example: Stockholm
+        country_code:
+          minLength: 1
+          type: string
+          description: Country code (ISO 3166-1 alpha-2).
+          example: SE
+        lon:
+          type: number
+          description: The geographical longitude coordinate.
+          format: double
+          nullable: true
+          example: 18.07187
+        lat:
+          type: number
+          description: The geographical latitude coordinate.
+          format: double
+          nullable: true
+          example: 59.3257
+      description: General address data including latitude and longitude.
+    LocationFuel:
+      type: object
+      properties:
+        import:
+          $ref: '#/components/schemas/LocationFuelItem'
+        export:
+          $ref: '#/components/schemas/LocationFuelItem'
+        consumption:
+          $ref: '#/components/schemas/LocationFuelItem'
+        production:
+          $ref: '#/components/schemas/LocationFuelItem'
+      description: Fuel data
+    Consent:
+      type: object
+      x-examples:
+        example-1:
+          version_id: f2283b35-c2c7-4a4f-90f4-49e493c69d7
+          name: terms_and_conditions
+          type: login_consent
+          given_consent: false
+          is_updated: true
+          is_mandatory: true
+          timestamp: '2022-06-28T13:54:43.369558Z'
+          language_code: en-GB
+          data:
+            url: https://your-website-url.com/terms-and-conditions
+      properties:
+        version_id:
+          type: string
+        name:
+          type: string
+        type:
+          type: string
+        given_consent:
+          type: boolean
+        is_updated:
+          type: boolean
+        is_mandatory:
+          type: boolean
+        timestamp:
+          type: string
+        language_code:
+          type: string
+        data:
+          type: object
+          properties:
+            url:
+              type: string
+              description: Nullable, such as the terms and conditions page on a website, etc.
+      examples: []
+    UserNotification:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+        header:
+          type: string
+          nullable: true
+        content:
+          type: string
+          nullable: true
+        read:
+          type: boolean
+          nullable: true
+        created_date:
+          type: string
+          format: date-time
+          nullable: true
+        event:
+          $ref: '#/components/schemas/Event'
+    User:
+      description: Get user information
+      type: object
+      x-examples:
+        example-1:
+          id: 1234
+          ext_ref: aec78361-f5b6-44cc-b9e6-935bd5053592
+          forname: John
+          surname: Doe
+          phone: '987643212'
+          email: john.doe@email.com
+          language_code: en-GB
+      examples:
+      - id: 1234
+        ext_ref: aec78361-f5b6-44cc-b9e6-935bd5053592
+        name: John
+        phone: '+46731234123'
+        email: john.doe@email.com
+        language_code: en-GB
+      properties:
+        id:
+          type: number
+          example: 1234
+          description: Eliq internal ID
+        client_id:
+          type: number
+          example: 123456789
+          description: Eliq internal Client ID
+        ext_ref:
+          type: string
+          minLength: 1
+          description: Eliq external reference. Client's user ID (ID in data management API)
+          example: aec78361-f5b6-44cc-b9e6-935bd5053592
+        name:
+          type: string
+          example: John
+          description: Users name
+        forename:
+          type: string
+          deprecated: true
+          description: Users forename
+        surname:
+          type: string
+          deprecated: true
+          description: Users surname
+        phone:
+          type: string
+          example: '+46731234123'
+          description: User phone number
+        email:
+          type: string
+          example: john.doe@email.com
+          format: email
+          description: User email
+        language_code:
+          type: string
+          minLength: 1
+          example: en-GB
+          description: Users selected language code. Translations shown in app and messages will be sent in this language
+      required:
+      - id
+      - ext_ref
+      - language_code
+    Error:
+      type: object
+      properties:
+        type:
+          type: string
+          description: Type of error.
+          nullable: true
+          example: internal_error
+        category:
+          type: string
+          description: Error category.
+          nullable: true
+          example: internal_error
+        code:
+          type: string
+          description: Code describing the issue.
+          nullable: true
+          example: INTERNAL_ERROR
+        transaction_id:
+          type: string
+          description: Identifier for the session. Please provide this when contacting support.
+          nullable: true
+          example: 0HN18NN5QB401:00000001
+        message:
+          type: string
+          description: A message related to the error.
+          nullable: true
+          example: Something went wrong. Please try again later. If problem remains, please contact support.
+        description:
+          type: string
+          description: A description of the error for developers.
+          nullable: true
+          example: Internal server error, please try again later. If problem remains, please contact support.
+      description: Model returned for error responses.
+    LocationFuels:
+      type: object
+      properties:
+        elec:
+          $ref: '#/components/schemas/LocationFuel'
+        gas:
+          $ref: '#/components/schemas/LocationFuel'
+        district_heating:
+          $ref: '#/components/schemas/LocationFuel'
+      description: Available fuel data
+    Event:
+      type: object
+      properties:
+        created_date:
+          type: string
+          format: date-time
+          nullable: true
+        type:
+          type: string
+          nullable: true
+        source:
+          type: object
+          description: 'The source of the event. This can for example be a monitor object or a report object
+
+            To figure out which object it is, look at Type'
+          nullable: true
+    Location:
+      required:
+      - address
+      - ext_ref
+      - fuels
+      - id
+      - meters
+      - timezone
+      type: object
+      properties:
+        id:
+          type: integer
+          description: ID
+          format: int32
+          example: 150
+        name:
+          type: string
+          description: Name
+          nullable: true
+          example: My Location
+        ext_ref:
+          minLength: 1
+          type: string
+          description: External (utility) reference.
+        timezone:
+          minLength: 1
+          type: string
+          description: Iana timezone
+          example: Europe/Berlin
+        address:
+          $ref: '#/components/schemas/Address'
+        fuels:
+          $ref: '#/components/schemas/LocationFuels'
+        meters:
+          type: array
+          items:
+            $ref: '#/components/schemas/LocationMeter'
+          description: Meters present at a location.
+      description: Location data.
+    LocationFuelItem:
+      required:
+      - resolution
+      - source
+      type: object
+      properties:
+        resolution:
+          minLength: 1
+          type: string
+          description: Energy data sampling resolution.
+          example: 15min
+        data_from:
+          type: string
+          description: Available from date.
+          format: date-time
+          nullable: true
+          example: '2021-01-01T00:00:00'
+        data_to:
+          type: string
+          description: Available to date.
+          format: date-time
+          nullable: true
+          example: '2021-03-01T00:00:00'
+        source:
+          $ref: '#/components/schemas/FuelSource'
+        sync_status:
+          $ref: '#/components/schemas/SyncStatus'
+      description: General data about a fuel item.
+    FuelSource:
+      enum:
+      - smart_meter
+      - non_smart_meter
+      - load_curve_estimation
+      - pv_disagg
+      type: string
+      description: Source of fuel data.
   securitySchemes:
     BearerAuth:
       type: http

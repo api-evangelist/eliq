@@ -828,147 +828,6 @@ paths:
                     request_id: 65e2ea86-470f-4363-9295-35d6b473981a
 components:
   schemas:
-    PriceFormula:
-      type: object
-      properties:
-        name:
-          type:
-          - string
-          - 'null'
-        from:
-          type:
-          - string
-          - 'null'
-        to:
-          type:
-          - string
-          - 'null'
-        currency_code:
-          type:
-          - string
-          - 'null'
-        elements:
-          type:
-          - array
-          - 'null'
-          items:
-            $ref: '#/components/schemas/Element'
-        price_multiplier:
-          type:
-          - number
-          - 'null'
-          format: double
-        energy_unit:
-          type:
-          - string
-          - 'null'
-    CapacityTariff:
-      type: object
-      properties:
-        charge_tariff:
-          type: number
-          format: double
-        minimum_contribution:
-          type: number
-          format: double
-        calculation_type:
-          type:
-          - string
-          - 'null'
-    Interval:
-      type: object
-      properties:
-        from_minute:
-          type:
-          - integer
-          - 'null'
-          format: int64
-        to_minute:
-          type:
-          - integer
-          - 'null'
-          format: int64
-    Tou:
-      type: object
-      properties:
-        register_id:
-          type:
-          - string
-          - 'null'
-        unit_rate:
-          type:
-          - number
-          - 'null'
-          format: double
-        intervals:
-          type:
-          - array
-          - 'null'
-          items:
-            $ref: '#/components/schemas/Interval'
-        skip_intervals:
-          type:
-          - boolean
-          - 'null'
-    Element:
-      type: object
-      properties:
-        name:
-          type:
-          - string
-          - 'null'
-        type:
-          type:
-          - string
-          - 'null'
-        charge:
-          $ref: '#/components/schemas/Charge'
-        unit_rate:
-          $ref: '#/components/schemas/UnitRate'
-    NoContentResult:
-      type: object
-      properties:
-        statusCode:
-          type: integer
-          format: int32
-    SpotPrice:
-      type: object
-      properties:
-        provider:
-          type:
-          - string
-          - 'null'
-        region:
-          type:
-          - string
-          - 'null'
-        resolution:
-          type:
-          - string
-          - 'null'
-        multiplier:
-          type:
-          - number
-          - 'null'
-          format: double
-    Charge:
-      type: object
-      properties:
-        resolution:
-          type:
-          - string
-          - 'null'
-        charge:
-          type:
-          - number
-          - 'null'
-          format: double
-        type:
-          type:
-          - string
-          - 'null'
-        capacity_tariff:
-          $ref: '#/components/schemas/CapacityTariff'
     Block:
       type: object
       properties:
@@ -1003,6 +862,138 @@ components:
           - integer
           - 'null'
           format: int64
+    Charge:
+      type: object
+      properties:
+        resolution:
+          type:
+          - string
+          - 'null'
+        charge:
+          type:
+          - number
+          - 'null'
+          format: double
+        type:
+          type:
+          - string
+          - 'null'
+        capacity_tariff:
+          $ref: '#/components/schemas/CapacityTariff'
+    CapacityTariff:
+      type: object
+      properties:
+        charge_tariff:
+          type: number
+          format: double
+        minimum_contribution:
+          type: number
+          format: double
+        calculation_type:
+          type:
+          - string
+          - 'null'
+    Element:
+      type: object
+      properties:
+        name:
+          type:
+          - string
+          - 'null'
+        type:
+          type:
+          - string
+          - 'null'
+        charge:
+          $ref: '#/components/schemas/Charge'
+        unit_rate:
+          $ref: '#/components/schemas/UnitRate'
+    Fixed:
+      type: object
+      properties:
+        unit_rate:
+          type:
+          - number
+          - 'null'
+          format: double
+    PriceFormula:
+      type: object
+      properties:
+        name:
+          type:
+          - string
+          - 'null'
+        from:
+          type:
+          - string
+          - 'null'
+        to:
+          type:
+          - string
+          - 'null'
+        currency_code:
+          type:
+          - string
+          - 'null'
+        elements:
+          type:
+          - array
+          - 'null'
+          items:
+            $ref: '#/components/schemas/Element'
+        price_multiplier:
+          type:
+          - number
+          - 'null'
+          format: double
+        energy_unit:
+          type:
+          - string
+          - 'null'
+    Tou:
+      type: object
+      properties:
+        register_id:
+          type:
+          - string
+          - 'null'
+        unit_rate:
+          type:
+          - number
+          - 'null'
+          format: double
+        intervals:
+          type:
+          - array
+          - 'null'
+          items:
+            $ref: '#/components/schemas/Interval'
+        skip_intervals:
+          type:
+          - boolean
+          - 'null'
+    ErrorDetails:
+      required:
+      - code
+      - description
+      type: object
+      properties:
+        code:
+          minLength: 1
+          type: string
+        description:
+          minLength: 1
+          type: string
+        request_id:
+          type:
+          - string
+          - 'null'
+    NoContentResult:
+      type: object
+      properties:
+        statusCode:
+          type: integer
+          format: int32
     UnitRate:
       type: object
       properties:
@@ -1024,26 +1015,35 @@ components:
           - 'null'
           items:
             type: string
-    ErrorDetails:
-      required:
-      - code
-      - description
+    Interval:
       type: object
       properties:
-        code:
-          minLength: 1
-          type: string
-        description:
-          minLength: 1
-          type: string
-        request_id:
+        from_minute:
+          type:
+          - integer
+          - 'null'
+          format: int64
+        to_minute:
+          type:
+          - integer
+          - 'null'
+          format: int64
+    SpotPrice:
+      type: object
+      properties:
+        provider:
           type:
           - string
           - 'null'
-    Fixed:
-      type: object
-      properties:
-        unit_rate:
+        region:
+          type:
+          - string
+          - 'null'
+        resolution:
+          type:
+          - string
+          - 'null'
+        multiplier:
           type:
           - number
           - 'null'

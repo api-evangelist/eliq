@@ -1489,6 +1489,82 @@ paths:
         * month: 1 year'
 components:
   schemas:
+    SyncStatus:
+      enum:
+      - ok
+      - waiting_for_data
+      type: string
+      description: Data synchronization status.
+    LocationMeter:
+      required:
+      - direction
+      - fuel_type
+      - id
+      - is_sub_meter
+      - user_setup_completed
+      type: object
+      properties:
+        id:
+          minLength: 1
+          type: string
+          description: ID.
+          example: e7c8938fe06a44a7923ed89da281705e
+        model:
+          minLength: 1
+          type: string
+          description: Model.
+          example: Standard Energy V1
+        user_setup_completed:
+          type: boolean
+          description: A true/false value depicting whether user setup is complete.
+          example: true
+        name_user:
+          type: string
+          description: Name given by the user.
+          nullable: true
+          example: MyName
+        name_suggested:
+          type: string
+          description: Name suggested.
+          nullable: true
+          example: Standard Energy V1
+        fuel_type:
+          minLength: 1
+          type: string
+          description: Type of fuel sampled.
+          example: elec
+        direction:
+          minLength: 1
+          type: string
+          description: Fuel direction.
+          example: import
+        is_sub_meter:
+          type: boolean
+          description: A true/false values depicting whether this is a sub-meter.
+          example: false
+        category_user:
+          type: string
+          description: Category which was provided by the user.
+          nullable: true
+          example: My Category
+        category_suggested:
+          type: string
+          description: The category suggested.
+          nullable: true
+          example: other
+        supply_start_date:
+          type: string
+          description: Supply start date.
+          format: date-time
+          nullable: true
+          example: '2026-01-01T00:00:00'
+        supply_end_date:
+          type: string
+          description: Supply end date.
+          format: date-time
+          nullable: true
+          example: '2026-12-31T00:00:00'
+      description: Meter data.
     Fuel:
       enum:
       - elec
@@ -1496,192 +1572,6 @@ components:
       - district_heating
       type: string
       description: Fuel type
-    LocationFuelItem:
-      required:
-      - resolution
-      - source
-      type: object
-      properties:
-        resolution:
-          minLength: 1
-          type: string
-          description: Energy data sampling resolution.
-          example: 15min
-        data_from:
-          type: string
-          description: Available from date.
-          format: date-time
-          nullable: true
-          example: '2021-01-01T00:00:00'
-        data_to:
-          type: string
-          description: Available to date.
-          format: date-time
-          nullable: true
-          example: '2021-03-01T00:00:00'
-        source:
-          $ref: '#/components/schemas/FuelSource'
-        sync_status:
-          $ref: '#/components/schemas/SyncStatus'
-      description: General data about a fuel item.
-    NotificationSettingsResponse:
-      type: object
-      properties:
-        notification_name:
-          type: string
-          description: The name of the notification
-          nullable: true
-        notification_type_id:
-          type: integer
-          description: Unique notification id
-          format: int32
-        notification_category:
-          type: string
-          description: Notification category
-          nullable: true
-        send_event_notification:
-          type: boolean
-          description: Specifies whether the notification should be sent (I.E. is the notification enabled).
-          nullable: true
-        send_email:
-          type: boolean
-          description: Specifies whether notification should be delivered by email.
-          nullable: true
-        send_push:
-          type: boolean
-          description: Specifies whether a push notification is delivered to the user's smartphone.
-          nullable: true
-        send_text:
-          type: boolean
-          description: Specifies whether the notification is sent via an SMS text message.
-          nullable: true
-        send_webhook:
-          type: boolean
-          description: Specifies whether the notification is sent via a webhook.
-          nullable: true
-    LocationNotificationSettingsInput:
-      required:
-      - notification_type_id
-      type: object
-      properties:
-        notification_type_id:
-          type: integer
-          description: The unique notification id
-          format: int32
-        enabled:
-          type: boolean
-          description: Specify whether the notification is enabled. Disabled notifications are not sent.
-          nullable: true
-        mute_email:
-          type: boolean
-          description: Specify whether delivery by email should be muted. True - not delivered, False - delivered.
-          nullable: true
-        mute_text:
-          type: boolean
-          description: Specify whether delivery by SMS text message should be muted. True - not delivered, False - delivered.
-          nullable: true
-        mute_push:
-          type: boolean
-          description: Specify whether push notification delivery to a user's smartphone should be muted. True - not delivered, False - delivered.
-          nullable: true
-        mute_webhook:
-          type: boolean
-          description: Specify whether webhook delivery should be muted. True - not delivered, False - delivered.
-          nullable: true
-      description: 'The various settings which can be configured for a notification.
-
-        An important note is that the notification is sent via all configured channels.
-
-        I.E. if none of the channels (email, text, push, webhook) are muted, ALL of them will be used in order to deliver the notification.'
-    SyncStatus:
-      enum:
-      - ok
-      - waiting_for_data
-      type: string
-      description: Data synchronization status.
-    LocationFuels:
-      type: object
-      properties:
-        elec:
-          $ref: '#/components/schemas/LocationFuel'
-        gas:
-          $ref: '#/components/schemas/LocationFuel'
-        district_heating:
-          $ref: '#/components/schemas/LocationFuel'
-      description: Available fuel data
-    Location:
-      required:
-      - address
-      - ext_ref
-      - fuels
-      - id
-      - meters
-      - timezone
-      type: object
-      properties:
-        id:
-          type: integer
-          description: ID
-          format: int32
-          example: 150
-        name:
-          type: string
-          description: Name
-          nullable: true
-          example: My Location
-        ext_ref:
-          minLength: 1
-          type: string
-          description: External (utility) reference.
-        timezone:
-          minLength: 1
-          type: string
-          description: Iana timezone
-          example: Europe/Berlin
-        address:
-          $ref: '#/components/schemas/Address'
-        fuels:
-          $ref: '#/components/schemas/LocationFuels'
-        meters:
-          type: array
-          items:
-            $ref: '#/components/schemas/LocationMeter'
-          description: Meters present at a location.
-      description: Location data.
-    Error:
-      type: object
-      properties:
-        type:
-          type: string
-          description: Type of error.
-          nullable: true
-          example: internal_error
-        category:
-          type: string
-          description: Error category.
-          nullable: true
-          example: internal_error
-        code:
-          type: string
-          description: Code describing the issue.
-          nullable: true
-          example: INTERNAL_ERROR
-        transaction_id:
-          type: string
-          description: Identifier for the session. Please provide this when contacting support.
-          nullable: true
-          example: 0HN18NN5QB401:00000001
-        message:
-          type: string
-          description: A message related to the error.
-          nullable: true
-          example: Something went wrong. Please try again later. If problem remains, please contact support.
-        description:
-          type: string
-          description: A description of the error for developers.
-          nullable: true
-          example: Internal server error, please try again later. If problem remains, please contact support.
-      description: Model returned for error responses.
     Address:
       required:
       - country_code
@@ -1721,6 +1611,206 @@ components:
           nullable: true
           example: 59.3257
       description: General address data including latitude and longitude.
+    LocationFuel:
+      type: object
+      properties:
+        import:
+          $ref: '#/components/schemas/LocationFuelItem'
+        export:
+          $ref: '#/components/schemas/LocationFuelItem'
+        consumption:
+          $ref: '#/components/schemas/LocationFuelItem'
+        production:
+          $ref: '#/components/schemas/LocationFuelItem'
+      description: Fuel data
+    LocationFuelItem:
+      required:
+      - resolution
+      - source
+      type: object
+      properties:
+        resolution:
+          minLength: 1
+          type: string
+          description: Energy data sampling resolution.
+          example: 15min
+        data_from:
+          type: string
+          description: Available from date.
+          format: date-time
+          nullable: true
+          example: '2021-01-01T00:00:00'
+        data_to:
+          type: string
+          description: Available to date.
+          format: date-time
+          nullable: true
+          example: '2021-03-01T00:00:00'
+        source:
+          $ref: '#/components/schemas/FuelSource'
+        sync_status:
+          $ref: '#/components/schemas/SyncStatus'
+      description: General data about a fuel item.
+    LocationNotificationSettingsInput:
+      required:
+      - notification_type_id
+      type: object
+      properties:
+        notification_type_id:
+          type: integer
+          description: The unique notification id
+          format: int32
+        enabled:
+          type: boolean
+          description: Specify whether the notification is enabled. Disabled notifications are not sent.
+          nullable: true
+        mute_email:
+          type: boolean
+          description: Specify whether delivery by email should be muted. True - not delivered, False - delivered.
+          nullable: true
+        mute_text:
+          type: boolean
+          description: Specify whether delivery by SMS text message should be muted. True - not delivered, False - delivered.
+          nullable: true
+        mute_push:
+          type: boolean
+          description: Specify whether push notification delivery to a user's smartphone should be muted. True - not delivered, False - delivered.
+          nullable: true
+        mute_webhook:
+          type: boolean
+          description: Specify whether webhook delivery should be muted. True - not delivered, False - delivered.
+          nullable: true
+      description: 'The various settings which can be configured for a notification.
+
+        An important note is that the notification is sent via all configured channels.
+
+        I.E. if none of the channels (email, text, push, webhook) are muted, ALL of them will be used in order to deliver the notification.'
+    Error:
+      type: object
+      properties:
+        type:
+          type: string
+          description: Type of error.
+          nullable: true
+          example: internal_error
+        category:
+          type: string
+          description: Error category.
+          nullable: true
+          example: internal_error
+        code:
+          type: string
+          description: Code describing the issue.
+          nullable: true
+          example: INTERNAL_ERROR
+        transaction_id:
+          type: string
+          description: Identifier for the session. Please provide this when contacting support.
+          nullable: true
+          example: 0HN18NN5QB401:00000001
+        message:
+          type: string
+          description: A message related to the error.
+          nullable: true
+          example: Something went wrong. Please try again later. If problem remains, please contact support.
+        description:
+          type: string
+          description: A description of the error for developers.
+          nullable: true
+          example: Internal server error, please try again later. If problem remains, please contact support.
+      description: Model returned for error responses.
+    LocationFuels:
+      type: object
+      properties:
+        elec:
+          $ref: '#/components/schemas/LocationFuel'
+        gas:
+          $ref: '#/components/schemas/LocationFuel'
+        district_heating:
+          $ref: '#/components/schemas/LocationFuel'
+      description: Available fuel data
+    Direction:
+      enum:
+      - import
+      - export
+      - consumption
+      - production
+      type: string
+      description: Direction type
+    Location:
+      required:
+      - address
+      - ext_ref
+      - fuels
+      - id
+      - meters
+      - timezone
+      type: object
+      properties:
+        id:
+          type: integer
+          description: ID
+          format: int32
+          example: 150
+        name:
+          type: string
+          description: Name
+          nullable: true
+          example: My Location
+        ext_ref:
+          minLength: 1
+          type: string
+          description: External (utility) reference.
+        timezone:
+          minLength: 1
+          type: string
+          description: Iana timezone
+          example: Europe/Berlin
+        address:
+          $ref: '#/components/schemas/Address'
+        fuels:
+          $ref: '#/components/schemas/LocationFuels'
+        meters:
+          type: array
+          items:
+            $ref: '#/components/schemas/LocationMeter'
+          description: Meters present at a location.
+      description: Location data.
+    NotificationSettingsResponse:
+      type: object
+      properties:
+        notification_name:
+          type: string
+          description: The name of the notification
+          nullable: true
+        notification_type_id:
+          type: integer
+          description: Unique notification id
+          format: int32
+        notification_category:
+          type: string
+          description: Notification category
+          nullable: true
+        send_event_notification:
+          type: boolean
+          description: Specifies whether the notification should be sent (I.E. is the notification enabled).
+          nullable: true
+        send_email:
+          type: boolean
+          description: Specifies whether notification should be delivered by email.
+          nullable: true
+        send_push:
+          type: boolean
+          description: Specifies whether a push notification is delivered to the user's smartphone.
+          nullable: true
+        send_text:
+          type: boolean
+          description: Specifies whether the notification is sent via an SMS text message.
+          nullable: true
+        send_webhook:
+          type: boolean
+          description: Specifies whether the notification is sent via a webhook.
+          nullable: true
     TemperatureData:
       description: Model containing time series temperature data. Different parameters will be available depending on the data requested, see below for more information
       type: object
@@ -1779,60 +1869,6 @@ components:
       - resolution
       - from
       - to
-    LocationFuel:
-      type: object
-      properties:
-        import:
-          $ref: '#/components/schemas/LocationFuelItem'
-        export:
-          $ref: '#/components/schemas/LocationFuelItem'
-        consumption:
-          $ref: '#/components/schemas/LocationFuelItem'
-        production:
-          $ref: '#/components/schemas/LocationFuelItem'
-      description: Fuel data
-    FuelSource:
-      enum:
-      - smart_meter
-      - non_smart_meter
-      - load_curve_estimation
-      - pv_disagg
-      type: string
-      description: Source of fuel data.
-    YearlyEstimate:
-      required:
-      - fuel
-      - source
-      - type
-      - year
-      type: object
-      properties:
-        fuel:
-          $ref: '#/components/schemas/Fuel'
-        type:
-          $ref: '#/components/schemas/Direction'
-        year:
-          type: integer
-          description: Year
-          format: int32
-        source:
-          minLength: 1
-          type: string
-          description: Source of the entry, e.g., user, system
-        energy_wh:
-          type: integer
-          description: Energy in Wh
-          format: int32
-          nullable: true
-      description: Model containing yearly estimate for a location
-    Direction:
-      enum:
-      - import
-      - export
-      - consumption
-      - production
-      type: string
-      description: Direction type
     Notification:
       description: 'Notification object. Content available in "object" is dependent on the notification type. '
       type: object
@@ -1909,76 +1945,40 @@ components:
       - created_date
       - header
       - content
-    LocationMeter:
+    YearlyEstimate:
       required:
-      - direction
-      - fuel_type
-      - id
-      - is_sub_meter
-      - user_setup_completed
+      - fuel
+      - source
+      - type
+      - year
       type: object
       properties:
-        id:
+        fuel:
+          $ref: '#/components/schemas/Fuel'
+        type:
+          $ref: '#/components/schemas/Direction'
+        year:
+          type: integer
+          description: Year
+          format: int32
+        source:
           minLength: 1
           type: string
-          description: ID.
-          example: e7c8938fe06a44a7923ed89da281705e
-        model:
-          minLength: 1
-          type: string
-          description: Model.
-          example: Standard Energy V1
-        user_setup_completed:
-          type: boolean
-          description: A true/false value depicting whether user setup is complete.
-          example: true
-        name_user:
-          type: string
-          description: Name given by the user.
+          description: Source of the entry, e.g., user, system
+        energy_wh:
+          type: integer
+          description: Energy in Wh
+          format: int32
           nullable: true
-          example: MyName
-        name_suggested:
-          type: string
-          description: Name suggested.
-          nullable: true
-          example: Standard Energy V1
-        fuel_type:
-          minLength: 1
-          type: string
-          description: Type of fuel sampled.
-          example: elec
-        direction:
-          minLength: 1
-          type: string
-          description: Fuel direction.
-          example: import
-        is_sub_meter:
-          type: boolean
-          description: A true/false values depicting whether this is a sub-meter.
-          example: false
-        category_user:
-          type: string
-          description: Category which was provided by the user.
-          nullable: true
-          example: My Category
-        category_suggested:
-          type: string
-          description: The category suggested.
-          nullable: true
-          example: other
-        supply_start_date:
-          type: string
-          description: Supply start date.
-          format: date-time
-          nullable: true
-          example: '2026-01-01T00:00:00'
-        supply_end_date:
-          type: string
-          description: Supply end date.
-          format: date-time
-          nullable: true
-          example: '2026-12-31T00:00:00'
-      description: Meter data.
+      description: Model containing yearly estimate for a location
+    FuelSource:
+      enum:
+      - smart_meter
+      - non_smart_meter
+      - load_curve_estimation
+      - pv_disagg
+      type: string
+      description: Source of fuel data.
   securitySchemes:
     BearerAuth:
       type: http

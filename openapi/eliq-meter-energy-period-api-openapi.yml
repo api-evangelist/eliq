@@ -388,6 +388,12 @@ paths:
                     request_id: 65e2ea86-470f-4363-9295-35d6b473981a
 components:
   schemas:
+    NoContentResult:
+      type: object
+      properties:
+        statusCode:
+          type: integer
+          format: int32
     ErrorDetails:
       required:
       - code
@@ -440,12 +446,6 @@ components:
           - 'null'
           items:
             $ref: '#/components/schemas/Register'
-    NoContentResult:
-      type: object
-      properties:
-        statusCode:
-          type: integer
-          format: int32
     Register:
       type: object
       properties:

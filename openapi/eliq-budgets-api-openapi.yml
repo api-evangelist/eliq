@@ -308,6 +308,73 @@ paths:
                     - 165200
 components:
   schemas:
+    BudgetHistory:
+      description: Past budget periods for a location as aligned time series. Each index in `limit` and `consumption` corresponds to one period between `from` and `to` at `resolution`.
+      type: object
+      title: BudgetHistory
+      properties:
+        fuel:
+          type: string
+          description: Fuel the history is for.
+          enum:
+          - elec
+          - gas
+          - district_heating
+          example: elec
+        unit:
+          type: string
+          description: Unit the history is for.
+          enum:
+          - energy
+          - cost
+          example: energy
+        resolution:
+          type: string
+          description: Resolution of the history periods.
+          enum:
+          - week
+          - month
+          example: month
+        from:
+          type: string
+          description: Start of the first period (inclusive).
+          format: date-time
+          example: '2020-01-01T00:00:00'
+        to:
+          type: string
+          description: End of the last period (exclusive).
+          format: date-time
+          example: '2020-04-01T00:00:00'
+        limit:
+          type: array
+          description: Budget limit for each period. Null for periods where no budget was set.
+          items:
+            type:
+            - number
+            - 'null'
+          example:
+          - 200000
+          - 200000
+          - 180000
+        consumption:
+          type: array
+          description: Actual consumption for each period. Null for periods with no data.
+          items:
+            type:
+            - number
+            - 'null'
+          example:
+          - 187500
+          - 213000
+          - 165200
+      required:
+      - fuel
+      - unit
+      - resolution
+      - from
+      - to
+      - limit
+      - consumption
     Budget:
       description: Model for budget. Contains information about the budget, and when it last was run.
       type: object
@@ -564,73 +631,6 @@ components:
       - fuel
       - resolution
       - unit
-    BudgetHistory:
-      description: Past budget periods for a location as aligned time series. Each index in `limit` and `consumption` corresponds to one period between `from` and `to` at `resolution`.
-      type: object
-      title: BudgetHistory
-      properties:
-        fuel:
-          type: string
-          description: Fuel the history is for.
-          enum:
-          - elec
-          - gas
-          - district_heating
-          example: elec
-        unit:
-          type: string
-          description: Unit the history is for.
-          enum:
-          - energy
-          - cost
-          example: energy
-        resolution:
-          type: string
-          description: Resolution of the history periods.
-          enum:
-          - week
-          - month
-          example: month
-        from:
-          type: string
-          description: Start of the first period (inclusive).
-          format: date-time
-          example: '2020-01-01T00:00:00'
-        to:
-          type: string
-          description: End of the last period (exclusive).
-          format: date-time
-          example: '2020-04-01T00:00:00'
-        limit:
-          type: array
-          description: Budget limit for each period. Null for periods where no budget was set.
-          items:
-            type:
-            - number
-            - 'null'
-          example:
-          - 200000
-          - 200000
-          - 180000
-        consumption:
-          type: array
-          description: Actual consumption for each period. Null for periods with no data.
-          items:
-            type:
-            - number
-            - 'null'
-          example:
-          - 187500
-          - 213000
-          - 165200
-      required:
-      - fuel
-      - unit
-      - resolution
-      - from
-      - to
-      - limit
-      - consumption
   securitySchemes:
     BearerAuth:
       type: http

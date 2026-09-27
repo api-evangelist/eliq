@@ -207,6 +207,20 @@ paths:
                   $ref: '#/components/schemas/PortfolioAccount'
 components:
   schemas:
+    PortfolioAccount:
+      required:
+      - name
+      type: object
+      properties:
+        id:
+          type:
+          - string
+          - 'null'
+        name:
+          minLength: 1
+          type: string
+        created_at_utc:
+          type: string
     ErrorDetails:
       required:
       - code
@@ -223,20 +237,6 @@ components:
           type:
           - string
           - 'null'
-    PortfolioAccount:
-      required:
-      - name
-      type: object
-      properties:
-        id:
-          type:
-          - string
-          - 'null'
-        name:
-          minLength: 1
-          type: string
-        created_at_utc:
-          type: string
 x-tagGroups:
 - name: Users
   tags:

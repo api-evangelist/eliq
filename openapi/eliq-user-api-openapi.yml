@@ -478,25 +478,13 @@ components:
           - number
           - 'null'
           format: double
-    LocationAddress:
+    DtoLinkTarget:
+      enum:
+      - webview
+      - browser
+      type: string
+    IOutputFormatter:
       type: object
-      properties:
-        street_address:
-          type:
-          - string
-          - 'null'
-        postal_code:
-          type:
-          - string
-          - 'null'
-        city:
-          type:
-          - string
-          - 'null'
-        country_code:
-          type:
-          - string
-          - 'null'
     User:
       type: object
       properties:
@@ -536,13 +524,35 @@ components:
           type:
           - string
           - 'null'
-    NotificationType:
-      enum:
-      - unknown
-      - custom
-      type: string
-    IOutputFormatter:
+    AcceptedResult:
       type: object
+      properties:
+        location:
+          type:
+          - string
+          - 'null'
+        value: {}
+        formatters:
+          type:
+          - array
+          - 'null'
+          items:
+            $ref: '#/components/schemas/IOutputFormatter'
+        contentTypes:
+          type:
+          - array
+          - 'null'
+          items:
+            type: string
+        declaredType:
+          type:
+          - string
+          - 'null'
+        statusCode:
+          type:
+          - integer
+          - 'null'
+          format: int32
     DtoLink:
       type: object
       properties:
@@ -556,64 +566,22 @@ components:
           - 'null'
         target:
           $ref: '#/components/schemas/DtoLinkTarget'
-    DtoLinkTarget:
-      enum:
-      - webview
-      - browser
-      type: string
-    Location:
+    ErrorDetails:
+      required:
+      - code
+      - description
       type: object
       properties:
-        id:
+        code:
+          minLength: 1
+          type: string
+        description:
+          minLength: 1
+          type: string
+        request_id:
           type:
           - string
           - 'null'
-        eliq_id:
-          type:
-          - integer
-          - 'null'
-          format: int32
-          readOnly: true
-        name:
-          type:
-          - string
-          - 'null'
-        user_id:
-          type:
-          - string
-          - 'null'
-        spot_price_region_id:
-          type:
-          - string
-          - 'null'
-        address:
-          $ref: '#/components/schemas/LocationAddress'
-        geo:
-          $ref: '#/components/schemas/LocationGeo'
-        meters:
-          type:
-          - array
-          - 'null'
-          items:
-            $ref: '#/components/schemas/Meter'
-        created_at_timestamp:
-          type:
-          - string
-          - 'null'
-        location_profile_type:
-          $ref: '#/components/schemas/ProfileType'
-    ProfileType:
-      enum:
-      - residential
-      - business
-      - undefined
-      type: string
-    NoContentResult:
-      type: object
-      properties:
-        statusCode:
-          type: integer
-          format: int32
     Meter:
       type: object
       properties:
@@ -675,35 +643,6 @@ components:
           type:
           - string
           - 'null'
-    AcceptedResult:
-      type: object
-      properties:
-        location:
-          type:
-          - string
-          - 'null'
-        value: {}
-        formatters:
-          type:
-          - array
-          - 'null'
-          items:
-            $ref: '#/components/schemas/IOutputFormatter'
-        contentTypes:
-          type:
-          - array
-          - 'null'
-          items:
-            type: string
-        declaredType:
-          type:
-          - string
-          - 'null'
-        statusCode:
-          type:
-          - integer
-          - 'null'
-          format: int32
     NotificationDto:
       type: object
       properties:
@@ -719,22 +658,83 @@ components:
           - 'null'
         link:
           $ref: '#/components/schemas/DtoLink'
-    ErrorDetails:
-      required:
-      - code
-      - description
+    NoContentResult:
       type: object
       properties:
-        code:
-          minLength: 1
-          type: string
-        description:
-          minLength: 1
-          type: string
-        request_id:
+        statusCode:
+          type: integer
+          format: int32
+    LocationAddress:
+      type: object
+      properties:
+        street_address:
           type:
           - string
           - 'null'
+        postal_code:
+          type:
+          - string
+          - 'null'
+        city:
+          type:
+          - string
+          - 'null'
+        country_code:
+          type:
+          - string
+          - 'null'
+    Location:
+      type: object
+      properties:
+        id:
+          type:
+          - string
+          - 'null'
+        eliq_id:
+          type:
+          - integer
+          - 'null'
+          format: int32
+          readOnly: true
+        name:
+          type:
+          - string
+          - 'null'
+        user_id:
+          type:
+          - string
+          - 'null'
+        spot_price_region_id:
+          type:
+          - string
+          - 'null'
+        address:
+          $ref: '#/components/schemas/LocationAddress'
+        geo:
+          $ref: '#/components/schemas/LocationGeo'
+        meters:
+          type:
+          - array
+          - 'null'
+          items:
+            $ref: '#/components/schemas/Meter'
+        created_at_timestamp:
+          type:
+          - string
+          - 'null'
+        location_profile_type:
+          $ref: '#/components/schemas/ProfileType'
+    NotificationType:
+      enum:
+      - unknown
+      - custom
+      type: string
+    ProfileType:
+      enum:
+      - residential
+      - business
+      - undefined
+      type: string
 x-tagGroups:
 - name: Users
   tags:

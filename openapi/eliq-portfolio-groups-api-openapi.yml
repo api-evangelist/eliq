@@ -226,53 +226,6 @@ paths:
                     request_id: 65e2ea86-470f-4363-9295-35d6b473981a
 components:
   schemas:
-    PortfolioUserRole:
-      enum:
-      - user
-      - admin
-      - owner
-      type: string
-    PortfolioLocation:
-      required:
-      - name
-      type: object
-      properties:
-        id:
-          type:
-          - string
-          - 'null'
-        name:
-          minLength: 1
-          type: string
-        created_at_utc:
-          type: string
-    PortfolioUser:
-      required:
-      - name
-      - role
-      type: object
-      properties:
-        id:
-          type:
-          - string
-          - 'null'
-        name:
-          minLength: 1
-          type: string
-        role:
-          $ref: '#/components/schemas/PortfolioUserRole'
-        created_at_utc:
-          type: string
-        last_logon_utc:
-          type:
-          - string
-          - 'null'
-        magic_link_emails:
-          type:
-          - array
-          - 'null'
-          items:
-            type: string
     PortfolioGroup:
       type: object
       properties:
@@ -324,6 +277,53 @@ components:
           - 'null'
           items:
             type: string
+    PortfolioGroupStatus:
+      enum:
+      - in_progress
+      - active
+      - disabled
+      type: string
+    PortfolioLocation:
+      required:
+      - name
+      type: object
+      properties:
+        id:
+          type:
+          - string
+          - 'null'
+        name:
+          minLength: 1
+          type: string
+        created_at_utc:
+          type: string
+    PortfolioUser:
+      required:
+      - name
+      - role
+      type: object
+      properties:
+        id:
+          type:
+          - string
+          - 'null'
+        name:
+          minLength: 1
+          type: string
+        role:
+          $ref: '#/components/schemas/PortfolioUserRole'
+        created_at_utc:
+          type: string
+        last_logon_utc:
+          type:
+          - string
+          - 'null'
+        magic_link_emails:
+          type:
+          - array
+          - 'null'
+          items:
+            type: string
     ErrorDetails:
       required:
       - code
@@ -340,11 +340,11 @@ components:
           type:
           - string
           - 'null'
-    PortfolioGroupStatus:
+    PortfolioUserRole:
       enum:
-      - in_progress
-      - active
-      - disabled
+      - user
+      - admin
+      - owner
       type: string
 x-tagGroups:
 - name: Users

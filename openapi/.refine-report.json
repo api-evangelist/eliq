@@ -47,9 +47,7 @@
     "eliq-info-api-openapi.yml",
     "eliq-locationsegmentation-api-openapi.yml"
   ],
-  "archived": [
-    "deleted 1 superseded output(s) from the previous generation"
-  ],
+  "archived": [],
   "errors": [],
   "warnings": [],
   "notes": [
@@ -67,8 +65,7 @@
     "eliq-intelligence-api-openapi.json: declared missing tag: Info",
     "eliq-intelligence-api-openapi.json: declared missing tag: LocationSegmentation",
     "tag 'Location profile' spans 2 source specs (eliq-data-management-api-openapi.json, eliq-insights-api-openapi.yaml): per-path servers applied",
-    "superseded outputs removed: eliq-o-auth-api-openapi.yml",
-    "apis.yml register: written (+1 apis, 39 total)"
+    "apis.yml register: already-registered"
   ],
   "skipped": [
     "eliq-advice-api-openapi.yml: previously refined output, superseded by openapi/_original/",
@@ -100,7 +97,7 @@
     "eliq-meter-energy-reads-api-openapi.yml: previously refined output, superseded by openapi/_original/",
     "eliq-meter-max-demand-api-openapi.yml: previously refined output, superseded by openapi/_original/",
     "eliq-meter-price-formulas-api-openapi.yml: previously refined output, superseded by openapi/_original/",
-    "eliq-o-auth-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "eliq-oauth-api-openapi.yml: previously refined output, superseded by openapi/_original/",
     "eliq-portfolio-accounts-api-openapi.yml: previously refined output, superseded by openapi/_original/",
     "eliq-portfolio-groups-api-openapi.yml: previously refined output, superseded by openapi/_original/",
     "eliq-portfolio-locations-api-openapi.yml: previously refined output, superseded by openapi/_original/",

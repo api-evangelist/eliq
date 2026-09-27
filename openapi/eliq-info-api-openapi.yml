@@ -60,62 +60,6 @@ paths:
       x-operation-id-source: derived
 components:
   schemas:
-    MyInfoResult:
-      required:
-      - client_id
-      - roles
-      type: object
-      properties:
-        client_id:
-          type: integer
-          description: Client Id of active user
-          format: int64
-          example: 5435964696
-        roles:
-          type: array
-          items:
-            type: string
-          description: Roles of active user
-          example:
-          - Support
-          - EliqConfigurator
-          - ClientConfigurator
-      additionalProperties: false
-      description: Information about the active user
-    DashboardsConfiguration:
-      type: object
-      properties:
-        enabled:
-          type: boolean
-          description: Whether embedded dashboards are enabled for the client
-          example: true
-        items:
-          type:
-          - array
-          - 'null'
-          items:
-            $ref: '#/components/schemas/DashboardConfigurationItem'
-          description: The dashboards available to the client
-      additionalProperties: false
-      description: DataBricks dashboards available for embedding in the application
-    AuthInfoResult:
-      required:
-      - entra_application_id
-      - entra_tenant_id
-      type: object
-      properties:
-        entra_tenant_id:
-          minLength: 1
-          type: string
-          description: Entra tenant id
-          example: dc4a5e2f-2537-4f0f-ba68-f79bc8d57fa8
-        entra_application_id:
-          minLength: 1
-          type: string
-          description: Entra application id
-          example: b77ee01b-e19b-4fe5-b73b-5d4d810910d1
-      additionalProperties: false
-      description: Authorization information for the application
     DashboardConfigurationItem:
       type: object
       properties:
@@ -141,6 +85,40 @@ components:
           example: client
       additionalProperties: false
       description: A published DataBricks dashboard the client is allowed to embed
+    AuthInfoResult:
+      required:
+      - entra_application_id
+      - entra_tenant_id
+      type: object
+      properties:
+        entra_tenant_id:
+          minLength: 1
+          type: string
+          description: Entra tenant id
+          example: dc4a5e2f-2537-4f0f-ba68-f79bc8d57fa8
+        entra_application_id:
+          minLength: 1
+          type: string
+          description: Entra application id
+          example: b77ee01b-e19b-4fe5-b73b-5d4d810910d1
+      additionalProperties: false
+      description: Authorization information for the application
+    DashboardsConfiguration:
+      type: object
+      properties:
+        enabled:
+          type: boolean
+          description: Whether embedded dashboards are enabled for the client
+          example: true
+        items:
+          type:
+          - array
+          - 'null'
+          items:
+            $ref: '#/components/schemas/DashboardConfigurationItem'
+          description: The dashboards available to the client
+      additionalProperties: false
+      description: DataBricks dashboards available for embedding in the application
     IntelligenceApiConfiguration:
       type: object
       properties:
@@ -151,6 +129,28 @@ components:
         dashboards:
           $ref: '#/components/schemas/DashboardsConfiguration'
       additionalProperties: false
+    MyInfoResult:
+      required:
+      - client_id
+      - roles
+      type: object
+      properties:
+        client_id:
+          type: integer
+          description: Client Id of active user
+          format: int64
+          example: 5435964696
+        roles:
+          type: array
+          items:
+            type: string
+          description: Roles of active user
+          example:
+          - Support
+          - EliqConfigurator
+          - ClientConfigurator
+      additionalProperties: false
+      description: Information about the active user
   securitySchemes:
     Bearer:
       type: http

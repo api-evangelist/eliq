@@ -1547,6 +1547,171 @@ paths:
       - Energy Data
 components:
   schemas:
+    MeterDataResult:
+      description: Model containing meter time series data result. Different parameters will be available depending on the data requested, see below for more information
+      type: object
+      title: MeterDataResult
+      properties:
+        meter:
+          type: array
+          description: Available if consumption has been queried. Will always contain the exact amount of elements as there are time frames between ‘to’ and ‘from’ with the given ‘resolution’. Values inside the array can be null if no energy data exists (One day always contains 24 values). The consumption values are floating-point numbers.
+          items:
+            type:
+            - object
+            - 'null'
+            properties:
+              direction:
+                type: string
+              data:
+                type: array
+                items:
+                  type:
+                  - number
+                  - 'null'
+            required:
+            - direction
+            - data
+        fuel:
+          type: string
+          description: Can be ‘elec’, ‘gas’ or ‘district_heating’. Matches with the value passed in query parameters of the request if provided
+          example: elec
+          enum:
+          - elec
+          - gas
+        unit:
+          type: string
+          description: 'Can be ‘cost’, ‘energy’ or ''m3''. Matches with the value passed in query parameters of the request if provided, otherwise default.
+
+
+            Only return m3 if the unit is available.'
+          example: energy
+          enum:
+          - energy
+          - cost
+        resolution:
+          type: string
+          description: Can be '6min','15min', '30min', 'hour', 'day' or 'month'. Matches with the value passed in query parameters of the request.
+          example: day
+          enum:
+          - 6min
+          - 15min
+          - 30min
+          - hour
+          - day
+          - month
+        from:
+          type: string
+          description: From date
+          example: '2021-01-01T00:00:00'
+          minLength: 1
+        to:
+          type: string
+          description: To date
+          example: '2021-02-01T00:00:00'
+          minLength: 1
+      required:
+      - meter
+      - fuel
+      - unit
+      - resolution
+      - from
+      - to
+    TimeSeriesData:
+      type: object
+      properties:
+        consumption:
+          type: array
+          items:
+            type: number
+            format: double
+            nullable: true
+          nullable: true
+        production:
+          type: array
+          items:
+            type: number
+            format: double
+            nullable: true
+          nullable: true
+        import:
+          type: array
+          items:
+            type: number
+            format: double
+            nullable: true
+          nullable: true
+        export:
+          type: array
+          items:
+            type: number
+            format: double
+            nullable: true
+          nullable: true
+        price:
+          type: array
+          items:
+            type: number
+            format: double
+            nullable: true
+          nullable: true
+        co2emission:
+          $ref: '#/components/schemas/Co2Emission'
+        resolution:
+          type: string
+          nullable: true
+        fuel:
+          $ref: '#/components/schemas/FuelType'
+        unit:
+          $ref: '#/components/schemas/UnitType'
+        from:
+          type: string
+          format: date-time
+          nullable: true
+        to:
+          type: string
+          format: date-time
+          nullable: true
+        estimated_from:
+          type: string
+          format: date-time
+          nullable: true
+        is_ondemand:
+          type: boolean
+          nullable: true
+    Error:
+      type: object
+      properties:
+        type:
+          type: string
+          description: Type of error.
+          nullable: true
+          example: internal_error
+        category:
+          type: string
+          description: Error category.
+          nullable: true
+          example: internal_error
+        code:
+          type: string
+          description: Code describing the issue.
+          nullable: true
+          example: INTERNAL_ERROR
+        transaction_id:
+          type: string
+          description: Identifier for the session. Please provide this when contacting support.
+          nullable: true
+          example: 0HN18NN5QB401:00000001
+        message:
+          type: string
+          description: A message related to the error.
+          nullable: true
+          example: Something went wrong. Please try again later. If problem remains, please contact support.
+        description:
+          type: string
+          description: A description of the error for developers.
+          nullable: true
+          example: Internal server error, please try again later. If problem remains, please contact support.
+      description: Model returned for error responses.
     FuelType:
       enum:
       - none
@@ -1554,26 +1719,6 @@ components:
       - gas
       - district_heating
       type: string
-    UnitType:
-      enum:
-      - none
-      - cost
-      - monetary_unit
-      - energy
-      - temperature
-      - m3
-      type: string
-    Co2Emission:
-      type: object
-      properties:
-        co2_in_kg:
-          type: number
-          format: double
-          nullable: true
-        car_gas_emission_in_km:
-          type: number
-          format: double
-          nullable: true
     TimeseriesData:
       description: Model containing time series data. Different parameters will be available depending on the data requested, see below for more information
       type: object
@@ -1689,6 +1834,17 @@ components:
       - resolution
       - from
       - to
+    Co2Emission:
+      type: object
+      properties:
+        co2_in_kg:
+          type: number
+          format: double
+          nullable: true
+        car_gas_emission_in_km:
+          type: number
+          format: double
+          nullable: true
     PeakPowerResponse:
       required:
       - direction
@@ -1785,171 +1941,15 @@ components:
           nullable: true
           deprecated: true
       description: Peak power response model
-    Error:
-      type: object
-      properties:
-        type:
-          type: string
-          description: Type of error.
-          nullable: true
-          example: internal_error
-        category:
-          type: string
-          description: Error category.
-          nullable: true
-          example: internal_error
-        code:
-          type: string
-          description: Code describing the issue.
-          nullable: true
-          example: INTERNAL_ERROR
-        transaction_id:
-          type: string
-          description: Identifier for the session. Please provide this when contacting support.
-          nullable: true
-          example: 0HN18NN5QB401:00000001
-        message:
-          type: string
-          description: A message related to the error.
-          nullable: true
-          example: Something went wrong. Please try again later. If problem remains, please contact support.
-        description:
-          type: string
-          description: A description of the error for developers.
-          nullable: true
-          example: Internal server error, please try again later. If problem remains, please contact support.
-      description: Model returned for error responses.
-    TimeSeriesData:
-      type: object
-      properties:
-        consumption:
-          type: array
-          items:
-            type: number
-            format: double
-            nullable: true
-          nullable: true
-        production:
-          type: array
-          items:
-            type: number
-            format: double
-            nullable: true
-          nullable: true
-        import:
-          type: array
-          items:
-            type: number
-            format: double
-            nullable: true
-          nullable: true
-        export:
-          type: array
-          items:
-            type: number
-            format: double
-            nullable: true
-          nullable: true
-        price:
-          type: array
-          items:
-            type: number
-            format: double
-            nullable: true
-          nullable: true
-        co2emission:
-          $ref: '#/components/schemas/Co2Emission'
-        resolution:
-          type: string
-          nullable: true
-        fuel:
-          $ref: '#/components/schemas/FuelType'
-        unit:
-          $ref: '#/components/schemas/UnitType'
-        from:
-          type: string
-          format: date-time
-          nullable: true
-        to:
-          type: string
-          format: date-time
-          nullable: true
-        estimated_from:
-          type: string
-          format: date-time
-          nullable: true
-        is_ondemand:
-          type: boolean
-          nullable: true
-    MeterDataResult:
-      description: Model containing meter time series data result. Different parameters will be available depending on the data requested, see below for more information
-      type: object
-      title: MeterDataResult
-      properties:
-        meter:
-          type: array
-          description: Available if consumption has been queried. Will always contain the exact amount of elements as there are time frames between ‘to’ and ‘from’ with the given ‘resolution’. Values inside the array can be null if no energy data exists (One day always contains 24 values). The consumption values are floating-point numbers.
-          items:
-            type:
-            - object
-            - 'null'
-            properties:
-              direction:
-                type: string
-              data:
-                type: array
-                items:
-                  type:
-                  - number
-                  - 'null'
-            required:
-            - direction
-            - data
-        fuel:
-          type: string
-          description: Can be ‘elec’, ‘gas’ or ‘district_heating’. Matches with the value passed in query parameters of the request if provided
-          example: elec
-          enum:
-          - elec
-          - gas
-        unit:
-          type: string
-          description: 'Can be ‘cost’, ‘energy’ or ''m3''. Matches with the value passed in query parameters of the request if provided, otherwise default.
-
-
-            Only return m3 if the unit is available.'
-          example: energy
-          enum:
-          - energy
-          - cost
-        resolution:
-          type: string
-          description: Can be '6min','15min', '30min', 'hour', 'day' or 'month'. Matches with the value passed in query parameters of the request.
-          example: day
-          enum:
-          - 6min
-          - 15min
-          - 30min
-          - hour
-          - day
-          - month
-        from:
-          type: string
-          description: From date
-          example: '2021-01-01T00:00:00'
-          minLength: 1
-        to:
-          type: string
-          description: To date
-          example: '2021-02-01T00:00:00'
-          minLength: 1
-      required:
-      - meter
-      - fuel
-      - unit
-      - resolution
-      - from
-      - to
+    UnitType:
+      enum:
+      - none
+      - cost
+      - monetary_unit
+      - energy
+      - temperature
+      - m3
+      type: string
   securitySchemes:
     BearerAuth:
       type: http

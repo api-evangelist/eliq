@@ -670,48 +670,6 @@ paths:
                     request_id: 65e2ea86-470f-4363-9295-35d6b473981a
 components:
   schemas:
-    JobFailedRow:
-      type: object
-      properties:
-        row_number:
-          type:
-          - integer
-          - 'null'
-          format: int32
-        error_code:
-          type:
-          - string
-          - 'null'
-        error_description:
-          type:
-          - string
-          - 'null'
-    JobEntryStateType:
-      enum:
-      - received
-      - queued
-      - processing
-      - failed
-      - completed
-      - canceled
-      type: string
-    FileRowError:
-      type: object
-      properties:
-        code:
-          type:
-          - string
-          - 'null'
-        description:
-          type:
-          - string
-          - 'null'
-    JobType:
-      enum:
-      - import
-      - export
-      - multi-file
-      type: string
     JobEntry:
       type: object
       properties:
@@ -763,6 +721,32 @@ components:
       - export
       - multi-file-export
       type: string
+    JobEntryStateType:
+      enum:
+      - received
+      - queued
+      - processing
+      - failed
+      - completed
+      - canceled
+      type: string
+    FileRowError:
+      type: object
+      properties:
+        code:
+          type:
+          - string
+          - 'null'
+        description:
+          type:
+          - string
+          - 'null'
+    JobType:
+      enum:
+      - import
+      - export
+      - multi-file
+      type: string
     ErrorDetails:
       required:
       - code
@@ -776,6 +760,22 @@ components:
           minLength: 1
           type: string
         request_id:
+          type:
+          - string
+          - 'null'
+    JobFailedRow:
+      type: object
+      properties:
+        row_number:
+          type:
+          - integer
+          - 'null'
+          format: int32
+        error_code:
+          type:
+          - string
+          - 'null'
+        error_description:
           type:
           - string
           - 'null'
