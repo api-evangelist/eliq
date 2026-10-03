@@ -92,6 +92,21 @@ paths:
                     description: Internal server error.
 components:
   schemas:
+    EpcRatingType:
+      enum:
+      - actual
+      - estimated
+      type: string
+      description: Energy rating type
+    EpcRatingStatus:
+      enum:
+      - active
+      - expired
+      type: string
+      description: 'Current energy rating status based on the valid from and to dates
+
+
+        Not available for estimated energy rating type'
     EpcRatingResponse:
       required:
       - energy_efficiency
@@ -162,21 +177,6 @@ components:
           nullable: true
           example: Internal server error, please try again later. If problem remains, please contact support.
       description: Model returned for error responses.
-    EpcRatingType:
-      enum:
-      - actual
-      - estimated
-      type: string
-      description: Energy rating type
-    EpcRatingStatus:
-      enum:
-      - active
-      - expired
-      type: string
-      description: 'Current energy rating status based on the valid from and to dates
-
-
-        Not available for estimated energy rating type'
   securitySchemes:
     BearerAuth:
       type: http

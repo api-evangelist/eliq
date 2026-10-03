@@ -1547,6 +1547,102 @@ paths:
       - Energy Data
 components:
   schemas:
+    PeakPowerResponse:
+      required:
+      - direction
+      - from
+      - fuel
+      - peak_power_resolution
+      - peak_power_timestamp
+      - power
+      - resolution
+      - to
+      type: object
+      properties:
+        power:
+          type: array
+          items:
+            type: number
+            format: double
+          description: List of power values
+        peak_power_timestamp:
+          type: array
+          items:
+            type: string
+            format: date-time
+          description: List of timestamps indicating when the peak power was recorded
+        from:
+          type: string
+          description: From date
+          format: date-time
+        to:
+          type: string
+          description: To date, exclusive
+          format: date-time
+        fuel:
+          enum:
+          - elec
+          - gas
+          - district_heating
+          type: string
+          description: Fuel type
+        direction:
+          enum:
+          - import
+          - export
+          - consumption
+          - production
+          type: string
+          description: Direction type
+        resolution:
+          enum:
+          - hour
+          - day
+          - month
+          type: string
+          description: Peak power data resolution
+        peak_power_resolution:
+          enum:
+          - 6min
+          - 10min
+          - 15min
+          - 30min
+          - hour
+          type: string
+          description: Resolution of peak power values
+        consumption:
+          type: array
+          items:
+            type: number
+            format: double
+          description: List of consumption values
+          nullable: true
+          deprecated: true
+        production:
+          type: array
+          items:
+            type: number
+            format: double
+          description: List of production values
+          nullable: true
+          deprecated: true
+        import:
+          type: array
+          items:
+            type: number
+            format: double
+          description: List of import values
+          nullable: true
+          deprecated: true
+        export:
+          type: array
+          items:
+            type: number
+            format: double
+          description: List of export values
+          nullable: true
+          deprecated: true
+      description: Peak power response model
     MeterDataResult:
       description: Model containing meter time series data result. Different parameters will be available depending on the data requested, see below for more information
       type: object
@@ -1616,67 +1712,16 @@ components:
       - resolution
       - from
       - to
-    TimeSeriesData:
+    Co2Emission:
       type: object
       properties:
-        consumption:
-          type: array
-          items:
-            type: number
-            format: double
-            nullable: true
+        co2_in_kg:
+          type: number
+          format: double
           nullable: true
-        production:
-          type: array
-          items:
-            type: number
-            format: double
-            nullable: true
-          nullable: true
-        import:
-          type: array
-          items:
-            type: number
-            format: double
-            nullable: true
-          nullable: true
-        export:
-          type: array
-          items:
-            type: number
-            format: double
-            nullable: true
-          nullable: true
-        price:
-          type: array
-          items:
-            type: number
-            format: double
-            nullable: true
-          nullable: true
-        co2emission:
-          $ref: '#/components/schemas/Co2Emission'
-        resolution:
-          type: string
-          nullable: true
-        fuel:
-          $ref: '#/components/schemas/FuelType'
-        unit:
-          $ref: '#/components/schemas/UnitType'
-        from:
-          type: string
-          format: date-time
-          nullable: true
-        to:
-          type: string
-          format: date-time
-          nullable: true
-        estimated_from:
-          type: string
-          format: date-time
-          nullable: true
-        is_ondemand:
-          type: boolean
+        car_gas_emission_in_km:
+          type: number
+          format: double
           nullable: true
     Error:
       type: object
@@ -1712,13 +1757,6 @@ components:
           nullable: true
           example: Internal server error, please try again later. If problem remains, please contact support.
       description: Model returned for error responses.
-    FuelType:
-      enum:
-      - none
-      - elec
-      - gas
-      - district_heating
-      type: string
     TimeseriesData:
       description: Model containing time series data. Different parameters will be available depending on the data requested, see below for more information
       type: object
@@ -1834,113 +1872,13 @@ components:
       - resolution
       - from
       - to
-    Co2Emission:
-      type: object
-      properties:
-        co2_in_kg:
-          type: number
-          format: double
-          nullable: true
-        car_gas_emission_in_km:
-          type: number
-          format: double
-          nullable: true
-    PeakPowerResponse:
-      required:
-      - direction
-      - from
-      - fuel
-      - peak_power_resolution
-      - peak_power_timestamp
-      - power
-      - resolution
-      - to
-      type: object
-      properties:
-        power:
-          type: array
-          items:
-            type: number
-            format: double
-          description: List of power values
-        peak_power_timestamp:
-          type: array
-          items:
-            type: string
-            format: date-time
-          description: List of timestamps indicating when the peak power was recorded
-        from:
-          type: string
-          description: From date
-          format: date-time
-        to:
-          type: string
-          description: To date, exclusive
-          format: date-time
-        fuel:
-          enum:
-          - elec
-          - gas
-          - district_heating
-          type: string
-          description: Fuel type
-        direction:
-          enum:
-          - import
-          - export
-          - consumption
-          - production
-          type: string
-          description: Direction type
-        resolution:
-          enum:
-          - hour
-          - day
-          - month
-          type: string
-          description: Peak power data resolution
-        peak_power_resolution:
-          enum:
-          - 6min
-          - 10min
-          - 15min
-          - 30min
-          - hour
-          type: string
-          description: Resolution of peak power values
-        consumption:
-          type: array
-          items:
-            type: number
-            format: double
-          description: List of consumption values
-          nullable: true
-          deprecated: true
-        production:
-          type: array
-          items:
-            type: number
-            format: double
-          description: List of production values
-          nullable: true
-          deprecated: true
-        import:
-          type: array
-          items:
-            type: number
-            format: double
-          description: List of import values
-          nullable: true
-          deprecated: true
-        export:
-          type: array
-          items:
-            type: number
-            format: double
-          description: List of export values
-          nullable: true
-          deprecated: true
-      description: Peak power response model
+    FuelType:
+      enum:
+      - none
+      - elec
+      - gas
+      - district_heating
+      type: string
     UnitType:
       enum:
       - none
@@ -1950,6 +1888,68 @@ components:
       - temperature
       - m3
       type: string
+    TimeSeriesData:
+      type: object
+      properties:
+        consumption:
+          type: array
+          items:
+            type: number
+            format: double
+            nullable: true
+          nullable: true
+        production:
+          type: array
+          items:
+            type: number
+            format: double
+            nullable: true
+          nullable: true
+        import:
+          type: array
+          items:
+            type: number
+            format: double
+            nullable: true
+          nullable: true
+        export:
+          type: array
+          items:
+            type: number
+            format: double
+            nullable: true
+          nullable: true
+        price:
+          type: array
+          items:
+            type: number
+            format: double
+            nullable: true
+          nullable: true
+        co2emission:
+          $ref: '#/components/schemas/Co2Emission'
+        resolution:
+          type: string
+          nullable: true
+        fuel:
+          $ref: '#/components/schemas/FuelType'
+        unit:
+          $ref: '#/components/schemas/UnitType'
+        from:
+          type: string
+          format: date-time
+          nullable: true
+        to:
+          type: string
+          format: date-time
+          nullable: true
+        estimated_from:
+          type: string
+          format: date-time
+          nullable: true
+        is_ondemand:
+          type: boolean
+          nullable: true
   securitySchemes:
     BearerAuth:
       type: http

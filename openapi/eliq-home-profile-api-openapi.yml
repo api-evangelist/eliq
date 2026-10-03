@@ -408,6 +408,54 @@ paths:
       deprecated: true
 components:
   schemas:
+    PatchDocument:
+      type: array
+      description: Patch document used in patch operations
+      minItems: 1
+      uniqueItems: true
+      x-examples:
+        example-1:
+        - op: replace
+          path: properties/house_type
+          value: apartment
+        - op: replace
+          path: properties/persons
+          value: 2
+        - op: replace
+          path: properties/heating_type_primary
+          value: radiators
+        - op: replace
+          path: fridges_and_freezers/fridges
+          value: 1
+      title: ''
+      items:
+        type: object
+        properties:
+          op:
+            type: string
+            minLength: 1
+            example: replace
+            enum:
+            - add
+            - replace
+            - remove
+            description: Operation to execute
+          path:
+            type: string
+            minLength: 1
+            description: Path to property to update
+            example: user/name
+          value:
+            type:
+            - string
+            - number
+            minLength: 1
+            example: John
+            description: Value to set
+        required:
+        - op
+        - path
+        - value
     HomeProfileOption:
       description: 'A home profile option is the option that can be set. A home profile option may have different data types, ''single_select'', ''multiple_select'' or ''number''. The available properties in the object will change depending on this data type, which is described more in the model. '
       type: object
@@ -572,88 +620,6 @@ components:
       required:
       - key
       - data_type
-    Error:
-      type: object
-      properties:
-        type:
-          type: string
-          description: Type of error.
-          nullable: true
-          example: internal_error
-        category:
-          type: string
-          description: Error category.
-          nullable: true
-          example: internal_error
-        code:
-          type: string
-          description: Code describing the issue.
-          nullable: true
-          example: INTERNAL_ERROR
-        transaction_id:
-          type: string
-          description: Identifier for the session. Please provide this when contacting support.
-          nullable: true
-          example: 0HN18NN5QB401:00000001
-        message:
-          type: string
-          description: A message related to the error.
-          nullable: true
-          example: Something went wrong. Please try again later. If problem remains, please contact support.
-        description:
-          type: string
-          description: A description of the error for developers.
-          nullable: true
-          example: Internal server error, please try again later. If problem remains, please contact support.
-      description: Model returned for error responses.
-    PatchDocument:
-      type: array
-      description: Patch document used in patch operations
-      minItems: 1
-      uniqueItems: true
-      x-examples:
-        example-1:
-        - op: replace
-          path: properties/house_type
-          value: apartment
-        - op: replace
-          path: properties/persons
-          value: 2
-        - op: replace
-          path: properties/heating_type_primary
-          value: radiators
-        - op: replace
-          path: fridges_and_freezers/fridges
-          value: 1
-      title: ''
-      items:
-        type: object
-        properties:
-          op:
-            type: string
-            minLength: 1
-            example: replace
-            enum:
-            - add
-            - replace
-            - remove
-            description: Operation to execute
-          path:
-            type: string
-            minLength: 1
-            description: Path to property to update
-            example: user/name
-          value:
-            type:
-            - string
-            - number
-            minLength: 1
-            example: John
-            description: Value to set
-        required:
-        - op
-        - path
-        - value
     Homeprofile:
       description: "The home profile is describing the properties of a location, such as house type, heating system and other appliances. This information is later used in Eliq analytics. \n\nThe home profile root objects properties may be different in different countries (could be parsed as a dictionary). Hence, the result shown for the locations country may not match with the example provided below."
       type: object
@@ -931,6 +897,40 @@ components:
           type: array
           items:
             $ref: '#/components/schemas/HomeProfileOption'
+    Error:
+      type: object
+      properties:
+        type:
+          type: string
+          description: Type of error.
+          nullable: true
+          example: internal_error
+        category:
+          type: string
+          description: Error category.
+          nullable: true
+          example: internal_error
+        code:
+          type: string
+          description: Code describing the issue.
+          nullable: true
+          example: INTERNAL_ERROR
+        transaction_id:
+          type: string
+          description: Identifier for the session. Please provide this when contacting support.
+          nullable: true
+          example: 0HN18NN5QB401:00000001
+        message:
+          type: string
+          description: A message related to the error.
+          nullable: true
+          example: Something went wrong. Please try again later. If problem remains, please contact support.
+        description:
+          type: string
+          description: A description of the error for developers.
+          nullable: true
+          example: Internal server error, please try again later. If problem remains, please contact support.
+      description: Model returned for error responses.
   securitySchemes:
     BearerAuth:
       type: http

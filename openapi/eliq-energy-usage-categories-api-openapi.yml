@@ -362,6 +362,31 @@ components:
       - low
       type: string
       description: Result data accuracy
+    EucCategoryResultModel:
+      required:
+      - category
+      - percentage
+      - value
+      type: object
+      properties:
+        category:
+          minLength: 1
+          type: string
+          description: Category
+          example: lighting
+        value:
+          type: number
+          description: Energy usage value
+          format: double
+          example: 1350
+        percentage:
+          maximum: 100
+          minimum: 0
+          type: number
+          description: Percentage of total value
+          format: double
+          example: 10.48
+      description: Energy usage by category
     EUC:
       required:
       - accuracy
@@ -434,31 +459,6 @@ components:
           nullable: true
           example: Internal server error, please try again later. If problem remains, please contact support.
       description: Model returned for error responses.
-    EucCategoryResultModel:
-      required:
-      - category
-      - percentage
-      - value
-      type: object
-      properties:
-        category:
-          minLength: 1
-          type: string
-          description: Category
-          example: lighting
-        value:
-          type: number
-          description: Energy usage value
-          format: double
-          example: 1350
-        percentage:
-          maximum: 100
-          minimum: 0
-          type: number
-          description: Percentage of total value
-          format: double
-          example: 10.48
-      description: Energy usage by category
   securitySchemes:
     BearerAuth:
       type: http

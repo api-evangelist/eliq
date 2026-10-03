@@ -255,153 +255,12 @@ paths:
       deprecated: true
 components:
   schemas:
-    ResultWrapper:
-      description: Responses from the similar homes and breakdown endpoint are wrapped in an object called result wrapper. The result status will contain information about the response and whether it is an ok or not ok result. The object also contains information of what needs to be done to get an ok response, for example enter more properties to the home profile.
-      type: object
-      x-examples:
-        breakdown-example:
-          result:
-            accuracy: medium
-            total_value: 100450
-            from: '2019-10-01T00:00:00'
-            to: '2019-11-01T00:00:00'
-            unit: energy
-            breakdown:
-            - category: cooking
-              value: 25047
-            - category: fridge_freezer
-              value: 35623
-            - category: washing
-              value: 18188
-            - category: cleaning
-              value: 4223
-            - category: always_on
-              value: 6365
-            - category: lightning
-              value: 11000
-          result_status:
-            code: ok
-      title: Result wrapper
-      examples:
-      - result:
-          accuracy: medium
-          total_value: 100450
-          from: '2019-10-01T00:00:00'
-          to: '2019-11-01T00:00:00'
-          unit: energy
-          breakdown:
-          - category: cooking
-            value: 25047
-          - category: fridge_freezer
-            value: 35623
-          - category: washing
-            value: 18188
-          - category: cleaning
-            value: 4223
-          - category: always_on
-            value: 6365
-          - category: lightning
-            value: 11000
-        result_status:
-          code: ok
-          action: null
-      properties:
-        result:
-          oneOf:
-          - $ref: '#/components/schemas/Breakdown'
-          - $ref: '#/components/schemas/SimilarHomesGroup'
-          - $ref: '#/components/schemas/TimeseriesData'
-          - $ref: '#/components/schemas/SimilarHomesReport'
-        result_status:
-          type: object
-          description: Contains information about the result, and whether it was successful or not
-          required:
-          - code
-          properties:
-            code:
-              type: string
-              minLength: 1
-              description: Either "ok" or "not_ok". Used to decide whether there is a result or not.
-              enum:
-              - ok
-              - not_ok
-              example: ok
-            action:
-              type:
-              - object
-              - 'null'
-              description: Available in cases where there are actions that can be done to make the result become ok, such as entering info in home profile options.
-              properties:
-                code:
-                  type: string
-                  description: 'A code for the action that should be taken. Please refer to documentation of specific endpoint for more information. '
-                description:
-                  type: string
-                  description: A description of the action that should be taken.
-      required:
-      - result_status
-    Error:
-      type: object
-      properties:
-        type:
-          type: string
-          description: Type of error.
-          nullable: true
-          example: internal_error
-        category:
-          type: string
-          description: Error category.
-          nullable: true
-          example: internal_error
-        code:
-          type: string
-          description: Code describing the issue.
-          nullable: true
-          example: INTERNAL_ERROR
-        transaction_id:
-          type: string
-          description: Identifier for the session. Please provide this when contacting support.
-          nullable: true
-          example: 0HN18NN5QB401:00000001
-        message:
-          type: string
-          description: A message related to the error.
-          nullable: true
-          example: Something went wrong. Please try again later. If problem remains, please contact support.
-        description:
-          type: string
-          description: A description of the error for developers.
-          nullable: true
-          example: Internal server error, please try again later. If problem remains, please contact support.
-      description: Model returned for error responses.
-    SimilarHomesGroupFilter:
-      required:
-      - description
-      - key
-      - type
-      type: object
-      properties:
-        key:
-          minLength: 1
-          type: string
-          description: This key refers to keys in home profile, for example 'house_type', 'heating_type_primary' or 'living_area'.
-          example: house_type
-        description:
-          minLength: 1
-          type: string
-          description: Description for the filter.
-          example: House
-        type:
-          $ref: '#/components/schemas/SimilarHomesGroupFilterType'
-        limit_range:
-          $ref: '#/components/schemas/LimitRange'
-        limit_values:
-          type: array
-          items:
-            type: string
-          description: Available if type is 'limit_values'. For example, for key 'house_type', this would include the list of house types the location is compared with.
-          nullable: true
-      description: Similar homes group filter.
+    SimilarHomesGroupFilterType:
+      enum:
+      - limit_values
+      - limit_range
+      type: string
+      description: Describes whether 'limit_values' or 'limit_range' should be used.
     BreakdownItem:
       description: Breakdown item contain usage information for a specific usage category
       type: object
@@ -425,104 +284,24 @@ components:
       examples:
       - category: cooking
         value: 25047
-    Breakdown:
-      description: 'The breakdown model contains information about the location breakdown (aka. Energy usage categories (EUC)). '
-      type: object
-      x-examples:
-        example-1:
-          accuracy: medium
-          total_value: 100450
-          from: '2019-10-01T00:00:00'
-          to: '2019-11-01T00:00:00'
-          unit: energy
-          breakdown:
-          - category: cooking
-            value: 25047
-          - category: fridge_freezer
-            value: 35623
-          - category: washing
-            value: 18188
-          - category: cleaning
-            value: 4223
-          - category: always_on
-            value: 6365
-          - category: lightning
-            value: 11000
-      title: Breakdown result
-      properties:
-        accuracy:
-          type: string
-          minLength: 1
-          enum:
-          - LOW
-          - MEDIUM
-          - HIGH
-          example: MEDIUM
-          description: How certain we are of the result. Can be either 'low', 'medium' or 'high'. Could be used to let user know the accuracy of the breakdown, or whether to show it the application or not.
-        total_value:
-          type: number
-          description: The total usage during the period
-          example: 100450
-        from:
-          type: string
-          minLength: 1
-          format: date-time
-          example: '2019-10-01T00:00:00'
-          description: Start date of the consumption period, matches with the value passed in query parameters of the request.
-        to:
-          type: string
-          minLength: 1
-          example: '2019-11-01T00:00:00'
-          format: date-time
-          description: 'End date of the consumption period, matches with the value passed in query parameters of the request.
-
-            '
-        unit:
-          type: string
-          minLength: 1
-          enum:
-          - energy
-          - cost
-          example: energy
-          description: Can be ‘cost’ or ‘energy’. Matches with the value passed in query parameters of the request if provided, otherwise default.
-        breakdown:
-          type: array
-          uniqueItems: true
-          minItems: 1
-          items:
-            $ref: '#/components/schemas/BreakdownItem'
+    SimilarHomesGroup:
       required:
-      - accuracy
-      - total_value
-      - from
-      - to
-      - unit
-      - breakdown
-      examples:
-      - accuracy: medium
-        total_value: 100450
-        from: '2019-10-01T00:00:00'
-        to: '2019-11-01T00:00:00'
-        unit: energy
-        breakdown:
-        - category: cooking
-          value: 25047
-        - category: fridge_freezer
-          value: 35623
-        - category: washing
-          value: 18188
-        - category: cleaning
-          value: 4223
-        - category: always_on
-          value: 6365
-        - category: lightning
-          value: 11000
-    SimilarHomesGroupFilterType:
-      enum:
-      - limit_values
-      - limit_range
-      type: string
-      description: Describes whether 'limit_values' or 'limit_range' should be used.
+      - contributors
+      - filters
+      type: object
+      properties:
+        filters:
+          minItems: 1
+          type: array
+          items:
+            $ref: '#/components/schemas/SimilarHomesGroupFilter'
+          description: A list of filters that was used when finding a similar homes group.
+        contributors:
+          type: integer
+          description: Number of contributors in the group.
+          format: int32
+          example: 1
+      description: Description of similar homes that a location is compared to.
     TimeseriesData:
       description: Model containing time series data. Different parameters will be available depending on the data requested, see below for more information
       type: object
@@ -638,6 +417,40 @@ components:
       - resolution
       - from
       - to
+    Error:
+      type: object
+      properties:
+        type:
+          type: string
+          description: Type of error.
+          nullable: true
+          example: internal_error
+        category:
+          type: string
+          description: Error category.
+          nullable: true
+          example: internal_error
+        code:
+          type: string
+          description: Code describing the issue.
+          nullable: true
+          example: INTERNAL_ERROR
+        transaction_id:
+          type: string
+          description: Identifier for the session. Please provide this when contacting support.
+          nullable: true
+          example: 0HN18NN5QB401:00000001
+        message:
+          type: string
+          description: A message related to the error.
+          nullable: true
+          example: Something went wrong. Please try again later. If problem remains, please contact support.
+        description:
+          type: string
+          description: A description of the error for developers.
+          nullable: true
+          example: Internal server error, please try again later. If problem remains, please contact support.
+      description: Model returned for error responses.
     LimitRange:
       required:
       - max
@@ -655,24 +468,91 @@ components:
           format: double
           example: 200
       description: Available if type is 'limit_range'. Contains minimum and maximum values for the given key.
-    SimilarHomesGroup:
-      required:
-      - contributors
-      - filters
+    ResultWrapper:
+      description: Responses from the similar homes and breakdown endpoint are wrapped in an object called result wrapper. The result status will contain information about the response and whether it is an ok or not ok result. The object also contains information of what needs to be done to get an ok response, for example enter more properties to the home profile.
       type: object
+      x-examples:
+        breakdown-example:
+          result:
+            accuracy: medium
+            total_value: 100450
+            from: '2019-10-01T00:00:00'
+            to: '2019-11-01T00:00:00'
+            unit: energy
+            breakdown:
+            - category: cooking
+              value: 25047
+            - category: fridge_freezer
+              value: 35623
+            - category: washing
+              value: 18188
+            - category: cleaning
+              value: 4223
+            - category: always_on
+              value: 6365
+            - category: lightning
+              value: 11000
+          result_status:
+            code: ok
+      title: Result wrapper
+      examples:
+      - result:
+          accuracy: medium
+          total_value: 100450
+          from: '2019-10-01T00:00:00'
+          to: '2019-11-01T00:00:00'
+          unit: energy
+          breakdown:
+          - category: cooking
+            value: 25047
+          - category: fridge_freezer
+            value: 35623
+          - category: washing
+            value: 18188
+          - category: cleaning
+            value: 4223
+          - category: always_on
+            value: 6365
+          - category: lightning
+            value: 11000
+        result_status:
+          code: ok
+          action: null
       properties:
-        filters:
-          minItems: 1
-          type: array
-          items:
-            $ref: '#/components/schemas/SimilarHomesGroupFilter'
-          description: A list of filters that was used when finding a similar homes group.
-        contributors:
-          type: integer
-          description: Number of contributors in the group.
-          format: int32
-          example: 1
-      description: Description of similar homes that a location is compared to.
+        result:
+          oneOf:
+          - $ref: '#/components/schemas/Breakdown'
+          - $ref: '#/components/schemas/SimilarHomesGroup'
+          - $ref: '#/components/schemas/TimeseriesData'
+          - $ref: '#/components/schemas/SimilarHomesReport'
+        result_status:
+          type: object
+          description: Contains information about the result, and whether it was successful or not
+          required:
+          - code
+          properties:
+            code:
+              type: string
+              minLength: 1
+              description: Either "ok" or "not_ok". Used to decide whether there is a result or not.
+              enum:
+              - ok
+              - not_ok
+              example: ok
+            action:
+              type:
+              - object
+              - 'null'
+              description: Available in cases where there are actions that can be done to make the result become ok, such as entering info in home profile options.
+              properties:
+                code:
+                  type: string
+                  description: 'A code for the action that should be taken. Please refer to documentation of specific endpoint for more information. '
+                description:
+                  type: string
+                  description: A description of the action that should be taken.
+      required:
+      - result_status
     SimilarHomesReport:
       required:
       - distribution_values
@@ -714,6 +594,126 @@ components:
           description: To date
           format: date-time
       description: Similar homes report for the requested period.
+    Breakdown:
+      description: 'The breakdown model contains information about the location breakdown (aka. Energy usage categories (EUC)). '
+      type: object
+      x-examples:
+        example-1:
+          accuracy: medium
+          total_value: 100450
+          from: '2019-10-01T00:00:00'
+          to: '2019-11-01T00:00:00'
+          unit: energy
+          breakdown:
+          - category: cooking
+            value: 25047
+          - category: fridge_freezer
+            value: 35623
+          - category: washing
+            value: 18188
+          - category: cleaning
+            value: 4223
+          - category: always_on
+            value: 6365
+          - category: lightning
+            value: 11000
+      title: Breakdown result
+      properties:
+        accuracy:
+          type: string
+          minLength: 1
+          enum:
+          - LOW
+          - MEDIUM
+          - HIGH
+          example: MEDIUM
+          description: How certain we are of the result. Can be either 'low', 'medium' or 'high'. Could be used to let user know the accuracy of the breakdown, or whether to show it the application or not.
+        total_value:
+          type: number
+          description: The total usage during the period
+          example: 100450
+        from:
+          type: string
+          minLength: 1
+          format: date-time
+          example: '2019-10-01T00:00:00'
+          description: Start date of the consumption period, matches with the value passed in query parameters of the request.
+        to:
+          type: string
+          minLength: 1
+          example: '2019-11-01T00:00:00'
+          format: date-time
+          description: 'End date of the consumption period, matches with the value passed in query parameters of the request.
+
+            '
+        unit:
+          type: string
+          minLength: 1
+          enum:
+          - energy
+          - cost
+          example: energy
+          description: Can be ‘cost’ or ‘energy’. Matches with the value passed in query parameters of the request if provided, otherwise default.
+        breakdown:
+          type: array
+          uniqueItems: true
+          minItems: 1
+          items:
+            $ref: '#/components/schemas/BreakdownItem'
+      required:
+      - accuracy
+      - total_value
+      - from
+      - to
+      - unit
+      - breakdown
+      examples:
+      - accuracy: medium
+        total_value: 100450
+        from: '2019-10-01T00:00:00'
+        to: '2019-11-01T00:00:00'
+        unit: energy
+        breakdown:
+        - category: cooking
+          value: 25047
+        - category: fridge_freezer
+          value: 35623
+        - category: washing
+          value: 18188
+        - category: cleaning
+          value: 4223
+        - category: always_on
+          value: 6365
+        - category: lightning
+          value: 11000
+    SimilarHomesGroupFilter:
+      required:
+      - description
+      - key
+      - type
+      type: object
+      properties:
+        key:
+          minLength: 1
+          type: string
+          description: This key refers to keys in home profile, for example 'house_type', 'heating_type_primary' or 'living_area'.
+          example: house_type
+        description:
+          minLength: 1
+          type: string
+          description: Description for the filter.
+          example: House
+        type:
+          $ref: '#/components/schemas/SimilarHomesGroupFilterType'
+        limit_range:
+          $ref: '#/components/schemas/LimitRange'
+        limit_values:
+          type: array
+          items:
+            type: string
+          description: Available if type is 'limit_values'. For example, for key 'house_type', this would include the list of house types the location is compared with.
+          nullable: true
+      description: Similar homes group filter.
   securitySchemes:
     BearerAuth:
       type: http

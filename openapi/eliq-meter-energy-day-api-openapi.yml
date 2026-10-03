@@ -413,6 +413,39 @@ paths:
                     request_id: 65e2ea86-470f-4363-9295-35d6b473981a
 components:
   schemas:
+    ErrorDetails:
+      required:
+      - code
+      - description
+      type: object
+      properties:
+        code:
+          minLength: 1
+          type: string
+        description:
+          minLength: 1
+          type: string
+        request_id:
+          type:
+          - string
+          - 'null'
+    Register:
+      type: object
+      properties:
+        id:
+          type:
+          - string
+          - 'null'
+        energy_wh:
+          type:
+          - number
+          - 'null'
+          format: float
+        energy_m3:
+          type:
+          - number
+          - 'null'
+          format: float
     EnergyDailyData:
       type: object
       properties:
@@ -438,45 +471,12 @@ components:
           - 'null'
           items:
             $ref: '#/components/schemas/Register'
-    ErrorDetails:
-      required:
-      - code
-      - description
-      type: object
-      properties:
-        code:
-          minLength: 1
-          type: string
-        description:
-          minLength: 1
-          type: string
-        request_id:
-          type:
-          - string
-          - 'null'
     NoContentResult:
       type: object
       properties:
         statusCode:
           type: integer
           format: int32
-    Register:
-      type: object
-      properties:
-        id:
-          type:
-          - string
-          - 'null'
-        energy_wh:
-          type:
-          - number
-          - 'null'
-          format: float
-        energy_m3:
-          type:
-          - number
-          - 'null'
-          format: float
 x-tagGroups:
 - name: Users
   tags:

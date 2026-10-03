@@ -714,13 +714,15 @@ components:
           - 'null'
         type:
           $ref: '#/components/schemas/JobType'
-    JobOperationType:
-      enum:
-      - upsert
-      - delete
-      - export
-      - multi-file-export
-      type: string
+    JobResultRow:
+      type: object
+      properties:
+        is_successful:
+          type: boolean
+        error:
+          $ref: '#/components/schemas/FileRowError'
+        result: {}
+        input: {}
     JobEntryStateType:
       enum:
       - received
@@ -730,22 +732,18 @@ components:
       - completed
       - canceled
       type: string
-    FileRowError:
-      type: object
-      properties:
-        code:
-          type:
-          - string
-          - 'null'
-        description:
-          type:
-          - string
-          - 'null'
     JobType:
       enum:
       - import
       - export
       - multi-file
+      type: string
+    JobOperationType:
+      enum:
+      - upsert
+      - delete
+      - export
+      - multi-file-export
       type: string
     ErrorDetails:
       required:
@@ -760,6 +758,17 @@ components:
           minLength: 1
           type: string
         request_id:
+          type:
+          - string
+          - 'null'
+    FileRowError:
+      type: object
+      properties:
+        code:
+          type:
+          - string
+          - 'null'
+        description:
           type:
           - string
           - 'null'
@@ -779,15 +788,6 @@ components:
           type:
           - string
           - 'null'
-    JobResultRow:
-      type: object
-      properties:
-        is_successful:
-          type: boolean
-        error:
-          $ref: '#/components/schemas/FileRowError'
-        result: {}
-        input: {}
 x-tagGroups:
 - name: Users
   tags:

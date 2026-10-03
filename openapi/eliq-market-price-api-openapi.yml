@@ -608,6 +608,11 @@ paths:
                     description: Spot price region not found
 components:
   schemas:
+    MarketPriceResolution:
+      enum:
+      - day
+      - month
+      type: string
     MarketPriceSummaryElementDto:
       required:
       - avg_price_kwh
@@ -636,11 +641,34 @@ components:
           items:
             $ref: '#/components/schemas/MarketPriceElementDto'
           description: All summary period prices
-    MarketPriceResolution:
-      enum:
-      - day
-      - month
-      type: string
+    MarketPriceResponseDto:
+      required:
+      - currency
+      - from
+      - resolution
+      - to
+      - values
+      type: object
+      properties:
+        resolution:
+          minLength: 1
+          type: string
+          description: Resolution of the values array
+        currency:
+          minLength: 1
+          type: string
+          description: Currency of the price_kwh
+        from:
+          type: string
+          description: From date inclusive
+        to:
+          type: string
+          description: To date exclusive
+        values:
+          type: array
+          items:
+            $ref: '#/components/schemas/MarketPriceElementDto'
+          description: Values in the specified resolution. The size always matches the number of periods between from and two in the given resolution. May contain null.
     Error:
       type: object
       properties:
@@ -675,34 +703,25 @@ components:
           nullable: true
           example: Internal server error, please try again later. If problem remains, please contact support.
       description: Model returned for error responses.
-    MarketPriceResponseDto:
+    PriceLevel:
+      enum:
+      - low
+      - medium
+      - high
+      type: string
+    MarketPriceElementDto:
       required:
-      - currency
-      - from
-      - resolution
-      - to
-      - values
+      - period_start
+      - price_kwh
       type: object
       properties:
-        resolution:
-          minLength: 1
+        period_start:
           type: string
-          description: Resolution of the values array
-        currency:
-          minLength: 1
-          type: string
-          description: Currency of the price_kwh
-        from:
-          type: string
-          description: From date inclusive
-        to:
-          type: string
-          description: To date exclusive
-        values:
-          type: array
-          items:
-            $ref: '#/components/schemas/MarketPriceElementDto'
-          description: Values in the specified resolution. The size always matches the number of periods between from and two in the given resolution. May contain null.
+          description: Market price period start
+        price_kwh:
+          type: number
+          description: Market price during period per kwh
+          format: double
     MarketPriceSummaryDto:
       required:
       - currency
@@ -729,25 +748,6 @@ components:
           items:
             $ref: '#/components/schemas/MarketPriceSummaryElementDto'
           description: Values in the specified resolution. The size always matches the number of periods between from and to in the given resolution. Collection may contain null entries for periods with no data.
-    MarketPriceElementDto:
-      required:
-      - period_start
-      - price_kwh
-      type: object
-      properties:
-        period_start:
-          type: string
-          description: Market price period start
-        price_kwh:
-          type: number
-          description: Market price during period per kwh
-          format: double
-    PriceLevel:
-      enum:
-      - low
-      - medium
-      - high
-      type: string
   securitySchemes:
     BearerAuth:
       type: http

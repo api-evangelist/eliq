@@ -1061,12 +1061,6 @@ components:
           type:
           - string
           - 'null'
-    NoContentResult:
-      type: object
-      properties:
-        statusCode:
-          type: integer
-          format: int32
     DeviceMaxDemand:
       type: object
       properties:
@@ -1079,6 +1073,12 @@ components:
           type:
           - string
           - 'null'
+    NoContentResult:
+      type: object
+      properties:
+        statusCode:
+          type: integer
+          format: int32
 x-tagGroups:
 - name: Users
   tags:

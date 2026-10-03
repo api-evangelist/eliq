@@ -228,6 +228,22 @@ paths:
                     request_id: 65e2ea86-470f-4363-9295-35d6b473981a
 components:
   schemas:
+    ErrorDetails:
+      required:
+      - code
+      - description
+      type: object
+      properties:
+        code:
+          minLength: 1
+          type: string
+        description:
+          minLength: 1
+          type: string
+        request_id:
+          type:
+          - string
+          - 'null'
     PortfolioUser:
       required:
       - name
@@ -255,22 +271,6 @@ components:
           - 'null'
           items:
             type: string
-    ErrorDetails:
-      required:
-      - code
-      - description
-      type: object
-      properties:
-        code:
-          minLength: 1
-          type: string
-        description:
-          minLength: 1
-          type: string
-        request_id:
-          type:
-          - string
-          - 'null'
     PortfolioUserRole:
       enum:
       - user

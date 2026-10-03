@@ -182,22 +182,16 @@ paths:
       - Eliq Connect
 components:
   schemas:
-    ConnectionMetaData:
-      title: ConnectionMetaData
+    EliqConnectUriResponse:
+      title: EliqConnectUriResponse
       x-stoplight:
-        id: 8hppqt6r7illo
+        id: x2vp8xc7rnr3y
       type: object
       properties:
-        status:
+        uri:
           type: string
-          description: Meta data status
-          enum:
-          - ok
-          - not_connected
-          - action_required
-          - awaiting_confirmation
-          - awaiting_first_data_sync
-          example: ok
+          example: https://connect.eliq.io/login?callbackUri={callback_uri}&linkOutCallbackUri={linkout_callback_uri}&ticketId={SSO_TICKET}
+          description: Uri to redirect the user to
     ConnectionEntity:
       type: object
       x-examples:
@@ -273,16 +267,22 @@ components:
               - string
               - 'null'
               example: '2022-06-05'
-    EliqConnectUriResponse:
-      title: EliqConnectUriResponse
+    ConnectionMetaData:
+      title: ConnectionMetaData
       x-stoplight:
-        id: x2vp8xc7rnr3y
+        id: 8hppqt6r7illo
       type: object
       properties:
-        uri:
+        status:
           type: string
-          example: https://connect.eliq.io/login?callbackUri={callback_uri}&linkOutCallbackUri={linkout_callback_uri}&ticketId={SSO_TICKET}
-          description: Uri to redirect the user to
+          description: Meta data status
+          enum:
+          - ok
+          - not_connected
+          - action_required
+          - awaiting_confirmation
+          - awaiting_first_data_sync
+          example: ok
     Connection:
       type: object
       x-examples:

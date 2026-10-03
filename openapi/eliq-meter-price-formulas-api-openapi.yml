@@ -828,40 +828,21 @@ paths:
                     request_id: 65e2ea86-470f-4363-9295-35d6b473981a
 components:
   schemas:
-    Block:
+    Element:
       type: object
       properties:
-        resolution:
+        name:
           type:
           - string
           - 'null'
-        register_id:
+        type:
           type:
           - string
           - 'null'
+        charge:
+          $ref: '#/components/schemas/Charge'
         unit_rate:
-          type: number
-          format: double
-        from_kwh:
-          type:
-          - integer
-          - 'null'
-          format: int64
-        to_kwh:
-          type:
-          - integer
-          - 'null'
-          format: int64
-        from_m3:
-          type:
-          - integer
-          - 'null'
-          format: int64
-        to_m3:
-          type:
-          - integer
-          - 'null'
-          format: int64
+          $ref: '#/components/schemas/UnitRate'
     Charge:
       type: object
       properties:
@@ -880,42 +861,53 @@ components:
           - 'null'
         capacity_tariff:
           $ref: '#/components/schemas/CapacityTariff'
-    CapacityTariff:
+    UnitRate:
       type: object
       properties:
-        charge_tariff:
-          type: number
-          format: double
-        minimum_contribution:
-          type: number
-          format: double
-        calculation_type:
-          type:
-          - string
-          - 'null'
-    Element:
-      type: object
-      properties:
-        name:
-          type:
-          - string
-          - 'null'
         type:
           type:
           - string
           - 'null'
-        charge:
-          $ref: '#/components/schemas/Charge'
-        unit_rate:
-          $ref: '#/components/schemas/UnitRate'
-    Fixed:
+        fixed:
+          $ref: '#/components/schemas/Fixed'
+        tou:
+          $ref: '#/components/schemas/Tou'
+        block:
+          $ref: '#/components/schemas/Block'
+        spot_price:
+          $ref: '#/components/schemas/SpotPrice'
+        weekdays:
+          type:
+          - array
+          - 'null'
+          items:
+            type: string
+    SpotPrice:
       type: object
       properties:
-        unit_rate:
+        provider:
+          type:
+          - string
+          - 'null'
+        region:
+          type:
+          - string
+          - 'null'
+        resolution:
+          type:
+          - string
+          - 'null'
+        multiplier:
           type:
           - number
           - 'null'
           format: double
+    NoContentResult:
+      type: object
+      properties:
+        statusCode:
+          type: integer
+          format: int32
     PriceFormula:
       type: object
       properties:
@@ -950,6 +942,90 @@ components:
           type:
           - string
           - 'null'
+    Fixed:
+      type: object
+      properties:
+        unit_rate:
+          type:
+          - number
+          - 'null'
+          format: double
+    Block:
+      type: object
+      properties:
+        resolution:
+          type:
+          - string
+          - 'null'
+        register_id:
+          type:
+          - string
+          - 'null'
+        unit_rate:
+          type: number
+          format: double
+        from_kwh:
+          type:
+          - integer
+          - 'null'
+          format: int64
+        to_kwh:
+          type:
+          - integer
+          - 'null'
+          format: int64
+        from_m3:
+          type:
+          - integer
+          - 'null'
+          format: int64
+        to_m3:
+          type:
+          - integer
+          - 'null'
+          format: int64
+    Interval:
+      type: object
+      properties:
+        from_minute:
+          type:
+          - integer
+          - 'null'
+          format: int64
+        to_minute:
+          type:
+          - integer
+          - 'null'
+          format: int64
+    ErrorDetails:
+      required:
+      - code
+      - description
+      type: object
+      properties:
+        code:
+          minLength: 1
+          type: string
+        description:
+          minLength: 1
+          type: string
+        request_id:
+          type:
+          - string
+          - 'null'
+    CapacityTariff:
+      type: object
+      properties:
+        charge_tariff:
+          type: number
+          format: double
+        minimum_contribution:
+          type: number
+          format: double
+        calculation_type:
+          type:
+          - string
+          - 'null'
     Tou:
       type: object
       properties:
@@ -972,82 +1048,6 @@ components:
           type:
           - boolean
           - 'null'
-    ErrorDetails:
-      required:
-      - code
-      - description
-      type: object
-      properties:
-        code:
-          minLength: 1
-          type: string
-        description:
-          minLength: 1
-          type: string
-        request_id:
-          type:
-          - string
-          - 'null'
-    NoContentResult:
-      type: object
-      properties:
-        statusCode:
-          type: integer
-          format: int32
-    UnitRate:
-      type: object
-      properties:
-        type:
-          type:
-          - string
-          - 'null'
-        fixed:
-          $ref: '#/components/schemas/Fixed'
-        tou:
-          $ref: '#/components/schemas/Tou'
-        block:
-          $ref: '#/components/schemas/Block'
-        spot_price:
-          $ref: '#/components/schemas/SpotPrice'
-        weekdays:
-          type:
-          - array
-          - 'null'
-          items:
-            type: string
-    Interval:
-      type: object
-      properties:
-        from_minute:
-          type:
-          - integer
-          - 'null'
-          format: int64
-        to_minute:
-          type:
-          - integer
-          - 'null'
-          format: int64
-    SpotPrice:
-      type: object
-      properties:
-        provider:
-          type:
-          - string
-          - 'null'
-        region:
-          type:
-          - string
-          - 'null'
-        resolution:
-          type:
-          - string
-          - 'null'
-        multiplier:
-          type:
-          - number
-          - 'null'
-          format: double
 x-tagGroups:
 - name: Users
   tags:
