@@ -76,28 +76,6 @@ components:
           description: The dashboards available to the client
       additionalProperties: false
       description: DataBricks dashboards available for embedding in the application
-    MyInfoResult:
-      required:
-      - client_id
-      - roles
-      type: object
-      properties:
-        client_id:
-          type: integer
-          description: Client Id of active user
-          format: int64
-          example: 5435964696
-        roles:
-          type: array
-          items:
-            type: string
-          description: Roles of active user
-          example:
-          - Support
-          - EliqConfigurator
-          - ClientConfigurator
-      additionalProperties: false
-      description: Information about the active user
     DashboardConfigurationItem:
       type: object
       properties:
@@ -123,6 +101,16 @@ components:
           example: client
       additionalProperties: false
       description: A published DataBricks dashboard the client is allowed to embed
+    IntelligenceApiConfiguration:
+      type: object
+      properties:
+        application_name:
+          type:
+          - string
+          - 'null'
+        dashboards:
+          $ref: '#/components/schemas/DashboardsConfiguration'
+      additionalProperties: false
     AuthInfoResult:
       required:
       - entra_application_id
@@ -141,16 +129,28 @@ components:
           example: b77ee01b-e19b-4fe5-b73b-5d4d810910d1
       additionalProperties: false
       description: Authorization information for the application
-    IntelligenceApiConfiguration:
+    MyInfoResult:
+      required:
+      - client_id
+      - roles
       type: object
       properties:
-        application_name:
-          type:
-          - string
-          - 'null'
-        dashboards:
-          $ref: '#/components/schemas/DashboardsConfiguration'
+        client_id:
+          type: integer
+          description: Client Id of active user
+          format: int64
+          example: 5435964696
+        roles:
+          type: array
+          items:
+            type: string
+          description: Roles of active user
+          example:
+          - Support
+          - EliqConfigurator
+          - ClientConfigurator
       additionalProperties: false
+      description: Information about the active user
   securitySchemes:
     Bearer:
       type: http

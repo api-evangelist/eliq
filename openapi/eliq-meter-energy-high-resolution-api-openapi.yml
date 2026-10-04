@@ -624,22 +624,12 @@ paths:
                     request_id: 65e2ea86-470f-4363-9295-35d6b473981a
 components:
   schemas:
-    ErrorDetails:
-      required:
-      - code
-      - description
+    NoContentResult:
       type: object
       properties:
-        code:
-          minLength: 1
-          type: string
-        description:
-          minLength: 1
-          type: string
-        request_id:
-          type:
-          - string
-          - 'null'
+        statusCode:
+          type: integer
+          format: int32
     EnergyHighResolutionData:
       type: object
       properties:
@@ -659,12 +649,22 @@ components:
           format: float
         is_estimated:
           type: boolean
-    NoContentResult:
+    ErrorDetails:
+      required:
+      - code
+      - description
       type: object
       properties:
-        statusCode:
-          type: integer
-          format: int32
+        code:
+          minLength: 1
+          type: string
+        description:
+          minLength: 1
+          type: string
+        request_id:
+          type:
+          - string
+          - 'null'
 x-tagGroups:
 - name: Users
   tags:

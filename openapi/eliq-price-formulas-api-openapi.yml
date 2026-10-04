@@ -142,74 +142,12 @@ paths:
                     description: Internal server error.
 components:
   schemas:
-    UnitRateType:
-      enum:
-      - fixed
-      - tou
-      - nordpool
-      - block
-      - spot_price
-      type: string
-      description: Unit rate type
     ChargeResolution:
       enum:
       - day
       - month
       type: string
       description: Charge resolution
-    Fuel:
-      enum:
-      - elec
-      - gas
-      - district_heating
-      type: string
-      description: Fuel type
-    MeterPriceFormula:
-      type: object
-      properties:
-        meter_id:
-          type: string
-          description: Meter id. Applicable only for price formulas set on a meter. Location level formulas which can be applied to multiple meters will have this field empty.
-          nullable: true
-        fuel:
-          $ref: '#/components/schemas/Fuel'
-        direction:
-          $ref: '#/components/schemas/PriceFormulaDirection'
-        from:
-          type: string
-          description: Price formula start date.
-          format: date-time
-          nullable: true
-        to:
-          type: string
-          description: Price formula end date.
-          format: date-time
-          nullable: true
-        currency_code:
-          type: string
-          description: Price formula currency code.
-          nullable: true
-        elements_array:
-          type: array
-          items:
-            $ref: '#/components/schemas/Element'
-          description: List of elements
-          nullable: true
-        source:
-          $ref: '#/components/schemas/Source'
-    Charge:
-      required:
-      - resolution
-      type: object
-      properties:
-        resolution:
-          $ref: '#/components/schemas/ChargeResolution'
-        charge:
-          type: number
-          description: Charge amount
-          format: double
-          nullable: true
-      description: Object containing the charge. Available when type is set to charge.
     SpotPrice:
       type: object
       properties:
@@ -224,32 +162,15 @@ components:
           type: number
           format: double
           nullable: true
-    NordpoolResolution:
+    UnitRateType:
       enum:
-      - hour
+      - fixed
+      - tou
+      - nordpool
+      - block
+      - spot_price
       type: string
-    SpotPriceResolution:
-      enum:
-      - hour
-      - 15min
-      type: string
-    Interval:
-      type: object
-      properties:
-        from_minute:
-          type: integer
-          format: int64
-          nullable: true
-        to_minute:
-          type: integer
-          format: int64
-          nullable: true
-    PriceFormulaDirection:
-      enum:
-      - import
-      - export
-      type: string
-      description: Direction type
+      description: Unit rate type
     Tou:
       type: object
       properties:
@@ -268,27 +189,6 @@ components:
         skip_intervals:
           type: boolean
           nullable: true
-    Source:
-      enum:
-      - client
-      - user
-      type: string
-      description: Price formula source
-    BlockResolution:
-      enum:
-      - day
-      - year
-      type: string
-    Fixed:
-      required:
-      - unit_rate
-      type: object
-      properties:
-        unit_rate:
-          type: number
-          description: Fixed unit rate
-          format: double
-      description: Object containing spot price information. Available if unit rate type is set to 'fixed'
     Block:
       type: object
       properties:
@@ -316,6 +216,10 @@ components:
           type: integer
           format: int64
           nullable: true
+    NordpoolResolution:
+      enum:
+      - hour
+      type: string
     Error:
       type: object
       properties:
@@ -350,12 +254,56 @@ components:
           nullable: true
           example: Internal server error, please try again later. If problem remains, please contact support.
       description: Model returned for error responses.
+    Interval:
+      type: object
+      properties:
+        from_minute:
+          type: integer
+          format: int64
+          nullable: true
+        to_minute:
+          type: integer
+          format: int64
+          nullable: true
     PriceElementType:
       enum:
       - charge
       - unit_rate
       type: string
       description: Formula element type.
+    MeterPriceFormula:
+      type: object
+      properties:
+        meter_id:
+          type: string
+          description: Meter id. Applicable only for price formulas set on a meter. Location level formulas which can be applied to multiple meters will have this field empty.
+          nullable: true
+        fuel:
+          $ref: '#/components/schemas/Fuel'
+        direction:
+          $ref: '#/components/schemas/PriceFormulaDirection'
+        from:
+          type: string
+          description: Price formula start date.
+          format: date-time
+          nullable: true
+        to:
+          type: string
+          description: Price formula end date.
+          format: date-time
+          nullable: true
+        currency_code:
+          type: string
+          description: Price formula currency code.
+          nullable: true
+        elements_array:
+          type: array
+          items:
+            $ref: '#/components/schemas/Element'
+          description: List of elements
+          nullable: true
+        source:
+          $ref: '#/components/schemas/Source'
     Element:
       required:
       - name
@@ -372,6 +320,57 @@ components:
           $ref: '#/components/schemas/Charge'
         unit_rate:
           $ref: '#/components/schemas/UnitRate'
+    Nordpool:
+      required:
+      - region
+      - resolution
+      type: object
+      properties:
+        region:
+          minLength: 1
+          type: string
+          description: Region
+        resolution:
+          $ref: '#/components/schemas/NordpoolResolution'
+        multiplier:
+          type: number
+          description: Multiplier. All Nordpool is by default without VAT. Specify VAT to be used, value 1.25 would result in 25% tax.
+          format: double
+          nullable: true
+      description: Object containing Nordpool information. Available if unit rate type is set to nordpool
+    Fixed:
+      required:
+      - unit_rate
+      type: object
+      properties:
+        unit_rate:
+          type: number
+          description: Fixed unit rate
+          format: double
+      description: Object containing spot price information. Available if unit rate type is set to 'fixed'
+    SpotPriceProvider:
+      enum:
+      - nordpool
+      - epex
+      type: string
+    Charge:
+      required:
+      - resolution
+      type: object
+      properties:
+        resolution:
+          $ref: '#/components/schemas/ChargeResolution'
+        charge:
+          type: number
+          description: Charge amount
+          format: double
+          nullable: true
+      description: Object containing the charge. Available when type is set to charge.
+    SpotPriceResolution:
+      enum:
+      - hour
+      - 15min
+      type: string
     UnitRate:
       required:
       - type
@@ -395,29 +394,30 @@ components:
             type: string
           nullable: true
       description: Object containing the unit rate. Available when type is set to unit_rate.
-    SpotPriceProvider:
+    PriceFormulaDirection:
       enum:
-      - nordpool
-      - epex
+      - import
+      - export
       type: string
-    Nordpool:
-      required:
-      - region
-      - resolution
-      type: object
-      properties:
-        region:
-          minLength: 1
-          type: string
-          description: Region
-        resolution:
-          $ref: '#/components/schemas/NordpoolResolution'
-        multiplier:
-          type: number
-          description: Multiplier. All Nordpool is by default without VAT. Specify VAT to be used, value 1.25 would result in 25% tax.
-          format: double
-          nullable: true
-      description: Object containing Nordpool information. Available if unit rate type is set to nordpool
+      description: Direction type
+    Fuel:
+      enum:
+      - elec
+      - gas
+      - district_heating
+      type: string
+      description: Fuel type
+    Source:
+      enum:
+      - client
+      - user
+      type: string
+      description: Price formula source
+    BlockResolution:
+      enum:
+      - day
+      - year
+      type: string
   securitySchemes:
     BearerAuth:
       type: http

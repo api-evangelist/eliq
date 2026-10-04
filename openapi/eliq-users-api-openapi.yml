@@ -498,60 +498,40 @@ paths:
                     description: Internal server error, please try again later. If problem remains, please contact support.
 components:
   schemas:
-    Event:
+    LocationFuelItem:
+      required:
+      - resolution
+      - source
       type: object
       properties:
-        created_date:
+        resolution:
+          minLength: 1
           type: string
+          description: Energy data sampling resolution.
+          example: 15min
+        data_from:
+          type: string
+          description: Available from date.
           format: date-time
           nullable: true
-        type:
+          example: '2021-01-01T00:00:00'
+        data_to:
           type: string
+          description: Available to date.
+          format: date-time
           nullable: true
+          example: '2021-03-01T00:00:00'
         source:
-          type: object
-          description: 'The source of the event. This can for example be a monitor object or a report object
-
-            To figure out which object it is, look at Type'
-          nullable: true
-    Consent:
-      type: object
-      x-examples:
-        example-1:
-          version_id: f2283b35-c2c7-4a4f-90f4-49e493c69d7
-          name: terms_and_conditions
-          type: login_consent
-          given_consent: false
-          is_updated: true
-          is_mandatory: true
-          timestamp: '2022-06-28T13:54:43.369558Z'
-          language_code: en-GB
-          data:
-            url: https://your-website-url.com/terms-and-conditions
-      properties:
-        version_id:
-          type: string
-        name:
-          type: string
-        type:
-          type: string
-        given_consent:
-          type: boolean
-        is_updated:
-          type: boolean
-        is_mandatory:
-          type: boolean
-        timestamp:
-          type: string
-        language_code:
-          type: string
-        data:
-          type: object
-          properties:
-            url:
-              type: string
-              description: Nullable, such as the terms and conditions page on a website, etc.
-      examples: []
+          $ref: '#/components/schemas/FuelSource'
+        sync_status:
+          $ref: '#/components/schemas/SyncStatus'
+      description: General data about a fuel item.
+    SyncStatus:
+      enum:
+      - ok
+      - waiting_for_data
+      type: string
+      description: Data synchronization status.
     User:
       description: Get user information
       type: object
@@ -615,6 +595,61 @@ components:
       - id
       - ext_ref
       - language_code
+    Event:
+      type: object
+      properties:
+        created_date:
+          type: string
+          format: date-time
+          nullable: true
+        type:
+          type: string
+          nullable: true
+        source:
+          type: object
+          description: 'The source of the event. This can for example be a monitor object or a report object
+
+            To figure out which object it is, look at Type'
+          nullable: true
+    Location:
+      required:
+      - address
+      - ext_ref
+      - fuels
+      - id
+      - meters
+      - timezone
+      type: object
+      properties:
+        id:
+          type: integer
+          description: ID
+          format: int32
+          example: 150
+        name:
+          type: string
+          description: Name
+          nullable: true
+          example: My Location
+        ext_ref:
+          minLength: 1
+          type: string
+          description: External (utility) reference.
+        timezone:
+          minLength: 1
+          type: string
+          description: Iana timezone
+          example: Europe/Berlin
+        address:
+          $ref: '#/components/schemas/Address'
+        fuels:
+          $ref: '#/components/schemas/LocationFuels'
+        meters:
+          type: array
+          items:
+            $ref: '#/components/schemas/LocationMeter'
+          description: Meters present at a location.
+      description: Location data.
     LocationMeter:
       required:
       - direction
@@ -685,44 +720,6 @@ components:
           nullable: true
           example: '2026-12-31T00:00:00'
       description: Meter data.
-    LocationFuelItem:
-      required:
-      - resolution
-      - source
-      type: object
-      properties:
-        resolution:
-          minLength: 1
-          type: string
-          description: Energy data sampling resolution.
-          example: 15min
-        data_from:
-          type: string
-          description: Available from date.
-          format: date-time
-          nullable: true
-          example: '2021-01-01T00:00:00'
-        data_to:
-          type: string
-          description: Available to date.
-          format: date-time
-          nullable: true
-          example: '2021-03-01T00:00:00'
-        source:
-          $ref: '#/components/schemas/FuelSource'
-        sync_status:
-          $ref: '#/components/schemas/SyncStatus'
-      description: General data about a fuel item.
-    LocationFuels:
-      type: object
-      properties:
-        elec:
-          $ref: '#/components/schemas/LocationFuel'
-        gas:
-          $ref: '#/components/schemas/LocationFuel'
-        district_heating:
-          $ref: '#/components/schemas/LocationFuel'
-      description: Available fuel data
     Error:
       type: object
       properties:
@@ -757,6 +754,44 @@ components:
           nullable: true
           example: Internal server error, please try again later. If problem remains, please contact support.
       description: Model returned for error responses.
+    Consent:
+      type: object
+      x-examples:
+        example-1:
+          version_id: f2283b35-c2c7-4a4f-90f4-49e493c69d7
+          name: terms_and_conditions
+          type: login_consent
+          given_consent: false
+          is_updated: true
+          is_mandatory: true
+          timestamp: '2022-06-28T13:54:43.369558Z'
+          language_code: en-GB
+          data:
+            url: https://your-website-url.com/terms-and-conditions
+      properties:
+        version_id:
+          type: string
+        name:
+          type: string
+        type:
+          type: string
+        given_consent:
+          type: boolean
+        is_updated:
+          type: boolean
+        is_mandatory:
+          type: boolean
+        timestamp:
+          type: string
+        language_code:
+          type: string
+        data:
+          type: object
+          properties:
+            url:
+              type: string
+              description: Nullable, such as the terms and conditions page on a website, etc.
+      examples: []
     FuelSource:
       enum:
       - smart_meter
@@ -765,84 +800,6 @@ components:
       - pv_disagg
       type: string
       description: Source of fuel data.
-    LocationFuel:
-      type: object
-      properties:
-        import:
-          $ref: '#/components/schemas/LocationFuelItem'
-        export:
-          $ref: '#/components/schemas/LocationFuelItem'
-        consumption:
-          $ref: '#/components/schemas/LocationFuelItem'
-        production:
-          $ref: '#/components/schemas/LocationFuelItem'
-      description: Fuel data
-    SyncStatus:
-      enum:
-      - ok
-      - waiting_for_data
-      type: string
-      description: Data synchronization status.
-    UserNotification:
-      type: object
-      properties:
-        id:
-          type: integer
-          format: int64
-        header:
-          type: string
-          nullable: true
-        content:
-          type: string
-          nullable: true
-        read:
-          type: boolean
-          nullable: true
-        created_date:
-          type: string
-          format: date-time
-          nullable: true
-        event:
-          $ref: '#/components/schemas/Event'
-    Location:
-      required:
-      - address
-      - ext_ref
-      - fuels
-      - id
-      - meters
-      - timezone
-      type: object
-      properties:
-        id:
-          type: integer
-          description: ID
-          format: int32
-          example: 150
-        name:
-          type: string
-          description: Name
-          nullable: true
-          example: My Location
-        ext_ref:
-          minLength: 1
-          type: string
-          description: External (utility) reference.
-        timezone:
-          minLength: 1
-          type: string
-          description: Iana timezone
-          example: Europe/Berlin
-        address:
-          $ref: '#/components/schemas/Address'
-        fuels:
-          $ref: '#/components/schemas/LocationFuels'
-        meters:
-          type: array
-          items:
-            $ref: '#/components/schemas/LocationMeter'
-          description: Meters present at a location.
-      description: Location data.
     Address:
       required:
       - country_code
@@ -882,6 +839,49 @@ components:
           nullable: true
           example: 59.3257
       description: General address data including latitude and longitude.
+    UserNotification:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+        header:
+          type: string
+          nullable: true
+        content:
+          type: string
+          nullable: true
+        read:
+          type: boolean
+          nullable: true
+        created_date:
+          type: string
+          format: date-time
+          nullable: true
+        event:
+          $ref: '#/components/schemas/Event'
+    LocationFuels:
+      type: object
+      properties:
+        elec:
+          $ref: '#/components/schemas/LocationFuel'
+        gas:
+          $ref: '#/components/schemas/LocationFuel'
+        district_heating:
+          $ref: '#/components/schemas/LocationFuel'
+      description: Available fuel data
+    LocationFuel:
+      type: object
+      properties:
+        import:
+          $ref: '#/components/schemas/LocationFuelItem'
+        export:
+          $ref: '#/components/schemas/LocationFuelItem'
+        consumption:
+          $ref: '#/components/schemas/LocationFuelItem'
+        production:
+          $ref: '#/components/schemas/LocationFuelItem'
+      description: Fuel data
   securitySchemes:
     BearerAuth:
       type: http

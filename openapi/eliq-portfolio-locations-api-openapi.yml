@@ -228,6 +228,20 @@ paths:
                     request_id: 65e2ea86-470f-4363-9295-35d6b473981a
 components:
   schemas:
+    PortfolioLocation:
+      required:
+      - name
+      type: object
+      properties:
+        id:
+          type:
+          - string
+          - 'null'
+        name:
+          minLength: 1
+          type: string
+        created_at_utc:
+          type: string
     ErrorDetails:
       required:
       - code
@@ -244,20 +258,6 @@ components:
           type:
           - string
           - 'null'
-    PortfolioLocation:
-      required:
-      - name
-      type: object
-      properties:
-        id:
-          type:
-          - string
-          - 'null'
-        name:
-          minLength: 1
-          type: string
-        created_at_utc:
-          type: string
 x-tagGroups:
 - name: Users
   tags:

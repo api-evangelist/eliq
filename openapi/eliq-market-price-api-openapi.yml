@@ -608,11 +608,19 @@ paths:
                     description: Spot price region not found
 components:
   schemas:
-    MarketPriceResolution:
-      enum:
-      - day
-      - month
-      type: string
+    MarketPriceElementDto:
+      required:
+      - period_start
+      - price_kwh
+      type: object
+      properties:
+        period_start:
+          type: string
+          description: Market price period start
+        price_kwh:
+          type: number
+          description: Market price during period per kwh
+          format: double
     MarketPriceSummaryElementDto:
       required:
       - avg_price_kwh
@@ -641,6 +649,11 @@ components:
           items:
             $ref: '#/components/schemas/MarketPriceElementDto'
           description: All summary period prices
+    MarketPriceResolution:
+      enum:
+      - day
+      - month
+      type: string
     MarketPriceResponseDto:
       required:
       - currency
@@ -703,25 +716,6 @@ components:
           nullable: true
           example: Internal server error, please try again later. If problem remains, please contact support.
       description: Model returned for error responses.
-    PriceLevel:
-      enum:
-      - low
-      - medium
-      - high
-      type: string
-    MarketPriceElementDto:
-      required:
-      - period_start
-      - price_kwh
-      type: object
-      properties:
-        period_start:
-          type: string
-          description: Market price period start
-        price_kwh:
-          type: number
-          description: Market price during period per kwh
-          format: double
     MarketPriceSummaryDto:
       required:
       - currency
@@ -748,6 +742,12 @@ components:
           items:
             $ref: '#/components/schemas/MarketPriceSummaryElementDto'
           description: Values in the specified resolution. The size always matches the number of periods between from and to in the given resolution. Collection may contain null entries for periods with no data.
+    PriceLevel:
+      enum:
+      - low
+      - medium
+      - high
+      type: string
   securitySchemes:
     BearerAuth:
       type: http

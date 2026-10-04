@@ -355,13 +355,6 @@ paths:
                     description: Internal server error, please try again later. If problem remains, please contact support.
 components:
   schemas:
-    EucAccuracy:
-      enum:
-      - high
-      - medium
-      - low
-      type: string
-      description: Result data accuracy
     EucCategoryResultModel:
       required:
       - category
@@ -387,6 +380,13 @@ components:
           format: double
           example: 10.48
       description: Energy usage by category
+    EucAccuracy:
+      enum:
+      - high
+      - medium
+      - low
+      type: string
+      description: Result data accuracy
     EUC:
       required:
       - accuracy

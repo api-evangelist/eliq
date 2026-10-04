@@ -496,54 +496,6 @@ components:
         statusCode:
           type: integer
           format: int32
-    LocationAddress:
-      type: object
-      properties:
-        street_address:
-          type:
-          - string
-          - 'null'
-        postal_code:
-          type:
-          - string
-          - 'null'
-        city:
-          type:
-          - string
-          - 'null'
-        country_code:
-          type:
-          - string
-          - 'null'
-    LocationGeo:
-      type: object
-      properties:
-        latitude:
-          type:
-          - number
-          - 'null'
-          format: double
-        longitude:
-          type:
-          - number
-          - 'null'
-          format: double
-    ErrorDetails:
-      required:
-      - code
-      - description
-      type: object
-      properties:
-        code:
-          minLength: 1
-          type: string
-        description:
-          minLength: 1
-          type: string
-        request_id:
-          type:
-          - string
-          - 'null'
     Location:
       type: object
       properties:
@@ -646,12 +598,60 @@ components:
           type:
           - string
           - 'null'
+    ErrorDetails:
+      required:
+      - code
+      - description
+      type: object
+      properties:
+        code:
+          minLength: 1
+          type: string
+        description:
+          minLength: 1
+          type: string
+        request_id:
+          type:
+          - string
+          - 'null'
+    LocationAddress:
+      type: object
+      properties:
+        street_address:
+          type:
+          - string
+          - 'null'
+        postal_code:
+          type:
+          - string
+          - 'null'
+        city:
+          type:
+          - string
+          - 'null'
+        country_code:
+          type:
+          - string
+          - 'null'
     ProfileType:
       enum:
       - residential
       - business
       - undefined
       type: string
+    LocationGeo:
+      type: object
+      properties:
+        latitude:
+          type:
+          - number
+          - 'null'
+          format: double
+        longitude:
+          type:
+          - number
+          - 'null'
+          format: double
 x-tagGroups:
 - name: Users
   tags:

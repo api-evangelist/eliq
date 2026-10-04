@@ -360,6 +360,12 @@ paths:
       deprecated: true
 components:
   schemas:
+    NoContentResult:
+      type: object
+      properties:
+        statusCode:
+          type: integer
+          format: int32
     HomeProfileProperty:
       type: object
       properties:
@@ -369,14 +375,24 @@ components:
           - 'null'
         value: {}
         value_type: {}
-    IOutputFormatter:
-      type: object
-    NoContentResult:
+    ErrorDetails:
+      required:
+      - code
+      - description
       type: object
       properties:
-        statusCode:
-          type: integer
-          format: int32
+        code:
+          minLength: 1
+          type: string
+        description:
+          minLength: 1
+          type: string
+        request_id:
+          type:
+          - string
+          - 'null'
+    IOutputFormatter:
+      type: object
     OkObjectResult:
       type: object
       properties:
@@ -402,22 +418,6 @@ components:
           - integer
           - 'null'
           format: int32
-    ErrorDetails:
-      required:
-      - code
-      - description
-      type: object
-      properties:
-        code:
-          minLength: 1
-          type: string
-        description:
-          minLength: 1
-          type: string
-        request_id:
-          type:
-          - string
-          - 'null'
 x-tagGroups:
 - name: Users
   tags:

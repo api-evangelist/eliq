@@ -465,50 +465,12 @@ paths:
                     request_id: 65e2ea86-470f-4363-9295-35d6b473981a
 components:
   schemas:
-    AcceptedResult:
+    NoContentResult:
       type: object
       properties:
-        location:
-          type:
-          - string
-          - 'null'
-        value: {}
-        formatters:
-          type:
-          - array
-          - 'null'
-          items:
-            $ref: '#/components/schemas/IOutputFormatter'
-        contentTypes:
-          type:
-          - array
-          - 'null'
-          items:
-            type: string
-        declaredType:
-          type:
-          - string
-          - 'null'
         statusCode:
-          type:
-          - integer
-          - 'null'
+          type: integer
           format: int32
-    NotificationDto:
-      type: object
-      properties:
-        type:
-          $ref: '#/components/schemas/NotificationType'
-        header:
-          type:
-          - string
-          - 'null'
-        content:
-          type:
-          - string
-          - 'null'
-        link:
-          $ref: '#/components/schemas/DtoLink'
     User:
       type: object
       properties:
@@ -548,19 +510,6 @@ components:
           type:
           - string
           - 'null'
-    IOutputFormatter:
-      type: object
-    NoContentResult:
-      type: object
-      properties:
-        statusCode:
-          type: integer
-          format: int32
-    NotificationType:
-      enum:
-      - unknown
-      - custom
-      type: string
     DtoLink:
       type: object
       properties:
@@ -574,59 +523,35 @@ components:
           - 'null'
         target:
           $ref: '#/components/schemas/DtoLinkTarget'
-    LocationAddress:
+    AcceptedResult:
       type: object
       properties:
-        street_address:
+        location:
           type:
           - string
           - 'null'
-        postal_code:
+        value: {}
+        formatters:
+          type:
+          - array
+          - 'null'
+          items:
+            $ref: '#/components/schemas/IOutputFormatter'
+        contentTypes:
+          type:
+          - array
+          - 'null'
+          items:
+            type: string
+        declaredType:
           type:
           - string
           - 'null'
-        city:
+        statusCode:
           type:
-          - string
+          - integer
           - 'null'
-        country_code:
-          type:
-          - string
-          - 'null'
-    LocationGeo:
-      type: object
-      properties:
-        latitude:
-          type:
-          - number
-          - 'null'
-          format: double
-        longitude:
-          type:
-          - number
-          - 'null'
-          format: double
-    DtoLinkTarget:
-      enum:
-      - webview
-      - browser
-      type: string
-    ErrorDetails:
-      required:
-      - code
-      - description
-      type: object
-      properties:
-        code:
-          minLength: 1
-          type: string
-        description:
-          minLength: 1
-          type: string
-        request_id:
-          type:
-          - string
-          - 'null'
+          format: int32
     Location:
       type: object
       properties:
@@ -668,6 +593,27 @@ components:
           - 'null'
         location_profile_type:
           $ref: '#/components/schemas/ProfileType'
+    DtoLinkTarget:
+      enum:
+      - webview
+      - browser
+      type: string
+    ErrorDetails:
+      required:
+      - code
+      - description
+      type: object
+      properties:
+        code:
+          minLength: 1
+          type: string
+        description:
+          minLength: 1
+          type: string
+        request_id:
+          type:
+          - string
+          - 'null'
     Meter:
       type: object
       properties:
@@ -729,12 +675,66 @@ components:
           type:
           - string
           - 'null'
+    NotificationDto:
+      type: object
+      properties:
+        type:
+          $ref: '#/components/schemas/NotificationType'
+        header:
+          type:
+          - string
+          - 'null'
+        content:
+          type:
+          - string
+          - 'null'
+        link:
+          $ref: '#/components/schemas/DtoLink'
+    LocationAddress:
+      type: object
+      properties:
+        street_address:
+          type:
+          - string
+          - 'null'
+        postal_code:
+          type:
+          - string
+          - 'null'
+        city:
+          type:
+          - string
+          - 'null'
+        country_code:
+          type:
+          - string
+          - 'null'
+    NotificationType:
+      enum:
+      - unknown
+      - custom
+      type: string
+    IOutputFormatter:
+      type: object
     ProfileType:
       enum:
       - residential
       - business
       - undefined
       type: string
+    LocationGeo:
+      type: object
+      properties:
+        latitude:
+          type:
+          - number
+          - 'null'
+          format: double
+        longitude:
+          type:
+          - number
+          - 'null'
+          format: double
 x-tagGroups:
 - name: Users
   tags:

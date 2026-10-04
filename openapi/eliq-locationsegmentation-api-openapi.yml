@@ -199,15 +199,37 @@ paths:
       x-operation-id-source: derived
 components:
   schemas:
-    FilterRequest:
+    TariffCount:
       type: object
       properties:
-        filters:
+        tariffId:
           type:
-          - array
+          - string
           - 'null'
-          items:
-            $ref: '#/components/schemas/FilterRequestAsset'
+        count:
+          type: integer
+          format: int32
+      additionalProperties: false
+    PvDetails:
+      type: object
+      properties:
+        estimatedProductionKwh:
+          type:
+          - number
+          - 'null'
+          format: double
+        selfConsumptionPercentage:
+          type:
+          - number
+          - 'null'
+          format: double
+        detectionSource:
+          $ref: '#/components/schemas/PvDetectionSource'
+        confidence:
+          type:
+          - number
+          - 'null'
+          format: double
       additionalProperties: false
     TariffSummary:
       type: object
@@ -227,34 +249,111 @@ components:
           type: number
           format: double
       additionalProperties: false
-    MapSegmentationResponseDto:
+    Summary:
       type: object
       properties:
-        locations:
+        totalLocations:
+          type: integer
+          format: int64
+        filteredLocations:
+          type: integer
+          format: int64
+        optimalTariffs:
           type:
           - array
           - 'null'
           items:
-            $ref: '#/components/schemas/MapLocationDto'
+            $ref: '#/components/schemas/TariffCount'
+        electricVehicles:
+          type: integer
+          format: int64
+        pv:
+          type: integer
+          format: int64
+        gasHeating:
+          type: integer
+          format: int64
+        elecHeating:
+          type: integer
+          format: int64
+        battery:
+          type: integer
+          format: int64
       additionalProperties: false
-    PvDetectionSource:
-      enum:
-      - disaggregation
-      - import_regression
-      type: string
-    Assets:
+    Tariffs:
       type: object
       properties:
-        electricVehicle:
-          $ref: '#/components/schemas/ElectricVehicle'
-        tariff:
-          $ref: '#/components/schemas/Tariffs'
-        pvDetails:
-          $ref: '#/components/schemas/PvDetails'
-        heatingDetails:
-          $ref: '#/components/schemas/HeatingDetails'
-        battery:
-          $ref: '#/components/schemas/Battery'
+        optimalTariff:
+          $ref: '#/components/schemas/TariffSummary'
+      additionalProperties: false
+    Battery:
+      type: object
+      properties:
+        score:
+          type: number
+          format: double
+      additionalProperties: false
+    FilterRequestAsset:
+      required:
+      - asset
+      type: object
+      properties:
+        asset:
+          $ref: '#/components/schemas/AssetKind'
+        exists:
+          type: boolean
+        properties:
+          type:
+          - array
+          - 'null'
+          items:
+            $ref: '#/components/schemas/FilterRequestAssetProperty'
+      additionalProperties: false
+    FilterRequestAssetProperty:
+      type: object
+      properties:
+        field:
+          type:
+          - string
+          - 'null'
+        operator:
+          $ref: '#/components/schemas/Operator'
+        value:
+          $ref: '#/components/schemas/JsonNode'
+      additionalProperties: false
+    AssetKind:
+      enum:
+      - ElectricVehicle
+      - Tariff
+      - pv
+      - GasHeating
+      - ElecHeating
+      - battery
+      type: string
+    PagedFilterRequest:
+      type: object
+      properties:
+        paging:
+          $ref: '#/components/schemas/PagingRequest'
+        filters:
+          type:
+          - array
+          - 'null'
+          items:
+            $ref: '#/components/schemas/FilterRequestAsset'
+      additionalProperties: false
+    Paging:
+      type: object
+      properties:
+        currentPage:
+          type: integer
+          format: int32
+        pages:
+          type: integer
+          format: int32
+        pageSize:
+          type: integer
+          format: int32
       additionalProperties: false
     ErrorDetails:
       required:
@@ -268,6 +367,55 @@ components:
         description:
           minLength: 1
           type: string
+      additionalProperties: false
+    PagingRequest:
+      type: object
+      properties:
+        page:
+          type: integer
+          format: int32
+        pageSize:
+          type: integer
+          format: int32
+      additionalProperties: false
+    MapSegmentationResponseDto:
+      type: object
+      properties:
+        locations:
+          type:
+          - array
+          - 'null'
+          items:
+            $ref: '#/components/schemas/MapLocationDto'
+      additionalProperties: false
+    JsonNode:
+      type: object
+      properties:
+        options:
+          $ref: '#/components/schemas/JsonNodeOptions'
+        parent:
+          $ref: '#/components/schemas/JsonNode'
+        root:
+          $ref: '#/components/schemas/JsonNode'
+      additionalProperties: false
+    ElectricVehicle:
+      type: object
+      properties:
+        chargedKwh:
+          type: number
+          format: double
+        chargedPowerKw:
+          type:
+          - array
+          - 'null'
+          items:
+            type: number
+            format: double
+        confidence:
+          type:
+          - number
+          - 'null'
+          format: double
       additionalProperties: false
     FilterResponseItem:
       type: object
@@ -312,27 +460,94 @@ components:
           type: string
           format: date
       additionalProperties: false
-    PagingRequest:
+    PvDetectionSource:
+      enum:
+      - disaggregation
+      - import_regression
+      type: string
+    ExportJob:
       type: object
       properties:
-        page:
-          type: integer
-          format: int32
-        pageSize:
-          type: integer
-          format: int32
+        id:
+          type: string
+          format: uuid
+        status:
+          $ref: '#/components/schemas/ExportJobStatus'
       additionalProperties: false
-    JsonNodeOptions:
+    ExportJobStatus:
+      enum:
+      - Created
+      - Pending
+      - Complete
+      - Failed
+      type: string
+    HeatingDetails:
       type: object
       properties:
-        propertyNameCaseInsensitive:
-          type: boolean
+        estimatedGasHeatingKwh:
+          type:
+          - number
+          - 'null'
+          format: double
+        estimatedElecHeatingKwh:
+          type:
+          - number
+          - 'null'
+          format: double
+        primaryHeatingFuel:
+          type:
+          - string
+          - 'null'
+        otherHeatingFuels:
+          $ref: '#/components/schemas/HeatingFuelFlags'
       additionalProperties: false
-    Tariffs:
+    TariffFilterOptions:
       type: object
       properties:
-        optimalTariff:
-          $ref: '#/components/schemas/TariffSummary'
+        tariffId:
+          type:
+          - string
+          - 'null'
+        tariffName:
+          type:
+          - string
+          - 'null'
+      additionalProperties: false
+    FilterRequest:
+      type: object
+      properties:
+        filters:
+          type:
+          - array
+          - 'null'
+          items:
+            $ref: '#/components/schemas/FilterRequestAsset'
+      additionalProperties: false
+    FilterResponse:
+      type: object
+      properties:
+        summary:
+          $ref: '#/components/schemas/Summary'
+        locations:
+          type:
+          - array
+          - 'null'
+          items:
+            $ref: '#/components/schemas/FilterResponseItem'
+        paging:
+          $ref: '#/components/schemas/Paging'
+      additionalProperties: false
+    HeatingFuelFlags:
+      type: object
+      properties:
+        elec:
+          type:
+          - boolean
+          - 'null'
+        gas:
+          type:
+          - boolean
+          - 'null'
       additionalProperties: false
     MapLocationDto:
       type: object
@@ -357,105 +572,6 @@ components:
           type: number
           format: double
       additionalProperties: false
-    FilterRequestAssetProperty:
-      type: object
-      properties:
-        field:
-          type:
-          - string
-          - 'null'
-        operator:
-          $ref: '#/components/schemas/Operator'
-        value:
-          $ref: '#/components/schemas/JsonNode'
-      additionalProperties: false
-    ExportJobStatus:
-      enum:
-      - Created
-      - Pending
-      - Complete
-      - Failed
-      type: string
-    JsonNode:
-      type: object
-      properties:
-        options:
-          $ref: '#/components/schemas/JsonNodeOptions'
-        parent:
-          $ref: '#/components/schemas/JsonNode'
-        root:
-          $ref: '#/components/schemas/JsonNode'
-      additionalProperties: false
-    FilterResponse:
-      type: object
-      properties:
-        summary:
-          $ref: '#/components/schemas/Summary'
-        locations:
-          type:
-          - array
-          - 'null'
-          items:
-            $ref: '#/components/schemas/FilterResponseItem'
-        paging:
-          $ref: '#/components/schemas/Paging'
-      additionalProperties: false
-    ElectricVehicle:
-      type: object
-      properties:
-        chargedKwh:
-          type: number
-          format: double
-        chargedPowerKw:
-          type:
-          - array
-          - 'null'
-          items:
-            type: number
-            format: double
-        confidence:
-          type:
-          - number
-          - 'null'
-          format: double
-      additionalProperties: false
-    HeatingFuelFlags:
-      type: object
-      properties:
-        elec:
-          type:
-          - boolean
-          - 'null'
-        gas:
-          type:
-          - boolean
-          - 'null'
-      additionalProperties: false
-    Paging:
-      type: object
-      properties:
-        currentPage:
-          type: integer
-          format: int32
-        pages:
-          type: integer
-          format: int32
-        pageSize:
-          type: integer
-          format: int32
-      additionalProperties: false
-    TariffFilterOptions:
-      type: object
-      properties:
-        tariffId:
-          type:
-          - string
-          - 'null'
-        tariffName:
-          type:
-          - string
-          - 'null'
-      additionalProperties: false
     Operator:
       enum:
       - eq
@@ -465,142 +581,26 @@ components:
       - gte
       - lte
       type: string
-    ExportJob:
+    JsonNodeOptions:
       type: object
       properties:
-        id:
-          type: string
-          format: uuid
-        status:
-          $ref: '#/components/schemas/ExportJobStatus'
-      additionalProperties: false
-    Battery:
-      type: object
-      properties:
-        score:
-          type: number
-          format: double
-      additionalProperties: false
-    PvDetails:
-      type: object
-      properties:
-        estimatedProductionKwh:
-          type:
-          - number
-          - 'null'
-          format: double
-        selfConsumptionPercentage:
-          type:
-          - number
-          - 'null'
-          format: double
-        detectionSource:
-          $ref: '#/components/schemas/PvDetectionSource'
-        confidence:
-          type:
-          - number
-          - 'null'
-          format: double
-      additionalProperties: false
-    TariffCount:
-      type: object
-      properties:
-        tariffId:
-          type:
-          - string
-          - 'null'
-        count:
-          type: integer
-          format: int32
-      additionalProperties: false
-    HeatingDetails:
-      type: object
-      properties:
-        estimatedGasHeatingKwh:
-          type:
-          - number
-          - 'null'
-          format: double
-        estimatedElecHeatingKwh:
-          type:
-          - number
-          - 'null'
-          format: double
-        primaryHeatingFuel:
-          type:
-          - string
-          - 'null'
-        otherHeatingFuels:
-          $ref: '#/components/schemas/HeatingFuelFlags'
-      additionalProperties: false
-    FilterRequestAsset:
-      required:
-      - asset
-      type: object
-      properties:
-        asset:
-          $ref: '#/components/schemas/AssetKind'
-        exists:
+        propertyNameCaseInsensitive:
           type: boolean
-        properties:
-          type:
-          - array
-          - 'null'
-          items:
-            $ref: '#/components/schemas/FilterRequestAssetProperty'
       additionalProperties: false
-    PagedFilterRequest:
+    Assets:
       type: object
       properties:
-        paging:
-          $ref: '#/components/schemas/PagingRequest'
-        filters:
-          type:
-          - array
-          - 'null'
-          items:
-            $ref: '#/components/schemas/FilterRequestAsset'
-      additionalProperties: false
-    Summary:
-      type: object
-      properties:
-        totalLocations:
-          type: integer
-          format: int64
-        filteredLocations:
-          type: integer
-          format: int64
-        optimalTariffs:
-          type:
-          - array
-          - 'null'
-          items:
-            $ref: '#/components/schemas/TariffCount'
-        electricVehicles:
-          type: integer
-          format: int64
-        pv:
-          type: integer
-          format: int64
-        gasHeating:
-          type: integer
-          format: int64
-        elecHeating:
-          type: integer
-          format: int64
+        electricVehicle:
+          $ref: '#/components/schemas/ElectricVehicle'
+        tariff:
+          $ref: '#/components/schemas/Tariffs'
+        pvDetails:
+          $ref: '#/components/schemas/PvDetails'
+        heatingDetails:
+          $ref: '#/components/schemas/HeatingDetails'
         battery:
-          type: integer
-          format: int64
+          $ref: '#/components/schemas/Battery'
       additionalProperties: false
-    AssetKind:
-      enum:
-      - ElectricVehicle
-      - Tariff
-      - pv
-      - GasHeating
-      - ElecHeating
-      - battery
-      type: string
   securitySchemes:
     Bearer:
       type: http

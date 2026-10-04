@@ -670,6 +670,23 @@ paths:
                     request_id: 65e2ea86-470f-4363-9295-35d6b473981a
 components:
   schemas:
+    FileRowError:
+      type: object
+      properties:
+        code:
+          type:
+          - string
+          - 'null'
+        description:
+          type:
+          - string
+          - 'null'
+    JobType:
+      enum:
+      - import
+      - export
+      - multi-file
+      type: string
     JobEntry:
       type: object
       properties:
@@ -723,28 +740,6 @@ components:
           $ref: '#/components/schemas/FileRowError'
         result: {}
         input: {}
-    JobEntryStateType:
-      enum:
-      - received
-      - queued
-      - processing
-      - failed
-      - completed
-      - canceled
-      type: string
-    JobType:
-      enum:
-      - import
-      - export
-      - multi-file
-      type: string
-    JobOperationType:
-      enum:
-      - upsert
-      - delete
-      - export
-      - multi-file-export
-      type: string
     ErrorDetails:
       required:
       - code
@@ -761,17 +756,15 @@ components:
           type:
           - string
           - 'null'
-    FileRowError:
-      type: object
-      properties:
-        code:
-          type:
-          - string
-          - 'null'
-        description:
-          type:
-          - string
-          - 'null'
+    JobEntryStateType:
+      enum:
+      - received
+      - queued
+      - processing
+      - failed
+      - completed
+      - canceled
+      type: string
     JobFailedRow:
       type: object
       properties:
@@ -788,6 +781,13 @@ components:
           type:
           - string
           - 'null'
+    JobOperationType:
+      enum:
+      - upsert
+      - delete
+      - export
+      - multi-file-export
+      type: string
 x-tagGroups:
 - name: Users
   tags:

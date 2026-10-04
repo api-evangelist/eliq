@@ -493,6 +493,24 @@ paths:
                     request_id: 65e2ea86-470f-4363-9295-35d6b473981a
 components:
   schemas:
+    NoContentResult:
+      type: object
+      properties:
+        statusCode:
+          type: integer
+          format: int32
+    NonSmartRegisterDto:
+      type: object
+      properties:
+        id:
+          type:
+          - string
+          - 'null'
+        index:
+          type:
+          - integer
+          - 'null'
+          format: int32
     ErrorDetails:
       required:
       - code
@@ -509,18 +527,6 @@ components:
           type:
           - string
           - 'null'
-    NonSmartRegisterDto:
-      type: object
-      properties:
-        id:
-          type:
-          - string
-          - 'null'
-        index:
-          type:
-          - integer
-          - 'null'
-          format: int32
     NonSmartMeterReadDto:
       type: object
       properties:
@@ -550,12 +556,6 @@ components:
           - 'null'
           items:
             $ref: '#/components/schemas/NonSmartRegisterDto'
-    NoContentResult:
-      type: object
-      properties:
-        statusCode:
-          type: integer
-          format: int32
 x-tagGroups:
 - name: Users
   tags:

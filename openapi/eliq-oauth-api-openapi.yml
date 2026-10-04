@@ -205,41 +205,6 @@ paths:
       - OAuth
 components:
   schemas:
-    token-response:
-      title: Token response
-      description: Response returned on successful token creation.
-      type: object
-      required:
-      - access_token
-      - token_type
-      - expires_in
-      properties:
-        access_token:
-          type: string
-          description: The issued JWT access token.
-          example: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c
-        token_type:
-          type: string
-          description: Always `Bearer`.
-          example: Bearer
-        expires_in:
-          type: number
-          description: Seconds until the access token expires.
-          example: 3600
-        refresh_token:
-          type: string
-          description: 'A refresh token for obtaining a new access token. Only present in delegated token responses
-
-            when a refresh token was requested and approved.'
-          example: eliq_rt_RGjWlUx0s3yursEPHSf3Sg36bb1UqbasJ85QoCt0XyxW2oinIfNnbvlirs2u6L-z70CN0zQwJJ1psdVEUD2R-w
-        refresh_token_expires_in:
-          type: number
-          description: Seconds until the refresh token expires. Only present when `refresh_token` is included.
-          example: 2592000
-      examples:
-      - access_token: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c
-        token_type: Bearer
-        expires_in: 3600
     token-request:
       title: Token request
       type: object
@@ -310,3 +275,38 @@ components:
         client_id: utility-acme-backend
         client_secret: eliq_Hcjr4OLI91flAP-o8e4G5-W1nwDxg8PjSCIfHo2cgMo
         aud: data-management-api
+    token-response:
+      title: Token response
+      description: Response returned on successful token creation.
+      type: object
+      required:
+      - access_token
+      - token_type
+      - expires_in
+      properties:
+        access_token:
+          type: string
+          description: The issued JWT access token.
+          example: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c
+        token_type:
+          type: string
+          description: Always `Bearer`.
+          example: Bearer
+        expires_in:
+          type: number
+          description: Seconds until the access token expires.
+          example: 3600
+        refresh_token:
+          type: string
+          description: 'A refresh token for obtaining a new access token. Only present in delegated token responses
+
+            when a refresh token was requested and approved.'
+          example: eliq_rt_RGjWlUx0s3yursEPHSf3Sg36bb1UqbasJ85QoCt0XyxW2oinIfNnbvlirs2u6L-z70CN0zQwJJ1psdVEUD2R-w
+        refresh_token_expires_in:
+          type: number
+          description: Seconds until the refresh token expires. Only present when `refresh_token` is included.
+          example: 2592000
+      examples:
+      - access_token: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c
+        token_type: Bearer
+        expires_in: 3600

@@ -456,170 +456,40 @@ components:
         - op
         - path
         - value
-    HomeProfileOption:
-      description: 'A home profile option is the option that can be set. A home profile option may have different data types, ''single_select'', ''multiple_select'' or ''number''. The available properties in the object will change depending on this data type, which is described more in the model. '
+    Error:
       type: object
-      x-examples:
-        example-1:
-          key: house_type
-          data_type: single_select
-          is_required: true
-          possible_values:
-          - value: apartment
-            developer_description: Apartment
-          - value: house
-            developer_description: House
-          - value: semi_detached
-            developer_description: House - semi detached
-          - value: holiday_home
-            developer_description: Holiday home / summer house
-          - value: townhouse
-            developer_description: House - townhouse
-          - value: other
-            developer_description: Other
-          tags:
-          - required_for_euc_to_work
-          - required_for_sh_to_work
-          developer_description: Type of dwelling
-      examples:
-      - key: house_type
-        data_type: single_select
-        is_required: false
-        value: apartment
-        possible_values:
-        - value: house
-          developer_description: House
-        - value: apartment
-          developer_description: Apartment
-        tags:
-        - required_for_euc_to_work
-        - required_for_sh_to_work
-        developer_description: Type of dwelling
-      - key: electric_ovens
-        data_type: number
-        is_required: false
-        limits:
-          min: 0
-          max: 5
-          step: 1
-        tags: []
-        developer_description: Number of electric ovens
-      title: HomeprofileOptions
       properties:
-        key:
+        type:
           type: string
-          minLength: 1
-          example: house_type
-          description: 'Key of home profile. A home profile option is identified by key, hence, it is the value for the key which are updated when running patch
-
-            '
-        data_type:
+          description: Type of error.
+          nullable: true
+          example: internal_error
+        category:
           type: string
-          minLength: 1
-          enum:
-          - single_select
-          - multiple_select
-          - number
-          example: single_select
-          description: 'The data type of the home profile option. Eg. if ''single_select'', there will be several different choices, where one value should be taken (eg. house type).
-
-            '
-        value:
-          type:
-          - number
-          - string
-          - array
-          example: apartment
-          description: Selected value for the location. A number if data_type is ‘number’, string if ‘data_type’ is ‘single_select’ and list of strings if data_type is ‘multiple_select’. Null if no value has been set.
-          items:
-            type: string
-        possible_values:
-          type: array
-          uniqueItems: true
-          minItems: 1
-          description: 'Only present if data_type is ''single_select'' or ''multiple_select''. The possible values contains all the possible options that can be set. '
-          items:
-            type: object
-            properties:
-              value:
-                type: string
-                minLength: 1
-                example: apartment
-                description: Value for the possible value. To be provided in patch
-              developer_description:
-                type: string
-                description: A string that describes this value. Not meant to be displayed to the end user.
-                example: Air-air heat pump
-              name:
-                type: string
-                description: DEPRECATED!
-                deprecated: true
-              type:
-                type: string
-                description: DEPRECATED!
-                deprecated: true
-            required:
-            - value
-        limits:
-          type: object
-          description: 'Only present if data_type is ''number''. The limit object contains the minimum and maximum value that can be selected, and with what step. '
-          properties:
-            min:
-              type: number
-              example: 0
-              description: Minimum number. Usually 0
-            max:
-              type: number
-              example: 5
-              description: Maximum number
-            step:
-              type: number
-              example: 1
-              description: Minimum step. Eg. if home profile option is to select number of freezers, the user would increase/decrease the amount of freezers with 1.
-        dependent_properties:
-          type: array
-          uniqueItems: true
-          minItems: 1
-          description: Only present if a dependent property has been configured. Used to indicated if an option should be shown or not given previous choices.
-          items:
-            type: object
-            properties:
-              property:
-                type: string
-                example: properties/house_type
-                description: The name of the dependent property.
-              accepted_values:
-                type: array
-                uniqueItems: true
-                minItems: 1
-                description: The list of the values that are accepted for the dependent property.
-                items:
-                  type: string
-        tags:
-          type: array
-          uniqueItems: true
-          description: An array of tags. Currently used tags are `required_for_euc_to_work` and `required_for_sh_to_work`.
-          items:
-            type: string
-          example:
-          - required_for_euc_to_work
-          - required_for_sh_to_work
-        developer_description:
+          description: Error category.
+          nullable: true
+          example: internal_error
+        code:
           type: string
-          description: A string that describes this option. Not meant to be displayed to the end user.
-          example: Size of heated living space in square meters
-        name:
+          description: Code describing the issue.
+          nullable: true
+          example: INTERNAL_ERROR
+        transaction_id:
           type: string
-          description: DEPRECATED!
-          deprecated: true
-        is_required:
-          type: boolean
-          default: false
-          description: DEPRECATED! Use tags instead. Whether the option is a field that is required for similar homes and breakdown.
-          deprecated: true
-      required:
-      - key
-      - data_type
+          description: Identifier for the session. Please provide this when contacting support.
+          nullable: true
+          example: 0HN18NN5QB401:00000001
+        message:
+          type: string
+          description: A message related to the error.
+          nullable: true
+          example: Something went wrong. Please try again later. If problem remains, please contact support.
+        description:
+          type: string
+          description: A description of the error for developers.
+          nullable: true
+          example: Internal server error, please try again later. If problem remains, please contact support.
+      description: Model returned for error responses.
     Homeprofile:
       description: "The home profile is describing the properties of a location, such as house type, heating system and other appliances. This information is later used in Eliq analytics. \n\nThe home profile root objects properties may be different in different countries (could be parsed as a dictionary). Hence, the result shown for the locations country may not match with the example provided below."
       type: object
@@ -897,40 +767,170 @@ components:
           type: array
           items:
             $ref: '#/components/schemas/HomeProfileOption'
-    Error:
+    HomeProfileOption:
+      description: 'A home profile option is the option that can be set. A home profile option may have different data types, ''single_select'', ''multiple_select'' or ''number''. The available properties in the object will change depending on this data type, which is described more in the model. '
       type: object
+      x-examples:
+        example-1:
+          key: house_type
+          data_type: single_select
+          is_required: true
+          possible_values:
+          - value: apartment
+            developer_description: Apartment
+          - value: house
+            developer_description: House
+          - value: semi_detached
+            developer_description: House - semi detached
+          - value: holiday_home
+            developer_description: Holiday home / summer house
+          - value: townhouse
+            developer_description: House - townhouse
+          - value: other
+            developer_description: Other
+          tags:
+          - required_for_euc_to_work
+          - required_for_sh_to_work
+          developer_description: Type of dwelling
+      examples:
+      - key: house_type
+        data_type: single_select
+        is_required: false
+        value: apartment
+        possible_values:
+        - value: house
+          developer_description: House
+        - value: apartment
+          developer_description: Apartment
+        tags:
+        - required_for_euc_to_work
+        - required_for_sh_to_work
+        developer_description: Type of dwelling
+      - key: electric_ovens
+        data_type: number
+        is_required: false
+        limits:
+          min: 0
+          max: 5
+          step: 1
+        tags: []
+        developer_description: Number of electric ovens
+      title: HomeprofileOptions
       properties:
-        type:
+        key:
           type: string
-          description: Type of error.
-          nullable: true
-          example: internal_error
-        category:
+          minLength: 1
+          example: house_type
+          description: 'Key of home profile. A home profile option is identified by key, hence, it is the value for the key which are updated when running patch
+
+            '
+        data_type:
           type: string
-          description: Error category.
-          nullable: true
-          example: internal_error
-        code:
+          minLength: 1
+          enum:
+          - single_select
+          - multiple_select
+          - number
+          example: single_select
+          description: 'The data type of the home profile option. Eg. if ''single_select'', there will be several different choices, where one value should be taken (eg. house type).
+
+            '
+        value:
+          type:
+          - number
+          - string
+          - array
+          example: apartment
+          description: Selected value for the location. A number if data_type is ‘number’, string if ‘data_type’ is ‘single_select’ and list of strings if data_type is ‘multiple_select’. Null if no value has been set.
+          items:
+            type: string
+        possible_values:
+          type: array
+          uniqueItems: true
+          minItems: 1
+          description: 'Only present if data_type is ''single_select'' or ''multiple_select''. The possible values contains all the possible options that can be set. '
+          items:
+            type: object
+            properties:
+              value:
+                type: string
+                minLength: 1
+                example: apartment
+                description: Value for the possible value. To be provided in patch
+              developer_description:
+                type: string
+                description: A string that describes this value. Not meant to be displayed to the end user.
+                example: Air-air heat pump
+              name:
+                type: string
+                description: DEPRECATED!
+                deprecated: true
+              type:
+                type: string
+                description: DEPRECATED!
+                deprecated: true
+            required:
+            - value
+        limits:
+          type: object
+          description: 'Only present if data_type is ''number''. The limit object contains the minimum and maximum value that can be selected, and with what step. '
+          properties:
+            min:
+              type: number
+              example: 0
+              description: Minimum number. Usually 0
+            max:
+              type: number
+              example: 5
+              description: Maximum number
+            step:
+              type: number
+              example: 1
+              description: Minimum step. Eg. if home profile option is to select number of freezers, the user would increase/decrease the amount of freezers with 1.
+        dependent_properties:
+          type: array
+          uniqueItems: true
+          minItems: 1
+          description: Only present if a dependent property has been configured. Used to indicated if an option should be shown or not given previous choices.
+          items:
+            type: object
+            properties:
+              property:
+                type: string
+                example: properties/house_type
+                description: The name of the dependent property.
+              accepted_values:
+                type: array
+                uniqueItems: true
+                minItems: 1
+                description: The list of the values that are accepted for the dependent property.
+                items:
+                  type: string
+        tags:
+          type: array
+          uniqueItems: true
+          description: An array of tags. Currently used tags are `required_for_euc_to_work` and `required_for_sh_to_work`.
+          items:
+            type: string
+          example:
+          - required_for_euc_to_work
+          - required_for_sh_to_work
+        developer_description:
           type: string
-          description: Code describing the issue.
-          nullable: true
-          example: INTERNAL_ERROR
-        transaction_id:
+          description: A string that describes this option. Not meant to be displayed to the end user.
+          example: Size of heated living space in square meters
+        name:
           type: string
-          description: Identifier for the session. Please provide this when contacting support.
-          nullable: true
-          example: 0HN18NN5QB401:00000001
-        message:
-          type: string
-          description: A message related to the error.
-          nullable: true
-          example: Something went wrong. Please try again later. If problem remains, please contact support.
-        description:
-          type: string
-          description: A description of the error for developers.
-          nullable: true
-          example: Internal server error, please try again later. If problem remains, please contact support.
-      description: Model returned for error responses.
+          description: DEPRECATED!
+          deprecated: true
+        is_required:
+          type: boolean
+          default: false
+          description: DEPRECATED! Use tags instead. Whether the option is a field that is required for similar homes and breakdown.
+          deprecated: true
+      required:
+      - key
+      - data_type
   securitySchemes:
     BearerAuth:
       type: http

@@ -192,6 +192,52 @@ components:
           type: string
           example: https://connect.eliq.io/login?callbackUri={callback_uri}&linkOutCallbackUri={linkout_callback_uri}&ticketId={SSO_TICKET}
           description: Uri to redirect the user to
+    Connection:
+      type: object
+      x-examples:
+        example-1:
+          id: 20b4adc8-2ae9-4f99-b50d-af0933042f58
+          display_name: Connection display name
+          provider: provider_name
+          status: connected
+      description: ''
+      properties:
+        id:
+          type: string
+          description: Id of connection
+          example: 20b4adc8-2ae9-4f99-b50d-af0933042f58
+        display_name:
+          type: string
+          description: A display friendly name of the connection. Can be displayed to the end-user
+          example: Connection display name
+        provider:
+          type: string
+          description: What provider the connection belongs to. Please contact Eliq for list of possible values, this is specific per client.
+          example: provider_name
+        status:
+          type: string
+          description: Status of connection
+          enum:
+          - connected
+          - awaiting_confirmation
+          - disconnected
+          example: connected
+    ConnectionMetaData:
+      title: ConnectionMetaData
+      x-stoplight:
+        id: 8hppqt6r7illo
+      type: object
+      properties:
+        status:
+          type: string
+          description: Meta data status
+          enum:
+          - ok
+          - not_connected
+          - action_required
+          - awaiting_confirmation
+          - awaiting_first_data_sync
+          example: ok
     ConnectionEntity:
       type: object
       x-examples:
@@ -267,52 +313,6 @@ components:
               - string
               - 'null'
               example: '2022-06-05'
-    ConnectionMetaData:
-      title: ConnectionMetaData
-      x-stoplight:
-        id: 8hppqt6r7illo
-      type: object
-      properties:
-        status:
-          type: string
-          description: Meta data status
-          enum:
-          - ok
-          - not_connected
-          - action_required
-          - awaiting_confirmation
-          - awaiting_first_data_sync
-          example: ok
-    Connection:
-      type: object
-      x-examples:
-        example-1:
-          id: 20b4adc8-2ae9-4f99-b50d-af0933042f58
-          display_name: Connection display name
-          provider: provider_name
-          status: connected
-      description: ''
-      properties:
-        id:
-          type: string
-          description: Id of connection
-          example: 20b4adc8-2ae9-4f99-b50d-af0933042f58
-        display_name:
-          type: string
-          description: A display friendly name of the connection. Can be displayed to the end-user
-          example: Connection display name
-        provider:
-          type: string
-          description: What provider the connection belongs to. Please contact Eliq for list of possible values, this is specific per client.
-          example: provider_name
-        status:
-          type: string
-          description: Status of connection
-          enum:
-          - connected
-          - awaiting_confirmation
-          - disconnected
-          example: connected
   securitySchemes:
     BearerAuth:
       type: http

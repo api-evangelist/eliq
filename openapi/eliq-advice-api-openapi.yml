@@ -411,6 +411,24 @@ paths:
                     description: Error when getting estimated savings monetary sources
 components:
   schemas:
+    AdviceReturnOfInvestmentModel:
+      required:
+      - from
+      - to
+      - unit
+      type: object
+      properties:
+        unit:
+          $ref: '#/components/schemas/AdviceReturnOfInvestmentUnit'
+        from:
+          type: number
+          description: From value
+          format: double
+        to:
+          type: number
+          description: To value
+          format: double
+      description: Return of investment
     AdviceStatus:
       enum:
       - none
@@ -421,65 +439,28 @@ components:
       - already_implemented
       type: string
       description: This statuses are used to capture end user feedback and feed this information back to our algorithms as well as making it easy to build an UI. The status can be updated at any time.
-    Link:
+    AdviceLinkModel:
       required:
+      - key
       - text
-      - url
+      - type
       type: object
       properties:
+        key:
+          minLength: 1
+          type: string
+          description: The key by which the link is identified.
+        type:
+          $ref: '#/components/schemas/AdviceLinkType'
         text:
           minLength: 1
           type: string
-          description: Title provided for a given Web resource
-          example: Example Domain
+          description: The text to be displayed in the front end for this link.
         url:
-          minLength: 1
           type: string
-          description: System generated url that redirects to a given Web resource. Provided url uses anonymous authentication and is only valid for 30 minutes after its receival.
-          example: https://www.eliq.io/v3/locations/advice/redirect_url?adviceTrackingId=3f062710-d544-49b4-ac04-9ef14e3080b5
-      description: "Optional link can be included with each advice\n            \nDeprecated property, links should be used instead."
-    AdviceReturnOfInvestmentUnit:
-      enum:
-      - months
-      type: string
-      description: Return of investment unit
-    EstimatedSavings:
-      required:
-      - unit
-      - value
-      type: object
-      properties:
-        value:
-          type: number
-          description: The amount saved.
-          format: double
-        unit:
-          $ref: '#/components/schemas/EnergyUnit'
-      description: "The estimated energy savings in either kWh or M3 for a given advice.\n            \nUnit depends on whether the advice is intended for gas of electricity."
-    AdviceInvestmentCostModel:
-      type: object
-      properties:
-        fixed:
-          type: number
-          description: Fixed investment cost value
-          format: double
+          description: The actual URL of the link.
           nullable: true
-        range_from:
-          type: number
-          description: Investment cost range from value
-          format: double
-          nullable: true
-        range_to:
-          type: number
-          description: Investment cost range to value
-          format: double
-          nullable: true
-        roi:
-          type: array
-          items:
-            $ref: '#/components/schemas/AdviceReturnOfInvestmentModel'
-          nullable: true
-      description: Investment cost
+      description: Optional link which can be included with each advice
     AdviceType:
       enum:
       - energy_tip
@@ -509,12 +490,75 @@ components:
           format: double
           example: 0.27
       description: Savings monetary value
+    AdvicePatchInput:
+      required:
+      - op
+      - path
+      - value
+      type: object
+      properties:
+        op:
+          minLength: 1
+          type: string
+          description: 'Operation to execute
+
+
+            Allowed values: "replace"'
+          example: replace
+        path:
+          minLength: 1
+          type: string
+          description: 'Path to property to update
+
+
+            Allowed values: "/status"'
+          example: /status
+        value:
+          minLength: 1
+          type: string
+          description: "Status to set. \n\nAllowed values: \"none\", \"skipped\", \"not_relevant\", \"implemented\", \"save_for_later\", \"already_implemented\""
+          example: implemented
+      description: Advice status update request body
     FinancingOptionType:
       enum:
       - financing
       - subsidy
       type: string
       description: Financing option type
+    EnergyUnit:
+      enum:
+      - kwh
+      - m3
+      type: string
+    AdviceInvestmentCostModel:
+      type: object
+      properties:
+        fixed:
+          type: number
+          description: Fixed investment cost value
+          format: double
+          nullable: true
+        range_from:
+          type: number
+          description: Investment cost range from value
+          format: double
+          nullable: true
+        range_to:
+          type: number
+          description: Investment cost range to value
+          format: double
+          nullable: true
+        roi:
+          type: array
+          items:
+            $ref: '#/components/schemas/AdviceReturnOfInvestmentModel'
+          nullable: true
+      description: Investment cost
+    AdviceReturnOfInvestmentUnit:
+      enum:
+      - months
+      type: string
+      description: Return of investment unit
     Advice:
       required:
       - content
@@ -631,6 +675,36 @@ components:
           description: The EUC (energy usage category) keys related to specific advice.
           nullable: true
       description: Model containing advice information.
+    Link:
+      required:
+      - text
+      - url
+      type: object
+      properties:
+        text:
+          minLength: 1
+          type: string
+          description: Title provided for a given Web resource
+          example: Example Domain
+        url:
+          minLength: 1
+          type: string
+          description: System generated url that redirects to a given Web resource. Provided url uses anonymous authentication and is only valid for 30 minutes after its receival.
+          example: https://www.eliq.io/v3/locations/advice/redirect_url?adviceTrackingId=3f062710-d544-49b4-ac04-9ef14e3080b5
+      description: "Optional link can be included with each advice\n            \nDeprecated property, links should be used instead."
+    EstimatedSavings:
+      required:
+      - unit
+      - value
+      type: object
+      properties:
+        value:
+          type: number
+          description: The amount saved.
+          format: double
+        unit:
+          $ref: '#/components/schemas/EnergyUnit'
+      description: "The estimated energy savings in either kWh or M3 for a given advice.\n            \nUnit depends on whether the advice is intended for gas of electricity."
     Error:
       type: object
       properties:
@@ -665,12 +739,6 @@ components:
           nullable: true
           example: Internal server error, please try again later. If problem remains, please contact support.
       description: Model returned for error responses.
-    AdviceLinkType:
-      enum:
-      - image
-      - external-link
-      type: string
-      description: The type which can be set to an advice Link.
     SavingMonetarySource:
       required:
       - details
@@ -694,51 +762,12 @@ components:
           description: Savings source type details
           example: Savings based on average price
       description: Savings calculation source type
-    EnergyUnit:
+    AdviceLinkType:
       enum:
-      - kwh
-      - m3
+      - image
+      - external-link
       type: string
-    AdviceLinkModel:
-      required:
-      - key
-      - text
-      - type
-      type: object
-      properties:
-        key:
-          minLength: 1
-          type: string
-          description: The key by which the link is identified.
-        type:
-          $ref: '#/components/schemas/AdviceLinkType'
-        text:
-          minLength: 1
-          type: string
-          description: The text to be displayed in the front end for this link.
-        url:
-          type: string
-          description: The actual URL of the link.
-          nullable: true
-      description: Optional link which can be included with each advice
-    AdviceReturnOfInvestmentModel:
-      required:
-      - from
-      - to
-      - unit
-      type: object
-      properties:
-        unit:
-          $ref: '#/components/schemas/AdviceReturnOfInvestmentUnit'
-        from:
-          type: number
-          description: From value
-          format: double
-        to:
-          type: number
-          description: To value
-          format: double
-      description: Return of investment
+      description: The type which can be set to an advice Link.
     AdviceFinancingOptionModel:
       required:
       - description
@@ -768,35 +797,6 @@ components:
           type: string
           description: Url of an external Web resource
       description: Financing option
-    AdvicePatchInput:
-      required:
-      - op
-      - path
-      - value
-      type: object
-      properties:
-        op:
-          minLength: 1
-          type: string
-          description: 'Operation to execute
-
-
-            Allowed values: "replace"'
-          example: replace
-        path:
-          minLength: 1
-          type: string
-          description: 'Path to property to update
-
-
-            Allowed values: "/status"'
-          example: /status
-        value:
-          minLength: 1
-          type: string
-          description: "Status to set. \n\nAllowed values: \"none\", \"skipped\", \"not_relevant\", \"implemented\", \"save_for_later\", \"already_implemented\""
-          example: implemented
-      description: Advice status update request body
   securitySchemes:
     BearerAuth:
       type: http
