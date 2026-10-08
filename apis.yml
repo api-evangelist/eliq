@@ -1633,6 +1633,8 @@ apis:
   - type: APIReference
     url: https://developer.eliq.com/api-reference/intelligence-api
 common:
+- type: FinOps
+  url: finops/eliq-finops.yml
 - type: Overlay
   url: overlays/eliq-auth-api-overlay.yaml
 - type: Overlay
