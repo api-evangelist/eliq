@@ -142,26 +142,45 @@ paths:
                     description: Internal server error.
 components:
   schemas:
-    ChargeResolution:
+    PriceFormulaDirection:
       enum:
-      - day
-      - month
+      - import
+      - export
       type: string
-      description: Charge resolution
-    SpotPrice:
+      description: Direction type
+    MeterPriceFormula:
       type: object
       properties:
-        provider:
-          $ref: '#/components/schemas/SpotPriceProvider'
-        region:
+        meter_id:
           type: string
+          description: Meter id. Applicable only for price formulas set on a meter. Location level formulas which can be applied to multiple meters will have this field empty.
           nullable: true
-        resolution:
-          $ref: '#/components/schemas/SpotPriceResolution'
-        multiplier:
-          type: number
-          format: double
+        fuel:
+          $ref: '#/components/schemas/Fuel'
+        direction:
+          $ref: '#/components/schemas/PriceFormulaDirection'
+        from:
+          type: string
+          description: Price formula start date.
+          format: date-time
           nullable: true
+        to:
+          type: string
+          description: Price formula end date.
+          format: date-time
+          nullable: true
+        currency_code:
+          type: string
+          description: Price formula currency code.
+          nullable: true
+        elements_array:
+          type: array
+          items:
+            $ref: '#/components/schemas/Element'
+          description: List of elements
+          nullable: true
+        source:
+          $ref: '#/components/schemas/Source'
     UnitRateType:
       enum:
       - fixed
@@ -171,54 +190,15 @@ components:
       - spot_price
       type: string
       description: Unit rate type
-    Tou:
-      type: object
-      properties:
-        register_id:
-          type: string
-          nullable: true
-        unit_rate:
-          type: number
-          format: double
-          nullable: true
-        intervals:
-          type: array
-          items:
-            $ref: '#/components/schemas/Interval'
-          nullable: true
-        skip_intervals:
-          type: boolean
-          nullable: true
-    Block:
-      type: object
-      properties:
-        resolution:
-          $ref: '#/components/schemas/BlockResolution'
-        register_id:
-          type: string
-          nullable: true
-        unit_rate:
-          type: number
-          format: double
-        from_kwh:
-          type: integer
-          format: int64
-          nullable: true
-        to_kwh:
-          type: integer
-          format: int64
-          nullable: true
-        from_m3:
-          type: integer
-          format: int64
-          nullable: true
-        to_m3:
-          type: integer
-          format: int64
-          nullable: true
-    NordpoolResolution:
+    SpotPriceResolution:
       enum:
       - hour
+      - 15min
+      type: string
+    SpotPriceProvider:
+      enum:
+      - nordpool
+      - epex
       type: string
     Error:
       type: object
@@ -254,72 +234,24 @@ components:
           nullable: true
           example: Internal server error, please try again later. If problem remains, please contact support.
       description: Model returned for error responses.
-    Interval:
+    Tou:
       type: object
       properties:
-        from_minute:
-          type: integer
-          format: int64
-          nullable: true
-        to_minute:
-          type: integer
-          format: int64
-          nullable: true
-    PriceElementType:
-      enum:
-      - charge
-      - unit_rate
-      type: string
-      description: Formula element type.
-    MeterPriceFormula:
-      type: object
-      properties:
-        meter_id:
+        register_id:
           type: string
-          description: Meter id. Applicable only for price formulas set on a meter. Location level formulas which can be applied to multiple meters will have this field empty.
           nullable: true
-        fuel:
-          $ref: '#/components/schemas/Fuel'
-        direction:
-          $ref: '#/components/schemas/PriceFormulaDirection'
-        from:
-          type: string
-          description: Price formula start date.
-          format: date-time
+        unit_rate:
+          type: number
+          format: double
           nullable: true
-        to:
-          type: string
-          description: Price formula end date.
-          format: date-time
-          nullable: true
-        currency_code:
-          type: string
-          description: Price formula currency code.
-          nullable: true
-        elements_array:
+        intervals:
           type: array
           items:
-            $ref: '#/components/schemas/Element'
-          description: List of elements
+            $ref: '#/components/schemas/Interval'
           nullable: true
-        source:
-          $ref: '#/components/schemas/Source'
-    Element:
-      required:
-      - name
-      - type
-      type: object
-      properties:
-        name:
-          minLength: 1
-          type: string
-          description: Name of the price formula element
-        type:
-          $ref: '#/components/schemas/PriceElementType'
-        charge:
-          $ref: '#/components/schemas/Charge'
-        unit_rate:
-          $ref: '#/components/schemas/UnitRate'
+        skip_intervals:
+          type: boolean
+          nullable: true
     Nordpool:
       required:
       - region
@@ -338,21 +270,6 @@ components:
           format: double
           nullable: true
       description: Object containing Nordpool information. Available if unit rate type is set to nordpool
-    Fixed:
-      required:
-      - unit_rate
-      type: object
-      properties:
-        unit_rate:
-          type: number
-          description: Fixed unit rate
-          format: double
-      description: Object containing spot price information. Available if unit rate type is set to 'fixed'
-    SpotPriceProvider:
-      enum:
-      - nordpool
-      - epex
-      type: string
     Charge:
       required:
       - resolution
@@ -366,11 +283,91 @@ components:
           format: double
           nullable: true
       description: Object containing the charge. Available when type is set to charge.
-    SpotPriceResolution:
+    PriceElementType:
+      enum:
+      - charge
+      - unit_rate
+      type: string
+      description: Formula element type.
+    Fixed:
+      required:
+      - unit_rate
+      type: object
+      properties:
+        unit_rate:
+          type: number
+          description: Fixed unit rate
+          format: double
+      description: Object containing spot price information. Available if unit rate type is set to 'fixed'
+    ChargeResolution:
+      enum:
+      - day
+      - month
+      type: string
+      description: Charge resolution
+    SpotPrice:
+      type: object
+      properties:
+        provider:
+          $ref: '#/components/schemas/SpotPriceProvider'
+        region:
+          type: string
+          nullable: true
+        resolution:
+          $ref: '#/components/schemas/SpotPriceResolution'
+        multiplier:
+          type: number
+          format: double
+          nullable: true
+    Fuel:
+      enum:
+      - elec
+      - gas
+      - district_heating
+      type: string
+      description: Fuel type
+    NordpoolResolution:
       enum:
       - hour
-      - 15min
       type: string
+    Interval:
+      type: object
+      properties:
+        from_minute:
+          type: integer
+          format: int64
+          nullable: true
+        to_minute:
+          type: integer
+          format: int64
+          nullable: true
+    Block:
+      type: object
+      properties:
+        resolution:
+          $ref: '#/components/schemas/BlockResolution'
+        register_id:
+          type: string
+          nullable: true
+        unit_rate:
+          type: number
+          format: double
+        from_kwh:
+          type: integer
+          format: int64
+          nullable: true
+        to_kwh:
+          type: integer
+          format: int64
+          nullable: true
+        from_m3:
+          type: integer
+          format: int64
+          nullable: true
+        to_m3:
+          type: integer
+          format: int64
+          nullable: true
     UnitRate:
       required:
       - type
@@ -394,19 +391,6 @@ components:
             type: string
           nullable: true
       description: Object containing the unit rate. Available when type is set to unit_rate.
-    PriceFormulaDirection:
-      enum:
-      - import
-      - export
-      type: string
-      description: Direction type
-    Fuel:
-      enum:
-      - elec
-      - gas
-      - district_heating
-      type: string
-      description: Fuel type
     Source:
       enum:
       - client
@@ -418,6 +402,22 @@ components:
       - day
       - year
       type: string
+    Element:
+      required:
+      - name
+      - type
+      type: object
+      properties:
+        name:
+          minLength: 1
+          type: string
+          description: Name of the price formula element
+        type:
+          $ref: '#/components/schemas/PriceElementType'
+        charge:
+          $ref: '#/components/schemas/Charge'
+        unit_rate:
+          $ref: '#/components/schemas/UnitRate'
   securitySchemes:
     BearerAuth:
       type: http

@@ -551,109 +551,6 @@ paths:
                     description: Internal server error, please try again later. If problem remains, please contact support.
 components:
   schemas:
-    SimilarHomesConsumption:
-      required:
-      - from
-      - fuel
-      - resolution
-      - to
-      - unit
-      type: object
-      properties:
-        consumption:
-          type: array
-          items:
-            type: integer
-            format: int32
-          description: Will always contain the exact amount of elements as there are time frames between 'to' and 'from' with the given 'resolution'. Values inside the array can be null if no energy data exists (one day always contains 24 values). Values are whole numbers.
-          nullable: true
-          deprecated: true
-        values:
-          type: array
-          items:
-            type: number
-            format: double
-          description: Contains cost or energy depending on the query parameters of the request. Will always contain the exact amount of elements as there are time frames between 'to' and 'from' with the given 'resolution'. Values inside the array can be null if no energy data exists (one day always contains 24 values). Values are floating-point numbers.
-          nullable: true
-        resolution:
-          $ref: '#/components/schemas/SimilarHomesResolutionType'
-        fuel:
-          $ref: '#/components/schemas/SimilarHomesFuelType'
-        unit:
-          $ref: '#/components/schemas/SimilarHomesUnitType'
-        from:
-          type: string
-          description: From date
-          format: date-time
-          example: '2021-01-01T00:00:00'
-        to:
-          type: string
-          description: To date
-          format: date-time
-          example: '2021-02-01T00:00:00'
-      description: Similar homes consumption data.
-    SimilarHomesReportResultModel:
-      required:
-      - result_status
-      type: object
-      properties:
-        result:
-          $ref: '#/components/schemas/SimilarHomesReport'
-        result_status:
-          $ref: '#/components/schemas/SimilarHomesResultStatus'
-      description: Model containing similar homes report result.
-    SimilarHomesFuelType:
-      enum:
-      - elec
-      - gas
-      type: string
-      description: Matches with the value passed in query parameters of the request, or a default value.
-    SimilarHomesResolutionType:
-      enum:
-      - day
-      - month
-      type: string
-      description: Matches with the value passed in query parameters of the request.
-    SimilarHomesGroupFilter:
-      required:
-      - description
-      - key
-      - type
-      type: object
-      properties:
-        key:
-          minLength: 1
-          type: string
-          description: This key refers to keys in home profile, for example 'house_type', 'heating_type_primary' or 'living_area'.
-          example: house_type
-        description:
-          minLength: 1
-          type: string
-          description: Description for the filter.
-          example: House
-        type:
-          $ref: '#/components/schemas/SimilarHomesGroupFilterType'
-        limit_range:
-          $ref: '#/components/schemas/LimitRange'
-        limit_values:
-          type: array
-          items:
-            type: string
-          description: Available if type is 'limit_values'. For example, for key 'house_type', this would include the list of house types the location is compared with.
-          nullable: true
-      description: Similar homes group filter.
-    SimilarHomesResultStatusAction:
-      type: object
-      properties:
-        code:
-          type: string
-          description: A code for the action that should be taken. Please refer to documentation of specific endpoint for more information.
-          nullable: true
-        description:
-          type: string
-          description: A description of the action that should be taken.
-          nullable: true
-      description: Available in cases where there are actions that can be done to make the result successful, such as entering information in the home profile options.
     Error:
       type: object
       properties:
@@ -688,59 +585,40 @@ components:
           nullable: true
           example: Internal server error, please try again later. If problem remains, please contact support.
       description: Model returned for error responses.
-    SimilarHomesConsumptionResultModel:
-      required:
-      - result_status
-      type: object
-      properties:
-        result:
-          $ref: '#/components/schemas/SimilarHomesConsumption'
-        result_status:
-          $ref: '#/components/schemas/SimilarHomesResultStatus'
-      description: Model containing similar homes consumption result.
-    SimilarHomesResultStatus:
-      required:
-      - code
+    SimilarHomesResultStatusAction:
       type: object
       properties:
         code:
-          $ref: '#/components/schemas/SimilarHomesResultStatusCode'
-        action:
-          $ref: '#/components/schemas/SimilarHomesResultStatusAction'
-      description: Contains information about the result, and whether it was successful or not.
-    SimilarHomesGroupResultModel:
+          type: string
+          description: A code for the action that should be taken. Please refer to documentation of specific endpoint for more information.
+          nullable: true
+        description:
+          type: string
+          description: A description of the action that should be taken.
+          nullable: true
+      description: Available in cases where there are actions that can be done to make the result successful, such as entering information in the home profile options.
+    SimilarHomesGroupFilterType:
+      enum:
+      - limit_values
+      - limit_range
+      type: string
+      description: Describes whether 'limit_values' or 'limit_range' should be used.
+    SimilarHomesReportResultModel:
       required:
       - result_status
       type: object
       properties:
         result:
-          $ref: '#/components/schemas/SimilarHomesGroup'
+          $ref: '#/components/schemas/SimilarHomesReport'
         result_status:
           $ref: '#/components/schemas/SimilarHomesResultStatus'
-      description: Model containing similar homes group result.
-    SimilarHomesUnitType:
+      description: Model containing similar homes report result.
+    SimilarHomesResultStatusCode:
       enum:
-      - energy
-      - cost
+      - ok
+      - not_ok
       type: string
-      description: Matches with the value passed in query parameters of the request, or a default value.
-    LimitRange:
-      required:
-      - max
-      - min
-      type: object
-      properties:
-        min:
-          type: number
-          description: Minimum number in the range. For example, if key is 'living_area' and min is 150, it means minimum 150 square meters.
-          format: double
-          example: 150
-        max:
-          type: number
-          description: Maximum number in the range. For example, if key is 'living_area' and max is 200, it means maximum 200 square meters.
-          format: double
-          example: 200
-      description: Available if type is 'limit_range'. Contains minimum and maximum values for the given key.
+      description: Indicating whether there is a result or not.
     SimilarHomesReport:
       required:
       - distribution_values
@@ -782,18 +660,56 @@ components:
           description: To date
           format: date-time
       description: Similar homes report for the requested period.
-    SimilarHomesGroupFilterType:
+    SimilarHomesResolutionType:
       enum:
-      - limit_values
-      - limit_range
+      - day
+      - month
       type: string
-      description: Describes whether 'limit_values' or 'limit_range' should be used.
-    SimilarHomesResultStatusCode:
+      description: Matches with the value passed in query parameters of the request.
+    SimilarHomesGroupFilter:
+      required:
+      - description
+      - key
+      - type
+      type: object
+      properties:
+        key:
+          minLength: 1
+          type: string
+          description: This key refers to keys in home profile, for example 'house_type', 'heating_type_primary' or 'living_area'.
+          example: house_type
+        description:
+          minLength: 1
+          type: string
+          description: Description for the filter.
+          example: House
+        type:
+          $ref: '#/components/schemas/SimilarHomesGroupFilterType'
+        limit_range:
+          $ref: '#/components/schemas/LimitRange'
+        limit_values:
+          type: array
+          items:
+            type: string
+          description: Available if type is 'limit_values'. For example, for key 'house_type', this would include the list of house types the location is compared with.
+          nullable: true
+      description: Similar homes group filter.
+    SimilarHomesFuelType:
       enum:
-      - ok
-      - not_ok
+      - elec
+      - gas
       type: string
-      description: Indicating whether there is a result or not.
+      description: Matches with the value passed in query parameters of the request, or a default value.
+    SimilarHomesConsumptionResultModel:
+      required:
+      - result_status
+      type: object
+      properties:
+        result:
+          $ref: '#/components/schemas/SimilarHomesConsumption'
+        result_status:
+          $ref: '#/components/schemas/SimilarHomesResultStatus'
+      description: Model containing similar homes consumption result.
     SimilarHomesGroup:
       required:
       - contributors
@@ -812,6 +728,90 @@ components:
           format: int32
           example: 1
       description: Description of similar homes that a location is compared to.
+    LimitRange:
+      required:
+      - max
+      - min
+      type: object
+      properties:
+        min:
+          type: number
+          description: Minimum number in the range. For example, if key is 'living_area' and min is 150, it means minimum 150 square meters.
+          format: double
+          example: 150
+        max:
+          type: number
+          description: Maximum number in the range. For example, if key is 'living_area' and max is 200, it means maximum 200 square meters.
+          format: double
+          example: 200
+      description: Available if type is 'limit_range'. Contains minimum and maximum values for the given key.
+    SimilarHomesUnitType:
+      enum:
+      - energy
+      - cost
+      type: string
+      description: Matches with the value passed in query parameters of the request, or a default value.
+    SimilarHomesConsumption:
+      required:
+      - from
+      - fuel
+      - resolution
+      - to
+      - unit
+      type: object
+      properties:
+        consumption:
+          type: array
+          items:
+            type: integer
+            format: int32
+          description: Will always contain the exact amount of elements as there are time frames between 'to' and 'from' with the given 'resolution'. Values inside the array can be null if no energy data exists (one day always contains 24 values). Values are whole numbers.
+          nullable: true
+          deprecated: true
+        values:
+          type: array
+          items:
+            type: number
+            format: double
+          description: Contains cost or energy depending on the query parameters of the request. Will always contain the exact amount of elements as there are time frames between 'to' and 'from' with the given 'resolution'. Values inside the array can be null if no energy data exists (one day always contains 24 values). Values are floating-point numbers.
+          nullable: true
+        resolution:
+          $ref: '#/components/schemas/SimilarHomesResolutionType'
+        fuel:
+          $ref: '#/components/schemas/SimilarHomesFuelType'
+        unit:
+          $ref: '#/components/schemas/SimilarHomesUnitType'
+        from:
+          type: string
+          description: From date
+          format: date-time
+          example: '2021-01-01T00:00:00'
+        to:
+          type: string
+          description: To date
+          format: date-time
+          example: '2021-02-01T00:00:00'
+      description: Similar homes consumption data.
+    SimilarHomesResultStatus:
+      required:
+      - code
+      type: object
+      properties:
+        code:
+          $ref: '#/components/schemas/SimilarHomesResultStatusCode'
+        action:
+          $ref: '#/components/schemas/SimilarHomesResultStatusAction'
+      description: Contains information about the result, and whether it was successful or not.
+    SimilarHomesGroupResultModel:
+      required:
+      - result_status
+      type: object
+      properties:
+        result:
+          $ref: '#/components/schemas/SimilarHomesGroup'
+        result_status:
+          $ref: '#/components/schemas/SimilarHomesResultStatus'
+      description: Model containing similar homes group result.
   securitySchemes:
     BearerAuth:
       type: http

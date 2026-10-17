@@ -465,64 +465,11 @@ paths:
                     request_id: 65e2ea86-470f-4363-9295-35d6b473981a
 components:
   schemas:
-    NoContentResult:
-      type: object
-      properties:
-        statusCode:
-          type: integer
-          format: int32
-    User:
-      type: object
-      properties:
-        id:
-          type:
-          - string
-          - 'null'
-        eliq_id:
-          type:
-          - integer
-          - 'null'
-          format: int32
-          readOnly: true
-        name:
-          type:
-          - string
-          - 'null'
-        email:
-          type:
-          - string
-          - 'null'
-        phone:
-          type:
-          - string
-          - 'null'
-        language_code:
-          type:
-          - string
-          - 'null'
-        locations:
-          type:
-          - array
-          - 'null'
-          items:
-            $ref: '#/components/schemas/Location'
-        created_at_timestamp:
-          type:
-          - string
-          - 'null'
-    DtoLink:
-      type: object
-      properties:
-        url:
-          type:
-          - string
-          - 'null'
-        label:
-          type:
-          - string
-          - 'null'
-        target:
-          $ref: '#/components/schemas/DtoLinkTarget'
+    NotificationType:
+      enum:
+      - unknown
+      - custom
+      type: string
     AcceptedResult:
       type: object
       properties:
@@ -552,52 +499,42 @@ components:
           - integer
           - 'null'
           format: int32
-    Location:
+    IOutputFormatter:
+      type: object
+    NotificationDto:
       type: object
       properties:
-        id:
+        type:
+          $ref: '#/components/schemas/NotificationType'
+        header:
           type:
           - string
           - 'null'
-        eliq_id:
-          type:
-          - integer
-          - 'null'
-          format: int32
-          readOnly: true
-        name:
+        content:
           type:
           - string
           - 'null'
-        user_id:
+        link:
+          $ref: '#/components/schemas/DtoLink'
+    LocationAddress:
+      type: object
+      properties:
+        street_address:
           type:
           - string
           - 'null'
-        spot_price_region_id:
+        postal_code:
           type:
           - string
           - 'null'
-        address:
-          $ref: '#/components/schemas/LocationAddress'
-        geo:
-          $ref: '#/components/schemas/LocationGeo'
-        meters:
-          type:
-          - array
-          - 'null'
-          items:
-            $ref: '#/components/schemas/Meter'
-        created_at_timestamp:
+        city:
           type:
           - string
           - 'null'
-        location_profile_type:
-          $ref: '#/components/schemas/ProfileType'
-    DtoLinkTarget:
-      enum:
-      - webview
-      - browser
-      type: string
+        country_code:
+          type:
+          - string
+          - 'null'
     ErrorDetails:
       required:
       - code
@@ -614,6 +551,23 @@ components:
           type:
           - string
           - 'null'
+    DtoLinkTarget:
+      enum:
+      - webview
+      - browser
+      type: string
+    ProfileType:
+      enum:
+      - residential
+      - business
+      - undefined
+      type: string
+    NoContentResult:
+      type: object
+      properties:
+        statusCode:
+          type: integer
+          format: int32
     Meter:
       type: object
       properties:
@@ -675,53 +629,99 @@ components:
           type:
           - string
           - 'null'
-    NotificationDto:
+    Location:
       type: object
       properties:
-        type:
-          $ref: '#/components/schemas/NotificationType'
-        header:
+        id:
           type:
           - string
           - 'null'
-        content:
+        eliq_id:
+          type:
+          - integer
+          - 'null'
+          format: int32
+          readOnly: true
+        name:
           type:
           - string
           - 'null'
-        link:
-          $ref: '#/components/schemas/DtoLink'
-    LocationAddress:
+        user_id:
+          type:
+          - string
+          - 'null'
+        spot_price_region_id:
+          type:
+          - string
+          - 'null'
+        address:
+          $ref: '#/components/schemas/LocationAddress'
+        geo:
+          $ref: '#/components/schemas/LocationGeo'
+        meters:
+          type:
+          - array
+          - 'null'
+          items:
+            $ref: '#/components/schemas/Meter'
+        created_at_timestamp:
+          type:
+          - string
+          - 'null'
+        location_profile_type:
+          $ref: '#/components/schemas/ProfileType'
+    DtoLink:
       type: object
       properties:
-        street_address:
+        url:
           type:
           - string
           - 'null'
-        postal_code:
+        label:
           type:
           - string
           - 'null'
-        city:
-          type:
-          - string
-          - 'null'
-        country_code:
-          type:
-          - string
-          - 'null'
-    NotificationType:
-      enum:
-      - unknown
-      - custom
-      type: string
-    IOutputFormatter:
+        target:
+          $ref: '#/components/schemas/DtoLinkTarget'
+    User:
       type: object
-    ProfileType:
-      enum:
-      - residential
-      - business
-      - undefined
-      type: string
+      properties:
+        id:
+          type:
+          - string
+          - 'null'
+        eliq_id:
+          type:
+          - integer
+          - 'null'
+          format: int32
+          readOnly: true
+        name:
+          type:
+          - string
+          - 'null'
+        email:
+          type:
+          - string
+          - 'null'
+        phone:
+          type:
+          - string
+          - 'null'
+        language_code:
+          type:
+          - string
+          - 'null'
+        locations:
+          type:
+          - array
+          - 'null'
+          items:
+            $ref: '#/components/schemas/Location'
+        created_at_timestamp:
+          type:
+          - string
+          - 'null'
     LocationGeo:
       type: object
       properties:

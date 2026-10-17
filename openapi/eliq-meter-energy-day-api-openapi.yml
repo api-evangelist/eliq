@@ -419,6 +419,22 @@ components:
         statusCode:
           type: integer
           format: int32
+    ErrorDetails:
+      required:
+      - code
+      - description
+      type: object
+      properties:
+        code:
+          minLength: 1
+          type: string
+        description:
+          minLength: 1
+          type: string
+        request_id:
+          type:
+          - string
+          - 'null'
     Register:
       type: object
       properties:
@@ -436,22 +452,6 @@ components:
           - number
           - 'null'
           format: float
-    ErrorDetails:
-      required:
-      - code
-      - description
-      type: object
-      properties:
-        code:
-          minLength: 1
-          type: string
-        description:
-          minLength: 1
-          type: string
-        request_id:
-          type:
-          - string
-          - 'null'
     EnergyDailyData:
       type: object
       properties:

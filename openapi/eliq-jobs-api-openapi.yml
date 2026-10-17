@@ -670,14 +670,44 @@ paths:
                     request_id: 65e2ea86-470f-4363-9295-35d6b473981a
 components:
   schemas:
-    FileRowError:
+    JobResultRow:
+      type: object
+      properties:
+        is_successful:
+          type: boolean
+        error:
+          $ref: '#/components/schemas/FileRowError'
+        result: {}
+        input: {}
+    ErrorDetails:
+      required:
+      - code
+      - description
       type: object
       properties:
         code:
+          minLength: 1
+          type: string
+        description:
+          minLength: 1
+          type: string
+        request_id:
           type:
           - string
           - 'null'
-        description:
+    JobFailedRow:
+      type: object
+      properties:
+        row_number:
+          type:
+          - integer
+          - 'null'
+          format: int32
+        error_code:
+          type:
+          - string
+          - 'null'
+        error_description:
           type:
           - string
           - 'null'
@@ -686,6 +716,15 @@ components:
       - import
       - export
       - multi-file
+      type: string
+    JobEntryStateType:
+      enum:
+      - received
+      - queued
+      - processing
+      - failed
+      - completed
+      - canceled
       type: string
     JobEntry:
       type: object
@@ -731,53 +770,14 @@ components:
           - 'null'
         type:
           $ref: '#/components/schemas/JobType'
-    JobResultRow:
-      type: object
-      properties:
-        is_successful:
-          type: boolean
-        error:
-          $ref: '#/components/schemas/FileRowError'
-        result: {}
-        input: {}
-    ErrorDetails:
-      required:
-      - code
-      - description
+    FileRowError:
       type: object
       properties:
         code:
-          minLength: 1
-          type: string
+          type:
+          - string
+          - 'null'
         description:
-          minLength: 1
-          type: string
-        request_id:
-          type:
-          - string
-          - 'null'
-    JobEntryStateType:
-      enum:
-      - received
-      - queued
-      - processing
-      - failed
-      - completed
-      - canceled
-      type: string
-    JobFailedRow:
-      type: object
-      properties:
-        row_number:
-          type:
-          - integer
-          - 'null'
-          format: int32
-        error_code:
-          type:
-          - string
-          - 'null'
-        error_description:
           type:
           - string
           - 'null'

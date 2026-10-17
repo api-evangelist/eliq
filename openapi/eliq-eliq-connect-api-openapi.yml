@@ -182,16 +182,6 @@ paths:
       - Eliq Connect
 components:
   schemas:
-    EliqConnectUriResponse:
-      title: EliqConnectUriResponse
-      x-stoplight:
-        id: x2vp8xc7rnr3y
-      type: object
-      properties:
-        uri:
-          type: string
-          example: https://connect.eliq.io/login?callbackUri={callback_uri}&linkOutCallbackUri={linkout_callback_uri}&ticketId={SSO_TICKET}
-          description: Uri to redirect the user to
     Connection:
       type: object
       x-examples:
@@ -222,22 +212,6 @@ components:
           - awaiting_confirmation
           - disconnected
           example: connected
-    ConnectionMetaData:
-      title: ConnectionMetaData
-      x-stoplight:
-        id: 8hppqt6r7illo
-      type: object
-      properties:
-        status:
-          type: string
-          description: Meta data status
-          enum:
-          - ok
-          - not_connected
-          - action_required
-          - awaiting_confirmation
-          - awaiting_first_data_sync
-          example: ok
     ConnectionEntity:
       type: object
       x-examples:
@@ -313,6 +287,32 @@ components:
               - string
               - 'null'
               example: '2022-06-05'
+    ConnectionMetaData:
+      title: ConnectionMetaData
+      x-stoplight:
+        id: 8hppqt6r7illo
+      type: object
+      properties:
+        status:
+          type: string
+          description: Meta data status
+          enum:
+          - ok
+          - not_connected
+          - action_required
+          - awaiting_confirmation
+          - awaiting_first_data_sync
+          example: ok
+    EliqConnectUriResponse:
+      title: EliqConnectUriResponse
+      x-stoplight:
+        id: x2vp8xc7rnr3y
+      type: object
+      properties:
+        uri:
+          type: string
+          example: https://connect.eliq.io/login?callbackUri={callback_uri}&linkOutCallbackUri={linkout_callback_uri}&ticketId={SSO_TICKET}
+          description: Uri to redirect the user to
   securitySchemes:
     BearerAuth:
       type: http

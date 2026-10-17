@@ -1029,22 +1029,6 @@ paths:
                     request_id: 65e2ea86-470f-4363-9295-35d6b473981a
 components:
   schemas:
-    DeviceMaxDemandLimit:
-      type: object
-      properties:
-        min:
-          type: number
-          format: double
-        target:
-          type: number
-          format: double
-        max:
-          type: number
-          format: double
-        unit:
-          type:
-          - string
-          - 'null'
     DeviceMaxDemand:
       type: object
       properties:
@@ -1076,6 +1060,22 @@ components:
           minLength: 1
           type: string
         request_id:
+          type:
+          - string
+          - 'null'
+    DeviceMaxDemandLimit:
+      type: object
+      properties:
+        min:
+          type: number
+          format: double
+        target:
+          type: number
+          format: double
+        max:
+          type: number
+          format: double
+        unit:
           type:
           - string
           - 'null'
