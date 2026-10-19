@@ -1,0 +1,12 @@
+{
+ "url": "https://eliqdeveloperportalst.blob.core.windows.net/api-docs/eliq-auth-api.yaml",
+ "requested_url": "https://eliqdeveloperportalst.blob.core.windows.net/api-docs/eliq-auth-api.yaml",
+ "status": 200,
+ "content_type": "text/plain",
+ "bytes": 14284,
+ "sha256": "f163edf308ded243036031516fcd1d186a77041e387c32b8fca3fd43439b5e75",
+ "fetched_at": "2026-10-19",
+ "fetched_by": "APIEvangelist-Harvest/1.0 (+https://apievangelist.com)",
+ "match": "byte-identical",
+ "note": "Re-fetched from the provider by verify-openapi-sources.py; the archived file is byte-identical to what the provider serves."
+}
