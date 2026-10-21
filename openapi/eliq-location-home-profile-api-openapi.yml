@@ -4,7 +4,75 @@ info:
   description: '# API Reference
 
 
-    The Eliq data management API is organized around REST.'
+    The Eliq data management API is organized around REST. The API accepts JSON-encoded request bodies, returns JSON-encoded responses and uses standard HTTP response codes. The URLs are all resource oriented around Eliq''s three main entities; User, Location and Meter
+
+
+    # Errors
+
+
+    Eliq Integration API uses standard HTTP response codes to indicate success or failure of a request. Codes with 2xx indicate success, 4xx indicate error due to invalid input, and 5xx indicates an error in Eliq Integration API.
+
+
+    ## Status codes
+
+
+    *Status code* | *Description*
+
+    --- | ---
+
+    200 - OK | Everything worked as expected.
+
+    201 - Created | Resource created.
+
+    202 - Accepted | Successful request, and will be handled later. A reference id will be available in the response body.
+
+    204 - No Content | Successful request. Used in successful delete requests
+
+    400 - Bad Request | Request input data is invalid.
+
+    401 - Unauthorized | Access token invalid for the given request. Eg. access token expired.
+
+    404 - Not Found | Requested resource not found
+
+    500, 502, 503, 504 | Something wrong with Eliq Integration API
+
+
+    ## Error body
+
+
+    Eliq Integration API returns an error response body on failures to provide additional information on the error. Please find the error body and description below.
+
+
+    ```json
+
+    {
+
+    "code":"",
+
+    "description":"",
+
+    "request_id":"16a3ae43-ca5f-455e-9aef-f93679bedc8d"
+
+    }
+
+    ```
+
+
+    *Field* | *Type* | *Description*
+
+    --- | --- | ---
+
+    code | String | Error code. Possible error codes per request can be found in each request section. Error codes do not change, and can be used to tie actions to.
+
+    description | String | A description of the error for developers
+
+    request_id | String | Identifier of the request. Passed when in contact with support
+
+
+    ## Request ID
+
+
+    Each API request has an associated request id. You can find this value in the response headers, under X-Request-Id. The request id can be used in communication with Eliq support.'
   contact:
     name: Support
     email: support_b2b@eliq.com
@@ -360,17 +428,6 @@ paths:
       deprecated: true
 components:
   schemas:
-    HomeProfileProperty:
-      type: object
-      properties:
-        key:
-          type:
-          - string
-          - 'null'
-        value: {}
-        value_type: {}
-    IOutputFormatter:
-      type: object
     OkObjectResult:
       type: object
       properties:
@@ -396,6 +453,17 @@ components:
           - integer
           - 'null'
           format: int32
+    HomeProfileProperty:
+      type: object
+      properties:
+        key:
+          type:
+          - string
+          - 'null'
+        value: {}
+        value_type: {}
+    IOutputFormatter:
+      type: object
     ErrorDetails:
       required:
       - code

@@ -1,0 +1,45 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/api-evangelist/eliq/main/json-schema/eliq-consent-schema.json",
+  "title": "Consent",
+  "x-generated": "2026-10-20",
+  "x-method": "derived",
+  "x-generator": "derive-json-schema.py",
+  "x-source": "openapi/eliq-users-api-openapi.yml#/components/schemas/Consent",
+  "type": "object",
+  "properties": {
+    "version_id": {
+      "type": "string"
+    },
+    "name": {
+      "type": "string"
+    },
+    "type": {
+      "type": "string"
+    },
+    "given_consent": {
+      "type": "boolean"
+    },
+    "is_updated": {
+      "type": "boolean"
+    },
+    "is_mandatory": {
+      "type": "boolean"
+    },
+    "timestamp": {
+      "type": "string"
+    },
+    "language_code": {
+      "type": "string"
+    },
+    "data": {
+      "type": "object",
+      "properties": {
+        "url": {
+          "type": "string",
+          "description": "Nullable, such as the terms and conditions page on a website, etc."
+        }
+      }
+    }
+  }
+}

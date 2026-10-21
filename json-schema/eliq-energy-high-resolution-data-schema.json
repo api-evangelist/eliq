@@ -1,0 +1,35 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/api-evangelist/eliq/main/json-schema/eliq-energy-high-resolution-data-schema.json",
+  "title": "EnergyHighResolutionData",
+  "x-generated": "2026-10-20",
+  "x-method": "derived",
+  "x-generator": "derive-json-schema.py",
+  "x-source": "openapi/eliq-meter-energy-high-resolution-api-openapi.yml#/components/schemas/EnergyHighResolutionData",
+  "type": "object",
+  "properties": {
+    "interval_start": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "energy_wh": {
+      "type": [
+        "number",
+        "null"
+      ],
+      "format": "float"
+    },
+    "energy_m3": {
+      "type": [
+        "number",
+        "null"
+      ],
+      "format": "float"
+    },
+    "is_estimated": {
+      "type": "boolean"
+    }
+  }
+}

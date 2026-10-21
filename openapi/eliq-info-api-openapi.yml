@@ -4,7 +4,38 @@ info:
   description: '# API Reference
 
 
-    The Eliq Intelligence API is organized around REST.'
+    The Eliq Intelligence API is organized around REST. The API accepts JSON-encoded request bodies, returns JSON-encoded responses and uses standard HTTP response codes. The URLs are resource oriented around Eliq''s Intelligence capabilities.
+
+
+    # Errors
+
+
+    ## Error body
+
+
+    The API returns an error response body on failures to provide additional information on the error. Please find the error body and description below.
+
+
+    ```json
+
+    {
+
+    "code":"",
+
+    "description":""
+
+    }
+
+    ```
+
+
+    *Field* | *Type* | *Description*
+
+    --- | --- | ---
+
+    code | String | Error code. Possible error codes per request can be found in each request section. Error codes do not change, and can be used to tie actions to.
+
+    description | String | A description of the error for developers'
   contact:
     name: Support
     email: support_b2b@eliq.com
@@ -60,44 +91,6 @@ paths:
       x-operation-id-source: derived
 components:
   schemas:
-    DashboardsConfiguration:
-      type: object
-      properties:
-        enabled:
-          type: boolean
-          description: Whether embedded dashboards are enabled for the client
-          example: true
-        items:
-          type:
-          - array
-          - 'null'
-          items:
-            $ref: '#/components/schemas/DashboardConfigurationItem'
-          description: The dashboards available to the client
-      additionalProperties: false
-      description: DataBricks dashboards available for embedding in the application
-    MyInfoResult:
-      required:
-      - client_id
-      - roles
-      type: object
-      properties:
-        client_id:
-          type: integer
-          description: Client Id of active user
-          format: int64
-          example: 5435964696
-        roles:
-          type: array
-          items:
-            type: string
-          description: Roles of active user
-          example:
-          - Support
-          - EliqConfigurator
-          - ClientConfigurator
-      additionalProperties: false
-      description: Information about the active user
     DashboardConfigurationItem:
       type: object
       properties:
@@ -123,6 +116,22 @@ components:
           example: client
       additionalProperties: false
       description: A published DataBricks dashboard the client is allowed to embed
+    DashboardsConfiguration:
+      type: object
+      properties:
+        enabled:
+          type: boolean
+          description: Whether embedded dashboards are enabled for the client
+          example: true
+        items:
+          type:
+          - array
+          - 'null'
+          items:
+            $ref: '#/components/schemas/DashboardConfigurationItem'
+          description: The dashboards available to the client
+      additionalProperties: false
+      description: DataBricks dashboards available for embedding in the application
     IntelligenceApiConfiguration:
       type: object
       properties:
@@ -151,6 +160,28 @@ components:
           example: b77ee01b-e19b-4fe5-b73b-5d4d810910d1
       additionalProperties: false
       description: Authorization information for the application
+    MyInfoResult:
+      required:
+      - client_id
+      - roles
+      type: object
+      properties:
+        client_id:
+          type: integer
+          description: Client Id of active user
+          format: int64
+          example: 5435964696
+        roles:
+          type: array
+          items:
+            type: string
+          description: Roles of active user
+          example:
+          - Support
+          - EliqConfigurator
+          - ClientConfigurator
+      additionalProperties: false
+      description: Information about the active user
   securitySchemes:
     Bearer:
       type: http

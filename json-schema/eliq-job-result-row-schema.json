@@ -1,0 +1,39 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/api-evangelist/eliq/main/json-schema/eliq-job-result-row-schema.json",
+  "title": "JobResultRow",
+  "x-generated": "2026-10-20",
+  "x-method": "derived",
+  "x-generator": "derive-json-schema.py",
+  "x-source": "openapi/eliq-jobs-api-openapi.yml#/components/schemas/JobResultRow",
+  "type": "object",
+  "properties": {
+    "is_successful": {
+      "type": "boolean"
+    },
+    "error": {
+      "$ref": "#/$defs/FileRowError"
+    },
+    "result": {},
+    "input": {}
+  },
+  "$defs": {
+    "FileRowError": {
+      "type": "object",
+      "properties": {
+        "code": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "description": {
+          "type": [
+            "string",
+            "null"
+          ]
+        }
+      }
+    }
+  }
+}

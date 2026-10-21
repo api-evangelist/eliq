@@ -1,0 +1,78 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/api-evangelist/eliq/main/json-schema/eliq-connection-entity-schema.json",
+  "title": "ConnectionEntity",
+  "x-generated": "2026-10-20",
+  "x-method": "derived",
+  "x-generator": "derive-json-schema.py",
+  "x-source": "openapi/eliq-eliq-connect-api-openapi.yml#/components/schemas/ConnectionEntity",
+  "type": "object",
+  "properties": {
+    "id": {
+      "type": "string",
+      "description": "Id of connection entity"
+    },
+    "display_name": {
+      "type": "string",
+      "description": "Display friendly name for connection entity. Can be displayed to end-user."
+    },
+    "type": {
+      "type": "string",
+      "description": "Type of entity",
+      "enum": [
+        "meter"
+      ]
+    },
+    "location_id": {
+      "type": "integer",
+      "description": "Location id the entity belongs to"
+    },
+    "meter": {
+      "type": "object",
+      "description": "Available if type is 'meter'",
+      "properties": {
+        "fuel": {
+          "type": "string",
+          "description": "Fuel measured by meter",
+          "enum": [
+            "elec",
+            "gas",
+            "district_heating"
+          ]
+        },
+        "type": {
+          "type": "string",
+          "description": "Which direction it measures",
+          "enum": [
+            "import",
+            "export",
+            "consumption",
+            "production"
+          ]
+        },
+        "supply_start_date": {
+          "type": "string",
+          "format": "date"
+        },
+        "supply_end_date": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "data_available_from_date": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "data_available_to_date": {
+          "type": [
+            "string",
+            "null"
+          ]
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,87 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/api-evangelist/eliq/main/json-schema/eliq-meter-data-result-schema.json",
+  "title": "MeterDataResult",
+  "description": "Model containing meter time series data result. Different parameters will be available depending on the data requested, see below for more information",
+  "x-generated": "2026-10-20",
+  "x-method": "derived",
+  "x-generator": "derive-json-schema.py",
+  "x-source": "openapi/eliq-energy-data-api-openapi.yml#/components/schemas/MeterDataResult",
+  "type": "object",
+  "properties": {
+    "meter": {
+      "type": "array",
+      "description": "Available if consumption has been queried. Will always contain the exact amount of elements as there are time frames between ‘to’ and ‘from’ with the given ‘resolution’. Values inside the array can be null if no energy data exists (One day always contains 24 values). The consumption values are floating-point numbers.",
+      "items": {
+        "type": [
+          "object",
+          "null"
+        ],
+        "properties": {
+          "direction": {
+            "type": "string"
+          },
+          "data": {
+            "type": "array",
+            "items": {
+              "type": [
+                "number",
+                "null"
+              ]
+            }
+          }
+        },
+        "required": [
+          "direction",
+          "data"
+        ]
+      }
+    },
+    "fuel": {
+      "type": "string",
+      "description": "Can be ‘elec’, ‘gas’ or ‘district_heating’. Matches with the value passed in query parameters of the request if provided",
+      "enum": [
+        "elec",
+        "gas"
+      ]
+    },
+    "unit": {
+      "type": "string",
+      "description": "Can be ‘cost’, ‘energy’ or 'm3'. Matches with the value passed in query parameters of the request if provided, otherwise default.\n\nOnly return m3 if the unit is available.",
+      "enum": [
+        "energy",
+        "cost"
+      ]
+    },
+    "resolution": {
+      "type": "string",
+      "description": "Can be '6min','15min', '30min', 'hour', 'day' or 'month'. Matches with the value passed in query parameters of the request.",
+      "enum": [
+        "6min",
+        "15min",
+        "30min",
+        "hour",
+        "day",
+        "month"
+      ]
+    },
+    "from": {
+      "type": "string",
+      "description": "From date",
+      "minLength": 1
+    },
+    "to": {
+      "type": "string",
+      "description": "To date",
+      "minLength": 1
+    }
+  },
+  "required": [
+    "meter",
+    "fuel",
+    "unit",
+    "resolution",
+    "from",
+    "to"
+  ]
+}

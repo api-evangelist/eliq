@@ -1,0 +1,33 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/api-evangelist/eliq/main/json-schema/eliq-saving-monetary-source-schema.json",
+  "title": "SavingMonetarySource",
+  "description": "Savings calculation source type",
+  "x-generated": "2026-10-20",
+  "x-method": "derived",
+  "x-generator": "derive-json-schema.py",
+  "x-source": "openapi/eliq-advice-api-openapi.yml#/components/schemas/SavingMonetarySource",
+  "required": [
+    "details",
+    "name",
+    "type"
+  ],
+  "type": "object",
+  "properties": {
+    "type": {
+      "minLength": 1,
+      "type": "string",
+      "description": "Unique source type"
+    },
+    "name": {
+      "minLength": 1,
+      "type": "string",
+      "description": "Savings source type name"
+    },
+    "details": {
+      "minLength": 1,
+      "type": "string",
+      "description": "Savings source type details"
+    }
+  }
+}

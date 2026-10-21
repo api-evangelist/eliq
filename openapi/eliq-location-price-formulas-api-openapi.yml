@@ -4,7 +4,75 @@ info:
   description: '# API Reference
 
 
-    The Eliq data management API is organized around REST.'
+    The Eliq data management API is organized around REST. The API accepts JSON-encoded request bodies, returns JSON-encoded responses and uses standard HTTP response codes. The URLs are all resource oriented around Eliq''s three main entities; User, Location and Meter
+
+
+    # Errors
+
+
+    Eliq Integration API uses standard HTTP response codes to indicate success or failure of a request. Codes with 2xx indicate success, 4xx indicate error due to invalid input, and 5xx indicates an error in Eliq Integration API.
+
+
+    ## Status codes
+
+
+    *Status code* | *Description*
+
+    --- | ---
+
+    200 - OK | Everything worked as expected.
+
+    201 - Created | Resource created.
+
+    202 - Accepted | Successful request, and will be handled later. A reference id will be available in the response body.
+
+    204 - No Content | Successful request. Used in successful delete requests
+
+    400 - Bad Request | Request input data is invalid.
+
+    401 - Unauthorized | Access token invalid for the given request. Eg. access token expired.
+
+    404 - Not Found | Requested resource not found
+
+    500, 502, 503, 504 | Something wrong with Eliq Integration API
+
+
+    ## Error body
+
+
+    Eliq Integration API returns an error response body on failures to provide additional information on the error. Please find the error body and description below.
+
+
+    ```json
+
+    {
+
+    "code":"",
+
+    "description":"",
+
+    "request_id":"16a3ae43-ca5f-455e-9aef-f93679bedc8d"
+
+    }
+
+    ```
+
+
+    *Field* | *Type* | *Description*
+
+    --- | --- | ---
+
+    code | String | Error code. Possible error codes per request can be found in each request section. Error codes do not change, and can be used to tie actions to.
+
+    description | String | A description of the error for developers
+
+    request_id | String | Identifier of the request. Passed when in contact with support
+
+
+    ## Request ID
+
+
+    Each API request has an associated request id. You can find this value in the response headers, under X-Request-Id. The request id can be used in communication with Eliq support.'
   contact:
     name: Support
     email: support_b2b@eliq.com
@@ -568,6 +636,86 @@ paths:
                     request_id: 65e2ea86-470f-4363-9295-35d6b473981a
 components:
   schemas:
+    CapacityTariff:
+      type: object
+      properties:
+        charge_tariff:
+          type: number
+          format: double
+        minimum_contribution:
+          type: number
+          format: double
+        calculation_type:
+          type:
+          - string
+          - 'null'
+    Interval:
+      type: object
+      properties:
+        from_minute:
+          type:
+          - integer
+          - 'null'
+          format: int64
+        to_minute:
+          type:
+          - integer
+          - 'null'
+          format: int64
+    SpotPrice:
+      type: object
+      properties:
+        provider:
+          type:
+          - string
+          - 'null'
+        region:
+          type:
+          - string
+          - 'null'
+        resolution:
+          type:
+          - string
+          - 'null'
+        multiplier:
+          type:
+          - number
+          - 'null'
+          format: double
+    Block:
+      type: object
+      properties:
+        resolution:
+          type:
+          - string
+          - 'null'
+        register_id:
+          type:
+          - string
+          - 'null'
+        unit_rate:
+          type: number
+          format: double
+        from_kwh:
+          type:
+          - integer
+          - 'null'
+          format: int64
+        to_kwh:
+          type:
+          - integer
+          - 'null'
+          format: int64
+        from_m3:
+          type:
+          - integer
+          - 'null'
+          format: int64
+        to_m3:
+          type:
+          - integer
+          - 'null'
+          format: int64
     LocationPriceFormula:
       type: object
       properties:
@@ -610,42 +758,6 @@ components:
           - number
           - 'null'
           format: double
-    SpotPrice:
-      type: object
-      properties:
-        provider:
-          type:
-          - string
-          - 'null'
-        region:
-          type:
-          - string
-          - 'null'
-        resolution:
-          type:
-          - string
-          - 'null'
-        multiplier:
-          type:
-          - number
-          - 'null'
-          format: double
-    ErrorDetails:
-      required:
-      - code
-      - description
-      type: object
-      properties:
-        code:
-          minLength: 1
-          type: string
-        description:
-          minLength: 1
-          type: string
-        request_id:
-          type:
-          - string
-          - 'null'
     Tou:
       type: object
       properties:
@@ -668,6 +780,55 @@ components:
           type:
           - boolean
           - 'null'
+    ErrorDetails:
+      required:
+      - code
+      - description
+      type: object
+      properties:
+        code:
+          minLength: 1
+          type: string
+        description:
+          minLength: 1
+          type: string
+        request_id:
+          type:
+          - string
+          - 'null'
+    Element:
+      type: object
+      properties:
+        name:
+          type:
+          - string
+          - 'null'
+        type:
+          type:
+          - string
+          - 'null'
+        charge:
+          $ref: '#/components/schemas/Charge'
+        unit_rate:
+          $ref: '#/components/schemas/UnitRate'
+    Charge:
+      type: object
+      properties:
+        resolution:
+          type:
+          - string
+          - 'null'
+        charge:
+          type:
+          - number
+          - 'null'
+          format: double
+        type:
+          type:
+          - string
+          - 'null'
+        capacity_tariff:
+          $ref: '#/components/schemas/CapacityTariff'
     UnitRate:
       type: object
       properties:
@@ -689,90 +850,12 @@ components:
           - 'null'
           items:
             type: string
-    Charge:
-      type: object
-      properties:
-        resolution:
-          type:
-          - string
-          - 'null'
-        charge:
-          type:
-          - number
-          - 'null'
-          format: double
-        type:
-          type:
-          - string
-          - 'null'
-        capacity_tariff:
-          $ref: '#/components/schemas/CapacityTariff'
     NoContentResult:
       type: object
       properties:
         statusCode:
           type: integer
           format: int32
-    Interval:
-      type: object
-      properties:
-        from_minute:
-          type:
-          - integer
-          - 'null'
-          format: int64
-        to_minute:
-          type:
-          - integer
-          - 'null'
-          format: int64
-    Block:
-      type: object
-      properties:
-        resolution:
-          type:
-          - string
-          - 'null'
-        register_id:
-          type:
-          - string
-          - 'null'
-        unit_rate:
-          type: number
-          format: double
-        from_kwh:
-          type:
-          - integer
-          - 'null'
-          format: int64
-        to_kwh:
-          type:
-          - integer
-          - 'null'
-          format: int64
-        from_m3:
-          type:
-          - integer
-          - 'null'
-          format: int64
-        to_m3:
-          type:
-          - integer
-          - 'null'
-          format: int64
-    CapacityTariff:
-      type: object
-      properties:
-        charge_tariff:
-          type: number
-          format: double
-        minimum_contribution:
-          type: number
-          format: double
-        calculation_type:
-          type:
-          - string
-          - 'null'
     Fixed:
       type: object
       properties:
@@ -781,21 +864,6 @@ components:
           - number
           - 'null'
           format: double
-    Element:
-      type: object
-      properties:
-        name:
-          type:
-          - string
-          - 'null'
-        type:
-          type:
-          - string
-          - 'null'
-        charge:
-          $ref: '#/components/schemas/Charge'
-        unit_rate:
-          $ref: '#/components/schemas/UnitRate'
 x-tagGroups:
 - name: Users
   tags:

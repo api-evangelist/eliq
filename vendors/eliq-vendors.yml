@@ -1,0 +1,57 @@
+generated: '2026-10-20'
+method: probed
+source: pre-flight dossier (docs platform, portal detections) + CNAME chains and response headers of the hosts apis.yml names
+registry: all/0-working/vendors.yml
+areas_vocabulary:
+- documentation
+- developer-portal
+- api-gateway
+- cdn
+- hosting
+- sdk-generation
+- api-collections
+- status-page
+- support
+- community
+- identity
+- mcp-hosting
+vendors:
+- vendor: cloudflare
+  name: Cloudflare
+  area: cdn
+  host: developer.eliq.com
+  evidence: header:cf-ray
+  signal: header
+  confidence: high
+  kin_score:
+  - https_enforced
+  - hsts
+- vendor: redoc
+  name: Redoc (self-hosted)
+  area: documentation
+  host: developer.eliq.com
+  evidence: markup:redoc
+  signal: docs-platform
+  confidence: medium
+  kin_score:
+  - openapi_published
+reliance:
+  areas_vendor_served:
+  - cdn
+  - documentation
+  vendor_count: 2
+  areas_observed: 12
+  share_of_observable_areas: 0.167
+  note: areas where a third party was DETECTED serving this provider; an area absent here was either self-run or not observed, and this script
+    cannot tell those apart
+checked:
+- 'docs-platform: redoc'
+- eliq.com (Website)
+- developer.eliq.com (DeveloperPortal)
+- developer.eliq.com (Documentation)
+- developer.eliq.com (APIReference)
+- developer.eliq.com (GettingStarted)
+- www.eliq.com (Support)
+- developer.eliq.com (SignUp)
+- developer.eliq.com (Login)
+- auth-api.eliq.com (baseURL)

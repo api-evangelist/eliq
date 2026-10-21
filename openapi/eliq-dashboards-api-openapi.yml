@@ -4,7 +4,38 @@ info:
   description: '# API Reference
 
 
-    The Eliq Intelligence API is organized around REST.'
+    The Eliq Intelligence API is organized around REST. The API accepts JSON-encoded request bodies, returns JSON-encoded responses and uses standard HTTP response codes. The URLs are resource oriented around Eliq''s Intelligence capabilities.
+
+
+    # Errors
+
+
+    ## Error body
+
+
+    The API returns an error response body on failures to provide additional information on the error. Please find the error body and description below.
+
+
+    ```json
+
+    {
+
+    "code":"",
+
+    "description":""
+
+    }
+
+    ```
+
+
+    *Field* | *Type* | *Description*
+
+    --- | --- | ---
+
+    code | String | Error code. Possible error codes per request can be found in each request section. Error codes do not change, and can be used to tie actions to.
+
+    description | String | A description of the error for developers'
   contact:
     name: Support
     email: support_b2b@eliq.com

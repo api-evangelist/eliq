@@ -1,0 +1,205 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/api-evangelist/eliq/main/json-schema/eliq-location-profile-settings-2-schema.json",
+  "title": "LocationProfileSettings_2",
+  "x-generated": "2026-10-20",
+  "x-method": "derived",
+  "x-generator": "derive-json-schema.py",
+  "x-source": "openapi/eliq-location-profile-api-openapi.yml#/components/schemas/LocationProfileSettings_2",
+  "required": [
+    "groups",
+    "settings"
+  ],
+  "type": "object",
+  "properties": {
+    "settings": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/LocationProfileSetting_2"
+      }
+    },
+    "groups": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    }
+  },
+  "$defs": {
+    "LocationProfileDataType_2": {
+      "enum": [
+        "single_select",
+        "multiple_select",
+        "number"
+      ],
+      "type": "string",
+      "description": "Data type"
+    },
+    "LocationProfilePossibleValue_2": {
+      "required": [
+        "developer_description",
+        "value"
+      ],
+      "type": "object",
+      "properties": {
+        "value": {
+          "minLength": 1,
+          "type": "string",
+          "description": "Value to select"
+        },
+        "developer_description": {
+          "minLength": 1,
+          "type": "string",
+          "description": "Description not meant for end users"
+        }
+      },
+      "description": "A possible value for a location profile setting. Available when the specified data_type is single_select or multiple_select."
+    },
+    "LocationProfileSelectedValue_2": {
+      "required": [
+        "id",
+        "value"
+      ],
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "Unique identifier for the selected value",
+          "format": "uuid"
+        },
+        "value": {
+          "description": "Selected value. Depending on the specified data_type, this value can be a number (number), string (single_select) or a list of strings (multiple_select)."
+        },
+        "from": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "description": "Value is valid from this date. If not specified, the value is valid from the beginning of time.",
+          "format": "date-time"
+        }
+      },
+      "description": "Selected value with metadata"
+    },
+    "LocationProfileSetting_2": {
+      "required": [
+        "data_type",
+        "dependent_properties",
+        "developer_description",
+        "group",
+        "key"
+      ],
+      "type": "object",
+      "properties": {
+        "key": {
+          "minLength": 1,
+          "type": "string",
+          "description": "Identifier for the setting"
+        },
+        "data_type": {
+          "$ref": "#/$defs/LocationProfileDataType_2"
+        },
+        "selected_values": {
+          "type": [
+            "array",
+            "null"
+          ],
+          "items": {
+            "$ref": "#/$defs/LocationProfileSelectedValue_2"
+          }
+        },
+        "possible_values": {
+          "type": [
+            "array",
+            "null"
+          ],
+          "items": {
+            "$ref": "#/$defs/LocationProfilePossibleValue_2"
+          }
+        },
+        "limits": {
+          "$ref": "#/$defs/LocationPropertyLimit_2"
+        },
+        "dependent_properties": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/LocationPropertyRequirement"
+          }
+        },
+        "developer_description": {
+          "minLength": 0,
+          "type": "string",
+          "description": "Description not meant for end users"
+        },
+        "tags": {
+          "type": [
+            "array",
+            "null"
+          ],
+          "items": {
+            "$ref": "#/$defs/LocationProfileTag_2"
+          },
+          "description": "Denotes whether settings is required for Similar homes or EUC to work.\nIf empty - Similar homes/EUC do not require this setting."
+        },
+        "group": {
+          "minLength": 0,
+          "type": "string",
+          "description": "The group (or category) to which this setting belongs to"
+        }
+      },
+      "description": "Location profile key setting"
+    },
+    "LocationProfileTag_2": {
+      "enum": [
+        "required_for_sh_to_work",
+        "required_for_euc_to_work"
+      ],
+      "type": "string",
+      "description": "Tag for location profile"
+    },
+    "LocationPropertyLimit_2": {
+      "required": [
+        "max",
+        "min",
+        "step"
+      ],
+      "type": "object",
+      "properties": {
+        "min": {
+          "type": "number",
+          "format": "double"
+        },
+        "max": {
+          "type": "number",
+          "format": "double"
+        },
+        "step": {
+          "type": "number",
+          "format": "double"
+        }
+      },
+      "description": "Limitations set for profile setting values. Available when the specified data_type is number."
+    },
+    "LocationPropertyRequirement": {
+      "type": "object",
+      "properties": {
+        "key": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "description": "Unique key for the property to depend on."
+        },
+        "accepted_values": {
+          "type": [
+            "array",
+            "null"
+          ],
+          "items": {},
+          "description": "Accepted values. Based on the dependent properties data_type, values can be a number or a string."
+        }
+      },
+      "description": "Properties that are required for a setting to be valid."
+    }
+  }
+}

@@ -1,0 +1,383 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/api-evangelist/eliq/main/json-schema/eliq-meter-price-formula-schema.json",
+  "title": "MeterPriceFormula",
+  "x-generated": "2026-10-20",
+  "x-method": "derived",
+  "x-generator": "derive-json-schema.py",
+  "x-source": "openapi/eliq-price-formulas-api-openapi.yml#/components/schemas/MeterPriceFormula",
+  "type": "object",
+  "properties": {
+    "meter_id": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "description": "Meter id. Applicable only for price formulas set on a meter. Location level formulas which can be applied to multiple meters will have this field empty."
+    },
+    "fuel": {
+      "$ref": "#/$defs/Fuel"
+    },
+    "direction": {
+      "$ref": "#/$defs/PriceFormulaDirection"
+    },
+    "from": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "description": "Price formula start date.",
+      "format": "date-time"
+    },
+    "to": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "description": "Price formula end date.",
+      "format": "date-time"
+    },
+    "currency_code": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "description": "Price formula currency code."
+    },
+    "elements_array": {
+      "type": [
+        "array",
+        "null"
+      ],
+      "items": {
+        "$ref": "#/$defs/Element"
+      },
+      "description": "List of elements"
+    },
+    "source": {
+      "$ref": "#/$defs/Source"
+    }
+  },
+  "$defs": {
+    "Block": {
+      "type": "object",
+      "properties": {
+        "resolution": {
+          "$ref": "#/$defs/BlockResolution"
+        },
+        "register_id": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "unit_rate": {
+          "type": "number",
+          "format": "double"
+        },
+        "from_kwh": {
+          "type": [
+            "integer",
+            "null"
+          ],
+          "format": "int64"
+        },
+        "to_kwh": {
+          "type": [
+            "integer",
+            "null"
+          ],
+          "format": "int64"
+        },
+        "from_m3": {
+          "type": [
+            "integer",
+            "null"
+          ],
+          "format": "int64"
+        },
+        "to_m3": {
+          "type": [
+            "integer",
+            "null"
+          ],
+          "format": "int64"
+        }
+      }
+    },
+    "BlockResolution": {
+      "enum": [
+        "day",
+        "year"
+      ],
+      "type": "string"
+    },
+    "Charge": {
+      "required": [
+        "resolution"
+      ],
+      "type": "object",
+      "properties": {
+        "resolution": {
+          "$ref": "#/$defs/ChargeResolution"
+        },
+        "charge": {
+          "type": [
+            "number",
+            "null"
+          ],
+          "description": "Charge amount",
+          "format": "double"
+        }
+      },
+      "description": "Object containing the charge. Available when type is set to charge."
+    },
+    "ChargeResolution": {
+      "enum": [
+        "day",
+        "month"
+      ],
+      "type": "string",
+      "description": "Charge resolution"
+    },
+    "Element": {
+      "required": [
+        "name",
+        "type"
+      ],
+      "type": "object",
+      "properties": {
+        "name": {
+          "minLength": 1,
+          "type": "string",
+          "description": "Name of the price formula element"
+        },
+        "type": {
+          "$ref": "#/$defs/PriceElementType"
+        },
+        "charge": {
+          "$ref": "#/$defs/Charge"
+        },
+        "unit_rate": {
+          "$ref": "#/$defs/UnitRate"
+        }
+      }
+    },
+    "Fixed": {
+      "required": [
+        "unit_rate"
+      ],
+      "type": "object",
+      "properties": {
+        "unit_rate": {
+          "type": "number",
+          "description": "Fixed unit rate",
+          "format": "double"
+        }
+      },
+      "description": "Object containing spot price information. Available if unit rate type is set to 'fixed'"
+    },
+    "Fuel": {
+      "enum": [
+        "elec",
+        "gas",
+        "district_heating"
+      ],
+      "type": "string",
+      "description": "Fuel type"
+    },
+    "Interval": {
+      "type": "object",
+      "properties": {
+        "from_minute": {
+          "type": [
+            "integer",
+            "null"
+          ],
+          "format": "int64"
+        },
+        "to_minute": {
+          "type": [
+            "integer",
+            "null"
+          ],
+          "format": "int64"
+        }
+      }
+    },
+    "Nordpool": {
+      "required": [
+        "region",
+        "resolution"
+      ],
+      "type": "object",
+      "properties": {
+        "region": {
+          "minLength": 1,
+          "type": "string",
+          "description": "Region"
+        },
+        "resolution": {
+          "$ref": "#/$defs/NordpoolResolution"
+        },
+        "multiplier": {
+          "type": [
+            "number",
+            "null"
+          ],
+          "description": "Multiplier. All Nordpool is by default without VAT. Specify VAT to be used, value 1.25 would result in 25% tax.",
+          "format": "double"
+        }
+      },
+      "description": "Object containing Nordpool information. Available if unit rate type is set to nordpool"
+    },
+    "NordpoolResolution": {
+      "enum": [
+        "hour"
+      ],
+      "type": "string"
+    },
+    "PriceElementType": {
+      "enum": [
+        "charge",
+        "unit_rate"
+      ],
+      "type": "string",
+      "description": "Formula element type."
+    },
+    "PriceFormulaDirection": {
+      "enum": [
+        "import",
+        "export"
+      ],
+      "type": "string",
+      "description": "Direction type"
+    },
+    "Source": {
+      "enum": [
+        "client",
+        "user"
+      ],
+      "type": "string",
+      "description": "Price formula source"
+    },
+    "SpotPrice": {
+      "type": "object",
+      "properties": {
+        "provider": {
+          "$ref": "#/$defs/SpotPriceProvider"
+        },
+        "region": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "resolution": {
+          "$ref": "#/$defs/SpotPriceResolution"
+        },
+        "multiplier": {
+          "type": [
+            "number",
+            "null"
+          ],
+          "format": "double"
+        }
+      }
+    },
+    "SpotPriceProvider": {
+      "enum": [
+        "nordpool",
+        "epex"
+      ],
+      "type": "string"
+    },
+    "SpotPriceResolution": {
+      "enum": [
+        "hour",
+        "15min"
+      ],
+      "type": "string"
+    },
+    "Tou": {
+      "type": "object",
+      "properties": {
+        "register_id": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "unit_rate": {
+          "type": [
+            "number",
+            "null"
+          ],
+          "format": "double"
+        },
+        "intervals": {
+          "type": [
+            "array",
+            "null"
+          ],
+          "items": {
+            "$ref": "#/$defs/Interval"
+          }
+        },
+        "skip_intervals": {
+          "type": [
+            "boolean",
+            "null"
+          ]
+        }
+      }
+    },
+    "UnitRate": {
+      "required": [
+        "type"
+      ],
+      "type": "object",
+      "properties": {
+        "type": {
+          "$ref": "#/$defs/UnitRateType"
+        },
+        "fixed": {
+          "$ref": "#/$defs/Fixed"
+        },
+        "tou": {
+          "$ref": "#/$defs/Tou"
+        },
+        "nordpool": {
+          "$ref": "#/$defs/Nordpool"
+        },
+        "block": {
+          "$ref": "#/$defs/Block"
+        },
+        "spot_price": {
+          "$ref": "#/$defs/SpotPrice"
+        },
+        "weekdays": {
+          "type": [
+            "array",
+            "null"
+          ],
+          "items": {
+            "type": "string"
+          }
+        }
+      },
+      "description": "Object containing the unit rate. Available when type is set to unit_rate."
+    },
+    "UnitRateType": {
+      "enum": [
+        "fixed",
+        "tou",
+        "nordpool",
+        "block",
+        "spot_price"
+      ],
+      "type": "string",
+      "description": "Unit rate type"
+    }
+  }
+}

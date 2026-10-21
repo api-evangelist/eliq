@@ -1,0 +1,56 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/api-evangelist/eliq/main/json-schema/eliq-location-notification-settings-input-schema.json",
+  "title": "LocationNotificationSettingsInput",
+  "description": "The various settings which can be configured for a notification.\nAn important note is that the notification is sent via all configured channels.\nI.E. if none of the channels (email, text, push, webhook) are muted, ALL of them will be used in order to deliver the notification.",
+  "x-generated": "2026-10-20",
+  "x-method": "derived",
+  "x-generator": "derive-json-schema.py",
+  "x-source": "openapi/eliq-locations-api-openapi.yml#/components/schemas/LocationNotificationSettingsInput",
+  "required": [
+    "notification_type_id"
+  ],
+  "type": "object",
+  "properties": {
+    "notification_type_id": {
+      "type": "integer",
+      "description": "The unique notification id",
+      "format": "int32"
+    },
+    "enabled": {
+      "type": [
+        "boolean",
+        "null"
+      ],
+      "description": "Specify whether the notification is enabled. Disabled notifications are not sent."
+    },
+    "mute_email": {
+      "type": [
+        "boolean",
+        "null"
+      ],
+      "description": "Specify whether delivery by email should be muted. True - not delivered, False - delivered."
+    },
+    "mute_text": {
+      "type": [
+        "boolean",
+        "null"
+      ],
+      "description": "Specify whether delivery by SMS text message should be muted. True - not delivered, False - delivered."
+    },
+    "mute_push": {
+      "type": [
+        "boolean",
+        "null"
+      ],
+      "description": "Specify whether push notification delivery to a user's smartphone should be muted. True - not delivered, False - delivered."
+    },
+    "mute_webhook": {
+      "type": [
+        "boolean",
+        "null"
+      ],
+      "description": "Specify whether webhook delivery should be muted. True - not delivered, False - delivered."
+    }
+  }
+}

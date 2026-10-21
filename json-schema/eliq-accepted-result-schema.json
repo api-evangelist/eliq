@@ -1,0 +1,55 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/api-evangelist/eliq/main/json-schema/eliq-accepted-result-schema.json",
+  "title": "AcceptedResult",
+  "x-generated": "2026-10-20",
+  "x-method": "derived",
+  "x-generator": "derive-json-schema.py",
+  "x-source": "openapi/eliq-user-api-openapi.yml#/components/schemas/AcceptedResult",
+  "type": "object",
+  "properties": {
+    "location": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "value": {},
+    "formatters": {
+      "type": [
+        "array",
+        "null"
+      ],
+      "items": {
+        "$ref": "#/$defs/IOutputFormatter"
+      }
+    },
+    "contentTypes": {
+      "type": [
+        "array",
+        "null"
+      ],
+      "items": {
+        "type": "string"
+      }
+    },
+    "declaredType": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "statusCode": {
+      "type": [
+        "integer",
+        "null"
+      ],
+      "format": "int32"
+    }
+  },
+  "$defs": {
+    "IOutputFormatter": {
+      "type": "object"
+    }
+  }
+}

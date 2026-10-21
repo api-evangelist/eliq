@@ -8,7 +8,105 @@ info:
   description: '# API Reference
 
 
-    The Eliq insights API is organized around REST.'
+    The Eliq insights API is organized around REST.
+
+    API has predictable resource oriented URLs, accepts JSON-encoded request bodies, returns JSON-encoded responses, and uses standard HTTP response codes and verbs.
+
+    Insights API contains endpoints for two entities: Users and Locations.
+
+
+    # Date and Time
+
+
+    Dates and Datetimes follow ISO 8601 format.
+
+    All dates and times are in `local time zone` - no UTC or other timezone specification is allowed for the queries and will result in error. Local timezone was chosen to make the data ready for presentation.
+
+
+    # Responses and Errors
+
+
+    Eliq insights API uses standard HTTP response codes to indicate success or failure of a request:
+
+    - 2xx indicate success
+
+    - 4xx indicate error due to invalid input
+
+    - 5xx indicates an internal error of Eliq Insights API
+
+
+    ## Status codes
+
+
+    *Status code* | *Description*
+
+    --- | ---
+
+    200 - OK | Everything worked as expected.
+
+    201 - Created | Resource created.
+
+    204 - No Content | Successful request. Used in successful delete requests
+
+    302 - Found | Resource requested has been temporarily moved to the URL given by the Location header.
+
+    400 - Bad Request | Request input data is invalid.
+
+    401 - Unauthorized | Access token invalid for the given request. E.g. access token expired.
+
+    404 - Not Found | Requested resource not found.
+
+    500, 502, 503, 504 | Something wrong with the Insights API.
+
+
+    ## Error body
+
+
+    Eliq Insights API returns an error response body on failures to provide additional information on the error.
+
+
+    Some fields have been deprecated. Deprecated fields will continue to be used in existing endpoints, but will not show up in any new additions.
+
+
+    | *Field* | *Type* | *Deprecated* | *Description* |
+
+    | --- | --- | --- | --- |
+
+    | type | String | Yes | Type of error. One of `third_party_error`, `internal_error`, `client_error` and `end_user_error`. |
+
+    | category | String | Yes | Category of the error. E.g. `invalid_parameter`. Used to guide developers. |
+
+    | code | String | | Error code specific to each issue. |
+
+    | description | String | | A description of the error for more context and easier debugging.|
+
+    | message | String | Yes | A message related to the error which can be shown to end users. |
+
+    | transaction_id | String | | Transaction identifier with which request is associated. Pass this when contacting support |
+
+
+    Example:
+
+
+    ```json
+
+    {
+
+    "type":"client_error",
+
+    "category":"invalid_parameter",
+
+    "code":"MISSING_TO",
+
+    "description":"Invalid parameter ''to''. Cannot be null",
+
+    "message":"Something went wrong, please try again later. If problem remains, please contact support (error: 1ad3a534117d4).",
+
+    "transaction_id":"1ad3a534117d4",
+
+    }
+
+    ```'
 servers:
 - url: http://localhost:3000
 security:
@@ -498,6 +596,149 @@ paths:
                     description: Internal server error, please try again later. If problem remains, please contact support.
 components:
   schemas:
+    Location:
+      required:
+      - address
+      - ext_ref
+      - fuels
+      - id
+      - meters
+      - timezone
+      type: object
+      properties:
+        id:
+          type: integer
+          description: ID
+          format: int32
+          example: 150
+        name:
+          type: string
+          description: Name
+          nullable: true
+          example: My Location
+        ext_ref:
+          minLength: 1
+          type: string
+          description: External (utility) reference.
+        timezone:
+          minLength: 1
+          type: string
+          description: Iana timezone
+          example: Europe/Berlin
+        address:
+          $ref: '#/components/schemas/Address'
+        fuels:
+          $ref: '#/components/schemas/LocationFuels'
+        meters:
+          type: array
+          items:
+            $ref: '#/components/schemas/LocationMeter'
+          description: Meters present at a location.
+      description: Location data.
+    Error:
+      type: object
+      properties:
+        type:
+          type: string
+          description: Type of error.
+          nullable: true
+          example: internal_error
+        category:
+          type: string
+          description: Error category.
+          nullable: true
+          example: internal_error
+        code:
+          type: string
+          description: Code describing the issue.
+          nullable: true
+          example: INTERNAL_ERROR
+        transaction_id:
+          type: string
+          description: Identifier for the session. Please provide this when contacting support.
+          nullable: true
+          example: 0HN18NN5QB401:00000001
+        message:
+          type: string
+          description: A message related to the error.
+          nullable: true
+          example: Something went wrong. Please try again later. If problem remains, please contact support.
+        description:
+          type: string
+          description: A description of the error for developers.
+          nullable: true
+          example: Internal server error, please try again later. If problem remains, please contact support.
+      description: Model returned for error responses.
+    Consent:
+      type: object
+      x-examples:
+        example-1:
+          version_id: f2283b35-c2c7-4a4f-90f4-49e493c69d7
+          name: terms_and_conditions
+          type: login_consent
+          given_consent: false
+          is_updated: true
+          is_mandatory: true
+          timestamp: '2022-06-28T13:54:43.369558Z'
+          language_code: en-GB
+          data:
+            url: https://your-website-url.com/terms-and-conditions
+      properties:
+        version_id:
+          type: string
+        name:
+          type: string
+        type:
+          type: string
+        given_consent:
+          type: boolean
+        is_updated:
+          type: boolean
+        is_mandatory:
+          type: boolean
+        timestamp:
+          type: string
+        language_code:
+          type: string
+        data:
+          type: object
+          properties:
+            url:
+              type: string
+              description: Nullable, such as the terms and conditions page on a website, etc.
+      examples: []
+    LocationFuels:
+      type: object
+      properties:
+        elec:
+          $ref: '#/components/schemas/LocationFuel'
+        gas:
+          $ref: '#/components/schemas/LocationFuel'
+        district_heating:
+          $ref: '#/components/schemas/LocationFuel'
+      description: Available fuel data
+    Event:
+      type: object
+      properties:
+        created_date:
+          type: string
+          format: date-time
+          nullable: true
+        type:
+          type: string
+          nullable: true
+        source:
+          type: object
+          description: 'The source of the event. This can for example be a monitor object or a report object
+
+            To figure out which object it is, look at Type'
+          nullable: true
+    SyncStatus:
+      enum:
+      - ok
+      - waiting_for_data
+      type: string
+      description: Data synchronization status.
     LocationMeter:
       required:
       - direction
@@ -568,6 +809,18 @@ components:
           nullable: true
           example: '2026-12-31T00:00:00'
       description: Meter data.
+    LocationFuel:
+      type: object
+      properties:
+        import:
+          $ref: '#/components/schemas/LocationFuelItem'
+        export:
+          $ref: '#/components/schemas/LocationFuelItem'
+        consumption:
+          $ref: '#/components/schemas/LocationFuelItem'
+        production:
+          $ref: '#/components/schemas/LocationFuelItem'
+      description: Fuel data
     LocationFuelItem:
       required:
       - resolution
@@ -596,164 +849,6 @@ components:
         sync_status:
           $ref: '#/components/schemas/SyncStatus'
       description: General data about a fuel item.
-    LocationFuel:
-      type: object
-      properties:
-        import:
-          $ref: '#/components/schemas/LocationFuelItem'
-        export:
-          $ref: '#/components/schemas/LocationFuelItem'
-        consumption:
-          $ref: '#/components/schemas/LocationFuelItem'
-        production:
-          $ref: '#/components/schemas/LocationFuelItem'
-      description: Fuel data
-    SyncStatus:
-      enum:
-      - ok
-      - waiting_for_data
-      type: string
-      description: Data synchronization status.
-    Event:
-      type: object
-      properties:
-        created_date:
-          type: string
-          format: date-time
-          nullable: true
-        type:
-          type: string
-          nullable: true
-        source:
-          type: object
-          description: 'The source of the event. This can for example be a monitor object or a report object
-
-            To figure out which object it is, look at Type'
-          nullable: true
-    FuelSource:
-      enum:
-      - smart_meter
-      - non_smart_meter
-      - load_curve_estimation
-      - pv_disagg
-      type: string
-      description: Source of fuel data.
-    Address:
-      required:
-      - country_code
-      - street_address
-      type: object
-      properties:
-        street_address:
-          minLength: 1
-          type: string
-          description: Street address.
-          example: Riksgatan 1
-        postal_code:
-          type: string
-          description: Postal code.
-          nullable: true
-          example: 117 40
-        city:
-          type: string
-          description: City name.
-          nullable: true
-          example: Stockholm
-        country_code:
-          minLength: 1
-          type: string
-          description: Country code (ISO 3166-1 alpha-2).
-          example: SE
-        lon:
-          type: number
-          description: The geographical longitude coordinate.
-          format: double
-          nullable: true
-          example: 18.07187
-        lat:
-          type: number
-          description: The geographical latitude coordinate.
-          format: double
-          nullable: true
-          example: 59.3257
-      description: General address data including latitude and longitude.
-    Consent:
-      type: object
-      x-examples:
-        example-1:
-          version_id: f2283b35-c2c7-4a4f-90f4-49e493c69d7
-          name: terms_and_conditions
-          type: login_consent
-          given_consent: false
-          is_updated: true
-          is_mandatory: true
-          timestamp: '2022-06-28T13:54:43.369558Z'
-          language_code: en-GB
-          data:
-            url: https://your-website-url.com/terms-and-conditions
-      properties:
-        version_id:
-          type: string
-        name:
-          type: string
-        type:
-          type: string
-        given_consent:
-          type: boolean
-        is_updated:
-          type: boolean
-        is_mandatory:
-          type: boolean
-        timestamp:
-          type: string
-        language_code:
-          type: string
-        data:
-          type: object
-          properties:
-            url:
-              type: string
-              description: Nullable, such as the terms and conditions page on a website, etc.
-      examples: []
-    Location:
-      required:
-      - address
-      - ext_ref
-      - fuels
-      - id
-      - meters
-      - timezone
-      type: object
-      properties:
-        id:
-          type: integer
-          description: ID
-          format: int32
-          example: 150
-        name:
-          type: string
-          description: Name
-          nullable: true
-          example: My Location
-        ext_ref:
-          minLength: 1
-          type: string
-          description: External (utility) reference.
-        timezone:
-          minLength: 1
-          type: string
-          description: Iana timezone
-          example: Europe/Berlin
-        address:
-          $ref: '#/components/schemas/Address'
-        fuels:
-          $ref: '#/components/schemas/LocationFuels'
-        meters:
-          type: array
-          items:
-            $ref: '#/components/schemas/LocationMeter'
-          description: Meters present at a location.
-      description: Location data.
     User:
       description: Get user information
       type: object
@@ -817,50 +912,53 @@ components:
       - id
       - ext_ref
       - language_code
-    LocationFuels:
+    Address:
+      required:
+      - country_code
+      - street_address
       type: object
       properties:
-        elec:
-          $ref: '#/components/schemas/LocationFuel'
-        gas:
-          $ref: '#/components/schemas/LocationFuel'
-        district_heating:
-          $ref: '#/components/schemas/LocationFuel'
-      description: Available fuel data
-    Error:
-      type: object
-      properties:
-        type:
+        street_address:
+          minLength: 1
           type: string
-          description: Type of error.
-          nullable: true
-          example: internal_error
-        category:
+          description: Street address.
+          example: Riksgatan 1
+        postal_code:
           type: string
-          description: Error category.
+          description: Postal code.
           nullable: true
-          example: internal_error
-        code:
+          example: 117 40
+        city:
           type: string
-          description: Code describing the issue.
+          description: City name.
           nullable: true
-          example: INTERNAL_ERROR
-        transaction_id:
+          example: Stockholm
+        country_code:
+          minLength: 1
           type: string
-          description: Identifier for the session. Please provide this when contacting support.
+          description: Country code (ISO 3166-1 alpha-2).
+          example: SE
+        lon:
+          type: number
+          description: The geographical longitude coordinate.
+          format: double
           nullable: true
-          example: 0HN18NN5QB401:00000001
-        message:
-          type: string
-          description: A message related to the error.
+          example: 18.07187
+        lat:
+          type: number
+          description: The geographical latitude coordinate.
+          format: double
           nullable: true
-          example: Something went wrong. Please try again later. If problem remains, please contact support.
-        description:
-          type: string
-          description: A description of the error for developers.
-          nullable: true
-          example: Internal server error, please try again later. If problem remains, please contact support.
-      description: Model returned for error responses.
+          example: 59.3257
+      description: General address data including latitude and longitude.
+    FuelSource:
+      enum:
+      - smart_meter
+      - non_smart_meter
+      - load_curve_estimation
+      - pv_disagg
+      type: string
+      description: Source of fuel data.
     UserNotification:
       type: object
       properties:

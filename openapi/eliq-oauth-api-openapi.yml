@@ -5,7 +5,73 @@ info:
   description: '# Eliq auth API
 
 
-    Used to obtain access tokens for Eliq APIs, most commonly the Eliq data management API and Eliq insights API.'
+    Used to obtain access tokens for Eliq APIs, most commonly the Eliq data management API and Eliq insights API.
+
+
+    ## Getting started
+
+
+    OAuth clients are set up in collaboration with Eliq. Your account manager will provide you with a `client_id`.
+
+    Client secrets are generated via the **Client Admin API** or by your account manager.
+
+
+    Each client is configured with access to one or more APIs, along with the allowed access types and scopes for each.
+
+    You can review and manage your client''s API access, secrets, and scope configuration in the **Client Admin Portal**.
+
+
+    **Multiple secrets** are supported per client to allow for smooth secret rotation without downtime.
+
+
+    ## Requesting tokens
+
+
+    Tokens are requested via `POST /oauth/token` using OAuth 2.0 client credentials. The endpoint supports three flows:
+
+
+    - **App token** — machine-to-machine token scoped to a specific API
+
+    - **Delegated token** — token issued on behalf of a subject (e.g. a user or location)
+
+    - **Token refresh** — exchange a refresh token for a new access token
+
+
+    ## Token verification
+
+
+    Tokens are signed with asymmetric keys. The public key is available at `GET /.well-known/jwks.json`.
+
+    The full OpenID configuration is available at `GET /.well-known/openid-configuration`.
+
+
+    ## Token claims
+
+
+    | Claim | Description | Example |
+
+    |---|---|---|
+
+    | `iss` | Token issuer | `https://auth-api.eliq.com` |
+
+    | `aud` | Target API the token is scoped to | `data-management-api` |
+
+    | `client_id` | OAuth application the token belongs to | `utility-acme-backend` |
+
+    | `org` | Organization ID | `1234567890` |
+
+    | `org_type` | Type of organization | `utility` |
+
+    | `sub` | Identity the token represents | `12345` (user) or `utility-acme-backend` (app) |
+
+    | `sub_type` | Type of subject | `user`, `client` |
+
+    | `scope` | Scopes granted | `data.read data.write` |
+
+    | `access_type` | How access was granted | `application`, `delegated` |
+
+
+    > **Legacy (v1) clients:** If your `client_id` is a numeric Utility ID, your existing integration continues to work without any changes. See the Legacy v1 section at the bottom of this page.'
 servers:
 - url: https://auth-api.eliq.com
   description: Production

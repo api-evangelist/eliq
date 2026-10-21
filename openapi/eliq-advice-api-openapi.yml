@@ -8,7 +8,105 @@ info:
   description: '# API Reference
 
 
-    The Eliq insights API is organized around REST.'
+    The Eliq insights API is organized around REST.
+
+    API has predictable resource oriented URLs, accepts JSON-encoded request bodies, returns JSON-encoded responses, and uses standard HTTP response codes and verbs.
+
+    Insights API contains endpoints for two entities: Users and Locations.
+
+
+    # Date and Time
+
+
+    Dates and Datetimes follow ISO 8601 format.
+
+    All dates and times are in `local time zone` - no UTC or other timezone specification is allowed for the queries and will result in error. Local timezone was chosen to make the data ready for presentation.
+
+
+    # Responses and Errors
+
+
+    Eliq insights API uses standard HTTP response codes to indicate success or failure of a request:
+
+    - 2xx indicate success
+
+    - 4xx indicate error due to invalid input
+
+    - 5xx indicates an internal error of Eliq Insights API
+
+
+    ## Status codes
+
+
+    *Status code* | *Description*
+
+    --- | ---
+
+    200 - OK | Everything worked as expected.
+
+    201 - Created | Resource created.
+
+    204 - No Content | Successful request. Used in successful delete requests
+
+    302 - Found | Resource requested has been temporarily moved to the URL given by the Location header.
+
+    400 - Bad Request | Request input data is invalid.
+
+    401 - Unauthorized | Access token invalid for the given request. E.g. access token expired.
+
+    404 - Not Found | Requested resource not found.
+
+    500, 502, 503, 504 | Something wrong with the Insights API.
+
+
+    ## Error body
+
+
+    Eliq Insights API returns an error response body on failures to provide additional information on the error.
+
+
+    Some fields have been deprecated. Deprecated fields will continue to be used in existing endpoints, but will not show up in any new additions.
+
+
+    | *Field* | *Type* | *Deprecated* | *Description* |
+
+    | --- | --- | --- | --- |
+
+    | type | String | Yes | Type of error. One of `third_party_error`, `internal_error`, `client_error` and `end_user_error`. |
+
+    | category | String | Yes | Category of the error. E.g. `invalid_parameter`. Used to guide developers. |
+
+    | code | String | | Error code specific to each issue. |
+
+    | description | String | | A description of the error for more context and easier debugging.|
+
+    | message | String | Yes | A message related to the error which can be shown to end users. |
+
+    | transaction_id | String | | Transaction identifier with which request is associated. Pass this when contacting support |
+
+
+    Example:
+
+
+    ```json
+
+    {
+
+    "type":"client_error",
+
+    "category":"invalid_parameter",
+
+    "code":"MISSING_TO",
+
+    "description":"Invalid parameter ''to''. Cannot be null",
+
+    "message":"Something went wrong, please try again later. If problem remains, please contact support (error: 1ad3a534117d4).",
+
+    "transaction_id":"1ad3a534117d4",
+
+    }
+
+    ```'
 servers:
 - url: http://localhost:3000
 security:
@@ -411,75 +509,6 @@ paths:
                     description: Error when getting estimated savings monetary sources
 components:
   schemas:
-    FinancingOptionType:
-      enum:
-      - financing
-      - subsidy
-      type: string
-      description: Financing option type
-    Error:
-      type: object
-      properties:
-        type:
-          type: string
-          description: Type of error.
-          nullable: true
-          example: internal_error
-        category:
-          type: string
-          description: Error category.
-          nullable: true
-          example: internal_error
-        code:
-          type: string
-          description: Code describing the issue.
-          nullable: true
-          example: INTERNAL_ERROR
-        transaction_id:
-          type: string
-          description: Identifier for the session. Please provide this when contacting support.
-          nullable: true
-          example: 0HN18NN5QB401:00000001
-        message:
-          type: string
-          description: A message related to the error.
-          nullable: true
-          example: Something went wrong. Please try again later. If problem remains, please contact support.
-        description:
-          type: string
-          description: A description of the error for developers.
-          nullable: true
-          example: Internal server error, please try again later. If problem remains, please contact support.
-      description: Model returned for error responses.
-    AdviceType:
-      enum:
-      - energy_tip
-      - upgrade
-      type: string
-      description: Advice type is used as a sub-category or a group
-    SavingMonetarySource:
-      required:
-      - details
-      - name
-      - type
-      type: object
-      properties:
-        type:
-          minLength: 1
-          type: string
-          description: Unique source type
-          example: average
-        name:
-          minLength: 1
-          type: string
-          description: Savings source type name
-          example: Average
-        details:
-          minLength: 1
-          type: string
-          description: Savings source type details
-          example: Savings based on average price
-      description: Savings calculation source type
     Advice:
       required:
       - content
@@ -596,168 +625,40 @@ components:
           description: The EUC (energy usage category) keys related to specific advice.
           nullable: true
       description: Model containing advice information.
-    Link:
-      required:
-      - text
-      - url
-      type: object
-      properties:
-        text:
-          minLength: 1
-          type: string
-          description: Title provided for a given Web resource
-          example: Example Domain
-        url:
-          minLength: 1
-          type: string
-          description: System generated url that redirects to a given Web resource. Provided url uses anonymous authentication and is only valid for 30 minutes after its receival.
-          example: https://www.eliq.io/v3/locations/advice/redirect_url?adviceTrackingId=3f062710-d544-49b4-ac04-9ef14e3080b5
-      description: "Optional link can be included with each advice\n            \nDeprecated property, links should be used instead."
-    AdviceLinkType:
-      enum:
-      - image
-      - external-link
-      type: string
-      description: The type which can be set to an advice Link.
-    AdviceReturnOfInvestmentModel:
-      required:
-      - from
-      - to
-      - unit
-      type: object
-      properties:
-        unit:
-          $ref: '#/components/schemas/AdviceReturnOfInvestmentUnit'
-        from:
-          type: number
-          description: From value
-          format: double
-        to:
-          type: number
-          description: To value
-          format: double
-      description: Return of investment
-    AdviceInvestmentCostModel:
-      type: object
-      properties:
-        fixed:
-          type: number
-          description: Fixed investment cost value
-          format: double
-          nullable: true
-        range_from:
-          type: number
-          description: Investment cost range from value
-          format: double
-          nullable: true
-        range_to:
-          type: number
-          description: Investment cost range to value
-          format: double
-          nullable: true
-        roi:
-          type: array
-          items:
-            $ref: '#/components/schemas/AdviceReturnOfInvestmentModel'
-          nullable: true
-      description: Investment cost
-    AdviceStatus:
-      enum:
-      - none
-      - skipped
-      - not_relevant
-      - implemented
-      - save_for_later
-      - already_implemented
-      type: string
-      description: This statuses are used to capture end user feedback and feed this information back to our algorithms as well as making it easy to build an UI. The status can be updated at any time.
-    SavingMonetary:
-      required:
-      - cost
-      - cost_per_wh
-      - type
+    Error:
       type: object
       properties:
         type:
-          minLength: 1
           type: string
-          description: Monetary source type
-          example: price_formula
-        cost:
-          type: number
-          description: Savings amount in local currency
-          format: double
-          example: 33.24
-        cost_per_wh:
-          type: number
-          description: Savings amount per one kilowatt-hour in local currency
-          format: double
-          example: 0.27
-      description: Savings monetary value
-    AdviceFinancingOptionModel:
-      required:
-      - description
-      - key
-      - title
-      - type
-      - url
-      type: object
-      properties:
-        key:
-          minLength: 1
+          description: Type of error.
+          nullable: true
+          example: internal_error
+        category:
           type: string
-          description: Unique key used to identify a financing option. Consisting only of lowercase letters and underscores.
-          example: financing_key
-        type:
-          $ref: '#/components/schemas/FinancingOptionType'
-        title:
-          minLength: 1
+          description: Error category.
+          nullable: true
+          example: internal_error
+        code:
           type: string
-          description: Title text
+          description: Code describing the issue.
+          nullable: true
+          example: INTERNAL_ERROR
+        transaction_id:
+          type: string
+          description: Identifier for the session. Please provide this when contacting support.
+          nullable: true
+          example: 0HN18NN5QB401:00000001
+        message:
+          type: string
+          description: A message related to the error.
+          nullable: true
+          example: Something went wrong. Please try again later. If problem remains, please contact support.
         description:
-          minLength: 1
           type: string
-          description: Description text
-        url:
-          minLength: 1
-          type: string
-          description: Url of an external Web resource
-      description: Financing option
-    EstimatedSavings:
-      required:
-      - unit
-      - value
-      type: object
-      properties:
-        value:
-          type: number
-          description: The amount saved.
-          format: double
-        unit:
-          $ref: '#/components/schemas/EnergyUnit'
-      description: "The estimated energy savings in either kWh or M3 for a given advice.\n            \nUnit depends on whether the advice is intended for gas of electricity."
-    AdviceLinkModel:
-      required:
-      - key
-      - text
-      - type
-      type: object
-      properties:
-        key:
-          minLength: 1
-          type: string
-          description: The key by which the link is identified.
-        type:
-          $ref: '#/components/schemas/AdviceLinkType'
-        text:
-          minLength: 1
-          type: string
-          description: The text to be displayed in the front end for this link.
-        url:
-          type: string
-          description: The actual URL of the link.
+          description: A description of the error for developers.
           nullable: true
-      description: Optional link which can be included with each advice
+          example: Internal server error, please try again later. If problem remains, please contact support.
+      description: Model returned for error responses.
     AdvicePatchInput:
       required:
       - op
@@ -787,16 +688,213 @@ components:
           description: "Status to set. \n\nAllowed values: \"none\", \"skipped\", \"not_relevant\", \"implemented\", \"save_for_later\", \"already_implemented\""
           example: implemented
       description: Advice status update request body
-    AdviceReturnOfInvestmentUnit:
-      enum:
-      - months
-      type: string
-      description: Return of investment unit
+    AdviceFinancingOptionModel:
+      required:
+      - description
+      - key
+      - title
+      - type
+      - url
+      type: object
+      properties:
+        key:
+          minLength: 1
+          type: string
+          description: Unique key used to identify a financing option. Consisting only of lowercase letters and underscores.
+          example: financing_key
+        type:
+          $ref: '#/components/schemas/FinancingOptionType'
+        title:
+          minLength: 1
+          type: string
+          description: Title text
+        description:
+          minLength: 1
+          type: string
+          description: Description text
+        url:
+          minLength: 1
+          type: string
+          description: Url of an external Web resource
+      description: Financing option
     EnergyUnit:
       enum:
       - kwh
       - m3
       type: string
+    Link:
+      required:
+      - text
+      - url
+      type: object
+      properties:
+        text:
+          minLength: 1
+          type: string
+          description: Title provided for a given Web resource
+          example: Example Domain
+        url:
+          minLength: 1
+          type: string
+          description: System generated url that redirects to a given Web resource. Provided url uses anonymous authentication and is only valid for 30 minutes after its receival.
+          example: https://www.eliq.io/v3/locations/advice/redirect_url?adviceTrackingId=3f062710-d544-49b4-ac04-9ef14e3080b5
+      description: "Optional link can be included with each advice\n            \nDeprecated property, links should be used instead."
+    AdviceLinkType:
+      enum:
+      - image
+      - external-link
+      type: string
+      description: The type which can be set to an advice Link.
+    AdviceReturnOfInvestmentUnit:
+      enum:
+      - months
+      type: string
+      description: Return of investment unit
+    SavingMonetarySource:
+      required:
+      - details
+      - name
+      - type
+      type: object
+      properties:
+        type:
+          minLength: 1
+          type: string
+          description: Unique source type
+          example: average
+        name:
+          minLength: 1
+          type: string
+          description: Savings source type name
+          example: Average
+        details:
+          minLength: 1
+          type: string
+          description: Savings source type details
+          example: Savings based on average price
+      description: Savings calculation source type
+    AdviceStatus:
+      enum:
+      - none
+      - skipped
+      - not_relevant
+      - implemented
+      - save_for_later
+      - already_implemented
+      type: string
+      description: This statuses are used to capture end user feedback and feed this information back to our algorithms as well as making it easy to build an UI. The status can be updated at any time.
+    AdviceLinkModel:
+      required:
+      - key
+      - text
+      - type
+      type: object
+      properties:
+        key:
+          minLength: 1
+          type: string
+          description: The key by which the link is identified.
+        type:
+          $ref: '#/components/schemas/AdviceLinkType'
+        text:
+          minLength: 1
+          type: string
+          description: The text to be displayed in the front end for this link.
+        url:
+          type: string
+          description: The actual URL of the link.
+          nullable: true
+      description: Optional link which can be included with each advice
+    SavingMonetary:
+      required:
+      - cost
+      - cost_per_wh
+      - type
+      type: object
+      properties:
+        type:
+          minLength: 1
+          type: string
+          description: Monetary source type
+          example: price_formula
+        cost:
+          type: number
+          description: Savings amount in local currency
+          format: double
+          example: 33.24
+        cost_per_wh:
+          type: number
+          description: Savings amount per one kilowatt-hour in local currency
+          format: double
+          example: 0.27
+      description: Savings monetary value
+    AdviceReturnOfInvestmentModel:
+      required:
+      - from
+      - to
+      - unit
+      type: object
+      properties:
+        unit:
+          $ref: '#/components/schemas/AdviceReturnOfInvestmentUnit'
+        from:
+          type: number
+          description: From value
+          format: double
+        to:
+          type: number
+          description: To value
+          format: double
+      description: Return of investment
+    EstimatedSavings:
+      required:
+      - unit
+      - value
+      type: object
+      properties:
+        value:
+          type: number
+          description: The amount saved.
+          format: double
+        unit:
+          $ref: '#/components/schemas/EnergyUnit'
+      description: "The estimated energy savings in either kWh or M3 for a given advice.\n            \nUnit depends on whether the advice is intended for gas of electricity."
+    AdviceType:
+      enum:
+      - energy_tip
+      - upgrade
+      type: string
+      description: Advice type is used as a sub-category or a group
+    FinancingOptionType:
+      enum:
+      - financing
+      - subsidy
+      type: string
+      description: Financing option type
+    AdviceInvestmentCostModel:
+      type: object
+      properties:
+        fixed:
+          type: number
+          description: Fixed investment cost value
+          format: double
+          nullable: true
+        range_from:
+          type: number
+          description: Investment cost range from value
+          format: double
+          nullable: true
+        range_to:
+          type: number
+          description: Investment cost range to value
+          format: double
+          nullable: true
+        roi:
+          type: array
+          items:
+            $ref: '#/components/schemas/AdviceReturnOfInvestmentModel'
+          nullable: true
+      description: Investment cost
   securitySchemes:
     BearerAuth:
       type: http

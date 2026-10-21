@@ -1,0 +1,112 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/api-evangelist/eliq/main/json-schema/eliq-timeseries-data-schema.json",
+  "title": "Time series data",
+  "description": "Model containing time series data. Different parameters will be available depending on the data requested, see below for more information",
+  "x-generated": "2026-10-20",
+  "x-method": "derived",
+  "x-generator": "derive-json-schema.py",
+  "x-source": "openapi/eliq-energy-data-api-openapi.yml#/components/schemas/TimeseriesData",
+  "type": "object",
+  "properties": {
+    "consumption": {
+      "type": "array",
+      "description": "Available if consumption has been queried. Will always contain the exact amount of elements as there are time frames between ‘to’ and ‘from’ with the given ‘resolution’. Values inside the array can be null if no energy data exists (One day always contains 24 values). The consumption values are floating-point numbers.",
+      "items": {
+        "type": [
+          "number",
+          "null"
+        ]
+      }
+    },
+    "import": {
+      "type": "array",
+      "description": "Available if import has been queried. Will always contain the exact amount of elements as there are time frames between ‘to’ and ‘from’ with the given ‘resolution’. Values inside the array can be null if no energy data exists (One day always contains 24 values). The import values are floating-point numbers.",
+      "items": {
+        "type": [
+          "number",
+          "null"
+        ]
+      }
+    },
+    "export": {
+      "type": "array",
+      "description": "Available if export has been queried. Will always contain the exact amount of elements as there are time frames between ‘to’ and ‘from’ with the given ‘resolution’. Values inside the array can be null if no energy data exists (One day always contains 24 values). The export values are floating-point numbers.",
+      "items": {
+        "type": [
+          "number",
+          "null"
+        ]
+      }
+    },
+    "production": {
+      "type": "array",
+      "description": "Available if production has been queried. Will always contain the exact amount of elements as there are time frames between ‘to’ and ‘from’ with the given ‘resolution’. Values inside the array can be null if no energy data exists (One day always contains 24 values). The production values are floating-point numbers.",
+      "items": {
+        "type": [
+          "number",
+          "null"
+        ]
+      }
+    },
+    "forecast": {
+      "type": "array",
+      "description": "Available if forecast has been queried. Will always contain the exact amount of elements as there are time frames between ‘to’ and ‘from’ with the given ‘resolution’. Values inside the array can be null if no energy data exists. The forecast values are floating-point numbers.",
+      "items": {
+        "type": [
+          "number",
+          "null"
+        ]
+      }
+    },
+    "fuel": {
+      "type": "string",
+      "minLength": 1,
+      "description": "Can be ‘elec’, ‘gas’ or ‘district_heating’. Matches with the value passed in query parameters of the request if provided",
+      "enum": [
+        "elec",
+        "gas",
+        "district_heating"
+      ]
+    },
+    "unit": {
+      "type": "string",
+      "minLength": 1,
+      "description": "Can be ‘cost’, ‘energy’ or 'm3'. Matches with the value passed in query parameters of the request if provided, otherwise default.\n\nOnly return m3 if the unit is available.",
+      "enum": [
+        "energy",
+        "cost"
+      ]
+    },
+    "resolution": {
+      "type": "string",
+      "minLength": 1,
+      "description": "Can be '6min','15min', '30min', 'hour', 'day' or 'month'. Matches with the value passed in query parameters of the request.",
+      "enum": [
+        "6min",
+        "15min",
+        "30min",
+        "hour",
+        "day",
+        "month"
+      ]
+    },
+    "from": {
+      "type": "string",
+      "minLength": 1,
+      "description": "From date"
+    },
+    "to": {
+      "type": "string",
+      "minLength": 1,
+      "description": "To date"
+    }
+  },
+  "required": [
+    "fuel",
+    "unit",
+    "resolution",
+    "from",
+    "to"
+  ]
+}

@@ -1,0 +1,64 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/api-evangelist/eliq/main/json-schema/eliq-market-price-response-dto-schema.json",
+  "title": "MarketPriceResponseDto",
+  "x-generated": "2026-10-20",
+  "x-method": "derived",
+  "x-generator": "derive-json-schema.py",
+  "x-source": "openapi/eliq-market-price-api-openapi.yml#/components/schemas/MarketPriceResponseDto",
+  "required": [
+    "currency",
+    "from",
+    "resolution",
+    "to",
+    "values"
+  ],
+  "type": "object",
+  "properties": {
+    "resolution": {
+      "minLength": 1,
+      "type": "string",
+      "description": "Resolution of the values array"
+    },
+    "currency": {
+      "minLength": 1,
+      "type": "string",
+      "description": "Currency of the price_kwh"
+    },
+    "from": {
+      "type": "string",
+      "description": "From date inclusive"
+    },
+    "to": {
+      "type": "string",
+      "description": "To date exclusive"
+    },
+    "values": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/MarketPriceElementDto"
+      },
+      "description": "Values in the specified resolution. The size always matches the number of periods between from and two in the given resolution. May contain null."
+    }
+  },
+  "$defs": {
+    "MarketPriceElementDto": {
+      "required": [
+        "period_start",
+        "price_kwh"
+      ],
+      "type": "object",
+      "properties": {
+        "period_start": {
+          "type": "string",
+          "description": "Market price period start"
+        },
+        "price_kwh": {
+          "type": "number",
+          "description": "Market price during period per kwh",
+          "format": "double"
+        }
+      }
+    }
+  }
+}

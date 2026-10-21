@@ -1,0 +1,217 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/api-evangelist/eliq/main/json-schema/eliq-location-schema.json",
+  "title": "Location",
+  "x-generated": "2026-10-20",
+  "x-method": "derived",
+  "x-generator": "derive-json-schema.py",
+  "x-source": "openapi/eliq-location-api-openapi.yml#/components/schemas/Location",
+  "type": "object",
+  "properties": {
+    "id": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "eliq_id": {
+      "type": [
+        "integer",
+        "null"
+      ],
+      "format": "int32",
+      "readOnly": true
+    },
+    "name": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "user_id": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "spot_price_region_id": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "address": {
+      "$ref": "#/$defs/LocationAddress"
+    },
+    "geo": {
+      "$ref": "#/$defs/LocationGeo"
+    },
+    "meters": {
+      "type": [
+        "array",
+        "null"
+      ],
+      "items": {
+        "$ref": "#/$defs/Meter"
+      }
+    },
+    "created_at_timestamp": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "location_profile_type": {
+      "$ref": "#/$defs/ProfileType"
+    }
+  },
+  "$defs": {
+    "LocationAddress": {
+      "type": "object",
+      "properties": {
+        "street_address": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "postal_code": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "city": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "country_code": {
+          "type": [
+            "string",
+            "null"
+          ]
+        }
+      }
+    },
+    "LocationGeo": {
+      "type": "object",
+      "properties": {
+        "latitude": {
+          "type": [
+            "number",
+            "null"
+          ],
+          "format": "double"
+        },
+        "longitude": {
+          "type": [
+            "number",
+            "null"
+          ],
+          "format": "double"
+        }
+      }
+    },
+    "Meter": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "eliq_id": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "readOnly": true
+        },
+        "location_id": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "name": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "model": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "fuel": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "type": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "is_sub_meter": {
+          "type": [
+            "boolean",
+            "null"
+          ]
+        },
+        "category": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "category_percentage": {
+          "type": [
+            "integer",
+            "null"
+          ],
+          "format": "int32"
+        },
+        "supply_start_date": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "supply_end_date": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "created_at_timestamp": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "sync_status": {
+          "type": [
+            "string",
+            "null"
+          ]
+        }
+      }
+    },
+    "ProfileType": {
+      "enum": [
+        "residential",
+        "business",
+        "undefined"
+      ],
+      "type": "string"
+    }
+  }
+}

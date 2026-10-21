@@ -1,0 +1,103 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/api-evangelist/eliq/main/json-schema/eliq-anomaly-schema.json",
+  "title": "Anomaly",
+  "description": "Anomaly object",
+  "x-generated": "2026-10-20",
+  "x-method": "derived",
+  "x-generator": "derive-json-schema.py",
+  "x-source": "openapi/eliq-anomalies-api-openapi.yml#/components/schemas/Anomaly",
+  "type": "object",
+  "properties": {
+    "type": {
+      "type": "string",
+      "minLength": 1,
+      "description": "Anomaly type",
+      "enum": [
+        "daily_anomaly",
+        "high_monthly_forecast"
+      ]
+    },
+    "fuel": {
+      "type": "string",
+      "minLength": 1,
+      "enum": [
+        "elec",
+        "gas",
+        "district_heating"
+      ],
+      "description": "Fuel for anomaly"
+    },
+    "status": {
+      "type": "object",
+      "required": [
+        "code"
+      ],
+      "properties": {
+        "code": {
+          "type": "string",
+          "minLength": 1,
+          "enum": [
+            "ok",
+            "not_ok"
+          ],
+          "description": "Status code indicating whether last run was successful or not"
+        },
+        "data_until": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "minLength": 1,
+          "description": "Which date the last data point had during last run (local date for location)",
+          "format": "date-time"
+        },
+        "result": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "minLength": 1,
+          "description": "Result from last run. Null if code is 'not_ok'",
+          "enum": [
+            "none",
+            "low",
+            "high"
+          ]
+        },
+        "action": {
+          "type": [
+            "object",
+            "null"
+          ],
+          "description": "Available if code is 'not_ok'. Indicates what went wrong during last run",
+          "required": [
+            "code",
+            "description"
+          ],
+          "properties": {
+            "code": {
+              "type": "string",
+              "minLength": 1,
+              "description": "Code explaining last runs fail",
+              "enum": [
+                "anomaly_not_enough_data",
+                "anomaly_awaiting_first_run"
+              ]
+            },
+            "description": {
+              "type": "string",
+              "minLength": 1,
+              "description": "Description of last runs fail"
+            }
+          }
+        }
+      }
+    }
+  },
+  "required": [
+    "type",
+    "fuel",
+    "status"
+  ]
+}

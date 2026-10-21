@@ -1,0 +1,123 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/api-evangelist/eliq/main/json-schema/eliq-similar-homes-report-result-model-schema.json",
+  "title": "SimilarHomesReportResultModel",
+  "description": "Model containing similar homes report result.",
+  "x-generated": "2026-10-20",
+  "x-method": "derived",
+  "x-generator": "derive-json-schema.py",
+  "x-source": "openapi/eliq-similar-homes-api-openapi.yml#/components/schemas/SimilarHomesReportResultModel",
+  "required": [
+    "result_status"
+  ],
+  "type": "object",
+  "properties": {
+    "result": {
+      "$ref": "#/$defs/SimilarHomesReport"
+    },
+    "result_status": {
+      "$ref": "#/$defs/SimilarHomesResultStatus"
+    }
+  },
+  "$defs": {
+    "SimilarHomesReport": {
+      "required": [
+        "distribution_values",
+        "from",
+        "to",
+        "value"
+      ],
+      "type": "object",
+      "properties": {
+        "value": {
+          "type": "number",
+          "description": "Average energy in Wh or cost for similar homes over the requested period",
+          "format": "double"
+        },
+        "distribution_values": {
+          "type": "array",
+          "items": {
+            "type": "number",
+            "format": "double"
+          },
+          "description": "Similar homes consumption data deciles. Contains values for all 10 ranks of deciles - starting from 1st and ending with 10th decile. The 1st decile has 10 per cent of the data set below it, the 2nd decile has 20 per cent of the data set below and so on. The 10th decile has 100 per cent of the data set below, making it a maximum value for the dataset."
+        },
+        "energy_wh": {
+          "type": [
+            "integer",
+            "null"
+          ],
+          "description": "Average energy Wh for similar homes over the requested period",
+          "format": "int32",
+          "deprecated": true
+        },
+        "distribution": {
+          "type": [
+            "array",
+            "null"
+          ],
+          "items": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "description": "Distribution of similar homes energy Wh consumption in deciles",
+          "deprecated": true
+        },
+        "from": {
+          "type": "string",
+          "description": "From date",
+          "format": "date-time"
+        },
+        "to": {
+          "type": "string",
+          "description": "To date",
+          "format": "date-time"
+        }
+      },
+      "description": "Similar homes report for the requested period."
+    },
+    "SimilarHomesResultStatus": {
+      "required": [
+        "code"
+      ],
+      "type": "object",
+      "properties": {
+        "code": {
+          "$ref": "#/$defs/SimilarHomesResultStatusCode"
+        },
+        "action": {
+          "$ref": "#/$defs/SimilarHomesResultStatusAction"
+        }
+      },
+      "description": "Contains information about the result, and whether it was successful or not."
+    },
+    "SimilarHomesResultStatusAction": {
+      "type": "object",
+      "properties": {
+        "code": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "description": "A code for the action that should be taken. Please refer to documentation of specific endpoint for more information."
+        },
+        "description": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "description": "A description of the action that should be taken."
+        }
+      },
+      "description": "Available in cases where there are actions that can be done to make the result successful, such as entering information in the home profile options."
+    },
+    "SimilarHomesResultStatusCode": {
+      "enum": [
+        "ok",
+        "not_ok"
+      ],
+      "type": "string",
+      "description": "Indicating whether there is a result or not."
+    }
+  }
+}

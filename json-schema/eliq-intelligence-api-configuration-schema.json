@@ -1,0 +1,73 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/api-evangelist/eliq/main/json-schema/eliq-intelligence-api-configuration-schema.json",
+  "title": "IntelligenceApiConfiguration",
+  "x-generated": "2026-10-20",
+  "x-method": "derived",
+  "x-generator": "derive-json-schema.py",
+  "x-source": "openapi/eliq-info-api-openapi.yml#/components/schemas/IntelligenceApiConfiguration",
+  "type": "object",
+  "properties": {
+    "application_name": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "dashboards": {
+      "$ref": "#/$defs/DashboardsConfiguration"
+    }
+  },
+  "additionalProperties": false,
+  "$defs": {
+    "DashboardConfigurationItem": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "description": "Id of the published DataBricks dashboard"
+        },
+        "name": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "description": "Display name shown in the application"
+        },
+        "external_value_scope": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "description": "What the dashboard's dataset queries are filtered by. \"client\" injects the client id, \"user\" injects a\nper-user hash. Defaults to \"client\" when omitted."
+        }
+      },
+      "additionalProperties": false,
+      "description": "A published DataBricks dashboard the client is allowed to embed"
+    },
+    "DashboardsConfiguration": {
+      "type": "object",
+      "properties": {
+        "enabled": {
+          "type": "boolean",
+          "description": "Whether embedded dashboards are enabled for the client"
+        },
+        "items": {
+          "type": [
+            "array",
+            "null"
+          ],
+          "items": {
+            "$ref": "#/$defs/DashboardConfigurationItem"
+          },
+          "description": "The dashboards available to the client"
+        }
+      },
+      "additionalProperties": false,
+      "description": "DataBricks dashboards available for embedding in the application"
+    }
+  }
+}

@@ -1,0 +1,244 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/api-evangelist/eliq/main/json-schema/eliq-budget-schema.json",
+  "title": "Budget",
+  "description": "Model for budget. Contains information about the budget, and when it last was run.",
+  "x-generated": "2026-10-20",
+  "x-method": "derived",
+  "x-generator": "derive-json-schema.py",
+  "x-source": "openapi/eliq-budgets-api-openapi.yml#/components/schemas/Budget",
+  "type": "object",
+  "properties": {
+    "enabled": {
+      "type": "boolean",
+      "description": "Whether budget is enabled or not"
+    },
+    "type": {
+      "type": "string",
+      "minLength": 1,
+      "description": "Type of budget",
+      "enum": [
+        "budget_weekly",
+        "budget_monthly"
+      ]
+    },
+    "fuel": {
+      "type": "string",
+      "minLength": 1,
+      "description": "Fuel it is enabled for",
+      "enum": [
+        "elec",
+        "gas",
+        "district_heating"
+      ]
+    },
+    "resolution": {
+      "type": "string",
+      "minLength": 1,
+      "description": "Resolution of budget",
+      "enum": [
+        "week",
+        "month"
+      ]
+    },
+    "unit": {
+      "type": "string",
+      "minLength": 1,
+      "description": "Unit of budget",
+      "enum": [
+        "energy",
+        "cost"
+      ]
+    },
+    "limit": {
+      "type": [
+        "number",
+        "null"
+      ],
+      "description": "Limit of the budget in Wh, or currency (depending on unit)"
+    },
+    "suggested_limit": {
+      "type": "number",
+      "description": "If user want to set up a new budget this value could be used as a suggested limit. Only returned if a forecast could be made"
+    },
+    "config": {
+      "type": "object",
+      "description": "Configuration for how the budget limit is determined. Returned when the budget is enabled.",
+      "properties": {
+        "mode": {
+          "type": "string",
+          "description": "How the budget limit is set.\n- `manual`: the limit is a fixed value provided by the client.\n- `auto`: the limit is derived automatically from the forecast at the start of each period as `forecast * (1 + margin_percent / 100)`. The derived limit is frozen for the duration of the period.",
+          "enum": [
+            "manual",
+            "auto"
+          ]
+        },
+        "margin_percent": {
+          "type": [
+            "number",
+            "null"
+          ],
+          "description": "Percentage applied over the forecast when mode is 'auto'. Clamped server-side to [-50, 50]. Defaults to 20. Null when mode is 'manual'."
+        }
+      }
+    },
+    "series": {
+      "type": "object",
+      "description": "Cumulative consumption and forecast for the current budget period, one value per resolution step. Returned when the budget is enabled and a run has produced data.",
+      "properties": {
+        "fuel": {
+          "type": "string",
+          "description": "Fuel the series is for.",
+          "enum": [
+            "elec",
+            "gas",
+            "district_heating"
+          ]
+        },
+        "unit": {
+          "type": "string",
+          "description": "Unit the series is for.",
+          "enum": [
+            "energy",
+            "cost"
+          ]
+        },
+        "resolution": {
+          "type": "string",
+          "description": "Resolution of the series.",
+          "enum": [
+            "week",
+            "month"
+          ]
+        },
+        "from": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "description": "Start of the current period (inclusive).",
+          "format": "date-time"
+        },
+        "to": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "description": "End of the current period (exclusive).",
+          "format": "date-time"
+        },
+        "consumption_cumulative": {
+          "type": "array",
+          "description": "Cumulative actual consumption at each step from period start. Steps with no data yet are null.",
+          "items": {
+            "type": [
+              "number",
+              "null"
+            ]
+          }
+        },
+        "forecast_cumulative": {
+          "type": "array",
+          "description": "Cumulative forecasted consumption at each step to the end of the period.",
+          "items": {
+            "type": [
+              "number",
+              "null"
+            ]
+          }
+        }
+      }
+    },
+    "status": {
+      "type": "object",
+      "description": "Contains status about last run. Returned when the budget is enabled.",
+      "required": [
+        "code",
+        "value",
+        "forecast"
+      ],
+      "properties": {
+        "code": {
+          "type": "string",
+          "minLength": 1,
+          "description": "Indicates whether last run was successful or not.",
+          "enum": [
+            "ok",
+            "not_ok"
+          ]
+        },
+        "result": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "minLength": 1,
+          "description": "Available if code 'ok'.",
+          "enum": [
+            "currently_below",
+            "forecasted_above",
+            "above",
+            "completed_below",
+            null
+          ]
+        },
+        "value": {
+          "type": [
+            "number",
+            "null"
+          ],
+          "description": "Accumulative value between period start and data_until, available if code 'ok'."
+        },
+        "forecast": {
+          "type": [
+            "number",
+            "null"
+          ],
+          "description": "Forecast of value at end of period, available if code 'ok' and if a forecast could be made."
+        },
+        "period_start": {
+          "type": "string",
+          "minLength": 1,
+          "description": "Start of the period, available if code 'ok'.",
+          "format": "date-time"
+        },
+        "period_end": {
+          "type": "string",
+          "minLength": 1,
+          "description": "End of the period, available if code 'ok'.",
+          "format": "date-time"
+        },
+        "data_until": {
+          "type": "string",
+          "minLength": 1,
+          "description": "Latest data value (exclusive), available if code 'ok'."
+        },
+        "action": {
+          "type": "object",
+          "description": "Available if code is 'not_ok'. Indicates what went wrong during last run",
+          "properties": {
+            "code": {
+              "type": "string",
+              "description": "Code explaining last runs fail.",
+              "enum": [
+                "budget_awaiting_first_run",
+                "budget_not_enough_data"
+              ]
+            },
+            "description": {
+              "type": "string",
+              "description": "Description of last runs fail."
+            }
+          }
+        }
+      }
+    }
+  },
+  "required": [
+    "enabled",
+    "type",
+    "fuel",
+    "resolution",
+    "unit"
+  ]
+}

@@ -1932,11 +1932,12 @@ paths:
     - url: http://localhost:3000
 components:
   schemas:
-    LocationProfileType:
-      type: object
-      properties:
-        type:
-          $ref: '#/components/schemas/ProfileType'
+    LocationProfileDataType:
+      enum:
+      - single_select
+      - multiple_select
+      - number
+      type: string
     LocationProfileValueResponse:
       required:
       - key
@@ -1955,6 +1956,12 @@ components:
           - string
           - 'null'
           format: date-time
+    ProfileType:
+      enum:
+      - residential
+      - business
+      - undefined
+      type: string
     LocationProfileSettings:
       required:
       - groups
@@ -1970,87 +1977,6 @@ components:
           type: array
           items:
             type: string
-    LocationPropertyLimit:
-      type: object
-      properties:
-        min:
-          type: number
-          format: double
-        max:
-          type: number
-          format: double
-        step:
-          type: number
-          format: double
-    ErrorDetails:
-      required:
-      - code
-      - description
-      type: object
-      properties:
-        code:
-          minLength: 1
-          type: string
-        description:
-          minLength: 1
-          type: string
-        request_id:
-          type:
-          - string
-          - 'null'
-    PatchLocationProfileRequestModel:
-      type: object
-      properties:
-        from:
-          type:
-          - string
-          - 'null'
-          format: date-time
-        value: {}
-    ProfileType:
-      enum:
-      - residential
-      - business
-      - undefined
-      type: string
-    NoContentResult:
-      type: object
-      properties:
-        statusCode:
-          type: integer
-          format: int32
-    LocationProfileTag:
-      enum:
-      - required_for_sh_to_work
-      - required_for_euc_to_work
-      type: string
-    LocationProfilePropertyRequirement:
-      type: object
-      properties:
-        key:
-          type:
-          - string
-          - 'null'
-        accepted_values:
-          type:
-          - array
-          - 'null'
-          items: {}
-    LocationProfileValueRequest:
-      required:
-      - key
-      - value
-      type: object
-      properties:
-        key:
-          minLength: 1
-          type: string
-        value: {}
-        from:
-          type:
-          - string
-          - 'null'
-          format: date-time
     LocationProfileSetting:
       required:
       - data_type
@@ -2092,12 +2018,30 @@ components:
         group:
           minLength: 1
           type: string
-    LocationProfileDataType:
-      enum:
-      - single_select
-      - multiple_select
-      - number
-      type: string
+    PatchLocationProfileRequestModel:
+      type: object
+      properties:
+        from:
+          type:
+          - string
+          - 'null'
+          format: date-time
+        value: {}
+    LocationProfileValueRequest:
+      required:
+      - key
+      - value
+      type: object
+      properties:
+        key:
+          minLength: 1
+          type: string
+        value: {}
+        from:
+          type:
+          - string
+          - 'null'
+          format: date-time
     LocationProfilePossibleValue:
       type: object
       properties:
@@ -2109,6 +2053,39 @@ components:
           type:
           - string
           - 'null'
+    LocationProfileType:
+      type: object
+      properties:
+        type:
+          $ref: '#/components/schemas/ProfileType'
+    ErrorDetails:
+      required:
+      - code
+      - description
+      type: object
+      properties:
+        code:
+          minLength: 1
+          type: string
+        description:
+          minLength: 1
+          type: string
+        request_id:
+          type:
+          - string
+          - 'null'
+    LocationProfilePropertyRequirement:
+      type: object
+      properties:
+        key:
+          type:
+          - string
+          - 'null'
+        accepted_values:
+          type:
+          - array
+          - 'null'
+          items: {}
     LocationProfileSelectedValue:
       type: object
       properties:
@@ -2121,28 +2098,36 @@ components:
           - string
           - 'null'
           format: date-time
-    LocationProfilePossibleValue_2:
-      required:
-      - developer_description
-      - value
+    LocationPropertyLimit:
       type: object
       properties:
-        value:
-          minLength: 1
-          type: string
-          description: Value to select
-        developer_description:
-          minLength: 1
-          type: string
-          description: Description not meant for end users
-      description: A possible value for a location profile setting. Available when the specified data_type is single_select or multiple_select.
-    LocationProfileType_2:
-      required:
-      - type
+        min:
+          type: number
+          format: double
+        max:
+          type: number
+          format: double
+        step:
+          type: number
+          format: double
+    LocationProfileTag:
+      enum:
+      - required_for_sh_to_work
+      - required_for_euc_to_work
+      type: string
+    NoContentResult:
       type: object
       properties:
-        type:
-          $ref: '#/components/schemas/ProfileType_2'
+        statusCode:
+          type: integer
+          format: int32
+    LocationProfileDataType_2:
+      enum:
+      - single_select
+      - multiple_select
+      - number
+      type: string
+      description: Data type
     LocationProfileValueResponse_2:
       required:
       - id
@@ -2166,6 +2151,47 @@ components:
           format: date-time
           nullable: true
       description: Location profile value result
+    ProfileType_2:
+      enum:
+      - residential
+      - business
+      - undefined
+      type: string
+      description: Profile type
+    Error:
+      type: object
+      properties:
+        type:
+          type: string
+          description: Type of error.
+          nullable: true
+          example: internal_error
+        category:
+          type: string
+          description: Error category.
+          nullable: true
+          example: internal_error
+        code:
+          type: string
+          description: Code describing the issue.
+          nullable: true
+          example: INTERNAL_ERROR
+        transaction_id:
+          type: string
+          description: Identifier for the session. Please provide this when contacting support.
+          nullable: true
+          example: 0HN18NN5QB401:00000001
+        message:
+          type: string
+          description: A message related to the error.
+          nullable: true
+          example: Something went wrong. Please try again later. If problem remains, please contact support.
+        description:
+          type: string
+          description: A description of the error for developers.
+          nullable: true
+          example: Internal server error, please try again later. If problem remains, please contact support.
+      description: Model returned for error responses.
     LocationProfileSettings_2:
       required:
       - groups
@@ -2180,63 +2206,14 @@ components:
           type: array
           items:
             type: string
-    LocationPropertyLimit_2:
+    LocationProfileCompletionResponse:
       required:
-      - max
-      - min
-      - step
+      - completion_percentage
       type: object
       properties:
-        min:
-          type: number
-          format: double
-        max:
-          type: number
-          format: double
-        step:
-          type: number
-          format: double
-      description: Limitations set for profile setting values. Available when the specified data_type is number.
-    PatchLocationProfileRequestModel_2:
-      type: object
-      properties:
-        from:
-          type: string
-          description: The date on which a location profile's value changed
-          format: date-time
-        value:
-          description: The value of the location profile's property
-    ProfileType_2:
-      enum:
-      - residential
-      - business
-      - undefined
-      type: string
-      description: Profile type
-    LocationProfileTag_2:
-      enum:
-      - required_for_sh_to_work
-      - required_for_euc_to_work
-      type: string
-      description: Tag for location profile
-    LocationProfileValueRequest_2:
-      required:
-      - key
-      - value
-      type: object
-      properties:
-        key:
-          minLength: 1
-          type: string
-          description: Identifier for the setting
-        value:
-          description: Selected value. Depending on the specified data_type, this value can be a number (number), string (single_select) or a list of strings (multiple_select).
-        from:
-          type: string
-          description: Value is valid from this date. If not specified, the value is valid from the beginning of time.
-          format: date-time
-          nullable: true
-      description: Location profile value input
+        completion_percentage:
+          type: integer
+          format: int32
     LocationProfileSetting_2:
       required:
       - data_type
@@ -2286,68 +2263,37 @@ components:
           description: The group (or category) to which this setting belongs to
           example: cooking, appliances, fridges_and_freezers
       description: Location profile key setting
-    LocationProfileCompletionResponse:
-      required:
-      - completion_percentage
+    PatchLocationProfileRequestModel_2:
       type: object
       properties:
-        completion_percentage:
-          type: integer
-          format: int32
-    LocationProfileDataType_2:
-      enum:
-      - single_select
-      - multiple_select
-      - number
-      type: string
-      description: Data type
-    Error:
+        from:
+          type: string
+          description: The date on which a location profile's value changed
+          format: date-time
+        value:
+          description: The value of the location profile's property
+    LocationProfilePossibleValue_2:
+      required:
+      - developer_description
+      - value
+      type: object
+      properties:
+        value:
+          minLength: 1
+          type: string
+          description: Value to select
+        developer_description:
+          minLength: 1
+          type: string
+          description: Description not meant for end users
+      description: A possible value for a location profile setting. Available when the specified data_type is single_select or multiple_select.
+    LocationProfileType_2:
+      required:
+      - type
       type: object
       properties:
         type:
-          type: string
-          description: Type of error.
-          nullable: true
-          example: internal_error
-        category:
-          type: string
-          description: Error category.
-          nullable: true
-          example: internal_error
-        code:
-          type: string
-          description: Code describing the issue.
-          nullable: true
-          example: INTERNAL_ERROR
-        transaction_id:
-          type: string
-          description: Identifier for the session. Please provide this when contacting support.
-          nullable: true
-          example: 0HN18NN5QB401:00000001
-        message:
-          type: string
-          description: A message related to the error.
-          nullable: true
-          example: Something went wrong. Please try again later. If problem remains, please contact support.
-        description:
-          type: string
-          description: A description of the error for developers.
-          nullable: true
-          example: Internal server error, please try again later. If problem remains, please contact support.
-      description: Model returned for error responses.
-    LocationPropertyRequirement:
-      type: object
-      properties:
-        key:
-          type: string
-          description: Unique key for the property to depend on.
-          nullable: true
-        accepted_values:
-          type: array
-          items: {}
-          description: Accepted values. Based on the dependent properties data_type, values can be a number or a string.
-          nullable: true
-      description: Properties that are required for a setting to be valid.
+          $ref: '#/components/schemas/ProfileType_2'
     LocationProfileSelectedValue_2:
       required:
       - id
@@ -2366,6 +2312,60 @@ components:
           format: date-time
           nullable: true
       description: Selected value with metadata
+    LocationPropertyLimit_2:
+      required:
+      - max
+      - min
+      - step
+      type: object
+      properties:
+        min:
+          type: number
+          format: double
+        max:
+          type: number
+          format: double
+        step:
+          type: number
+          format: double
+      description: Limitations set for profile setting values. Available when the specified data_type is number.
+    LocationProfileTag_2:
+      enum:
+      - required_for_sh_to_work
+      - required_for_euc_to_work
+      type: string
+      description: Tag for location profile
+    LocationProfileValueRequest_2:
+      required:
+      - key
+      - value
+      type: object
+      properties:
+        key:
+          minLength: 1
+          type: string
+          description: Identifier for the setting
+        value:
+          description: Selected value. Depending on the specified data_type, this value can be a number (number), string (single_select) or a list of strings (multiple_select).
+        from:
+          type: string
+          description: Value is valid from this date. If not specified, the value is valid from the beginning of time.
+          format: date-time
+          nullable: true
+      description: Location profile value input
+    LocationPropertyRequirement:
+      type: object
+      properties:
+        key:
+          type: string
+          description: Unique key for the property to depend on.
+          nullable: true
+        accepted_values:
+          type: array
+          items: {}
+          description: Accepted values. Based on the dependent properties data_type, values can be a number or a string.
+          nullable: true
+      description: Properties that are required for a setting to be valid.
   securitySchemes:
     BearerAuth:
       type: http

@@ -1,0 +1,31 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/api-evangelist/eliq/main/json-schema/eliq-job-failed-row-schema.json",
+  "title": "JobFailedRow",
+  "x-generated": "2026-10-20",
+  "x-method": "derived",
+  "x-generator": "derive-json-schema.py",
+  "x-source": "openapi/eliq-jobs-api-openapi.yml#/components/schemas/JobFailedRow",
+  "type": "object",
+  "properties": {
+    "row_number": {
+      "type": [
+        "integer",
+        "null"
+      ],
+      "format": "int32"
+    },
+    "error_code": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "error_description": {
+      "type": [
+        "string",
+        "null"
+      ]
+    }
+  }
+}

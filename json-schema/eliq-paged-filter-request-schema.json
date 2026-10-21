@@ -1,0 +1,129 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/api-evangelist/eliq/main/json-schema/eliq-paged-filter-request-schema.json",
+  "title": "PagedFilterRequest",
+  "x-generated": "2026-10-20",
+  "x-method": "derived",
+  "x-generator": "derive-json-schema.py",
+  "x-source": "openapi/eliq-locationsegmentation-api-openapi.yml#/components/schemas/PagedFilterRequest",
+  "type": "object",
+  "properties": {
+    "paging": {
+      "$ref": "#/$defs/PagingRequest"
+    },
+    "filters": {
+      "type": [
+        "array",
+        "null"
+      ],
+      "items": {
+        "$ref": "#/$defs/FilterRequestAsset"
+      }
+    }
+  },
+  "additionalProperties": false,
+  "$defs": {
+    "AssetKind": {
+      "enum": [
+        "ElectricVehicle",
+        "Tariff",
+        "pv",
+        "GasHeating",
+        "ElecHeating",
+        "battery"
+      ],
+      "type": "string"
+    },
+    "FilterRequestAsset": {
+      "required": [
+        "asset"
+      ],
+      "type": "object",
+      "properties": {
+        "asset": {
+          "$ref": "#/$defs/AssetKind"
+        },
+        "exists": {
+          "type": "boolean"
+        },
+        "properties": {
+          "type": [
+            "array",
+            "null"
+          ],
+          "items": {
+            "$ref": "#/$defs/FilterRequestAssetProperty"
+          }
+        }
+      },
+      "additionalProperties": false
+    },
+    "FilterRequestAssetProperty": {
+      "type": "object",
+      "properties": {
+        "field": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "operator": {
+          "$ref": "#/$defs/Operator"
+        },
+        "value": {
+          "$ref": "#/$defs/JsonNode"
+        }
+      },
+      "additionalProperties": false
+    },
+    "JsonNode": {
+      "type": "object",
+      "properties": {
+        "options": {
+          "$ref": "#/$defs/JsonNodeOptions"
+        },
+        "parent": {
+          "$ref": "#/$defs/JsonNode"
+        },
+        "root": {
+          "$ref": "#/$defs/JsonNode"
+        }
+      },
+      "additionalProperties": false
+    },
+    "JsonNodeOptions": {
+      "type": "object",
+      "properties": {
+        "propertyNameCaseInsensitive": {
+          "type": "boolean"
+        }
+      },
+      "additionalProperties": false
+    },
+    "Operator": {
+      "enum": [
+        "eq",
+        "neq",
+        "gt",
+        "lt",
+        "gte",
+        "lte"
+      ],
+      "type": "string"
+    },
+    "PagingRequest": {
+      "type": "object",
+      "properties": {
+        "page": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "pageSize": {
+          "type": "integer",
+          "format": "int32"
+        }
+      },
+      "additionalProperties": false
+    }
+  }
+}

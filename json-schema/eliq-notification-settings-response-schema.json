@@ -1,0 +1,66 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/api-evangelist/eliq/main/json-schema/eliq-notification-settings-response-schema.json",
+  "title": "NotificationSettingsResponse",
+  "x-generated": "2026-10-20",
+  "x-method": "derived",
+  "x-generator": "derive-json-schema.py",
+  "x-source": "openapi/eliq-locations-api-openapi.yml#/components/schemas/NotificationSettingsResponse",
+  "type": "object",
+  "properties": {
+    "notification_name": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "description": "The name of the notification"
+    },
+    "notification_type_id": {
+      "type": "integer",
+      "description": "Unique notification id",
+      "format": "int32"
+    },
+    "notification_category": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "description": "Notification category"
+    },
+    "send_event_notification": {
+      "type": [
+        "boolean",
+        "null"
+      ],
+      "description": "Specifies whether the notification should be sent (I.E. is the notification enabled)."
+    },
+    "send_email": {
+      "type": [
+        "boolean",
+        "null"
+      ],
+      "description": "Specifies whether notification should be delivered by email."
+    },
+    "send_push": {
+      "type": [
+        "boolean",
+        "null"
+      ],
+      "description": "Specifies whether a push notification is delivered to the user's smartphone."
+    },
+    "send_text": {
+      "type": [
+        "boolean",
+        "null"
+      ],
+      "description": "Specifies whether the notification is sent via an SMS text message."
+    },
+    "send_webhook": {
+      "type": [
+        "boolean",
+        "null"
+      ],
+      "description": "Specifies whether the notification is sent via a webhook."
+    }
+  }
+}

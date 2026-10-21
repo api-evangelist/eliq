@@ -1,0 +1,429 @@
+generated: '2026-10-20'
+method: derived
+generator: derive-vocabulary.py
+source:
+- openapi/eliq-advice-api-openapi.yml
+- openapi/eliq-anomalies-api-openapi.yml
+- openapi/eliq-authentication-api-openapi.yml
+- openapi/eliq-breakdown-api-openapi.yml
+- openapi/eliq-budgets-api-openapi.yml
+vocabulary:
+  name: Eliq Domain Vocabulary
+  description: 'Terms declared by Eliq''s own API contract: its resource groups, objects and enumerations, with the contract''s definitions. Derived,
+    not authored.'
+  version: '2026-10-20'
+  terms:
+  - term: FinancingOptionType
+    definition: Financing option type
+    tags:
+    - Enumeration
+    source: openapi/eliq-advice-api-openapi.yml#/components/schemas/FinancingOptionType
+  - term: Error
+    definition: Model returned for error responses.
+    tags:
+    - Object
+    source: openapi/eliq-advice-api-openapi.yml#/components/schemas/Error
+  - term: AdviceType
+    definition: Advice type is used as a sub-category or a group
+    tags:
+    - Enumeration
+    source: openapi/eliq-advice-api-openapi.yml#/components/schemas/AdviceType
+  - term: SavingMonetarySource
+    definition: Savings calculation source type
+    tags:
+    - Object
+    source: openapi/eliq-advice-api-openapi.yml#/components/schemas/SavingMonetarySource
+  - term: Advice
+    definition: Model containing advice information.
+    tags:
+    - Object
+    source: openapi/eliq-advice-api-openapi.yml#/components/schemas/Advice
+  - term: Link
+    definition: Optional link can be included with each advice Deprecated property, links should be used instead.
+    tags:
+    - Object
+    source: openapi/eliq-advice-api-openapi.yml#/components/schemas/Link
+  - term: AdviceLinkType
+    definition: The type which can be set to an advice Link.
+    tags:
+    - Enumeration
+    source: openapi/eliq-advice-api-openapi.yml#/components/schemas/AdviceLinkType
+  - term: AdviceReturnOfInvestmentModel
+    definition: Return of investment
+    tags:
+    - Object
+    source: openapi/eliq-advice-api-openapi.yml#/components/schemas/AdviceReturnOfInvestmentModel
+  - term: AdviceInvestmentCostModel
+    definition: Investment cost
+    tags:
+    - Object
+    source: openapi/eliq-advice-api-openapi.yml#/components/schemas/AdviceInvestmentCostModel
+  - term: AdviceStatus
+    definition: This statuses are used to capture end user feedback and feed this information back to our algorithms as well as making it easy
+      to build an UI. The status can be updated at any time.
+    tags:
+    - Enumeration
+    source: openapi/eliq-advice-api-openapi.yml#/components/schemas/AdviceStatus
+  - term: SavingMonetary
+    definition: Savings monetary value
+    tags:
+    - Object
+    source: openapi/eliq-advice-api-openapi.yml#/components/schemas/SavingMonetary
+  - term: AdviceFinancingOptionModel
+    definition: Financing option
+    tags:
+    - Object
+    source: openapi/eliq-advice-api-openapi.yml#/components/schemas/AdviceFinancingOptionModel
+  - term: EstimatedSavings
+    definition: The estimated energy savings in either kWh or M3 for a given advice. Unit depends on whether the advice is intended for gas of
+      electricity.
+    tags:
+    - Object
+    source: openapi/eliq-advice-api-openapi.yml#/components/schemas/EstimatedSavings
+  - term: AdviceLinkModel
+    definition: Optional link which can be included with each advice
+    tags:
+    - Object
+    source: openapi/eliq-advice-api-openapi.yml#/components/schemas/AdviceLinkModel
+  - term: AdvicePatchInput
+    definition: Advice status update request body
+    tags:
+    - Object
+    source: openapi/eliq-advice-api-openapi.yml#/components/schemas/AdvicePatchInput
+  - term: AdviceReturnOfInvestmentUnit
+    definition: Return of investment unit
+    tags:
+    - Enumeration
+    source: openapi/eliq-advice-api-openapi.yml#/components/schemas/AdviceReturnOfInvestmentUnit
+  - term: EnergyUnit
+    definition: 'Enumeration declared by the contract with values: kwh, m3.'
+    tags:
+    - Enumeration
+    source: openapi/eliq-advice-api-openapi.yml#/components/schemas/EnergyUnit
+  - term: Anomaly
+    definition: Anomaly object
+    tags:
+    - Object
+    source: openapi/eliq-anomalies-api-openapi.yml#/components/schemas/Anomaly
+  - term: Time series data
+    definition: Model containing time series data. Different parameters will be available depending on the data requested, see below for more
+      information
+    tags:
+    - Object
+    source: openapi/eliq-breakdown-api-openapi.yml#/components/schemas/TimeseriesData
+  - term: SimilarHomesGroupFilterType
+    definition: Describes whether 'limit_values' or 'limit_range' should be used.
+    tags:
+    - Enumeration
+    source: openapi/eliq-breakdown-api-openapi.yml#/components/schemas/SimilarHomesGroupFilterType
+  - term: SimilarHomesReport
+    definition: Similar homes report for the requested period.
+    tags:
+    - Object
+    source: openapi/eliq-breakdown-api-openapi.yml#/components/schemas/SimilarHomesReport
+  - term: BreakdownItem
+    definition: Breakdown item contain usage information for a specific usage category
+    tags:
+    - Object
+    source: openapi/eliq-breakdown-api-openapi.yml#/components/schemas/BreakdownItem
+  - term: SimilarHomesGroupFilter
+    definition: Similar homes group filter.
+    tags:
+    - Object
+    source: openapi/eliq-breakdown-api-openapi.yml#/components/schemas/SimilarHomesGroupFilter
+  - term: Breakdown result
+    definition: The breakdown model contains information about the location breakdown (aka. Energy usage categories (EUC)).
+    tags:
+    - Object
+    source: openapi/eliq-breakdown-api-openapi.yml#/components/schemas/Breakdown
+  - term: Result wrapper
+    definition: Responses from the similar homes and breakdown endpoint are wrapped in an object called result wrapper. The result status will
+      contain information about the response and whether it is an ok or not ok result. The object also contains information of what needs to be
+      done to get an ok response, for example enter more properties to the home profile.
+    tags:
+    - Object
+    source: openapi/eliq-breakdown-api-openapi.yml#/components/schemas/ResultWrapper
+  - term: SimilarHomesGroup
+    definition: Description of similar homes that a location is compared to.
+    tags:
+    - Object
+    source: openapi/eliq-breakdown-api-openapi.yml#/components/schemas/SimilarHomesGroup
+  - term: LimitRange
+    definition: Available if type is 'limit_range'. Contains minimum and maximum values for the given key.
+    tags:
+    - Object
+    source: openapi/eliq-breakdown-api-openapi.yml#/components/schemas/LimitRange
+  - term: Budget
+    definition: Model for budget. Contains information about the budget, and when it last was run.
+    tags:
+    - Object
+    source: openapi/eliq-budgets-api-openapi.yml#/components/schemas/Budget
+  - term: BudgetHistory
+    definition: Past budget periods for a location as aligned time series. Each index in `limit` and `consumption` corresponds to one period between
+      `from` and `to` at `resolution`.
+    tags:
+    - Object
+    source: openapi/eliq-budgets-api-openapi.yml#/components/schemas/BudgetHistory
+  - term: ErrorDetails
+    definition: 'Object declared by the contract with fields: code, description, request_id.'
+    tags:
+    - Object
+    source: openapi/eliq-client-details-api-openapi.yml#/components/schemas/ErrorDetails
+  - term: DashboardEmbedTokenResult
+    definition: Everything the frontend needs to embed a dashboard with @databricks/aibi-client
+    tags:
+    - Object
+    source: openapi/eliq-dashboards-api-openapi.yml#/components/schemas/DashboardEmbedTokenResult
+  - term: Connection
+    definition: 'Object declared by the contract with fields: id, display_name, provider, status.'
+    tags:
+    - Object
+    source: openapi/eliq-eliq-connect-api-openapi.yml#/components/schemas/Connection
+  - term: ConnectionEntity
+    definition: 'Object declared by the contract with fields: id, display_name, type, location_id, meter.'
+    tags:
+    - Object
+    source: openapi/eliq-eliq-connect-api-openapi.yml#/components/schemas/ConnectionEntity
+  - term: ConnectionMetaData
+    definition: 'Object declared by the contract with fields: status.'
+    tags:
+    - Object
+    source: openapi/eliq-eliq-connect-api-openapi.yml#/components/schemas/ConnectionMetaData
+  - term: EliqConnectUriResponse
+    definition: 'Object declared by the contract with fields: uri.'
+    tags:
+    - Object
+    source: openapi/eliq-eliq-connect-api-openapi.yml#/components/schemas/EliqConnectUriResponse
+  - term: PeakPowerResponse
+    definition: Peak power response model
+    tags:
+    - Object
+    source: openapi/eliq-energy-data-api-openapi.yml#/components/schemas/PeakPowerResponse
+  - term: MeterDataResult
+    definition: Model containing meter time series data result. Different parameters will be available depending on the data requested, see below
+      for more information
+    tags:
+    - Object
+    source: openapi/eliq-energy-data-api-openapi.yml#/components/schemas/MeterDataResult
+  - term: TimeSeriesData
+    definition: 'Object declared by the contract with fields: consumption, production, import, export, price, co2emission, resolution, fuel, unit,
+      from, to, estimated_from. (1 more)'
+    tags:
+    - Object
+    source: openapi/eliq-energy-data-api-openapi.yml#/components/schemas/TimeSeriesData
+  - term: Co2Emission
+    definition: 'Object declared by the contract with fields: co2_in_kg, car_gas_emission_in_km.'
+    tags:
+    - Object
+    source: openapi/eliq-energy-data-api-openapi.yml#/components/schemas/Co2Emission
+  - term: FuelType
+    definition: 'Enumeration declared by the contract with values: none, elec, gas, district_heating.'
+    tags:
+    - Enumeration
+    source: openapi/eliq-energy-data-api-openapi.yml#/components/schemas/FuelType
+  - term: UnitType
+    definition: 'Enumeration declared by the contract with values: none, cost, monetary_unit, energy, temperature, m3.'
+    tags:
+    - Enumeration
+    source: openapi/eliq-energy-data-api-openapi.yml#/components/schemas/UnitType
+  - term: EpcRatingType
+    definition: Energy rating type
+    tags:
+    - Enumeration
+    source: openapi/eliq-energy-performance-certificate-api-openapi.yml#/components/schemas/EpcRatingType
+  - term: EpcRatingStatus
+    definition: Current energy rating status based on the valid from and to dates Not available for estimated energy rating type
+    tags:
+    - Enumeration
+    source: openapi/eliq-energy-performance-certificate-api-openapi.yml#/components/schemas/EpcRatingStatus
+  - term: EpcRatingResponse
+    definition: EPC rating
+    tags:
+    - Object
+    source: openapi/eliq-energy-performance-certificate-api-openapi.yml#/components/schemas/EpcRatingResponse
+  - term: EucCategoryResultModel
+    definition: Energy usage by category
+    tags:
+    - Object
+    source: openapi/eliq-energy-usage-categories-api-openapi.yml#/components/schemas/EucCategoryResultModel
+  - term: EUC
+    definition: Model containing energy usage by category
+    tags:
+    - Object
+    source: openapi/eliq-energy-usage-categories-api-openapi.yml#/components/schemas/EUC
+  - term: EucAccuracy
+    definition: Result data accuracy
+    tags:
+    - Enumeration
+    source: openapi/eliq-energy-usage-categories-api-openapi.yml#/components/schemas/EucAccuracy
+  - term: PatchDocument
+    definition: Patch document used in patch operations
+    tags:
+    - Object
+    source: openapi/eliq-home-profile-api-openapi.yml#/components/schemas/PatchDocument
+  - term: Homeprofile
+    definition: The home profile is describing the properties of a location, such as house type, heating system and other appliances. This information
+      is later used in Eliq analytics. The home profile root objects properties may be different in different countries (could be parsed as a
+      dictionary). Hence, the result shown for the locations country may not match with the example provided below.
+    tags:
+    - Object
+    source: openapi/eliq-home-profile-api-openapi.yml#/components/schemas/Homeprofile
+  - term: HomeprofileOptions
+    definition: A home profile option is the option that can be set. A home profile option may have different data types, 'single_select', 'multiple_select'
+      or 'number'. The available properties in the object will change depending on this data type, which is described more in the model.
+    tags:
+    - Object
+    source: openapi/eliq-home-profile-api-openapi.yml#/components/schemas/HomeProfileOption
+  - term: DashboardsConfiguration
+    definition: DataBricks dashboards available for embedding in the application
+    tags:
+    - Object
+    source: openapi/eliq-info-api-openapi.yml#/components/schemas/DashboardsConfiguration
+  - term: MyInfoResult
+    definition: Information about the active user
+    tags:
+    - Object
+    source: openapi/eliq-info-api-openapi.yml#/components/schemas/MyInfoResult
+  - term: DashboardConfigurationItem
+    definition: A published DataBricks dashboard the client is allowed to embed
+    tags:
+    - Object
+    source: openapi/eliq-info-api-openapi.yml#/components/schemas/DashboardConfigurationItem
+  - term: IntelligenceApiConfiguration
+    definition: 'Object declared by the contract with fields: application_name, dashboards.'
+    tags:
+    - Object
+    source: openapi/eliq-info-api-openapi.yml#/components/schemas/IntelligenceApiConfiguration
+  - term: AuthInfoResult
+    definition: Authorization information for the application
+    tags:
+    - Object
+    source: openapi/eliq-info-api-openapi.yml#/components/schemas/AuthInfoResult
+  - term: JobResultRow
+    definition: 'Object declared by the contract with fields: is_successful, error, result, input.'
+    tags:
+    - Object
+    source: openapi/eliq-jobs-api-openapi.yml#/components/schemas/JobResultRow
+  - term: JobFailedRow
+    definition: 'Object declared by the contract with fields: row_number, error_code, error_description.'
+    tags:
+    - Object
+    source: openapi/eliq-jobs-api-openapi.yml#/components/schemas/JobFailedRow
+  - term: JobType
+    definition: 'Enumeration declared by the contract with values: import, export, multi-file.'
+    tags:
+    - Enumeration
+    source: openapi/eliq-jobs-api-openapi.yml#/components/schemas/JobType
+  - term: JobEntryStateType
+    definition: 'Enumeration declared by the contract with values: received, queued, processing, failed, completed, canceled.'
+    tags:
+    - Enumeration
+    source: openapi/eliq-jobs-api-openapi.yml#/components/schemas/JobEntryStateType
+  - term: JobEntry
+    definition: 'Object declared by the contract with fields: id, reference, created_at_timestamp, state_updated_at_timestamp, entity, operation,
+      state, number_of_rows, number_of_successful_rows, number_of_failed_rows, file_format, type.'
+    tags:
+    - Object
+    source: openapi/eliq-jobs-api-openapi.yml#/components/schemas/JobEntry
+  - term: FileRowError
+    definition: 'Object declared by the contract with fields: code, description.'
+    tags:
+    - Object
+    source: openapi/eliq-jobs-api-openapi.yml#/components/schemas/FileRowError
+  - term: JobOperationType
+    definition: 'Enumeration declared by the contract with values: upsert, delete, export, multi-file-export.'
+    tags:
+    - Enumeration
+    source: openapi/eliq-jobs-api-openapi.yml#/components/schemas/JobOperationType
+  - term: LocationAddress
+    definition: 'Object declared by the contract with fields: street_address, postal_code, city, country_code.'
+    tags:
+    - Object
+    source: openapi/eliq-location-api-openapi.yml#/components/schemas/LocationAddress
+  - term: ProfileType
+    definition: 'Enumeration declared by the contract with values: residential, business, undefined.'
+    tags:
+    - Enumeration
+    source: openapi/eliq-location-api-openapi.yml#/components/schemas/ProfileType
+  - term: NoContentResult
+    definition: 'Object declared by the contract with fields: statusCode.'
+    tags:
+    - Object
+    source: openapi/eliq-location-api-openapi.yml#/components/schemas/NoContentResult
+  - term: Meter
+    definition: 'Object declared by the contract with fields: id, eliq_id, location_id, name, model, fuel, type, is_sub_meter, category, category_percentage,
+      supply_start_date, supply_end_date. (2 more)'
+    tags:
+    - Object
+    source: openapi/eliq-location-api-openapi.yml#/components/schemas/Meter
+  - term: Location
+    definition: 'Object declared by the contract with fields: id, eliq_id, name, user_id, spot_price_region_id, address, geo, meters, created_at_timestamp,
+      location_profile_type.'
+    tags:
+    - Object
+    source: openapi/eliq-location-api-openapi.yml#/components/schemas/Location
+  - term: LocationGeo
+    definition: 'Object declared by the contract with fields: latitude, longitude.'
+    tags:
+    - Object
+    source: openapi/eliq-location-api-openapi.yml#/components/schemas/LocationGeo
+  - term: HomeProfileProperty
+    definition: 'Object declared by the contract with fields: key, value, value_type.'
+    tags:
+    - Object
+    source: openapi/eliq-location-home-profile-api-openapi.yml#/components/schemas/HomeProfileProperty
+  - term: OkObjectResult
+    definition: 'Object declared by the contract with fields: value, formatters, contentTypes, declaredType, statusCode.'
+    tags:
+    - Object
+    source: openapi/eliq-location-home-profile-api-openapi.yml#/components/schemas/OkObjectResult
+  - term: LocationPriceFormula
+    definition: 'Object declared by the contract with fields: fuel, source, name, direction, from, to, currency_code, elements, price_multiplier.'
+    tags:
+    - Object
+    source: openapi/eliq-location-price-formulas-api-openapi.yml#/components/schemas/LocationPriceFormula
+  - term: SpotPrice
+    definition: 'Object declared by the contract with fields: provider, region, resolution, multiplier.'
+    tags:
+    - Object
+    source: openapi/eliq-location-price-formulas-api-openapi.yml#/components/schemas/SpotPrice
+  - term: Tou
+    definition: 'Object declared by the contract with fields: register_id, unit_rate, intervals, skip_intervals.'
+    tags:
+    - Object
+    source: openapi/eliq-location-price-formulas-api-openapi.yml#/components/schemas/Tou
+  - term: UnitRate
+    definition: 'Object declared by the contract with fields: type, fixed, tou, block, spot_price, weekdays.'
+    tags:
+    - Object
+    source: openapi/eliq-location-price-formulas-api-openapi.yml#/components/schemas/UnitRate
+  - term: Charge
+    definition: 'Object declared by the contract with fields: resolution, charge, type, capacity_tariff.'
+    tags:
+    - Object
+    source: openapi/eliq-location-price-formulas-api-openapi.yml#/components/schemas/Charge
+  - term: Interval
+    definition: 'Object declared by the contract with fields: from_minute, to_minute.'
+    tags:
+    - Object
+    source: openapi/eliq-location-price-formulas-api-openapi.yml#/components/schemas/Interval
+  - term: Block
+    definition: 'Object declared by the contract with fields: resolution, register_id, unit_rate, from_kwh, to_kwh, from_m3, to_m3.'
+    tags:
+    - Object
+    source: openapi/eliq-location-price-formulas-api-openapi.yml#/components/schemas/Block
+  - term: CapacityTariff
+    definition: 'Object declared by the contract with fields: charge_tariff, minimum_contribution, calculation_type.'
+    tags:
+    - Object
+    source: openapi/eliq-location-price-formulas-api-openapi.yml#/components/schemas/CapacityTariff
+  - term: Fixed
+    definition: 'Object declared by the contract with fields: unit_rate.'
+    tags:
+    - Object
+    source: openapi/eliq-location-price-formulas-api-openapi.yml#/components/schemas/Fixed
+  - term: Element
+    definition: 'Object declared by the contract with fields: name, type, charge, unit_rate.'
+    tags:
+    - Object
+    source: openapi/eliq-location-price-formulas-api-openapi.yml#/components/schemas/Element

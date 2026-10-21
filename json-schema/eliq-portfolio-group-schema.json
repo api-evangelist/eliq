@@ -1,0 +1,134 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/api-evangelist/eliq/main/json-schema/eliq-portfolio-group-schema.json",
+  "title": "PortfolioGroup",
+  "x-generated": "2026-10-20",
+  "x-method": "derived",
+  "x-generator": "derive-json-schema.py",
+  "x-source": "openapi/eliq-portfolio-groups-api-openapi.yml#/components/schemas/PortfolioGroup",
+  "type": "object",
+  "properties": {
+    "id": {
+      "type": "string",
+      "format": "uuid"
+    },
+    "name": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "status": {
+      "$ref": "#/$defs/PortfolioGroupStatus"
+    },
+    "created_at_utc": {
+      "type": "string"
+    },
+    "created_by_user_id": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "users": {
+      "type": [
+        "array",
+        "null"
+      ],
+      "items": {
+        "$ref": "#/$defs/PortfolioUser"
+      }
+    },
+    "locations": {
+      "type": [
+        "array",
+        "null"
+      ],
+      "items": {
+        "$ref": "#/$defs/PortfolioLocation"
+      }
+    },
+    "created_by_user": {
+      "$ref": "#/$defs/PortfolioUser"
+    }
+  },
+  "$defs": {
+    "PortfolioGroupStatus": {
+      "enum": [
+        "in_progress",
+        "active",
+        "disabled"
+      ],
+      "type": "string"
+    },
+    "PortfolioLocation": {
+      "required": [
+        "name"
+      ],
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "name": {
+          "minLength": 1,
+          "type": "string"
+        },
+        "created_at_utc": {
+          "type": "string"
+        }
+      }
+    },
+    "PortfolioUser": {
+      "required": [
+        "name",
+        "role"
+      ],
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "name": {
+          "minLength": 1,
+          "type": "string"
+        },
+        "role": {
+          "$ref": "#/$defs/PortfolioUserRole"
+        },
+        "created_at_utc": {
+          "type": "string"
+        },
+        "last_logon_utc": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "magic_link_emails": {
+          "type": [
+            "array",
+            "null"
+          ],
+          "items": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "PortfolioUserRole": {
+      "enum": [
+        "user",
+        "admin",
+        "owner"
+      ],
+      "type": "string"
+    }
+  }
+}

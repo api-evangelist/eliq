@@ -1,0 +1,66 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/api-evangelist/eliq/main/json-schema/eliq-notification-dto-schema.json",
+  "title": "NotificationDto",
+  "x-generated": "2026-10-20",
+  "x-method": "derived",
+  "x-generator": "derive-json-schema.py",
+  "x-source": "openapi/eliq-user-api-openapi.yml#/components/schemas/NotificationDto",
+  "type": "object",
+  "properties": {
+    "type": {
+      "$ref": "#/$defs/NotificationType"
+    },
+    "header": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "content": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "link": {
+      "$ref": "#/$defs/DtoLink"
+    }
+  },
+  "$defs": {
+    "DtoLink": {
+      "type": "object",
+      "properties": {
+        "url": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "label": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "target": {
+          "$ref": "#/$defs/DtoLinkTarget"
+        }
+      }
+    },
+    "DtoLinkTarget": {
+      "enum": [
+        "webview",
+        "browser"
+      ],
+      "type": "string"
+    },
+    "NotificationType": {
+      "enum": [
+        "unknown",
+        "custom"
+      ],
+      "type": "string"
+    }
+  }
+}

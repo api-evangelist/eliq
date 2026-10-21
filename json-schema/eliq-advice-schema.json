@@ -1,0 +1,388 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/api-evangelist/eliq/main/json-schema/eliq-advice-schema.json",
+  "title": "Advice",
+  "description": "Model containing advice information.",
+  "x-generated": "2026-10-20",
+  "x-method": "derived",
+  "x-generator": "derive-json-schema.py",
+  "x-source": "openapi/eliq-advice-api-openapi.yml#/components/schemas/Advice",
+  "required": [
+    "content",
+    "id",
+    "key",
+    "relevance",
+    "title",
+    "type"
+  ],
+  "type": "object",
+  "properties": {
+    "id": {
+      "minLength": 1,
+      "type": "string",
+      "description": "Advice id."
+    },
+    "relevance": {
+      "maximum": 1,
+      "minimum": 0,
+      "type": "number",
+      "description": "A number that indicates how relevant the advice is for the end user. The higher the number, the more relevant the advice.",
+      "format": "double"
+    },
+    "estimated_yearly_savings_energy": {
+      "type": [
+        "number",
+        "null"
+      ],
+      "description": "Estimated savings in energy kWh.\n            \nDeprecated property, estimated_yearly_savings should be used instead.",
+      "format": "double"
+    },
+    "estimated_yearly_savings": {
+      "type": [
+        "array",
+        "null"
+      ],
+      "items": {
+        "$ref": "#/$defs/EstimatedSavings"
+      },
+      "description": "A list of available estimated savings in either kWh or M3, depending on whether the advice is intended\nfor gas or electricity fuel."
+    },
+    "estimated_yearly_savings_cost": {
+      "type": [
+        "number",
+        "null"
+      ],
+      "description": "Estimated savings in cost. Currency is the same as price formula currency.\n\nDeprecated property, estimated_yearly_savings_monetary should be used instead.",
+      "format": "double"
+    },
+    "estimated_yearly_savings_monetary": {
+      "type": [
+        "array",
+        "null"
+      ],
+      "items": {
+        "$ref": "#/$defs/SavingMonetary"
+      },
+      "description": "A list of available estimated savings in cost. Currency is the same as price formula currency.\n\nAvailable monetary source types are provided with a separate endpoint \n<a href=\"#/Advice/get-v3-location-advice-monetary-sources\">Get savings monetary sources</a>."
+    },
+    "title": {
+      "minLength": 1,
+      "type": "string",
+      "description": "Title text."
+    },
+    "content": {
+      "minLength": 1,
+      "type": "string",
+      "description": "Content text."
+    },
+    "key": {
+      "minLength": 1,
+      "type": "string",
+      "description": "Unique advice key."
+    },
+    "status": {
+      "$ref": "#/$defs/AdviceStatus"
+    },
+    "activated_at": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "description": "Timestamp in UTC\n\nOne optional setting is to configure advice to be activated after a certain time period.\n\nIf this is defined, the timestamp indicates when the advice was activated. This is managed by Eliq on the backend side.\n\nIf an advice has not been activated the timestamp is null, and this can be used to filter out non activated advice.",
+      "format": "date-time"
+    },
+    "updated_status_at": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "description": "Timestamp in UTC\n\nThis timestamp indicates when the advice status was last updated.",
+      "format": "date-time"
+    },
+    "link": {
+      "$ref": "#/$defs/Link"
+    },
+    "links": {
+      "type": [
+        "array",
+        "null"
+      ],
+      "items": {
+        "$ref": "#/$defs/AdviceLinkModel"
+      },
+      "description": "Optional collection of links can be included with each advice"
+    },
+    "type": {
+      "$ref": "#/$defs/AdviceType"
+    },
+    "investment_cost": {
+      "$ref": "#/$defs/AdviceInvestmentCostModel"
+    },
+    "financing_options": {
+      "type": [
+        "array",
+        "null"
+      ],
+      "items": {
+        "$ref": "#/$defs/AdviceFinancingOptionModel"
+      },
+      "description": "Available financing options"
+    },
+    "euc_keys": {
+      "type": [
+        "array",
+        "null"
+      ],
+      "items": {
+        "type": "string"
+      },
+      "description": "The EUC (energy usage category) keys related to specific advice."
+    }
+  },
+  "$defs": {
+    "AdviceFinancingOptionModel": {
+      "required": [
+        "description",
+        "key",
+        "title",
+        "type",
+        "url"
+      ],
+      "type": "object",
+      "properties": {
+        "key": {
+          "minLength": 1,
+          "type": "string",
+          "description": "Unique key used to identify a financing option. Consisting only of lowercase letters and underscores."
+        },
+        "type": {
+          "$ref": "#/$defs/FinancingOptionType"
+        },
+        "title": {
+          "minLength": 1,
+          "type": "string",
+          "description": "Title text"
+        },
+        "description": {
+          "minLength": 1,
+          "type": "string",
+          "description": "Description text"
+        },
+        "url": {
+          "minLength": 1,
+          "type": "string",
+          "description": "Url of an external Web resource"
+        }
+      },
+      "description": "Financing option"
+    },
+    "AdviceInvestmentCostModel": {
+      "type": "object",
+      "properties": {
+        "fixed": {
+          "type": [
+            "number",
+            "null"
+          ],
+          "description": "Fixed investment cost value",
+          "format": "double"
+        },
+        "range_from": {
+          "type": [
+            "number",
+            "null"
+          ],
+          "description": "Investment cost range from value",
+          "format": "double"
+        },
+        "range_to": {
+          "type": [
+            "number",
+            "null"
+          ],
+          "description": "Investment cost range to value",
+          "format": "double"
+        },
+        "roi": {
+          "type": [
+            "array",
+            "null"
+          ],
+          "items": {
+            "$ref": "#/$defs/AdviceReturnOfInvestmentModel"
+          }
+        }
+      },
+      "description": "Investment cost"
+    },
+    "AdviceLinkModel": {
+      "required": [
+        "key",
+        "text",
+        "type"
+      ],
+      "type": "object",
+      "properties": {
+        "key": {
+          "minLength": 1,
+          "type": "string",
+          "description": "The key by which the link is identified."
+        },
+        "type": {
+          "$ref": "#/$defs/AdviceLinkType"
+        },
+        "text": {
+          "minLength": 1,
+          "type": "string",
+          "description": "The text to be displayed in the front end for this link."
+        },
+        "url": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "description": "The actual URL of the link."
+        }
+      },
+      "description": "Optional link which can be included with each advice"
+    },
+    "AdviceLinkType": {
+      "enum": [
+        "image",
+        "external-link"
+      ],
+      "type": "string",
+      "description": "The type which can be set to an advice Link."
+    },
+    "AdviceReturnOfInvestmentModel": {
+      "required": [
+        "from",
+        "to",
+        "unit"
+      ],
+      "type": "object",
+      "properties": {
+        "unit": {
+          "$ref": "#/$defs/AdviceReturnOfInvestmentUnit"
+        },
+        "from": {
+          "type": "number",
+          "description": "From value",
+          "format": "double"
+        },
+        "to": {
+          "type": "number",
+          "description": "To value",
+          "format": "double"
+        }
+      },
+      "description": "Return of investment"
+    },
+    "AdviceReturnOfInvestmentUnit": {
+      "enum": [
+        "months"
+      ],
+      "type": "string",
+      "description": "Return of investment unit"
+    },
+    "AdviceStatus": {
+      "enum": [
+        "none",
+        "skipped",
+        "not_relevant",
+        "implemented",
+        "save_for_later",
+        "already_implemented"
+      ],
+      "type": "string",
+      "description": "This statuses are used to capture end user feedback and feed this information back to our algorithms as well as making it easy to build an UI. The status can be updated at any time."
+    },
+    "AdviceType": {
+      "enum": [
+        "energy_tip",
+        "upgrade"
+      ],
+      "type": "string",
+      "description": "Advice type is used as a sub-category or a group"
+    },
+    "EnergyUnit": {
+      "enum": [
+        "kwh",
+        "m3"
+      ],
+      "type": "string"
+    },
+    "EstimatedSavings": {
+      "required": [
+        "unit",
+        "value"
+      ],
+      "type": "object",
+      "properties": {
+        "value": {
+          "type": "number",
+          "description": "The amount saved.",
+          "format": "double"
+        },
+        "unit": {
+          "$ref": "#/$defs/EnergyUnit"
+        }
+      },
+      "description": "The estimated energy savings in either kWh or M3 for a given advice.\n            \nUnit depends on whether the advice is intended for gas of electricity."
+    },
+    "FinancingOptionType": {
+      "enum": [
+        "financing",
+        "subsidy"
+      ],
+      "type": "string",
+      "description": "Financing option type"
+    },
+    "Link": {
+      "required": [
+        "text",
+        "url"
+      ],
+      "type": "object",
+      "properties": {
+        "text": {
+          "minLength": 1,
+          "type": "string",
+          "description": "Title provided for a given Web resource"
+        },
+        "url": {
+          "minLength": 1,
+          "type": "string",
+          "description": "System generated url that redirects to a given Web resource. Provided url uses anonymous authentication and is only valid for 30 minutes after its receival."
+        }
+      },
+      "description": "Optional link can be included with each advice\n            \nDeprecated property, links should be used instead."
+    },
+    "SavingMonetary": {
+      "required": [
+        "cost",
+        "cost_per_wh",
+        "type"
+      ],
+      "type": "object",
+      "properties": {
+        "type": {
+          "minLength": 1,
+          "type": "string",
+          "description": "Monetary source type"
+        },
+        "cost": {
+          "type": "number",
+          "description": "Savings amount in local currency",
+          "format": "double"
+        },
+        "cost_per_wh": {
+          "type": "number",
+          "description": "Savings amount per one kilowatt-hour in local currency",
+          "format": "double"
+        }
+      },
+      "description": "Savings monetary value"
+    }
+  }
+}

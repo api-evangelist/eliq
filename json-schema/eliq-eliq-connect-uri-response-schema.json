@@ -1,0 +1,19 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/api-evangelist/eliq/main/json-schema/eliq-eliq-connect-uri-response-schema.json",
+  "title": "EliqConnectUriResponse",
+  "x-generated": "2026-10-20",
+  "x-method": "derived",
+  "x-generator": "derive-json-schema.py",
+  "x-source": "openapi/eliq-eliq-connect-api-openapi.yml#/components/schemas/EliqConnectUriResponse",
+  "x-stoplight": {
+    "id": "x2vp8xc7rnr3y"
+  },
+  "type": "object",
+  "properties": {
+    "uri": {
+      "type": "string",
+      "description": "Uri to redirect the user to"
+    }
+  }
+}

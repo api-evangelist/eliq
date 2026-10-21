@@ -1,0 +1,28 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/api-evangelist/eliq/main/json-schema/eliq-portfolio-location-schema.json",
+  "title": "PortfolioLocation",
+  "x-generated": "2026-10-20",
+  "x-method": "derived",
+  "x-generator": "derive-json-schema.py",
+  "x-source": "openapi/eliq-portfolio-locations-api-openapi.yml#/components/schemas/PortfolioLocation",
+  "required": [
+    "name"
+  ],
+  "type": "object",
+  "properties": {
+    "id": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "name": {
+      "minLength": 1,
+      "type": "string"
+    },
+    "created_at_utc": {
+      "type": "string"
+    }
+  }
+}

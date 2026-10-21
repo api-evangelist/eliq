@@ -1,0 +1,304 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/api-evangelist/eliq/main/json-schema/eliq-price-formula-schema.json",
+  "title": "PriceFormula",
+  "x-generated": "2026-10-20",
+  "x-method": "derived",
+  "x-generator": "derive-json-schema.py",
+  "x-source": "openapi/eliq-meter-price-formulas-api-openapi.yml#/components/schemas/PriceFormula",
+  "type": "object",
+  "properties": {
+    "name": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "from": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "to": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "currency_code": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "elements": {
+      "type": [
+        "array",
+        "null"
+      ],
+      "items": {
+        "$ref": "#/$defs/Element"
+      }
+    },
+    "price_multiplier": {
+      "type": [
+        "number",
+        "null"
+      ],
+      "format": "double"
+    },
+    "energy_unit": {
+      "type": [
+        "string",
+        "null"
+      ]
+    }
+  },
+  "$defs": {
+    "Block": {
+      "type": "object",
+      "properties": {
+        "resolution": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "register_id": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "unit_rate": {
+          "type": "number",
+          "format": "double"
+        },
+        "from_kwh": {
+          "type": [
+            "integer",
+            "null"
+          ],
+          "format": "int64"
+        },
+        "to_kwh": {
+          "type": [
+            "integer",
+            "null"
+          ],
+          "format": "int64"
+        },
+        "from_m3": {
+          "type": [
+            "integer",
+            "null"
+          ],
+          "format": "int64"
+        },
+        "to_m3": {
+          "type": [
+            "integer",
+            "null"
+          ],
+          "format": "int64"
+        }
+      }
+    },
+    "CapacityTariff": {
+      "type": "object",
+      "properties": {
+        "charge_tariff": {
+          "type": "number",
+          "format": "double"
+        },
+        "minimum_contribution": {
+          "type": "number",
+          "format": "double"
+        },
+        "calculation_type": {
+          "type": [
+            "string",
+            "null"
+          ]
+        }
+      }
+    },
+    "Charge": {
+      "type": "object",
+      "properties": {
+        "resolution": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "charge": {
+          "type": [
+            "number",
+            "null"
+          ],
+          "format": "double"
+        },
+        "type": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "capacity_tariff": {
+          "$ref": "#/$defs/CapacityTariff"
+        }
+      }
+    },
+    "Element": {
+      "type": "object",
+      "properties": {
+        "name": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "type": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "charge": {
+          "$ref": "#/$defs/Charge"
+        },
+        "unit_rate": {
+          "$ref": "#/$defs/UnitRate"
+        }
+      }
+    },
+    "Fixed": {
+      "type": "object",
+      "properties": {
+        "unit_rate": {
+          "type": [
+            "number",
+            "null"
+          ],
+          "format": "double"
+        }
+      }
+    },
+    "Interval": {
+      "type": "object",
+      "properties": {
+        "from_minute": {
+          "type": [
+            "integer",
+            "null"
+          ],
+          "format": "int64"
+        },
+        "to_minute": {
+          "type": [
+            "integer",
+            "null"
+          ],
+          "format": "int64"
+        }
+      }
+    },
+    "SpotPrice": {
+      "type": "object",
+      "properties": {
+        "provider": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "region": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "resolution": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "multiplier": {
+          "type": [
+            "number",
+            "null"
+          ],
+          "format": "double"
+        }
+      }
+    },
+    "Tou": {
+      "type": "object",
+      "properties": {
+        "register_id": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "unit_rate": {
+          "type": [
+            "number",
+            "null"
+          ],
+          "format": "double"
+        },
+        "intervals": {
+          "type": [
+            "array",
+            "null"
+          ],
+          "items": {
+            "$ref": "#/$defs/Interval"
+          }
+        },
+        "skip_intervals": {
+          "type": [
+            "boolean",
+            "null"
+          ]
+        }
+      }
+    },
+    "UnitRate": {
+      "type": "object",
+      "properties": {
+        "type": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "fixed": {
+          "$ref": "#/$defs/Fixed"
+        },
+        "tou": {
+          "$ref": "#/$defs/Tou"
+        },
+        "block": {
+          "$ref": "#/$defs/Block"
+        },
+        "spot_price": {
+          "$ref": "#/$defs/SpotPrice"
+        },
+        "weekdays": {
+          "type": [
+            "array",
+            "null"
+          ],
+          "items": {
+            "type": "string"
+          }
+        }
+      }
+    }
+  }
+}

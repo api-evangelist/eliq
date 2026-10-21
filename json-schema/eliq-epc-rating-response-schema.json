@@ -1,0 +1,68 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/api-evangelist/eliq/main/json-schema/eliq-epc-rating-response-schema.json",
+  "title": "EpcRatingResponse",
+  "description": "EPC rating",
+  "x-generated": "2026-10-20",
+  "x-method": "derived",
+  "x-generator": "derive-json-schema.py",
+  "x-source": "openapi/eliq-energy-performance-certificate-api-openapi.yml#/components/schemas/EpcRatingResponse",
+  "required": [
+    "energy_efficiency",
+    "energy_rating",
+    "type"
+  ],
+  "type": "object",
+  "properties": {
+    "energy_rating": {
+      "minLength": 1,
+      "type": "string",
+      "description": "Energy rating"
+    },
+    "energy_efficiency": {
+      "type": "integer",
+      "description": "Energy efficiency",
+      "format": "int32"
+    },
+    "type": {
+      "$ref": "#/$defs/EpcRatingType"
+    },
+    "valid_from": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "description": "Valid from date\n\nNot available for estimated energy rating type",
+      "format": "date-time"
+    },
+    "valid_to": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "description": "Valid to date\n\nNot available for estimated energy rating type",
+      "format": "date-time"
+    },
+    "status": {
+      "$ref": "#/$defs/EpcRatingStatus"
+    }
+  },
+  "$defs": {
+    "EpcRatingStatus": {
+      "enum": [
+        "active",
+        "expired"
+      ],
+      "type": "string",
+      "description": "Current energy rating status based on the valid from and to dates\n\nNot available for estimated energy rating type"
+    },
+    "EpcRatingType": {
+      "enum": [
+        "actual",
+        "estimated"
+      ],
+      "type": "string",
+      "description": "Energy rating type"
+    }
+  }
+}

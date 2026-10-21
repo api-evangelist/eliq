@@ -1,0 +1,46 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/api-evangelist/eliq/main/json-schema/eliq-temperature-data-schema.json",
+  "title": "Temperature data",
+  "description": "Model containing time series temperature data. Different parameters will be available depending on the data requested, see below for more information",
+  "x-generated": "2026-10-20",
+  "x-method": "derived",
+  "x-generator": "derive-json-schema.py",
+  "x-source": "openapi/eliq-locations-api-openapi.yml#/components/schemas/TemperatureData",
+  "type": "object",
+  "properties": {
+    "temperature": {
+      "type": "array",
+      "items": {
+        "type": [
+          "number",
+          "null"
+        ]
+      }
+    },
+    "resolution": {
+      "type": "string",
+      "minLength": 1,
+      "description": "Can be 'day' or 'month'. Matches with the value passed in query parameters of the request.",
+      "enum": [
+        "day",
+        "month"
+      ]
+    },
+    "from": {
+      "type": "string",
+      "minLength": 1,
+      "description": "From date"
+    },
+    "to": {
+      "type": "string",
+      "minLength": 1,
+      "description": "To date"
+    }
+  },
+  "required": [
+    "resolution",
+    "from",
+    "to"
+  ]
+}

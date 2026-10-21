@@ -1,0 +1,71 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/api-evangelist/eliq/main/json-schema/eliq-energy-daily-data-schema.json",
+  "title": "EnergyDailyData",
+  "x-generated": "2026-10-20",
+  "x-method": "derived",
+  "x-generator": "derive-json-schema.py",
+  "x-source": "openapi/eliq-meter-energy-day-api-openapi.yml#/components/schemas/EnergyDailyData",
+  "type": "object",
+  "properties": {
+    "date": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "energy_wh": {
+      "type": [
+        "number",
+        "null"
+      ],
+      "format": "float"
+    },
+    "energy_m3": {
+      "type": [
+        "number",
+        "null"
+      ],
+      "format": "float"
+    },
+    "is_estimated": {
+      "type": "boolean"
+    },
+    "registers": {
+      "type": [
+        "array",
+        "null"
+      ],
+      "items": {
+        "$ref": "#/$defs/Register"
+      }
+    }
+  },
+  "$defs": {
+    "Register": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "energy_wh": {
+          "type": [
+            "number",
+            "null"
+          ],
+          "format": "float"
+        },
+        "energy_m3": {
+          "type": [
+            "number",
+            "null"
+          ],
+          "format": "float"
+        }
+      }
+    }
+  }
+}

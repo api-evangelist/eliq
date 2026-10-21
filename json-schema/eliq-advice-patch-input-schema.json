@@ -1,0 +1,33 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/api-evangelist/eliq/main/json-schema/eliq-advice-patch-input-schema.json",
+  "title": "AdvicePatchInput",
+  "description": "Advice status update request body",
+  "x-generated": "2026-10-20",
+  "x-method": "derived",
+  "x-generator": "derive-json-schema.py",
+  "x-source": "openapi/eliq-advice-api-openapi.yml#/components/schemas/AdvicePatchInput",
+  "required": [
+    "op",
+    "path",
+    "value"
+  ],
+  "type": "object",
+  "properties": {
+    "op": {
+      "minLength": 1,
+      "type": "string",
+      "description": "Operation to execute\n\nAllowed values: \"replace\""
+    },
+    "path": {
+      "minLength": 1,
+      "type": "string",
+      "description": "Path to property to update\n\nAllowed values: \"/status\""
+    },
+    "value": {
+      "minLength": 1,
+      "type": "string",
+      "description": "Status to set. \n\nAllowed values: \"none\", \"skipped\", \"not_relevant\", \"implemented\", \"save_for_later\", \"already_implemented\""
+    }
+  }
+}

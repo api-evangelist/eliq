@@ -1,151 +1,302 @@
-generated: '2026-09-06'
+generated: '2026-10-20'
 method: probed
-source: live HTTPS probes of every host in apis.yml plus every OpenAPI servers[] host, 2026-09-06
-provider: Eliq
-providerId: eliq
+generator: harvest-well-known.py
+source: Live GET of the named /.well-known/ path list on every host the record knows; every row is a request that
+  was issued.
 summary:
-  hosts_probed: 8
-  documents_found: 4
-  found:
-  - auth-api.eliq.com/.well-known/openid-configuration
-  - auth-api.eliq.com/.well-known/jwks.json
-  - auth-api-uat.eliq.com/.well-known/openid-configuration
-  - auth-api-uat.eliq.com/.well-known/jwks.json
-  note: No security.txt on any host, no api-catalog, no ai-plugin.json, no agent card. The two OIDC discovery documents
-    Eliq does serve are real but minimal — issuer and jwks_uri only — and are named by the Auth API contract itself
-    (GET /.well-known/jwks.json and GET /.well-known/openid-configuration are declared operations).
+  hosts_probed: 7
+  paths_probed: 77
+  documents_served: 4
 hosts:
-- host: eliq.com
-  documents:
-  - path: /.well-known/security.txt
-    status: 404
-  - path: /.well-known/openid-configuration
-    status: 404
-  - path: /.well-known/oauth-authorization-server
-    status: 404
-  - path: /.well-known/api-catalog
-    status: 404
-  - path: /.well-known/ai-plugin.json
-    status: 404
-- host: www.eliq.com
-  documents:
-  - path: /.well-known/security.txt
-    status: 404
-  - path: /.well-known/openid-configuration
-    status: 404
-  - path: /.well-known/oauth-authorization-server
-    status: 404
-  - path: /.well-known/api-catalog
-    status: 404
-  - path: /.well-known/ai-plugin.json
-    status: 404
-- host: developer.eliq.com
-  documents:
-  - path: /.well-known/security.txt
-    status: 404
-  - path: /.well-known/openid-configuration
-    status: 404
-  - path: /.well-known/oauth-authorization-server
-    status: 404
-  - path: /.well-known/api-catalog
-    status: 404
-  - path: /.well-known/ai-plugin.json
-    status: 404
 - host: auth-api.eliq.com
+  control:
+    path: /.well-known/apis-io-negative-control-7f3ab91c.json
+    status: 404
+    bytes: 0
   documents:
   - path: /.well-known/security.txt
     status: 404
+    standard: RFC 9116
   - path: /.well-known/openid-configuration
     status: 200
-    file: eliq-openid-configuration.json
-    note: 'Real OIDC discovery document. Minimal: issuer + jwks_uri only — no authorization_endpoint, token_endpoint,
-      scopes_supported or grant_types_supported. Enough to verify a token signature, not enough to discover the
-      token endpoint (which the Auth API OpenAPI documents as POST /oauth/token).'
-  - path: /.well-known/jwks.json
-    status: 200
-    file: eliq-jwks.json
-    note: Live JSON Web Key Set — one RS256 RSA signing key (public key material; not a secret).
+    standard: OpenID Connect Discovery 1.0
+    content_type: application/json; charset=utf-8
+    file: eliq-auth-api-openid-configuration.json
   - path: /.well-known/oauth-authorization-server
-    status: 404
+    status: 200
+    standard: RFC 8414
+    content_type: application/json; charset=utf-8
+    file: eliq-auth-api-oauth-authorization-server.json
   - path: /.well-known/oauth-protected-resource
     status: 404
+    standard: RFC 9728
   - path: /.well-known/api-catalog
     status: 404
+    standard: RFC 9727
+  - path: /.well-known/apis.json
+    status: 404
+    standard: APIs.json
   - path: /.well-known/ai-plugin.json
     status: 404
-  - path: /.well-known/agent-card.json
+    standard: OpenAI plugin manifest
+  - path: /.well-known/aauth-resource.json
     status: 404
-  - path: /.well-known/agent.json
+    standard: AAuth
+  - path: /.well-known/ucp.json
     status: 404
+    standard: UCP
+  - path: /.well-known/acp.json
+    status: 404
+    standard: ACP
+  - path: /.well-known/mcp/server-card.json
+    status: 404
+    standard: MCP server card
+- host: developer.eliq.com
+  control:
+    path: /.well-known/apis-io-negative-control-7f3ab91c.json
+    status: 404
+    bytes: 0
+  documents:
+  - path: /.well-known/security.txt
+    status: 404
+    standard: RFC 9116
+  - path: /.well-known/openid-configuration
+    status: 404
+    standard: OpenID Connect Discovery 1.0
+  - path: /.well-known/oauth-authorization-server
+    status: 404
+    standard: RFC 8414
+  - path: /.well-known/oauth-protected-resource
+    status: 404
+    standard: RFC 9728
+  - path: /.well-known/api-catalog
+    status: 404
+    standard: RFC 9727
+  - path: /.well-known/apis.json
+    status: 404
+    standard: APIs.json
+  - path: /.well-known/ai-plugin.json
+    status: 404
+    standard: OpenAI plugin manifest
+  - path: /.well-known/aauth-resource.json
+    status: 404
+    standard: AAuth
+  - path: /.well-known/ucp.json
+    status: 404
+    standard: UCP
+  - path: /.well-known/acp.json
+    status: 404
+    standard: ACP
+  - path: /.well-known/mcp/server-card.json
+    status: 404
+    standard: MCP server card
+- host: www.eliq.com
+  control:
+    path: /.well-known/apis-io-negative-control-7f3ab91c.json
+    status: 404
+    bytes: 0
+  documents:
+  - path: /.well-known/security.txt
+    status: 404
+    standard: RFC 9116
+  - path: /.well-known/openid-configuration
+    status: 404
+    standard: OpenID Connect Discovery 1.0
+  - path: /.well-known/oauth-authorization-server
+    status: 404
+    standard: RFC 8414
+  - path: /.well-known/oauth-protected-resource
+    status: 404
+    standard: RFC 9728
+  - path: /.well-known/api-catalog
+    status: 404
+    standard: RFC 9727
+  - path: /.well-known/apis.json
+    status: 404
+    standard: APIs.json
+  - path: /.well-known/ai-plugin.json
+    status: 404
+    standard: OpenAI plugin manifest
+  - path: /.well-known/aauth-resource.json
+    status: 404
+    standard: AAuth
+  - path: /.well-known/ucp.json
+    status: 404
+    standard: UCP
+  - path: /.well-known/acp.json
+    status: 404
+    standard: ACP
+  - path: /.well-known/mcp/server-card.json
+    status: 404
+    standard: MCP server card
+- host: eliq.com
+  control:
+    path: /.well-known/apis-io-negative-control-7f3ab91c.json
+    status: 404
+    bytes: 0
+  documents:
+  - path: /.well-known/security.txt
+    status: 404
+    standard: RFC 9116
+  - path: /.well-known/openid-configuration
+    status: 404
+    standard: OpenID Connect Discovery 1.0
+  - path: /.well-known/oauth-authorization-server
+    status: 404
+    standard: RFC 8414
+  - path: /.well-known/oauth-protected-resource
+    status: 404
+    standard: RFC 9728
+  - path: /.well-known/api-catalog
+    status: 404
+    standard: RFC 9727
+  - path: /.well-known/apis.json
+    status: 404
+    standard: APIs.json
+  - path: /.well-known/ai-plugin.json
+    status: 404
+    standard: OpenAI plugin manifest
+  - path: /.well-known/aauth-resource.json
+    status: 404
+    standard: AAuth
+  - path: /.well-known/ucp.json
+    status: 404
+    standard: UCP
+  - path: /.well-known/acp.json
+    status: 404
+    standard: ACP
+  - path: /.well-known/mcp/server-card.json
+    status: 404
+    standard: MCP server card
+- host: api.eliq.com
+  control:
+    path: /.well-known/apis-io-negative-control-7f3ab91c.json
+    status: null
+    bytes: 0
+  documents:
+  - path: /.well-known/security.txt
+    status: null
+    standard: RFC 9116
+    note: 'unreachable: URLError'
+  - path: /.well-known/openid-configuration
+    status: null
+    standard: OpenID Connect Discovery 1.0
+    note: 'unreachable: URLError'
+  - path: /.well-known/oauth-authorization-server
+    status: null
+    standard: RFC 8414
+    note: 'unreachable: URLError'
+  - path: /.well-known/oauth-protected-resource
+    status: null
+    standard: RFC 9728
+    note: 'unreachable: URLError'
+  - path: /.well-known/api-catalog
+    status: null
+    standard: RFC 9727
+    note: 'unreachable: URLError'
+  - path: /.well-known/apis.json
+    status: null
+    standard: APIs.json
+    note: 'unreachable: URLError'
+  - path: /.well-known/ai-plugin.json
+    status: null
+    standard: OpenAI plugin manifest
+    note: 'unreachable: URLError'
+  - path: /.well-known/aauth-resource.json
+    status: null
+    standard: AAuth
+    note: 'unreachable: URLError'
+  - path: /.well-known/ucp.json
+    status: null
+    standard: UCP
+    note: 'unreachable: URLError'
+  - path: /.well-known/acp.json
+    status: null
+    standard: ACP
+    note: 'unreachable: URLError'
+  - path: /.well-known/mcp/server-card.json
+    status: null
+    standard: MCP server card
+    note: 'unreachable: URLError'
 - host: auth-api-uat.eliq.com
+  control:
+    path: /.well-known/apis-io-negative-control-7f3ab91c.json
+    status: 404
+    bytes: 0
   documents:
+  - path: /.well-known/security.txt
+    status: 404
+    standard: RFC 9116
   - path: /.well-known/openid-configuration
     status: 200
-    file: eliq-uat-openid-configuration.json
-    note: UAT issuer discovery document.
-  - path: /.well-known/jwks.json
+    standard: OpenID Connect Discovery 1.0
+    content_type: application/json; charset=utf-8
+    file: eliq-auth-api-uat-openid-configuration.json
+  - path: /.well-known/oauth-authorization-server
     status: 200
-    file: eliq-uat-jwks.json
-    note: UAT signing key set.
-  - path: /.well-known/security.txt
+    standard: RFC 8414
+    content_type: application/json; charset=utf-8
+    file: eliq-auth-api-uat-oauth-authorization-server.json
+  - path: /.well-known/oauth-protected-resource
     status: 404
-  - path: /.well-known/oauth-authorization-server
-    status: 404
+    standard: RFC 9728
   - path: /.well-known/api-catalog
     status: 404
+    standard: RFC 9727
+  - path: /.well-known/apis.json
+    status: 404
+    standard: APIs.json
   - path: /.well-known/ai-plugin.json
     status: 404
-- host: eliq.insights-api.eliq.com
+    standard: OpenAI plugin manifest
+  - path: /.well-known/aauth-resource.json
+    status: 404
+    standard: AAuth
+  - path: /.well-known/ucp.json
+    status: 404
+    standard: UCP
+  - path: /.well-known/acp.json
+    status: 404
+    standard: ACP
+  - path: /.well-known/mcp/server-card.json
+    status: 404
+    standard: MCP server card
+- host: support.eliq.com
+  control:
+    path: /.well-known/apis-io-negative-control-7f3ab91c.json
+    status: 404
+    bytes: 0
   documents:
   - path: /.well-known/security.txt
     status: 404
+    standard: RFC 9116
   - path: /.well-known/openid-configuration
     status: 404
+    standard: OpenID Connect Discovery 1.0
   - path: /.well-known/oauth-authorization-server
     status: 404
-  - path: /.well-known/api-catalog
-    status: 404
-  - path: /.well-known/ai-plugin.json
-    status: 404
+    standard: RFC 8414
   - path: /.well-known/oauth-protected-resource
     status: 404
-  - path: /.well-known/agent-card.json
-    status: 404
-  - path: /.well-known/agent.json
-    status: 404
-- host: eliq.data-management-api.eliq.com
-  documents:
-  - path: /.well-known/security.txt
-    status: 404
-  - path: /.well-known/openid-configuration
-    status: 404
-  - path: /.well-known/oauth-authorization-server
-    status: 404
+    standard: RFC 9728
   - path: /.well-known/api-catalog
     status: 404
+    standard: RFC 9727
+  - path: /.well-known/apis.json
+    status: 404
+    standard: APIs.json
   - path: /.well-known/ai-plugin.json
     status: 404
-  - path: /.well-known/oauth-protected-resource
+    standard: OpenAI plugin manifest
+  - path: /.well-known/aauth-resource.json
     status: 404
-  - path: /.well-known/agent-card.json
+    standard: AAuth
+  - path: /.well-known/ucp.json
     status: 404
-  - path: /.well-known/agent.json
+    standard: UCP
+  - path: /.well-known/acp.json
     status: 404
-- host: eliq.intelligence-api.eliq.com
-  documents:
-  - path: /.well-known/security.txt
+    standard: ACP
+  - path: /.well-known/mcp/server-card.json
     status: 404
-  - path: /.well-known/openid-configuration
-    status: 404
-  - path: /.well-known/oauth-authorization-server
-    status: 404
-  - path: /.well-known/api-catalog
-    status: 404
-  - path: /.well-known/ai-plugin.json
-    status: 404
-  - path: /.well-known/oauth-protected-resource
-    status: 404
-  - path: /.well-known/agent-card.json
-    status: 404
-  - path: /.well-known/agent.json
-    status: 404
+    standard: MCP server card

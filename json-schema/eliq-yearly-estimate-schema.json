@@ -1,0 +1,64 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/api-evangelist/eliq/main/json-schema/eliq-yearly-estimate-schema.json",
+  "title": "YearlyEstimate",
+  "description": "Model containing yearly estimate for a location",
+  "x-generated": "2026-10-20",
+  "x-method": "derived",
+  "x-generator": "derive-json-schema.py",
+  "x-source": "openapi/eliq-locations-api-openapi.yml#/components/schemas/YearlyEstimate",
+  "required": [
+    "fuel",
+    "source",
+    "type",
+    "year"
+  ],
+  "type": "object",
+  "properties": {
+    "fuel": {
+      "$ref": "#/$defs/Fuel"
+    },
+    "type": {
+      "$ref": "#/$defs/Direction"
+    },
+    "year": {
+      "type": "integer",
+      "description": "Year",
+      "format": "int32"
+    },
+    "source": {
+      "minLength": 1,
+      "type": "string",
+      "description": "Source of the entry, e.g., user, system"
+    },
+    "energy_wh": {
+      "type": [
+        "integer",
+        "null"
+      ],
+      "description": "Energy in Wh",
+      "format": "int32"
+    }
+  },
+  "$defs": {
+    "Direction": {
+      "enum": [
+        "import",
+        "export",
+        "consumption",
+        "production"
+      ],
+      "type": "string",
+      "description": "Direction type"
+    },
+    "Fuel": {
+      "enum": [
+        "elec",
+        "gas",
+        "district_heating"
+      ],
+      "type": "string",
+      "description": "Fuel type"
+    }
+  }
+}

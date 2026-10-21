@@ -1,0 +1,30 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/api-evangelist/eliq/main/json-schema/eliq-device-max-demand-limit-schema.json",
+  "title": "DeviceMaxDemandLimit",
+  "x-generated": "2026-10-20",
+  "x-method": "derived",
+  "x-generator": "derive-json-schema.py",
+  "x-source": "openapi/eliq-meter-max-demand-api-openapi.yml#/components/schemas/DeviceMaxDemandLimit",
+  "type": "object",
+  "properties": {
+    "min": {
+      "type": "number",
+      "format": "double"
+    },
+    "target": {
+      "type": "number",
+      "format": "double"
+    },
+    "max": {
+      "type": "number",
+      "format": "double"
+    },
+    "unit": {
+      "type": [
+        "string",
+        "null"
+      ]
+    }
+  }
+}

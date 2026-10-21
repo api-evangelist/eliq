@@ -1,4 +1,5 @@
 # Eliq plans + pricing — measured absence. Eliq publishes no plans.
+name: Eliq API Plans
 specification: API Commons Plans
 specificationVersion: '0.1'
 schema: https://raw.githubusercontent.com/api-evangelist/interface-research/main/schema/api-commons.yml#/$defs/Plans

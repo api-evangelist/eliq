@@ -1,0 +1,46 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/api-evangelist/eliq/main/json-schema/eliq-dashboard-embed-token-result-schema.json",
+  "title": "DashboardEmbedTokenResult",
+  "description": "Everything the frontend needs to embed a dashboard with @databricks/aibi-client",
+  "x-generated": "2026-10-20",
+  "x-method": "derived",
+  "x-generator": "derive-json-schema.py",
+  "x-source": "openapi/eliq-dashboards-api-openapi.yml#/components/schemas/DashboardEmbedTokenResult",
+  "required": [
+    "dashboard_id",
+    "expires_in_seconds",
+    "instance_url",
+    "token",
+    "workspace_id"
+  ],
+  "type": "object",
+  "properties": {
+    "instance_url": {
+      "minLength": 1,
+      "type": "string",
+      "description": "Base URL of the DataBricks workspace instance"
+    },
+    "workspace_id": {
+      "minLength": 1,
+      "type": "string",
+      "description": "Id of the DataBricks workspace"
+    },
+    "dashboard_id": {
+      "minLength": 1,
+      "type": "string",
+      "description": "Id of the published dashboard"
+    },
+    "token": {
+      "minLength": 1,
+      "type": "string",
+      "description": "User-scoped token authorizing the embedded dashboard"
+    },
+    "expires_in_seconds": {
+      "type": "integer",
+      "description": "Number of seconds until the token expires; request a new token before then",
+      "format": "int32"
+    }
+  },
+  "additionalProperties": false
+}

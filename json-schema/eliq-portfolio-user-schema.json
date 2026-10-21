@@ -1,0 +1,57 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/api-evangelist/eliq/main/json-schema/eliq-portfolio-user-schema.json",
+  "title": "PortfolioUser",
+  "x-generated": "2026-10-20",
+  "x-method": "derived",
+  "x-generator": "derive-json-schema.py",
+  "x-source": "openapi/eliq-portfolio-users-api-openapi.yml#/components/schemas/PortfolioUser",
+  "required": [
+    "name",
+    "role"
+  ],
+  "type": "object",
+  "properties": {
+    "id": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "name": {
+      "minLength": 1,
+      "type": "string"
+    },
+    "role": {
+      "$ref": "#/$defs/PortfolioUserRole"
+    },
+    "created_at_utc": {
+      "type": "string"
+    },
+    "last_logon_utc": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "magic_link_emails": {
+      "type": [
+        "array",
+        "null"
+      ],
+      "items": {
+        "type": "string"
+      }
+    }
+  },
+  "$defs": {
+    "PortfolioUserRole": {
+      "enum": [
+        "user",
+        "admin",
+        "owner"
+      ],
+      "type": "string"
+    }
+  }
+}

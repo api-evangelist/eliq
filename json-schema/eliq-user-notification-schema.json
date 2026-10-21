@@ -1,0 +1,71 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/api-evangelist/eliq/main/json-schema/eliq-user-notification-schema.json",
+  "title": "UserNotification",
+  "x-generated": "2026-10-20",
+  "x-method": "derived",
+  "x-generator": "derive-json-schema.py",
+  "x-source": "openapi/eliq-users-api-openapi.yml#/components/schemas/UserNotification",
+  "type": "object",
+  "properties": {
+    "id": {
+      "type": "integer",
+      "format": "int64"
+    },
+    "header": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "content": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "read": {
+      "type": [
+        "boolean",
+        "null"
+      ]
+    },
+    "created_date": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "format": "date-time"
+    },
+    "event": {
+      "$ref": "#/$defs/Event"
+    }
+  },
+  "$defs": {
+    "Event": {
+      "type": "object",
+      "properties": {
+        "created_date": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "format": "date-time"
+        },
+        "type": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "source": {
+          "type": [
+            "object",
+            "null"
+          ],
+          "description": "The source of the event. This can for example be a monitor object or a report object\nTo figure out which object it is, look at Type"
+        }
+      }
+    }
+  }
+}

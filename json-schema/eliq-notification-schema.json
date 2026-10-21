@@ -1,0 +1,55 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/api-evangelist/eliq/main/json-schema/eliq-notification-schema.json",
+  "title": "Notification",
+  "description": "Notification object. Content available in \"object\" is dependent on the notification type. ",
+  "x-generated": "2026-10-20",
+  "x-method": "derived",
+  "x-generator": "derive-json-schema.py",
+  "x-source": "openapi/eliq-locations-api-openapi.yml#/components/schemas/Notification",
+  "type": "object",
+  "properties": {
+    "type": {
+      "type": "string",
+      "minLength": 1,
+      "description": "Notification type"
+    },
+    "id": {
+      "type": "number",
+      "description": "Eliq internal ID of the notification"
+    },
+    "read": {
+      "type": "boolean",
+      "description": "Could be used to indicate it the notification is read or not. Needs to be used together with PATCH notifications.",
+      "default": true
+    },
+    "created_date": {
+      "type": "string",
+      "minLength": 1,
+      "description": "The date when the notification was created. The date is in UTC (Z flag is missing due to design mistake :)) ",
+      "format": "date-time"
+    },
+    "header": {
+      "type": "string",
+      "minLength": 1,
+      "description": "Header of notification. In language code set for the user"
+    },
+    "content": {
+      "type": "string",
+      "minLength": 1,
+      "description": "Content of notification in language code set for the user. May contain new line marker '\\n'"
+    },
+    "object": {
+      "type": "object",
+      "description": "Object containing detailed information from the source of the notification. E.g. a monthly insights object. "
+    }
+  },
+  "required": [
+    "type",
+    "id",
+    "read",
+    "created_date",
+    "header",
+    "content"
+  ]
+}

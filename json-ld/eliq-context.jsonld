@@ -1,0 +1,999 @@
+{
+  "@context": {
+    "@vocab": "https://eliq.com/schema#",
+    "schema": "https://schema.org/",
+    "xsd": "http://www.w3.org/2001/XMLSchema#",
+    "dcterms": "http://purl.org/dc/terms/",
+    "eliq": "https://eliq.com/schema#",
+    "FinancingOptionType": "eliq:FinancingOptionType",
+    "Error": "eliq:Error",
+    "type": {
+      "@id": "eliq:type",
+      "@type": "xsd:string"
+    },
+    "category": {
+      "@id": "eliq:category",
+      "@type": "xsd:string"
+    },
+    "code": {
+      "@id": "eliq:code",
+      "@type": "xsd:string"
+    },
+    "transaction_id": {
+      "@id": "eliq:transaction_id",
+      "@type": "xsd:string"
+    },
+    "message": {
+      "@id": "eliq:message",
+      "@type": "xsd:string"
+    },
+    "description": {
+      "@id": "eliq:description",
+      "@type": "xsd:string"
+    },
+    "AdviceType": "eliq:AdviceType",
+    "SavingMonetarySource": "eliq:SavingMonetarySource",
+    "name": {
+      "@id": "eliq:name",
+      "@type": "xsd:string"
+    },
+    "details": {
+      "@id": "eliq:details",
+      "@type": "xsd:string"
+    },
+    "Advice": "eliq:Advice",
+    "id": {
+      "@id": "eliq:id",
+      "@type": "xsd:string"
+    },
+    "relevance": {
+      "@id": "eliq:relevance",
+      "@type": "xsd:decimal"
+    },
+    "estimated_yearly_savings_energy": {
+      "@id": "eliq:estimated_yearly_savings_energy",
+      "@type": "xsd:decimal"
+    },
+    "estimated_yearly_savings": {
+      "@id": "eliq:estimated_yearly_savings",
+      "@container": "@list"
+    },
+    "estimated_yearly_savings_cost": {
+      "@id": "eliq:estimated_yearly_savings_cost",
+      "@type": "xsd:decimal"
+    },
+    "estimated_yearly_savings_monetary": {
+      "@id": "eliq:estimated_yearly_savings_monetary",
+      "@container": "@list"
+    },
+    "title": {
+      "@id": "eliq:title",
+      "@type": "xsd:string"
+    },
+    "content": {
+      "@id": "eliq:content",
+      "@type": "xsd:string"
+    },
+    "key": {
+      "@id": "eliq:key",
+      "@type": "xsd:string"
+    },
+    "status": {
+      "@id": "eliq:status",
+      "@type": "@id"
+    },
+    "activated_at": {
+      "@id": "eliq:activated_at",
+      "@type": "xsd:dateTime"
+    },
+    "updated_status_at": {
+      "@id": "eliq:updated_status_at",
+      "@type": "xsd:dateTime"
+    },
+    "link": {
+      "@id": "eliq:link",
+      "@type": "@id"
+    },
+    "links": {
+      "@id": "eliq:links",
+      "@container": "@list"
+    },
+    "investment_cost": {
+      "@id": "eliq:investment_cost",
+      "@type": "@id"
+    },
+    "financing_options": {
+      "@id": "eliq:financing_options",
+      "@container": "@list"
+    },
+    "euc_keys": {
+      "@id": "eliq:euc_keys",
+      "@container": "@list"
+    },
+    "Link": "eliq:Link",
+    "text": {
+      "@id": "eliq:text",
+      "@type": "xsd:string"
+    },
+    "url": {
+      "@id": "eliq:url",
+      "@type": "xsd:string"
+    },
+    "AdviceLinkType": "eliq:AdviceLinkType",
+    "AdviceReturnOfInvestmentModel": "eliq:AdviceReturnOfInvestmentModel",
+    "unit": {
+      "@id": "eliq:unit",
+      "@type": "@id"
+    },
+    "from": {
+      "@id": "eliq:from",
+      "@type": "xsd:decimal"
+    },
+    "to": {
+      "@id": "eliq:to",
+      "@type": "xsd:decimal"
+    },
+    "AdviceInvestmentCostModel": "eliq:AdviceInvestmentCostModel",
+    "fixed": {
+      "@id": "eliq:fixed",
+      "@type": "xsd:decimal"
+    },
+    "range_from": {
+      "@id": "eliq:range_from",
+      "@type": "xsd:decimal"
+    },
+    "range_to": {
+      "@id": "eliq:range_to",
+      "@type": "xsd:decimal"
+    },
+    "roi": {
+      "@id": "eliq:roi",
+      "@container": "@list"
+    },
+    "AdviceStatus": "eliq:AdviceStatus",
+    "SavingMonetary": "eliq:SavingMonetary",
+    "cost": {
+      "@id": "eliq:cost",
+      "@type": "xsd:decimal"
+    },
+    "cost_per_wh": {
+      "@id": "eliq:cost_per_wh",
+      "@type": "xsd:decimal"
+    },
+    "AdviceFinancingOptionModel": "eliq:AdviceFinancingOptionModel",
+    "EstimatedSavings": "eliq:EstimatedSavings",
+    "value": {
+      "@id": "eliq:value",
+      "@type": "xsd:decimal"
+    },
+    "AdviceLinkModel": "eliq:AdviceLinkModel",
+    "AdvicePatchInput": "eliq:AdvicePatchInput",
+    "op": {
+      "@id": "eliq:op",
+      "@type": "xsd:string"
+    },
+    "path": {
+      "@id": "eliq:path",
+      "@type": "xsd:string"
+    },
+    "AdviceReturnOfInvestmentUnit": "eliq:AdviceReturnOfInvestmentUnit",
+    "EnergyUnit": "eliq:EnergyUnit",
+    "Anomaly": "eliq:Anomaly",
+    "fuel": {
+      "@id": "eliq:fuel",
+      "@type": "xsd:string"
+    },
+    "TimeseriesData": "eliq:TimeseriesData",
+    "consumption": {
+      "@id": "eliq:consumption",
+      "@container": "@list"
+    },
+    "import": {
+      "@id": "eliq:import",
+      "@container": "@list"
+    },
+    "export": {
+      "@id": "eliq:export",
+      "@container": "@list"
+    },
+    "production": {
+      "@id": "eliq:production",
+      "@container": "@list"
+    },
+    "forecast": {
+      "@id": "eliq:forecast",
+      "@container": "@list"
+    },
+    "resolution": {
+      "@id": "eliq:resolution",
+      "@type": "xsd:string"
+    },
+    "SimilarHomesGroupFilterType": "eliq:SimilarHomesGroupFilterType",
+    "SimilarHomesReport": "eliq:SimilarHomesReport",
+    "distribution_values": {
+      "@id": "eliq:distribution_values",
+      "@container": "@list"
+    },
+    "energy_wh": {
+      "@id": "eliq:energy_wh",
+      "@type": "xsd:integer"
+    },
+    "distribution": {
+      "@id": "eliq:distribution",
+      "@container": "@list"
+    },
+    "BreakdownItem": "eliq:BreakdownItem",
+    "SimilarHomesGroupFilter": "eliq:SimilarHomesGroupFilter",
+    "limit_range": {
+      "@id": "eliq:limit_range",
+      "@type": "@id"
+    },
+    "limit_values": {
+      "@id": "eliq:limit_values",
+      "@container": "@list"
+    },
+    "Breakdown": "eliq:Breakdown",
+    "accuracy": {
+      "@id": "eliq:accuracy",
+      "@type": "xsd:string"
+    },
+    "total_value": {
+      "@id": "eliq:total_value",
+      "@type": "xsd:decimal"
+    },
+    "breakdown": {
+      "@id": "eliq:breakdown",
+      "@container": "@list"
+    },
+    "ResultWrapper": "eliq:ResultWrapper",
+    "result": {
+      "@id": "eliq:result"
+    },
+    "result_status": {
+      "@id": "eliq:result_status"
+    },
+    "SimilarHomesGroup": "eliq:SimilarHomesGroup",
+    "filters": {
+      "@id": "eliq:filters",
+      "@container": "@list"
+    },
+    "contributors": {
+      "@id": "eliq:contributors",
+      "@type": "xsd:integer"
+    },
+    "LimitRange": "eliq:LimitRange",
+    "min": {
+      "@id": "eliq:min",
+      "@type": "xsd:decimal"
+    },
+    "max": {
+      "@id": "eliq:max",
+      "@type": "xsd:decimal"
+    },
+    "Budget": "eliq:Budget",
+    "enabled": {
+      "@id": "eliq:enabled",
+      "@type": "xsd:boolean"
+    },
+    "limit": {
+      "@id": "eliq:limit",
+      "@type": "xsd:decimal"
+    },
+    "suggested_limit": {
+      "@id": "eliq:suggested_limit",
+      "@type": "xsd:decimal"
+    },
+    "config": {
+      "@id": "eliq:config"
+    },
+    "series": {
+      "@id": "eliq:series"
+    },
+    "BudgetHistory": "eliq:BudgetHistory",
+    "ErrorDetails": "eliq:ErrorDetails",
+    "request_id": {
+      "@id": "eliq:request_id",
+      "@type": "xsd:string"
+    },
+    "DashboardEmbedTokenResult": "eliq:DashboardEmbedTokenResult",
+    "instance_url": {
+      "@id": "eliq:instance_url",
+      "@type": "xsd:string"
+    },
+    "workspace_id": {
+      "@id": "eliq:workspace_id",
+      "@type": "xsd:string"
+    },
+    "dashboard_id": {
+      "@id": "eliq:dashboard_id",
+      "@type": "xsd:string"
+    },
+    "token": {
+      "@id": "eliq:token",
+      "@type": "xsd:string"
+    },
+    "expires_in_seconds": {
+      "@id": "eliq:expires_in_seconds",
+      "@type": "xsd:integer"
+    },
+    "Connection": "eliq:Connection",
+    "display_name": {
+      "@id": "eliq:display_name",
+      "@type": "xsd:string"
+    },
+    "provider": {
+      "@id": "eliq:provider",
+      "@type": "xsd:string"
+    },
+    "ConnectionEntity": "eliq:ConnectionEntity",
+    "location_id": {
+      "@id": "eliq:location_id",
+      "@type": "xsd:integer"
+    },
+    "meter": {
+      "@id": "eliq:meter"
+    },
+    "ConnectionMetaData": "eliq:ConnectionMetaData",
+    "EliqConnectUriResponse": "eliq:EliqConnectUriResponse",
+    "uri": {
+      "@id": "eliq:uri",
+      "@type": "xsd:string"
+    },
+    "PeakPowerResponse": "eliq:PeakPowerResponse",
+    "power": {
+      "@id": "eliq:power",
+      "@container": "@list"
+    },
+    "peak_power_timestamp": {
+      "@id": "eliq:peak_power_timestamp",
+      "@container": "@list"
+    },
+    "direction": {
+      "@id": "eliq:direction",
+      "@type": "xsd:string"
+    },
+    "peak_power_resolution": {
+      "@id": "eliq:peak_power_resolution",
+      "@type": "xsd:string"
+    },
+    "MeterDataResult": "eliq:MeterDataResult",
+    "TimeSeriesData": "eliq:TimeSeriesData",
+    "price": {
+      "@id": "eliq:price",
+      "@container": "@list"
+    },
+    "co2emission": {
+      "@id": "eliq:co2emission",
+      "@type": "@id"
+    },
+    "estimated_from": {
+      "@id": "eliq:estimated_from",
+      "@type": "xsd:dateTime"
+    },
+    "is_ondemand": {
+      "@id": "eliq:is_ondemand",
+      "@type": "xsd:boolean"
+    },
+    "Co2Emission": "eliq:Co2Emission",
+    "co2_in_kg": {
+      "@id": "eliq:co2_in_kg",
+      "@type": "xsd:decimal"
+    },
+    "car_gas_emission_in_km": {
+      "@id": "eliq:car_gas_emission_in_km",
+      "@type": "xsd:decimal"
+    },
+    "FuelType": "eliq:FuelType",
+    "UnitType": "eliq:UnitType",
+    "EpcRatingType": "eliq:EpcRatingType",
+    "EpcRatingStatus": "eliq:EpcRatingStatus",
+    "EpcRatingResponse": "eliq:EpcRatingResponse",
+    "energy_rating": {
+      "@id": "eliq:energy_rating",
+      "@type": "xsd:string"
+    },
+    "energy_efficiency": {
+      "@id": "eliq:energy_efficiency",
+      "@type": "xsd:integer"
+    },
+    "valid_from": {
+      "@id": "eliq:valid_from",
+      "@type": "xsd:dateTime"
+    },
+    "valid_to": {
+      "@id": "eliq:valid_to",
+      "@type": "xsd:dateTime"
+    },
+    "EucCategoryResultModel": "eliq:EucCategoryResultModel",
+    "percentage": {
+      "@id": "eliq:percentage",
+      "@type": "xsd:decimal"
+    },
+    "EUC": "eliq:EUC",
+    "EucAccuracy": "eliq:EucAccuracy",
+    "Homeprofile": "eliq:Homeprofile",
+    "properties": {
+      "@id": "eliq:properties",
+      "@container": "@list"
+    },
+    "cooking": {
+      "@id": "eliq:cooking",
+      "@container": "@list"
+    },
+    "appliances": {
+      "@id": "eliq:appliances",
+      "@container": "@list"
+    },
+    "fridges_and_freezers": {
+      "@id": "eliq:fridges_and_freezers",
+      "@container": "@list"
+    },
+    "extras": {
+      "@id": "eliq:extras",
+      "@container": "@list"
+    },
+    "HomeProfileOption": "eliq:HomeProfileOption",
+    "data_type": {
+      "@id": "eliq:data_type",
+      "@type": "xsd:string"
+    },
+    "possible_values": {
+      "@id": "eliq:possible_values",
+      "@container": "@list"
+    },
+    "limits": {
+      "@id": "eliq:limits"
+    },
+    "dependent_properties": {
+      "@id": "eliq:dependent_properties",
+      "@container": "@list"
+    },
+    "tags": {
+      "@id": "eliq:tags",
+      "@container": "@list"
+    },
+    "developer_description": {
+      "@id": "eliq:developer_description",
+      "@type": "xsd:string"
+    },
+    "is_required": {
+      "@id": "eliq:is_required",
+      "@type": "xsd:boolean"
+    },
+    "DashboardsConfiguration": "eliq:DashboardsConfiguration",
+    "items": {
+      "@id": "eliq:items",
+      "@container": "@list"
+    },
+    "MyInfoResult": "eliq:MyInfoResult",
+    "client_id": {
+      "@id": "eliq:client_id",
+      "@type": "xsd:integer"
+    },
+    "roles": {
+      "@id": "eliq:roles",
+      "@container": "@list"
+    },
+    "DashboardConfigurationItem": "eliq:DashboardConfigurationItem",
+    "external_value_scope": {
+      "@id": "eliq:external_value_scope",
+      "@type": "xsd:string"
+    },
+    "IntelligenceApiConfiguration": "eliq:IntelligenceApiConfiguration",
+    "application_name": {
+      "@id": "eliq:application_name",
+      "@type": "xsd:string"
+    },
+    "dashboards": {
+      "@id": "eliq:dashboards",
+      "@type": "@id"
+    },
+    "AuthInfoResult": "eliq:AuthInfoResult",
+    "entra_tenant_id": {
+      "@id": "eliq:entra_tenant_id",
+      "@type": "xsd:string"
+    },
+    "entra_application_id": {
+      "@id": "eliq:entra_application_id",
+      "@type": "xsd:string"
+    },
+    "JobResultRow": "eliq:JobResultRow",
+    "is_successful": {
+      "@id": "eliq:is_successful",
+      "@type": "xsd:boolean"
+    },
+    "error": {
+      "@id": "eliq:error",
+      "@type": "@id"
+    },
+    "input": {
+      "@id": "eliq:input"
+    },
+    "JobFailedRow": "eliq:JobFailedRow",
+    "row_number": {
+      "@id": "eliq:row_number",
+      "@type": "xsd:integer"
+    },
+    "error_code": {
+      "@id": "eliq:error_code",
+      "@type": "xsd:string"
+    },
+    "error_description": {
+      "@id": "eliq:error_description",
+      "@type": "xsd:string"
+    },
+    "JobType": "eliq:JobType",
+    "JobEntryStateType": "eliq:JobEntryStateType",
+    "JobEntry": "eliq:JobEntry",
+    "reference": {
+      "@id": "eliq:reference",
+      "@type": "xsd:string"
+    },
+    "created_at_timestamp": {
+      "@id": "eliq:created_at_timestamp",
+      "@type": "xsd:string"
+    },
+    "state_updated_at_timestamp": {
+      "@id": "eliq:state_updated_at_timestamp",
+      "@type": "xsd:string"
+    },
+    "entity": {
+      "@id": "eliq:entity",
+      "@type": "xsd:string"
+    },
+    "operation": {
+      "@id": "eliq:operation",
+      "@type": "@id"
+    },
+    "state": {
+      "@id": "eliq:state",
+      "@type": "@id"
+    },
+    "number_of_rows": {
+      "@id": "eliq:number_of_rows",
+      "@type": "xsd:integer"
+    },
+    "number_of_successful_rows": {
+      "@id": "eliq:number_of_successful_rows",
+      "@type": "xsd:integer"
+    },
+    "number_of_failed_rows": {
+      "@id": "eliq:number_of_failed_rows",
+      "@type": "xsd:integer"
+    },
+    "file_format": {
+      "@id": "eliq:file_format",
+      "@type": "xsd:string"
+    },
+    "FileRowError": "eliq:FileRowError",
+    "JobOperationType": "eliq:JobOperationType",
+    "LocationAddress": "eliq:LocationAddress",
+    "street_address": {
+      "@id": "eliq:street_address",
+      "@type": "xsd:string"
+    },
+    "postal_code": {
+      "@id": "eliq:postal_code",
+      "@type": "xsd:string"
+    },
+    "city": {
+      "@id": "eliq:city",
+      "@type": "xsd:string"
+    },
+    "country_code": {
+      "@id": "eliq:country_code",
+      "@type": "xsd:string"
+    },
+    "ProfileType": "eliq:ProfileType",
+    "NoContentResult": "eliq:NoContentResult",
+    "statusCode": {
+      "@id": "eliq:statusCode",
+      "@type": "xsd:integer"
+    },
+    "Meter": "eliq:Meter",
+    "eliq_id": {
+      "@id": "eliq:eliq_id",
+      "@type": "xsd:string"
+    },
+    "model": {
+      "@id": "eliq:model",
+      "@type": "xsd:string"
+    },
+    "is_sub_meter": {
+      "@id": "eliq:is_sub_meter",
+      "@type": "xsd:boolean"
+    },
+    "category_percentage": {
+      "@id": "eliq:category_percentage",
+      "@type": "xsd:integer"
+    },
+    "supply_start_date": {
+      "@id": "eliq:supply_start_date",
+      "@type": "xsd:string"
+    },
+    "supply_end_date": {
+      "@id": "eliq:supply_end_date",
+      "@type": "xsd:string"
+    },
+    "sync_status": {
+      "@id": "eliq:sync_status",
+      "@type": "xsd:string"
+    },
+    "Location": "eliq:Location",
+    "user_id": {
+      "@id": "eliq:user_id",
+      "@type": "xsd:string"
+    },
+    "spot_price_region_id": {
+      "@id": "eliq:spot_price_region_id",
+      "@type": "xsd:string"
+    },
+    "address": {
+      "@id": "eliq:address",
+      "@type": "@id"
+    },
+    "geo": {
+      "@id": "eliq:geo",
+      "@type": "@id"
+    },
+    "meters": {
+      "@id": "eliq:meters",
+      "@container": "@list"
+    },
+    "location_profile_type": {
+      "@id": "eliq:location_profile_type",
+      "@type": "@id"
+    },
+    "LocationGeo": "eliq:LocationGeo",
+    "latitude": {
+      "@id": "eliq:latitude",
+      "@type": "xsd:decimal"
+    },
+    "longitude": {
+      "@id": "eliq:longitude",
+      "@type": "xsd:decimal"
+    },
+    "HomeProfileProperty": "eliq:HomeProfileProperty",
+    "value_type": {
+      "@id": "eliq:value_type"
+    },
+    "OkObjectResult": "eliq:OkObjectResult",
+    "formatters": {
+      "@id": "eliq:formatters",
+      "@container": "@list"
+    },
+    "contentTypes": {
+      "@id": "eliq:contentTypes",
+      "@container": "@list"
+    },
+    "declaredType": {
+      "@id": "eliq:declaredType",
+      "@type": "xsd:string"
+    },
+    "LocationPriceFormula": "eliq:LocationPriceFormula",
+    "source": {
+      "@id": "eliq:source",
+      "@type": "xsd:string"
+    },
+    "currency_code": {
+      "@id": "eliq:currency_code",
+      "@type": "xsd:string"
+    },
+    "elements": {
+      "@id": "eliq:elements",
+      "@container": "@list"
+    },
+    "price_multiplier": {
+      "@id": "eliq:price_multiplier",
+      "@type": "xsd:decimal"
+    },
+    "SpotPrice": "eliq:SpotPrice",
+    "region": {
+      "@id": "eliq:region",
+      "@type": "xsd:string"
+    },
+    "multiplier": {
+      "@id": "eliq:multiplier",
+      "@type": "xsd:decimal"
+    },
+    "Tou": "eliq:Tou",
+    "register_id": {
+      "@id": "eliq:register_id",
+      "@type": "xsd:string"
+    },
+    "unit_rate": {
+      "@id": "eliq:unit_rate",
+      "@type": "xsd:decimal"
+    },
+    "intervals": {
+      "@id": "eliq:intervals",
+      "@container": "@list"
+    },
+    "skip_intervals": {
+      "@id": "eliq:skip_intervals",
+      "@type": "xsd:boolean"
+    },
+    "UnitRate": "eliq:UnitRate",
+    "tou": {
+      "@id": "eliq:tou",
+      "@type": "@id"
+    },
+    "block": {
+      "@id": "eliq:block",
+      "@type": "@id"
+    },
+    "spot_price": {
+      "@id": "eliq:spot_price",
+      "@type": "@id"
+    },
+    "weekdays": {
+      "@id": "eliq:weekdays",
+      "@container": "@list"
+    },
+    "Charge": "eliq:Charge",
+    "charge": {
+      "@id": "eliq:charge",
+      "@type": "xsd:decimal"
+    },
+    "capacity_tariff": {
+      "@id": "eliq:capacity_tariff",
+      "@type": "@id"
+    },
+    "Interval": "eliq:Interval",
+    "from_minute": {
+      "@id": "eliq:from_minute",
+      "@type": "xsd:integer"
+    },
+    "to_minute": {
+      "@id": "eliq:to_minute",
+      "@type": "xsd:integer"
+    },
+    "Block": "eliq:Block",
+    "from_kwh": {
+      "@id": "eliq:from_kwh",
+      "@type": "xsd:integer"
+    },
+    "to_kwh": {
+      "@id": "eliq:to_kwh",
+      "@type": "xsd:integer"
+    },
+    "from_m3": {
+      "@id": "eliq:from_m3",
+      "@type": "xsd:integer"
+    },
+    "to_m3": {
+      "@id": "eliq:to_m3",
+      "@type": "xsd:integer"
+    },
+    "CapacityTariff": "eliq:CapacityTariff",
+    "charge_tariff": {
+      "@id": "eliq:charge_tariff",
+      "@type": "xsd:decimal"
+    },
+    "minimum_contribution": {
+      "@id": "eliq:minimum_contribution",
+      "@type": "xsd:decimal"
+    },
+    "calculation_type": {
+      "@id": "eliq:calculation_type",
+      "@type": "xsd:string"
+    },
+    "Fixed": "eliq:Fixed",
+    "Element": "eliq:Element",
+    "LocationProfileType": "eliq:LocationProfileType",
+    "LocationProfileValueResponse": "eliq:LocationProfileValueResponse",
+    "LocationProfileSettings": "eliq:LocationProfileSettings",
+    "settings": {
+      "@id": "eliq:settings",
+      "@container": "@list"
+    },
+    "groups": {
+      "@id": "eliq:groups",
+      "@container": "@list"
+    },
+    "LocationPropertyLimit": "eliq:LocationPropertyLimit",
+    "step": {
+      "@id": "eliq:step",
+      "@type": "xsd:decimal"
+    },
+    "PatchLocationProfileRequestModel": "eliq:PatchLocationProfileRequestModel",
+    "LocationProfileTag": "eliq:LocationProfileTag",
+    "LocationProfilePropertyRequirement": "eliq:LocationProfilePropertyRequirement",
+    "accepted_values": {
+      "@id": "eliq:accepted_values",
+      "@container": "@list"
+    },
+    "LocationProfileValueRequest": "eliq:LocationProfileValueRequest",
+    "LocationProfileSetting": "eliq:LocationProfileSetting",
+    "selected_values": {
+      "@id": "eliq:selected_values",
+      "@container": "@list"
+    },
+    "group": {
+      "@id": "eliq:group",
+      "@type": "xsd:string"
+    },
+    "LocationProfileDataType": "eliq:LocationProfileDataType",
+    "LocationProfilePossibleValue": "eliq:LocationProfilePossibleValue",
+    "LocationProfileSelectedValue": "eliq:LocationProfileSelectedValue",
+    "LocationProfilePossibleValue_2": "eliq:LocationProfilePossibleValue_2",
+    "LocationProfileType_2": "eliq:LocationProfileType_2",
+    "LocationProfileValueResponse_2": "eliq:LocationProfileValueResponse_2",
+    "LocationProfileSettings_2": "eliq:LocationProfileSettings_2",
+    "LocationPropertyLimit_2": "eliq:LocationPropertyLimit_2",
+    "PatchLocationProfileRequestModel_2": "eliq:PatchLocationProfileRequestModel_2",
+    "ProfileType_2": "eliq:ProfileType_2",
+    "LocationProfileTag_2": "eliq:LocationProfileTag_2",
+    "LocationProfileValueRequest_2": "eliq:LocationProfileValueRequest_2",
+    "LocationProfileSetting_2": "eliq:LocationProfileSetting_2",
+    "LocationProfileCompletionResponse": "eliq:LocationProfileCompletionResponse",
+    "completion_percentage": {
+      "@id": "eliq:completion_percentage",
+      "@type": "xsd:integer"
+    },
+    "LocationProfileDataType_2": "eliq:LocationProfileDataType_2",
+    "LocationPropertyRequirement": "eliq:LocationPropertyRequirement",
+    "LocationProfileSelectedValue_2": "eliq:LocationProfileSelectedValue_2",
+    "LocationMeter": "eliq:LocationMeter",
+    "user_setup_completed": {
+      "@id": "eliq:user_setup_completed",
+      "@type": "xsd:boolean"
+    },
+    "name_user": {
+      "@id": "eliq:name_user",
+      "@type": "xsd:string"
+    },
+    "name_suggested": {
+      "@id": "eliq:name_suggested",
+      "@type": "xsd:string"
+    },
+    "fuel_type": {
+      "@id": "eliq:fuel_type",
+      "@type": "xsd:string"
+    },
+    "category_user": {
+      "@id": "eliq:category_user",
+      "@type": "xsd:string"
+    },
+    "category_suggested": {
+      "@id": "eliq:category_suggested",
+      "@type": "xsd:string"
+    },
+    "LocationFuelItem": "eliq:LocationFuelItem",
+    "data_from": {
+      "@id": "eliq:data_from",
+      "@type": "xsd:dateTime"
+    },
+    "data_to": {
+      "@id": "eliq:data_to",
+      "@type": "xsd:dateTime"
+    },
+    "Direction": "eliq:Direction",
+    "LocationFuel": "eliq:LocationFuel",
+    "SyncStatus": "eliq:SyncStatus",
+    "FuelSource": "eliq:FuelSource",
+    "Fuel": "eliq:Fuel",
+    "Address": "eliq:Address",
+    "lon": {
+      "@id": "eliq:lon",
+      "@type": "xsd:decimal"
+    },
+    "lat": {
+      "@id": "eliq:lat",
+      "@type": "xsd:decimal"
+    },
+    "YearlyEstimate": "eliq:YearlyEstimate",
+    "year": {
+      "@id": "eliq:year",
+      "@type": "xsd:integer"
+    },
+    "TemperatureData": "eliq:TemperatureData",
+    "temperature": {
+      "@id": "eliq:temperature",
+      "@container": "@list"
+    },
+    "Notification": "eliq:Notification",
+    "read": {
+      "@id": "eliq:read",
+      "@type": "xsd:boolean"
+    },
+    "created_date": {
+      "@id": "eliq:created_date",
+      "@type": "xsd:dateTime"
+    },
+    "header": {
+      "@id": "eliq:header",
+      "@type": "xsd:string"
+    },
+    "object": {
+      "@id": "eliq:object"
+    },
+    "LocationNotificationSettingsInput": "eliq:LocationNotificationSettingsInput",
+    "notification_type_id": {
+      "@id": "eliq:notification_type_id",
+      "@type": "xsd:integer"
+    },
+    "mute_email": {
+      "@id": "eliq:mute_email",
+      "@type": "xsd:boolean"
+    },
+    "mute_text": {
+      "@id": "eliq:mute_text",
+      "@type": "xsd:boolean"
+    },
+    "mute_push": {
+      "@id": "eliq:mute_push",
+      "@type": "xsd:boolean"
+    },
+    "mute_webhook": {
+      "@id": "eliq:mute_webhook",
+      "@type": "xsd:boolean"
+    },
+    "LocationFuels": "eliq:LocationFuels",
+    "elec": {
+      "@id": "eliq:elec",
+      "@type": "@id"
+    },
+    "gas": {
+      "@id": "eliq:gas",
+      "@type": "@id"
+    },
+    "district_heating": {
+      "@id": "eliq:district_heating",
+      "@type": "@id"
+    },
+    "NotificationSettingsResponse": "eliq:NotificationSettingsResponse",
+    "notification_name": {
+      "@id": "eliq:notification_name",
+      "@type": "xsd:string"
+    },
+    "notification_category": {
+      "@id": "eliq:notification_category",
+      "@type": "xsd:string"
+    },
+    "send_event_notification": {
+      "@id": "eliq:send_event_notification",
+      "@type": "xsd:boolean"
+    },
+    "send_email": {
+      "@id": "eliq:send_email",
+      "@type": "xsd:boolean"
+    },
+    "send_push": {
+      "@id": "eliq:send_push",
+      "@type": "xsd:boolean"
+    },
+    "send_text": {
+      "@id": "eliq:send_text",
+      "@type": "xsd:boolean"
+    },
+    "send_webhook": {
+      "@id": "eliq:send_webhook",
+      "@type": "xsd:boolean"
+    },
+    "Paging": "eliq:Paging",
+    "currentPage": {
+      "@id": "eliq:currentPage",
+      "@type": "xsd:integer"
+    },
+    "pages": {
+      "@id": "eliq:pages",
+      "@type": "xsd:integer"
+    },
+    "pageSize": {
+      "@id": "eliq:pageSize",
+      "@type": "xsd:integer"
+    }
+  },
+  "@type": "schema:Dataset",
+  "schema:name": "Eliq API JSON-LD context",
+  "schema:description": "A JSON-LD @context for the objects Eliq's own API contract declares: one class per component schema, one property per declared field, typed from the contract. Derived by script (derive-json-ld.py, 2026-10-20) from openapi/eliq-advice-api-openapi.yml, openapi/eliq-anomalies-api-openapi.yml, openapi/eliq-authentication-api-openapi.yml.",
+  "dcterms:created": "2026-10-20",
+  "dcterms:source": [
+    "openapi/eliq-advice-api-openapi.yml",
+    "openapi/eliq-anomalies-api-openapi.yml",
+    "openapi/eliq-authentication-api-openapi.yml",
+    "openapi/eliq-breakdown-api-openapi.yml",
+    "openapi/eliq-budgets-api-openapi.yml"
+  ]
+}

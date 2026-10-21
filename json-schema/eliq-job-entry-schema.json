@@ -1,0 +1,102 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/api-evangelist/eliq/main/json-schema/eliq-job-entry-schema.json",
+  "title": "JobEntry",
+  "x-generated": "2026-10-20",
+  "x-method": "derived",
+  "x-generator": "derive-json-schema.py",
+  "x-source": "openapi/eliq-jobs-api-openapi.yml#/components/schemas/JobEntry",
+  "type": "object",
+  "properties": {
+    "id": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "reference": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "created_at_timestamp": {
+      "type": "string"
+    },
+    "state_updated_at_timestamp": {
+      "type": "string"
+    },
+    "entity": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "operation": {
+      "$ref": "#/$defs/JobOperationType"
+    },
+    "state": {
+      "$ref": "#/$defs/JobEntryStateType"
+    },
+    "number_of_rows": {
+      "type": [
+        "integer",
+        "null"
+      ],
+      "format": "int32"
+    },
+    "number_of_successful_rows": {
+      "type": [
+        "integer",
+        "null"
+      ],
+      "format": "int32"
+    },
+    "number_of_failed_rows": {
+      "type": [
+        "integer",
+        "null"
+      ],
+      "format": "int32"
+    },
+    "file_format": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "type": {
+      "$ref": "#/$defs/JobType"
+    }
+  },
+  "$defs": {
+    "JobEntryStateType": {
+      "enum": [
+        "received",
+        "queued",
+        "processing",
+        "failed",
+        "completed",
+        "canceled"
+      ],
+      "type": "string"
+    },
+    "JobOperationType": {
+      "enum": [
+        "upsert",
+        "delete",
+        "export",
+        "multi-file-export"
+      ],
+      "type": "string"
+    },
+    "JobType": {
+      "enum": [
+        "import",
+        "export",
+        "multi-file"
+      ],
+      "type": "string"
+    }
+  }
+}

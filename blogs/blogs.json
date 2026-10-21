@@ -17,13 +17,10 @@
     },
     {
       "source": "https://eliq.com/insights",
-      "feed_url": "https://eliq.com/insights",
-      "title": "",
-      "saved": 0,
-      "method": "none"
+      "error": "HTTPError"
     }
   ],
-  "fetched": "2026-10-10T13:15:00Z",
+  "fetched": "2026-10-17T14:53:57Z",
   "post_count": 4,
   "feed_nature": "vendor-blog",
   "feed_nature_basis": "path_blog",

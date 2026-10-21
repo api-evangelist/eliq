@@ -1,0 +1,146 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/api-evangelist/eliq/main/json-schema/eliq-similar-homes-consumption-result-model-schema.json",
+  "title": "SimilarHomesConsumptionResultModel",
+  "description": "Model containing similar homes consumption result.",
+  "x-generated": "2026-10-20",
+  "x-method": "derived",
+  "x-generator": "derive-json-schema.py",
+  "x-source": "openapi/eliq-similar-homes-api-openapi.yml#/components/schemas/SimilarHomesConsumptionResultModel",
+  "required": [
+    "result_status"
+  ],
+  "type": "object",
+  "properties": {
+    "result": {
+      "$ref": "#/$defs/SimilarHomesConsumption"
+    },
+    "result_status": {
+      "$ref": "#/$defs/SimilarHomesResultStatus"
+    }
+  },
+  "$defs": {
+    "SimilarHomesConsumption": {
+      "required": [
+        "from",
+        "fuel",
+        "resolution",
+        "to",
+        "unit"
+      ],
+      "type": "object",
+      "properties": {
+        "consumption": {
+          "type": [
+            "array",
+            "null"
+          ],
+          "items": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "description": "Will always contain the exact amount of elements as there are time frames between 'to' and 'from' with the given 'resolution'. Values inside the array can be null if no energy data exists (one day always contains 24 values). Values are whole numbers.",
+          "deprecated": true
+        },
+        "values": {
+          "type": [
+            "array",
+            "null"
+          ],
+          "items": {
+            "type": "number",
+            "format": "double"
+          },
+          "description": "Contains cost or energy depending on the query parameters of the request. Will always contain the exact amount of elements as there are time frames between 'to' and 'from' with the given 'resolution'. Values inside the array can be null if no energy data exists (one day always contains 24 values). Values are floating-point numbers."
+        },
+        "resolution": {
+          "$ref": "#/$defs/SimilarHomesResolutionType"
+        },
+        "fuel": {
+          "$ref": "#/$defs/SimilarHomesFuelType"
+        },
+        "unit": {
+          "$ref": "#/$defs/SimilarHomesUnitType"
+        },
+        "from": {
+          "type": "string",
+          "description": "From date",
+          "format": "date-time"
+        },
+        "to": {
+          "type": "string",
+          "description": "To date",
+          "format": "date-time"
+        }
+      },
+      "description": "Similar homes consumption data."
+    },
+    "SimilarHomesFuelType": {
+      "enum": [
+        "elec",
+        "gas"
+      ],
+      "type": "string",
+      "description": "Matches with the value passed in query parameters of the request, or a default value."
+    },
+    "SimilarHomesResolutionType": {
+      "enum": [
+        "day",
+        "month"
+      ],
+      "type": "string",
+      "description": "Matches with the value passed in query parameters of the request."
+    },
+    "SimilarHomesResultStatus": {
+      "required": [
+        "code"
+      ],
+      "type": "object",
+      "properties": {
+        "code": {
+          "$ref": "#/$defs/SimilarHomesResultStatusCode"
+        },
+        "action": {
+          "$ref": "#/$defs/SimilarHomesResultStatusAction"
+        }
+      },
+      "description": "Contains information about the result, and whether it was successful or not."
+    },
+    "SimilarHomesResultStatusAction": {
+      "type": "object",
+      "properties": {
+        "code": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "description": "A code for the action that should be taken. Please refer to documentation of specific endpoint for more information."
+        },
+        "description": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "description": "A description of the action that should be taken."
+        }
+      },
+      "description": "Available in cases where there are actions that can be done to make the result successful, such as entering information in the home profile options."
+    },
+    "SimilarHomesResultStatusCode": {
+      "enum": [
+        "ok",
+        "not_ok"
+      ],
+      "type": "string",
+      "description": "Indicating whether there is a result or not."
+    },
+    "SimilarHomesUnitType": {
+      "enum": [
+        "energy",
+        "cost"
+      ],
+      "type": "string",
+      "description": "Matches with the value passed in query parameters of the request, or a default value."
+    }
+  }
+}

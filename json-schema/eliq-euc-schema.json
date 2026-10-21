@@ -1,0 +1,90 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/api-evangelist/eliq/main/json-schema/eliq-euc-schema.json",
+  "title": "EUC",
+  "description": "Model containing energy usage by category",
+  "x-generated": "2026-10-20",
+  "x-method": "derived",
+  "x-generator": "derive-json-schema.py",
+  "x-source": "openapi/eliq-energy-usage-categories-api-openapi.yml#/components/schemas/EUC",
+  "required": [
+    "accuracy",
+    "breakdown",
+    "from",
+    "to",
+    "total_value",
+    "unit"
+  ],
+  "type": "object",
+  "properties": {
+    "accuracy": {
+      "$ref": "#/$defs/EucAccuracy"
+    },
+    "total_value": {
+      "type": "number",
+      "description": "Total value",
+      "format": "double"
+    },
+    "from": {
+      "type": "string",
+      "description": "From date",
+      "format": "date-time"
+    },
+    "to": {
+      "type": "string",
+      "description": "To date",
+      "format": "date-time"
+    },
+    "unit": {
+      "minLength": 1,
+      "type": "string",
+      "description": "Unit"
+    },
+    "breakdown": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/EucCategoryResultModel"
+      },
+      "description": "A list of energy usage values for each category"
+    }
+  },
+  "$defs": {
+    "EucAccuracy": {
+      "enum": [
+        "high",
+        "medium",
+        "low"
+      ],
+      "type": "string",
+      "description": "Result data accuracy"
+    },
+    "EucCategoryResultModel": {
+      "required": [
+        "category",
+        "percentage",
+        "value"
+      ],
+      "type": "object",
+      "properties": {
+        "category": {
+          "minLength": 1,
+          "type": "string",
+          "description": "Category"
+        },
+        "value": {
+          "type": "number",
+          "description": "Energy usage value",
+          "format": "double"
+        },
+        "percentage": {
+          "maximum": 100,
+          "minimum": 0,
+          "type": "number",
+          "description": "Percentage of total value",
+          "format": "double"
+        }
+      },
+      "description": "Energy usage by category"
+    }
+  }
+}

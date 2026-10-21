@@ -1,0 +1,30 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/api-evangelist/eliq/main/json-schema/eliq-my-info-result-schema.json",
+  "title": "MyInfoResult",
+  "description": "Information about the active user",
+  "x-generated": "2026-10-20",
+  "x-method": "derived",
+  "x-generator": "derive-json-schema.py",
+  "x-source": "openapi/eliq-info-api-openapi.yml#/components/schemas/MyInfoResult",
+  "required": [
+    "client_id",
+    "roles"
+  ],
+  "type": "object",
+  "properties": {
+    "client_id": {
+      "type": "integer",
+      "description": "Client Id of active user",
+      "format": "int64"
+    },
+    "roles": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "Roles of active user"
+    }
+  },
+  "additionalProperties": false
+}

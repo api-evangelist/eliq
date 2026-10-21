@@ -1,0 +1,39 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/api-evangelist/eliq/main/json-schema/eliq-location-profile-value-response-2-schema.json",
+  "title": "LocationProfileValueResponse_2",
+  "description": "Location profile value result",
+  "x-generated": "2026-10-20",
+  "x-method": "derived",
+  "x-generator": "derive-json-schema.py",
+  "x-source": "openapi/eliq-location-profile-api-openapi.yml#/components/schemas/LocationProfileValueResponse_2",
+  "required": [
+    "id",
+    "key",
+    "value"
+  ],
+  "type": "object",
+  "properties": {
+    "id": {
+      "type": "string",
+      "description": "Unique identifier for the selected value",
+      "format": "uuid"
+    },
+    "key": {
+      "minLength": 1,
+      "type": "string",
+      "description": "Identifier for the setting"
+    },
+    "value": {
+      "description": "Selected value. Depending on the specified data_type, this value can be a number (number), string (single_select) or a list of strings (multiple_select)."
+    },
+    "from": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "description": "Value is valid from this date. If not specified, the value is valid from the beginning of time.",
+      "format": "date-time"
+    }
+  }
+}
