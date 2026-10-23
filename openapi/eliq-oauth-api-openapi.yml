@@ -376,3 +376,9 @@ components:
       - access_token: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c
         token_type: Bearer
         expires_in: 3600
+x-provenance:
+  method: harvested
+  publisher: Eliq
+  source: https://eliqdeveloperportalst.blob.core.windows.net/api-docs/eliq-auth-api.yaml
+  note: split by refine-openapis from the provider's own published document, verified by fetch (openapi/_original/*.fetch.json);
+    stamped by stamp-openapi-provenance.py (roadmap#793)
