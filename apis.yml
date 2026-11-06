@@ -34,7 +34,7 @@ accessModel:
   - rate-limits
   - security
   - sandbox
-  generated: '2026-11-02'
+  generated: '2026-11-06'
   method: derived
 position: Producing
 access: 3rd-Party
@@ -165,7 +165,8 @@ apis:
   description: The Advice API from Eliq — 3 operation(s) for advice.
   humanURL: https://developer.eliq.com/api-reference/auth-api
   baseURL: https://auth-api.eliq.com
-  tags:
+  tags: []
+  tags_raw:
   - Advice
   properties:
   - type: OpenAPI
